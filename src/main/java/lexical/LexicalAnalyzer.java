@@ -6,14 +6,23 @@ import location.Location;
 import reader.Reader;
 public class LexicalAnalyzer implements Lexical{
     private char[] chars;
-    private Location location;
+    private final Location location;
     private boolean reachedEndOfFile = false;
 
+    /**
+     * @param reader El lector de caracteres
+     */
     public LexicalAnalyzer(Reader reader) {
         this.chars = reader.getChars();
-        this.location = new Location(1, 0, 0);
+        // Inicializa una nueva location vacia
+        this.location = new Location();
     }
 
+    /**
+     * @return El siguiente token
+     * @throws LexicalException
+     */
+    @Override
     public Token nextToken() throws LexicalException {
         char currentChar = chars[location.getPosition()];
         Token token = null;
@@ -29,7 +38,11 @@ public class LexicalAnalyzer implements Lexical{
         return token;
     }
 
-    public Token matchClassIdentifier() throws MalformedClassIdentifierException {
+    /**
+     * @return El siguiente token de tipo ID_CLASS, dadod que ya se matcheó el primer caracter
+     * @throws MalformedClassIdentifierException
+     */
+    private Token matchClassIdentifier() throws MalformedClassIdentifierException {
         String lexeme = "";
         char currentChar = chars[location.getPosition()]; ;
         while (!reachedEndOfFile && (isLetter(currentChar) || isDigit(currentChar))) {
@@ -50,26 +63,30 @@ public class LexicalAnalyzer implements Lexical{
         return new Token(lexeme, Type.ID_CLASS, location.copy());
     }
 
-    public boolean isLetter(char c) {
+    private boolean isLetter(char c) {
         return c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z';
     }
 
-    public boolean isUppercaseLetter(char c) {
+    private boolean isUppercaseLetter(char c) {
         return c >= 'A' && c <= 'Z';
     }
 
-    public boolean isLowercaseLetter(char c) {
+    private boolean isLowercaseLetter(char c) {
         return c >= 'a' && c <= 'z';
     }
 
-    public boolean isDigit(char c) {
+    private boolean isDigit(char c) {
         return c >= '0' && c <= '9';
     }
 
-    public boolean isWhitespace(char c) {
+    private boolean isWhitespace(char c) {
         return c == ' ' || c == '\t' || c == '\n' || c == '\r';
     }
 
+    /**
+     * @return Si se llegó al final del archivo
+     */
+    @Override
     public boolean isEndOfFile() {
         return this.location.getPosition() > (chars.length - 1);
 

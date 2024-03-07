@@ -11,6 +11,10 @@ public class Location {
         this.position = position;
     }
 
+    public Location() {
+        this(1, 1, 0);
+    }
+
     public Location copy() {
         return new Location(this.line, this.column, this.position);
     }

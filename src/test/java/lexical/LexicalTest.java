@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
 public class LexicalTest {
+
     @Test
     public void testClassNameStringSuccess() {
         Lexical lexical = new LexicalAnalyzer(new StringReader("Class"));
