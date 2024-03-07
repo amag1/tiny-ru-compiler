@@ -1,6 +1,6 @@
 package reader;
 
-public class StringReader {
+public class StringReader implements Reader{
     private String input;
     private char[] chars;
 
