@@ -57,7 +57,7 @@ public class LexicalAnalyzer implements Lexical{
             }
         }
 
-        if (!isLetter(chars[location.getPosition()-1])) {
+        if (!isLetter(currentChar)) {
             throw new MalformedClassIdentifierException(lexeme, location);
         }
         return new Token(lexeme, Type.ID_CLASS, location.copy());

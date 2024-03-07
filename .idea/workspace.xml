@@ -9,14 +9,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fc66baf1-900e-4b26-a170-a1bbce1c460b" name="Changes" comment="Add tests with junit">
-      <change afterPath="$PROJECT_DIR$/.idea/artifacts/tiny_ru_compiler_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/lexical/test/test0.ru" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/META-INF/MANIFEST.MF" afterDir="false" />
+    <list default="true" id="fc66baf1-900e-4b26-a170-a1bbce1c460b" name="Changes" comment="Refactors and documentation">
+      <change afterPath="$PROJECT_DIR$/src/main/java/lexical/test/00.ru" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/lexical/test/01.ru" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/lexical/LexicalAnalyzer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/lexical/LexicalAnalyzer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/location/Location.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/location/Location.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/lexical/LexicalTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/lexical/LexicalTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,11 +67,14 @@
   "keyToString": {
     "Application.Executor.executor": "Run",
     "Application.Main.executor": "Run",
-    "JUnit.LexicalTest.executor": "Coverage",
+    "JUnit.LexicalTest.TestIsLetter.executor": "Run",
+    "JUnit.LexicalTest.executor": "Run",
     "JUnit.LexicalTest.testClassMultipleNameStringSuccess.executor": "Run",
     "JUnit.LexicalTest.testClassNameString.executor": "Run",
     "JUnit.LexicalTest.testClassNameStringException.executor": "Run",
-    "JUnit.LexicalTest.testClassNameStringSuccess.executor": "Run",
+    "JUnit.LexicalTest.testClassNameStringSuccess.executor": "Debug",
+    "JUnit.LexicalTest.testFailingLexer (1).executor": "Run",
+    "JUnit.LexicalTest.testFailingLexer.executor": "Debug",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
@@ -95,20 +97,7 @@
       <recent name="location" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.LexicalTest.testClassMultipleNameStringSuccess">
-    <configuration name="Executor" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="lexical.Executor" />
-      <module name="tiny-ru-compiler" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="lexical.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
+  <component name="RunManager" selected="JUnit.LexicalTest">
     <configuration name="LexicalTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="tiny-ru-compiler" />
       <extension name="coverage">
@@ -124,7 +113,7 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="LexicalTest.testClassMultipleNameStringSuccess" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="LexicalTest.TestIsLetter" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="tiny-ru-compiler" />
       <extension name="coverage">
         <pattern>
@@ -134,23 +123,7 @@
       </extension>
       <option name="PACKAGE_NAME" value="lexical" />
       <option name="MAIN_CLASS_NAME" value="lexical.LexicalTest" />
-      <option name="METHOD_NAME" value="testClassMultipleNameStringSuccess" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="LexicalTest.testClassNameStringException" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="tiny-ru-compiler" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="lexical.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="lexical" />
-      <option name="MAIN_CLASS_NAME" value="lexical.LexicalTest" />
-      <option name="METHOD_NAME" value="testClassNameStringException" />
+      <option name="METHOD_NAME" value="TestIsLetter" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -172,13 +145,45 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="LexicalTest.testFailingLexer (1)" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="tiny-ru-compiler" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="lexical.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="lexical" />
+      <option name="MAIN_CLASS_NAME" value="lexical.LexicalTest" />
+      <option name="METHOD_NAME" value="testFailingLexer(java.lang.String,java.lang.Class)" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="LexicalTest.testFailingLexer" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="tiny-ru-compiler" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="lexical.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="lexical" />
+      <option name="MAIN_CLASS_NAME" value="lexical.LexicalTest" />
+      <option name="METHOD_NAME" value="testFailingLexer(java.lang.String,java.lang.String)" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.LexicalTest.testClassMultipleNameStringSuccess" />
-        <item itemvalue="Application.Executor" />
         <item itemvalue="JUnit.LexicalTest" />
-        <item itemvalue="JUnit.LexicalTest.testClassNameStringException" />
         <item itemvalue="JUnit.LexicalTest.testClassNameStringSuccess" />
+        <item itemvalue="JUnit.LexicalTest.testFailingLexer (1)" />
+        <item itemvalue="JUnit.LexicalTest.TestIsLetter" />
+        <item itemvalue="JUnit.LexicalTest.testFailingLexer" />
       </list>
     </recent_temporary>
   </component>
@@ -201,7 +206,7 @@
       <workItem from="1709753811593" duration="4822000" />
       <workItem from="1709774144075" duration="4564000" />
       <workItem from="1709832467444" duration="1731000" />
-      <workItem from="1709834213723" duration="2492000" />
+      <workItem from="1709834213723" duration="5251000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit">
       <option name="closed" value="true" />
@@ -235,18 +240,62 @@
       <option name="project" value="LOCAL" />
       <updated>1709834398460</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Refactors and documentation">
+      <option name="closed" value="true" />
+      <created>1709837091945</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1709837091945</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="UnknownFeatures">
+    <option featureType="com.intellij.fileTypeFactory" implementationName="*.ru" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Initial commit" />
     <MESSAGE value="Add initial method to lexical analyzer" />
     <MESSAGE value="Implement methods to match class identifiers" />
     <MESSAGE value="Add tests with junit" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add tests with junit" />
+    <MESSAGE value="Refactors and documentation" />
+    <option name="LAST_COMMIT_MESSAGE" value="Refactors and documentation" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/test/java/lexical/LexicalTest.java</url>
+          <line>46</line>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/lexical/LexicalAnalyzer.java</url>
+          <line>59</line>
+          <option name="timeStamp" value="7" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/lexical/LexicalAnalyzer.java</url>
+          <line>45</line>
+          <option name="timeStamp" value="8" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/tiny_ru_compiler$LexicalTest.ic" NAME="LexicalTest Coverage Results" MODIFIED="1709835264349" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
