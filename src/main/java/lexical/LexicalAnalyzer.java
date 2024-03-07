@@ -11,15 +11,18 @@ public class LexicalAnalyzer implements Lexical{
 
     public LexicalAnalyzer(Reader reader) {
         this.chars = reader.getChars();
-        this.location = new Location(1, 1, 0);
+        this.location = new Location(1, 0, 0);
     }
 
     public Token nextToken() throws LexicalException {
         char currentChar = chars[location.getPosition()];
-        Token token;
+        Token token = null;
         switch (currentChar) {
             default:
-                token = matchClassIdentifier();
+                if (isUppercaseLetter(currentChar)) {
+                    token = matchClassIdentifier();
+                }
+
                 break;
         }
 
@@ -72,8 +75,5 @@ public class LexicalAnalyzer implements Lexical{
 
     }
 
-    public boolean ReachedEOF() {
-        return this.reachedEndOfFile;
-    }
 
 }

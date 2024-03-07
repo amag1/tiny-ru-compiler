@@ -13,7 +13,7 @@ public class Executor {
         Logger log = new ConsoleLogger();
         try {
             List<Token> tokens = new ArrayList<Token>();
-            while (!lexical.ReachedEOF()) {
+            while (!lexical.isEndOfFile()) {
                 tokens.add(lexical.nextToken());
             }
 

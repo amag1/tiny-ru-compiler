@@ -4,15 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fc66baf1-900e-4b26-a170-a1bbce1c460b" name="Changes" comment="Add initial method to lexical analyzer">
-      <change afterPath="$PROJECT_DIR$/src/main/java/logger/ConsoleLogger.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/logger/Logger.java" afterDir="false" />
+    <list default="true" id="fc66baf1-900e-4b26-a170-a1bbce1c460b" name="Changes" comment="Implement methods to match class identifiers">
+      <change afterPath="$PROJECT_DIR$/src/test/java/lexical/LexicalTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/exceptions/lexical/LexicalException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/exceptions/lexical/LexicalException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/exceptions/lexical/MalformedClassIdentifierException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/exceptions/lexical/MalformedClassIdentifierException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/lexical/Executor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/lexical/Executor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/lexical/Lexical.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/lexical/Lexical.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/lexical/LexicalAnalyzer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/lexical/LexicalAnalyzer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/lexical/Token.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/lexical/Token.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -50,6 +48,10 @@
   "keyToString": {
     "Application.Executor.executor": "Run",
     "Application.Main.executor": "Run",
+    "JUnit.LexicalTest.executor": "Run",
+    "JUnit.LexicalTest.testClassNameString.executor": "Run",
+    "JUnit.LexicalTest.testClassNameStringException.executor": "Run",
+    "JUnit.LexicalTest.testClassNameStringSuccess.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
@@ -63,6 +65,7 @@
     "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -71,7 +74,7 @@
       <recent name="location" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="JUnit.LexicalTest">
     <configuration name="Executor" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="lexical.Executor" />
       <module name="tiny-ru-compiler" />
@@ -85,9 +88,76 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="LexicalTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="tiny-ru-compiler" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="lexical.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="lexical" />
+      <option name="MAIN_CLASS_NAME" value="lexical.LexicalTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="LexicalTest.testClassNameString" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="tiny-ru-compiler" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="lexical.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="lexical" />
+      <option name="MAIN_CLASS_NAME" value="lexical.LexicalTest" />
+      <option name="METHOD_NAME" value="testClassNameString" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="LexicalTest.testClassNameStringException" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="tiny-ru-compiler" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="lexical.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="lexical" />
+      <option name="MAIN_CLASS_NAME" value="lexical.LexicalTest" />
+      <option name="METHOD_NAME" value="testClassNameStringException" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="LexicalTest.testClassNameStringSuccess" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="tiny-ru-compiler" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="lexical.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="lexical" />
+      <option name="MAIN_CLASS_NAME" value="lexical.LexicalTest" />
+      <option name="METHOD_NAME" value="testClassNameStringSuccess" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.LexicalTest" />
         <item itemvalue="Application.Executor" />
+        <item itemvalue="JUnit.LexicalTest.testClassNameStringException" />
+        <item itemvalue="JUnit.LexicalTest.testClassNameStringSuccess" />
+        <item itemvalue="JUnit.LexicalTest.testClassNameString" />
       </list>
     </recent_temporary>
   </component>
@@ -108,7 +178,8 @@
       <updated>1709600960907</updated>
       <workItem from="1709600962462" duration="2204000" />
       <workItem from="1709753811593" duration="4822000" />
-      <workItem from="1709774144075" duration="4361000" />
+      <workItem from="1709774144075" duration="4564000" />
+      <workItem from="1709832467444" duration="1731000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit">
       <option name="closed" value="true" />
@@ -126,7 +197,15 @@
       <option name="project" value="LOCAL" />
       <updated>1709777608877</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Implement methods to match class identifiers">
+      <option name="closed" value="true" />
+      <created>1709778596534</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1709778596534</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -135,14 +214,15 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Initial commit" />
     <MESSAGE value="Add initial method to lexical analyzer" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add initial method to lexical analyzer" />
+    <MESSAGE value="Implement methods to match class identifiers" />
+    <option name="LAST_COMMIT_MESSAGE" value="Implement methods to match class identifiers" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/lexical/LexicalAnalyzer.java</url>
-          <line>29</line>
+          <line>32</line>
           <option name="timeStamp" value="4" />
         </line-breakpoint>
       </breakpoints>
