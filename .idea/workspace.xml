@@ -4,19 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fc66baf1-900e-4b26-a170-a1bbce1c460b" name="Changes" comment="Initial commit">
-      <change afterPath="$PROJECT_DIR$/src/main/java/exceptions/lexical/LexicalException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/exceptions/lexical/MalformedClassIdentifierException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/lexical/Executor.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/lexical/LexicalAnalyzer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/location/Location.java" afterDir="false" />
+    <list default="true" id="fc66baf1-900e-4b26-a170-a1bbce1c460b" name="Changes" comment="Add initial method to lexical analyzer">
+      <change afterPath="$PROJECT_DIR$/src/main/java/logger/ConsoleLogger.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/logger/Logger.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Main.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/lexical/Lexical.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/lexical/Lexical.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/lexical/Location.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/exceptions/lexical/LexicalException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/exceptions/lexical/LexicalException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/exceptions/lexical/MalformedClassIdentifierException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/exceptions/lexical/MalformedClassIdentifierException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/lexical/Executor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/lexical/Executor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/lexical/LexicalAnalyzer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/lexical/LexicalAnalyzer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/lexical/Token.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/lexical/Token.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/lexical/Type.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/lexical/Type.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/reader/StringReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/reader/StringReader.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -112,7 +108,7 @@
       <updated>1709600960907</updated>
       <workItem from="1709600962462" duration="2204000" />
       <workItem from="1709753811593" duration="4822000" />
-      <workItem from="1709774144075" duration="3429000" />
+      <workItem from="1709774144075" duration="4361000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit">
       <option name="closed" value="true" />
@@ -122,7 +118,15 @@
       <option name="project" value="LOCAL" />
       <updated>1709756779627</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Add initial method to lexical analyzer">
+      <option name="closed" value="true" />
+      <created>1709777608877</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1709777608877</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -130,7 +134,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Initial commit" />
-    <option name="LAST_COMMIT_MESSAGE" value="Initial commit" />
+    <MESSAGE value="Add initial method to lexical analyzer" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add initial method to lexical analyzer" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

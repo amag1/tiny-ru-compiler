@@ -21,4 +21,12 @@ public class Token {
         return type;
     }
 
+    public int getLine() {
+        return location.getLine();
+    }
+
+    public int getColumn() {
+        return location.getColumn();
+    }
+
 }

@@ -42,7 +42,7 @@ public class LexicalAnalyzer implements Lexical{
         }
 
         if (!isLetter(chars[location.getPosition()-1])) {
-            throw new MalformedClassIdentifierException(location);
+            throw new MalformedClassIdentifierException(lexeme, location);
         }
         return new Token(lexeme, Type.ID_CLASS, location.copy());
     }
