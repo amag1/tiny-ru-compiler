@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.ArrayList;
 public class Executor {
     public static void main(String[] args) {
-        Lexical lexical = new LexicalAnalyzer(new StringReader("Hol3"));
+        Lexical lexical = new LexicalAnalyzer(new StringReader("1231321 HolaHola asac \n3"));
         Logger log = new ConsoleLogger();
         try {
             List<Token> tokens = new ArrayList<Token>();

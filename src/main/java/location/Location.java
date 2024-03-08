@@ -35,6 +35,10 @@ public class Location {
         this.position = position;
     }
 
+    public void setColumn(int column) {
+        this.column = column;
+    }
+
     public int getLine() {
         return this.line;
     }

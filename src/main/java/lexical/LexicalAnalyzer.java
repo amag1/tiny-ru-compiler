@@ -1,7 +1,6 @@
 package lexical;
 
-import exceptions.lexical.LexicalException;
-import exceptions.lexical.MalformedClassIdentifierException;
+import exceptions.lexical.*;
 import location.Location;
 import reader.Reader;
 public class LexicalAnalyzer implements Lexical{
@@ -16,6 +15,7 @@ public class LexicalAnalyzer implements Lexical{
         this.chars = reader.getChars();
         // Inicializa una nueva location vacia
         this.location = new Location();
+        this.reachedEndOfFile = isEndOfFile();
     }
 
     /**
@@ -24,12 +24,24 @@ public class LexicalAnalyzer implements Lexical{
      */
     @Override
     public Token nextToken() throws LexicalException {
+        removeWhitespaces();
+
         char currentChar = chars[location.getPosition()];
-        Token token = null;
+        Token token;
         switch (currentChar) {
             default:
-                if (isUppercaseLetter(currentChar)) {
-                    token = matchClassIdentifier();
+                if (isNumber(currentChar)) {
+                    token = matchIntLiteral();
+                } else {
+                    if (isLetter(currentChar)) {
+                        if (isUppercaseLetter(currentChar)) {
+                            token = matchClassIdentifier();
+                        } else {
+                            token = matchIdentifier();
+                        }
+                    } else {
+                        throw new InvalidCharacterException(currentChar, location);
+                    }
                 }
 
                 break;
@@ -45,7 +57,7 @@ public class LexicalAnalyzer implements Lexical{
     private Token matchClassIdentifier() throws MalformedClassIdentifierException {
         String lexeme = "";
         char currentChar = chars[location.getPosition()]; ;
-        while (!reachedEndOfFile && (isLetter(currentChar) || isDigit(currentChar))) {
+        while (!reachedEndOfFile && (isLetter(currentChar) || isNumber(currentChar))) {
             lexeme += currentChar;
             location.increaseColumn();
             location.increasePosition();
@@ -57,10 +69,50 @@ public class LexicalAnalyzer implements Lexical{
             }
         }
 
-        if (!isLetter(currentChar)) {
+        if (!isLetter(currentChar) && !isWhitespace(currentChar)){
             throw new MalformedClassIdentifierException(lexeme, location);
         }
         return new Token(lexeme, Type.ID_CLASS, location.copy());
+    }
+
+    private Token matchIntLiteral() {
+        String lexeme = "";
+        char currentChar = chars[location.getPosition()];
+        while (!reachedEndOfFile && isNumber(currentChar)) {
+            lexeme += currentChar;
+            location.increaseColumn();
+            location.increasePosition();
+
+            if (isEndOfFile()) {
+                reachedEndOfFile = true;
+            } else {
+                currentChar = chars[location.getPosition()];
+            }
+        }
+
+        return new Token(lexeme, Type.INT_LITERAL, location.copy());
+    }
+
+    private Token matchIdentifier() throws LexicalException {
+        String lexeme = "";
+        char currentChar = chars[location.getPosition()];
+        while (!reachedEndOfFile && (isLetter(currentChar) || isNumber(currentChar))) {
+            lexeme += currentChar;
+            location.increaseColumn();
+            location.increasePosition();
+
+            if (isEndOfFile()) {
+                reachedEndOfFile = true;
+            } else {
+                currentChar = chars[location.getPosition()];
+            }
+        }
+
+        if (lexeme.length() > 1024) {
+            throw new IdentifierTooLongException(lexeme, location);
+        }
+
+        return new Token(lexeme, Type.ID, location.copy());
     }
 
     private boolean isLetter(char c) {
@@ -75,12 +127,34 @@ public class LexicalAnalyzer implements Lexical{
         return c >= 'a' && c <= 'z';
     }
 
-    private boolean isDigit(char c) {
+    private boolean isNumber(char c) {
         return c >= '0' && c <= '9';
     }
 
     private boolean isWhitespace(char c) {
         return c == ' ' || c == '\t' || c == '\n' || c == '\r';
+    }
+
+    private void removeWhitespaces() {
+        if (!reachedEndOfFile) {
+            char currentChar = chars[location.getPosition()];
+            while (isWhitespace(currentChar)) {
+                if (currentChar == '\n') {
+                    location.increaseLine();
+                    location.increasePosition();
+                    location.setColumn(0);
+                } else {
+                    location.increaseColumn();
+                    location.setPosition(location.getPosition() + 1);
+                }
+
+                if (isEndOfFile()) {
+                    reachedEndOfFile = true;
+                } else {
+                    currentChar = chars[location.getPosition()];
+                }
+            }
+        }
     }
 
     /**

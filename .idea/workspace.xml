@@ -9,13 +9,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fc66baf1-900e-4b26-a170-a1bbce1c460b" name="Changes" comment="Refactors and documentation">
-      <change afterPath="$PROJECT_DIR$/src/main/java/lexical/test/00.ru" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/lexical/test/01.ru" afterDir="false" />
+    <list default="true" id="fc66baf1-900e-4b26-a170-a1bbce1c460b" name="Changes" comment="Add test formatting">
+      <change afterPath="$PROJECT_DIR$/src/main/java/exceptions/lexical/IdentifierTooLongException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/exceptions/lexical/InvalidCharacterException.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/lexical/Executor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/lexical/Executor.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/lexical/LexicalAnalyzer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/lexical/LexicalAnalyzer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/lexical/Type.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/lexical/Type.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/location/Location.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/location/Location.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/lexical/LexicalTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/lexical/LexicalTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,12 +39,12 @@
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "amag1"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;amag1&quot;
   }
-}]]></component>
+}</component>
   <component name="GithubPullRequestsUISettings">
     <option name="selectedUrlAndAccountId">
       <UrlAndAccount>
@@ -65,7 +66,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "Application.Executor.executor": "Run",
+    "Application.Executor.executor": "Debug",
     "Application.Main.executor": "Run",
     "JUnit.LexicalTest.TestIsLetter.executor": "Run",
     "JUnit.LexicalTest.executor": "Run",
@@ -97,7 +98,20 @@
       <recent name="location" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.LexicalTest">
+  <component name="RunManager" selected="Application.Executor">
+    <configuration name="Executor" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="lexical.Executor" />
+      <module name="tiny-ru-compiler" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="lexical.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="LexicalTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="tiny-ru-compiler" />
       <extension name="coverage">
@@ -161,29 +175,13 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="LexicalTest.testFailingLexer" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="tiny-ru-compiler" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="lexical.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="lexical" />
-      <option name="MAIN_CLASS_NAME" value="lexical.LexicalTest" />
-      <option name="METHOD_NAME" value="testFailingLexer(java.lang.String,java.lang.String)" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.Executor" />
         <item itemvalue="JUnit.LexicalTest" />
         <item itemvalue="JUnit.LexicalTest.testClassNameStringSuccess" />
         <item itemvalue="JUnit.LexicalTest.testFailingLexer (1)" />
         <item itemvalue="JUnit.LexicalTest.TestIsLetter" />
-        <item itemvalue="JUnit.LexicalTest.testFailingLexer" />
       </list>
     </recent_temporary>
   </component>
@@ -206,7 +204,8 @@
       <workItem from="1709753811593" duration="4822000" />
       <workItem from="1709774144075" duration="4564000" />
       <workItem from="1709832467444" duration="1731000" />
-      <workItem from="1709834213723" duration="5251000" />
+      <workItem from="1709834213723" duration="6126000" />
+      <workItem from="1709861844251" duration="1267000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit">
       <option name="closed" value="true" />
@@ -248,7 +247,15 @@
       <option name="project" value="LOCAL" />
       <updated>1709837091945</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Add test formatting">
+      <option name="closed" value="true" />
+      <created>1709839692228</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1709839692228</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -274,25 +281,16 @@
     <MESSAGE value="Implement methods to match class identifiers" />
     <MESSAGE value="Add tests with junit" />
     <MESSAGE value="Refactors and documentation" />
-    <option name="LAST_COMMIT_MESSAGE" value="Refactors and documentation" />
+    <MESSAGE value="Add test formatting" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add test formatting" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/test/java/lexical/LexicalTest.java</url>
-          <line>46</line>
-          <option name="timeStamp" value="5" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/lexical/LexicalAnalyzer.java</url>
-          <line>59</line>
-          <option name="timeStamp" value="7" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/lexical/LexicalAnalyzer.java</url>
-          <line>45</line>
-          <option name="timeStamp" value="8" />
+          <line>138</line>
+          <option name="timeStamp" value="10" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
