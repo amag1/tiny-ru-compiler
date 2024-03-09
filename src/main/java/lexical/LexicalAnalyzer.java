@@ -69,7 +69,7 @@ public class LexicalAnalyzer implements Lexical{
             if (isUppercaseLetter(currentChar)) {
                 return matchClassIdentifier(currentChar, startLocation);
             } else {
-                return matchIdentifier();
+                return matchIdentifier(currentChar, startLocation);
             }
         }
 
@@ -106,12 +106,6 @@ public class LexicalAnalyzer implements Lexical{
             throw new MalformedClassIdentifierException(lexeme, location);
         }
 
-        // La ultima letra de un struct debe estar en minuscula
-        char lastChar = lexeme.charAt(lexeme.length()-1);
-        if (!isLowercaseLetter(lastChar)) {
-            throw new MalformedClassIdentifierException(lexeme, location);
-        }
-
         return new Token(lexeme, Type.ID_CLASS, startLocation);
     }
 
@@ -143,8 +137,14 @@ public class LexicalAnalyzer implements Lexical{
         return new Token(lexeme, Type.INT_LITERAL, startLocation);
     }
 
-    private Token matchIdentifier() throws LexicalException {
-        String lexeme = "";
+    private Token matchIdentifier(char startChar, Location startLocation) throws LexicalException {
+        String lexeme = "" + startChar;
+
+        if (isEndOfFile()) {
+            reachedEndOfFile = true;
+            return new Token(lexeme, Type.ID, startLocation);
+        }
+
         char currentChar = chars[location.getPosition()];
         while (!reachedEndOfFile && (isLetter(currentChar) || isNumber(currentChar))) {
             lexeme += currentChar;
@@ -162,7 +162,7 @@ public class LexicalAnalyzer implements Lexical{
             throw new IdentifierTooLongException(lexeme, location);
         }
 
-        return new Token(lexeme, Type.ID, location.copy());
+        return new Token(lexeme, Type.ID, startLocation);
     }
 
     private boolean isLetter(char c) {
@@ -213,7 +213,6 @@ public class LexicalAnalyzer implements Lexical{
     @Override
     public boolean isEndOfFile() {
         return this.location.getPosition() > (chars.length - 1);
-
     }
 
 
