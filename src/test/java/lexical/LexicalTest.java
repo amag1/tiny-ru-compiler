@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 public class LexicalTest {
     @Test
     public void testClassNameStringSuccess() {
-        String codeText = "Cla@ss";
+        String codeText = "Class";
         Token[] expectedTokens = {
                 new Token("Class", Type.ID_CLASS, new Location(1, 0)),
         };
@@ -33,8 +33,8 @@ public class LexicalTest {
     public void MultipleIdsSuccess() {
         String codeText = "pepe meshna";
         Token[] expectedTokens = {
-                new Token("pepe", Type.ID, new Location(1, 4)),
-                new Token("meshna", Type.ID, new Location(1, 11)),
+                new Token("pepe", Type.ID, new Location(1, 0)),
+                new Token("meshna", Type.ID, new Location(1, 5)),
         };
 
         LexicalTestTokenSuccess test = new LexicalTestTokenSuccess(codeText, expectedTokens);
