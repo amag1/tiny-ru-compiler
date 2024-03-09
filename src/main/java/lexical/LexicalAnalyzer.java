@@ -62,7 +62,7 @@ public class LexicalAnalyzer implements Lexical{
 
 
         if (isNumber(currentChar)) {
-            return matchIntLiteral();
+            return matchIntLiteral(currentChar, startLocation);
         }
 
         if (isLetter(currentChar)) {
@@ -115,8 +115,14 @@ public class LexicalAnalyzer implements Lexical{
         return new Token(lexeme, Type.ID_CLASS, startLocation);
     }
 
-    private Token matchIntLiteral() {
-        String lexeme = "";
+    private Token matchIntLiteral(char startChar, Location startLocation) {
+        String lexeme = "" + startChar;
+
+        if (isEndOfFile()) {
+            reachedEndOfFile = true;
+            return new Token(lexeme, Type.INT_LITERAL, startLocation);
+        }
+
         char currentChar = chars[location.getPosition()];
         while (!reachedEndOfFile && isNumber(currentChar)) {
             lexeme += currentChar;
@@ -130,7 +136,9 @@ public class LexicalAnalyzer implements Lexical{
             }
         }
 
-        return new Token(lexeme, Type.INT_LITERAL, location.copy());
+        // TODO ? handle error of letters '8hola'
+
+        return new Token(lexeme, Type.INT_LITERAL, startLocation);
     }
 
     private Token matchIdentifier() throws LexicalException {
