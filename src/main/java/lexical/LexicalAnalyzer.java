@@ -77,19 +77,7 @@ public class LexicalAnalyzer implements Lexical{
             // TODO string_literal
 
             default:
-                if (isNumber(currentChar)) {
-                    token = matchIntLiteral(currentChar, startLocation);
-                }
-
-                if (isLetter(currentChar)) {
-                    if (isUppercaseLetter(currentChar)) {
-                        // TODO check type declaration keywords (Char, Int, Bool, String)
-                        token = matchClassIdentifier(currentChar, startLocation);
-                    } else {
-                        // TODO check keywords
-                        token = matchIdentifier(currentChar, startLocation);
-                    }
-                }
+                token = matchComplexString(currentChar, startLocation);
         }
 
         if (token.getType() == null) {
