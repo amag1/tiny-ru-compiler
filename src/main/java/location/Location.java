@@ -11,6 +11,11 @@ public class Location {
         this.position = position;
     }
 
+    public Location(int line, int column) {
+        this.line = line;
+        this.column = column;
+    }
+
     public Location() {
         this(1, 0, 0);
     }
