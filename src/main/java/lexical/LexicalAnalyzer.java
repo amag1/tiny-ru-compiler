@@ -35,53 +35,92 @@ public class LexicalAnalyzer implements Lexical{
         location.increaseColumn();
         location.increasePosition();
 
-        Token token;
+        Token token = new Token();
+
         switch (currentChar) {
             // Symbols
             case '(':
-                return new Token("", Type.OPEN_PAR, startLocation);
+                token = new Token("", Type.OPEN_PAR, startLocation);
+                break;
             case ')':
-                return new Token("", Type.ID_CLASS, startLocation);
+                token = new Token("", Type.ID_CLASS, startLocation);
+                break;
             case '{':
-                return new Token("", Type.OPEN_CURLY, startLocation);
+                token = new Token("", Type.OPEN_CURLY, startLocation);
+                break;
             case '}':
-                return new Token("", Type.CLOSE_CURLY, startLocation);
+                token = new Token("", Type.CLOSE_CURLY, startLocation);
+                break;
             case '[':
-                return new Token("", Type.OPEN_BRACKET, startLocation);
+                token = new Token("", Type.OPEN_BRACKET, startLocation);
+                break;
             case ']':
-                return new Token("", Type.CLOSE_BRACKET, startLocation);
+                token = new Token("", Type.CLOSE_BRACKET, startLocation);
+                break;
             case '.':
-                return new Token("", Type.DOT, startLocation);
+                token = new Token("", Type.DOT, startLocation);
+                break;
             case ':':
-                return new Token("", Type.COLON, startLocation);
+                token = new Token("", Type.COLON, startLocation);
+                break;
             case ';':
-                return new Token("", Type.SEMICOLON, startLocation);
+                token = new Token("", Type.SEMICOLON, startLocation);
+                break;
             case ',':
-                return new Token("", Type.COMMA, startLocation);
+                token = new Token("", Type.COMMA, startLocation);
+                break;
 
             // TODO operators
 
             // TODO char_literal
 
             // TODO string_literal
+
+            default:
+                if (isNumber(currentChar)) {
+                    token = matchIntLiteral(currentChar, startLocation);
+                }
+
+                if (isLetter(currentChar)) {
+                    if (isUppercaseLetter(currentChar)) {
+                        // TODO check type declaration keywords (Char, Int, Bool, String)
+                        token = matchClassIdentifier(currentChar, startLocation);
+                    } else {
+                        // TODO check keywords
+                        token = matchIdentifier(currentChar, startLocation);
+                    }
+                }
         }
 
-
-        if (isNumber(currentChar)) {
-            return matchIntLiteral(currentChar, startLocation);
+        if (token.getType() == null) {
+            throw new InvalidCharacterException(currentChar, startLocation);
         }
 
-        if (isLetter(currentChar)) {
-            if (isUppercaseLetter(currentChar)) {
-                // TODO check type declaration keywords (Char, Int, Bool, String)
-                return matchClassIdentifier(currentChar, startLocation);
-            } else {
-                // TODO check keywords
-                return matchIdentifier(currentChar, startLocation);
+        return token;
+    }
+
+    private Token matchComplexString(char startChar, Location startLocation) throws LexicalException {
+        Token token = new Token();
+
+        try {
+            if (isNumber(startChar)) {
+                token = matchIntLiteral(startChar, startLocation);
             }
+
+            if (isLetter(startChar)) {
+                if (isUppercaseLetter(startChar)) {
+                    // TODO check type declaration keywords (Char, Int, Bool, String)
+                    token = matchClassIdentifier(startChar, startLocation);
+                } else {
+                    // TODO check keywords
+                    token = matchIdentifier(startChar, startLocation);
+                }
+            }
+        } catch (LexicalException e) {
+            throw e;
         }
 
-        throw new InvalidCharacterException(currentChar, startLocation);
+        return token;
     }
 
     /**

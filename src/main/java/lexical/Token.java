@@ -7,6 +7,8 @@ public class Token {
     private Type type;
     private Location location;
 
+    public Token() {}
+
     public Token(String lexeme, Type type, Location location) {
         this.lexeme = lexeme;
         this.type = type;
