@@ -166,5 +166,15 @@ public class LexicalAnalyzer implements Lexical{
 
     }
 
+    @Override
+    public int getColumn() {
+        return this.location.getColumn();
+    }
+
+    @Override
+    public int getLine() {
+        return this.location.getLine();
+    }
+
 
 }
