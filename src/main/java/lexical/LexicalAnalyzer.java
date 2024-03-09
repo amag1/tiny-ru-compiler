@@ -115,7 +115,7 @@ public class LexicalAnalyzer implements Lexical{
         return new Token(lexeme, Type.ID_CLASS, startLocation);
     }
 
-    private Token matchIntLiteral(char startChar, Location startLocation) {
+    private Token matchIntLiteral(char startChar, Location startLocation) throws MalformedIntLiteralException{
         String lexeme = "" + startChar;
 
         if (isEndOfFile()) {
@@ -136,7 +136,9 @@ public class LexicalAnalyzer implements Lexical{
             }
         }
 
-        // TODO ? handle error of letters '8hola'
+        if (isLetter(currentChar)) {
+            throw new MalformedIntLiteralException(lexeme, location);
+        }
 
         return new Token(lexeme, Type.INT_LITERAL, startLocation);
     }
