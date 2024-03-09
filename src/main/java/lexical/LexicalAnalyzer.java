@@ -56,8 +56,14 @@ public class LexicalAnalyzer implements Lexical{
                 return new Token("", Type.COLON, startLocation);
             case ';':
                 return new Token("", Type.SEMICOLON, startLocation);
+            case ',':
+                return new Token("", Type.COMMA, startLocation);
 
             // TODO operators
+
+            // TODO char_literal
+
+            // TODO string_literal
         }
 
 
@@ -67,8 +73,10 @@ public class LexicalAnalyzer implements Lexical{
 
         if (isLetter(currentChar)) {
             if (isUppercaseLetter(currentChar)) {
+                // TODO check type declaration keywords (Char, Int, Bool, String)
                 return matchClassIdentifier(currentChar, startLocation);
             } else {
+                // TODO check keywords
                 return matchIdentifier(currentChar, startLocation);
             }
         }
