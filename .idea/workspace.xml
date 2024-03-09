@@ -9,10 +9,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fc66baf1-900e-4b26-a170-a1bbce1c460b" name="Changes" comment="Add test formatting">
+    <list default="true" id="fc66baf1-900e-4b26-a170-a1bbce1c460b" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/lexical/LexicalAnalyzer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/lexical/LexicalAnalyzer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/lexical/Type.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/lexical/Type.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/lexical/LexicalTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/lexical/LexicalTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/lexical/LexicalTestTokenFailure.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/lexical/LexicalTestTokenFailure.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/lexical/LexicalTestTokenSuccess.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/lexical/LexicalTestTokenSuccess.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -94,20 +97,7 @@
       <recent name="location" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Executor">
-    <configuration name="Executor" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="lexical.Executor" />
-      <module name="tiny-ru-compiler" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="lexical.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
+  <component name="RunManager" selected="JUnit.LexicalTest.testClassNameStringSuccess">
     <configuration name="LexicalTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="tiny-ru-compiler" />
       <extension name="coverage">
@@ -123,7 +113,7 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="LexicalTest.TestIsLetter" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="LexicalTest.CurlyStringSuccess" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="tiny-ru-compiler" />
       <extension name="coverage">
         <pattern>
@@ -133,7 +123,23 @@
       </extension>
       <option name="PACKAGE_NAME" value="lexical" />
       <option name="MAIN_CLASS_NAME" value="lexical.LexicalTest" />
-      <option name="METHOD_NAME" value="TestIsLetter" />
+      <option name="METHOD_NAME" value="CurlyStringSuccess" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="LexicalTest.testClassNameStringException" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="tiny-ru-compiler" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="lexical.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="lexical" />
+      <option name="MAIN_CLASS_NAME" value="lexical.LexicalTest" />
+      <option name="METHOD_NAME" value="testClassNameStringException" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -173,11 +179,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.Executor" />
-        <item itemvalue="JUnit.LexicalTest" />
         <item itemvalue="JUnit.LexicalTest.testClassNameStringSuccess" />
+        <item itemvalue="JUnit.LexicalTest" />
+        <item itemvalue="JUnit.LexicalTest.testClassNameStringException" />
+        <item itemvalue="JUnit.LexicalTest.CurlyStringSuccess" />
         <item itemvalue="JUnit.LexicalTest.testFailingLexer (1)" />
-        <item itemvalue="JUnit.LexicalTest.TestIsLetter" />
       </list>
     </recent_temporary>
   </component>

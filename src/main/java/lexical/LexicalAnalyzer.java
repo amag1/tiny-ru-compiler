@@ -223,5 +223,15 @@ public class LexicalAnalyzer implements Lexical{
         return this.location.getPosition() > (chars.length - 1);
     }
 
+    @Override
+    public int getColumn() {
+        return this.location.getColumn();
+    }
+
+    @Override
+    public int getLine() {
+        return this.location.getLine();
+    }
+
 
 }
