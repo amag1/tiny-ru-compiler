@@ -25,10 +25,36 @@ public class LexicalAnalyzer implements Lexical{
     @Override
     public Token nextToken() throws LexicalException {
         removeWhitespaces();
+        // TODO: remove comments
+        // TODO: remove tabs
 
         char currentChar = chars[location.getPosition()];
         Token token;
         switch (currentChar) {
+            // Symbols
+            case '(':
+                return new Token("", Type.OPEN_PAR, location);
+            case ')':
+                return new Token("", Type.ID_CLASS, location);
+            case '{':
+                return new Token("", Type.OPEN_CURLY, location);
+            case '}':
+                return new Token("", Type.CLOSE_CURLY, location);
+            case '[':
+                return new Token("", Type.OPEN_BRACKET, location);
+            case ']':
+                return new Token("", Type.CLOSE_BRACKET, location);
+            case '.':
+                return new Token("", Type.DOT, location);
+            case ':':
+                return new Token("", Type.COLON, location);
+            case ';':
+                return new Token("", Type.SEMICOLON, location);
+
+
+
+
+
             default:
                 if (isNumber(currentChar)) {
                     token = matchIntLiteral();
