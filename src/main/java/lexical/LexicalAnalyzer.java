@@ -28,61 +28,67 @@ public class LexicalAnalyzer implements Lexical{
         // TODO: remove comments
         // TODO: remove tabs
 
+        Location startLocation = location.copy();
         char currentChar = chars[location.getPosition()];
+
+        // Consume posicion
+        location.increaseColumn();
+        location.increasePosition();
+
         Token token;
         switch (currentChar) {
             // Symbols
             case '(':
-                return new Token("", Type.OPEN_PAR, location);
+                return new Token("", Type.OPEN_PAR, startLocation);
             case ')':
-                return new Token("", Type.ID_CLASS, location);
+                return new Token("", Type.ID_CLASS, startLocation);
             case '{':
-                return new Token("", Type.OPEN_CURLY, location);
+                return new Token("", Type.OPEN_CURLY, startLocation);
             case '}':
-                return new Token("", Type.CLOSE_CURLY, location);
+                return new Token("", Type.CLOSE_CURLY, startLocation);
             case '[':
-                return new Token("", Type.OPEN_BRACKET, location);
+                return new Token("", Type.OPEN_BRACKET, startLocation);
             case ']':
-                return new Token("", Type.CLOSE_BRACKET, location);
+                return new Token("", Type.CLOSE_BRACKET, startLocation);
             case '.':
-                return new Token("", Type.DOT, location);
+                return new Token("", Type.DOT, startLocation);
             case ':':
-                return new Token("", Type.COLON, location);
+                return new Token("", Type.COLON, startLocation);
             case ';':
-                return new Token("", Type.SEMICOLON, location);
+                return new Token("", Type.SEMICOLON, startLocation);
 
-
-
-
-
-            default:
-                if (isNumber(currentChar)) {
-                    token = matchIntLiteral();
-                } else {
-                    if (isLetter(currentChar)) {
-                        if (isUppercaseLetter(currentChar)) {
-                            token = matchClassIdentifier();
-                        } else {
-                            token = matchIdentifier();
-                        }
-                    } else {
-                        throw new InvalidCharacterException(currentChar, location);
-                    }
-                }
-
-                break;
+            // TODO operators
         }
 
-        return token;
+
+        if (isNumber(currentChar)) {
+            return matchIntLiteral();
+        }
+
+        if (isLetter(currentChar)) {
+            if (isUppercaseLetter(currentChar)) {
+                return matchClassIdentifier(currentChar, startLocation);
+            } else {
+                return matchIdentifier();
+            }
+        }
+
+        throw new InvalidCharacterException(currentChar, startLocation);
     }
 
     /**
      * @return El siguiente token de tipo ID_CLASS, dadod que ya se matcheó el primer caracter
      * @throws MalformedClassIdentifierException
      */
-    private Token matchClassIdentifier() throws MalformedClassIdentifierException {
-        String lexeme = "";
-        char currentChar = chars[location.getPosition()]; ;
+    private Token matchClassIdentifier(char startChar, Location startLocation) throws MalformedClassIdentifierException {
+        String lexeme = "" + startChar;
+
+        if (isEndOfFile()) {
+            reachedEndOfFile = true;
+            return new Token(lexeme, Type.ID_CLASS, startLocation);
+        }
+
+        char currentChar = chars[location.getPosition()];
         while (!reachedEndOfFile && (isLetter(currentChar) || isNumber(currentChar))) {
             lexeme += currentChar;
             location.increaseColumn();
@@ -96,9 +102,17 @@ public class LexicalAnalyzer implements Lexical{
         }
 
         if (!isLetter(currentChar) && !isWhitespace(currentChar)){
+            lexeme += currentChar;
             throw new MalformedClassIdentifierException(lexeme, location);
         }
-        return new Token(lexeme, Type.ID_CLASS, location.copy());
+
+        // La ultima letra de un struct debe estar en minuscula
+        char lastChar = lexeme.charAt(lexeme.length()-1);
+        if (!isLowercaseLetter(lastChar)) {
+            throw new MalformedClassIdentifierException(lexeme, location);
+        }
+
+        return new Token(lexeme, Type.ID_CLASS, startLocation);
     }
 
     private Token matchIntLiteral() {
