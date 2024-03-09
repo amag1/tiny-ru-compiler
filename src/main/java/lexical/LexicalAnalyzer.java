@@ -90,23 +90,21 @@ public class LexicalAnalyzer implements Lexical{
     private Token matchComplexString(char startChar, Location startLocation) throws LexicalException {
         Token token = new Token();
 
-        try {
-            if (isNumber(startChar)) {
-                token = matchIntLiteral(startChar, startLocation);
-            }
 
-            if (isLetter(startChar)) {
-                if (isUppercaseLetter(startChar)) {
-                    // TODO check type declaration keywords (Char, Int, Bool, String)
-                    token = matchClassIdentifier(startChar, startLocation);
-                } else {
-                    // TODO check keywords
-                    token = matchIdentifier(startChar, startLocation);
-                }
-            }
-        } catch (LexicalException e) {
-            throw e;
+        if (isNumber(startChar)) {
+            token = matchIntLiteral(startChar, startLocation);
         }
+
+        if (isLetter(startChar)) {
+            if (isUppercaseLetter(startChar)) {
+                // TODO check type declaration keywords (Char, Int, Bool, String)
+                token = matchClassIdentifier(startChar, startLocation);
+            } else {
+                // TODO check keywords
+                token = matchIdentifier(startChar, startLocation);
+            }
+        }
+
 
         return token;
     }
