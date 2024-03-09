@@ -14,19 +14,30 @@ public class LexicalTestTokenSuccess {
         this.expectedTokens = expectedTokens;
     }
 
-    public void run() {
+    public void run(boolean lexemChecking, boolean locationChecking) {
         Lexical lexical = new LexicalAnalyzer(new StringReader(codeText));
         Token currentToken;
         for (Token expectedToken: expectedTokens) {
             try {
                 currentToken = lexical.nextToken();
-                assertEquals(expectedToken.getLexem(),currentToken.getLexem(), "Different token lexems") ;
+
                 assertEquals(expectedToken.getType(),currentToken.getType(), "Different token types");
-                assertEquals(expectedToken.getLine(),currentToken.getLine(), "Different token lines");
-                assertEquals(expectedToken.getColumn(),currentToken.getColumn(), "Different token columns");
+
+                if (lexemChecking) {
+                    assertEquals(expectedToken.getLexem(),currentToken.getLexem(), "Different token lexems") ;
+                }
+
+                if (locationChecking) {
+                    assertEquals(expectedToken.getLine(), currentToken.getLine(), "Different token lines");
+                    assertEquals(expectedToken.getColumn(), currentToken.getColumn(), "Different token columns");
+                }
             } catch (LexicalException e) {
-                fail();
+                fail(e.getMessage());
             }
         }
+    }
+
+    public void run(){
+        this.run(true, true);
     }
 }

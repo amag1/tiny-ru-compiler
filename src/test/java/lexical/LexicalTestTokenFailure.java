@@ -17,20 +17,28 @@ public class LexicalTestTokenFailure {
         this.expectedException = expectedException;
     }
 
-    public void run() {
+    public void run(boolean locationChecking) {
         Lexical lexical = new LexicalAnalyzer(new StringReader(codeText));
         while (!lexical.isEndOfFile()) {
             try {
                 Token currentToken = lexical.nextToken();
             } catch (LexicalException e) {
                 assertEquals(this.expectedException.getClass(), e.getClass(), "Different exception classes");
+
+                if (locationChecking) {
                 assertEquals(this.expectedException.getColumn(), lexical.getColumn(), "Different exception columns");
                 assertEquals(this.expectedException.getLine(), lexical.getLine(), "Different exception lines");
+                }
+
                 return;
             }
         }
 
         // No se encontró la excepción
         fail("Exception Not Found");
+    }
+
+    public void run(){
+        this.run(true);
     }
 }

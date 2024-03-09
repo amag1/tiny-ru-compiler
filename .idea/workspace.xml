@@ -10,13 +10,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fc66baf1-900e-4b26-a170-a1bbce1c460b" name="Changes" comment="Add test formatting">
-      <change afterPath="$PROJECT_DIR$/src/test/java/lexical/LexicalTestTokenFailure.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/lexical/LexicalTestTokenSuccess.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/lexical/Lexical.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/lexical/Lexical.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/lexical/LexicalAnalyzer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/lexical/LexicalAnalyzer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/location/Location.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/location/Location.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/lexical/LexicalTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/lexical/LexicalTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/lexical/LexicalTestTokenFailure.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/lexical/LexicalTestTokenFailure.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/lexical/LexicalTestTokenSuccess.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/lexical/LexicalTestTokenSuccess.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -98,7 +95,7 @@
       <recent name="location" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.LexicalTest">
+  <component name="RunManager" selected="JUnit.LexicalTest.testClassNameStringSuccess">
     <configuration name="LexicalTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="tiny-ru-compiler" />
       <extension name="coverage">
@@ -180,11 +177,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.LexicalTest.testClassNameStringSuccess" />
         <item itemvalue="JUnit.LexicalTest" />
         <item itemvalue="JUnit.LexicalTest.testClassNameStringException" />
         <item itemvalue="JUnit.LexicalTest.CurlyStringSuccess" />
         <item itemvalue="JUnit.LexicalTest.testFailingLexer (1)" />
-        <item itemvalue="JUnit.LexicalTest.testClassNameStringSuccess" />
       </list>
     </recent_temporary>
   </component>

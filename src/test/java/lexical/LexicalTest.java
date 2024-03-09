@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 public class LexicalTest {
     @Test
     public void testClassNameStringSuccess() {
-        String codeText = "Class";
+        String codeText = "Cla@ss";
         Token[] expectedTokens = {
                 new Token("Class", Type.ID_CLASS, new Location(1, 0)),
         };
