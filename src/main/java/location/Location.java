@@ -17,7 +17,7 @@ public class Location {
     }
 
     public Location() {
-        this(1, 0, 0);
+        this(1, 1, 0);
     }
 
     public Location copy() {

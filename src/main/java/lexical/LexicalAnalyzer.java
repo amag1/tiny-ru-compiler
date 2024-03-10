@@ -29,13 +29,13 @@ public class LexicalAnalyzer implements Lexical{
         // TODO: remove tabs
 
         Location startLocation = location.copy();
-        char currentChar = chars[location.getPosition()];
+        char currentChar = getCurrentChar();
 
-        // Consume posicion
+        // Consume position
         location.increaseColumn();
         location.increasePosition();
 
-        Token token = new Token();
+        Token token;
 
         switch (currentChar) {
             // Symbols
@@ -69,6 +69,12 @@ public class LexicalAnalyzer implements Lexical{
             case ',':
                 token = new Token("", Type.COMMA, startLocation);
                 break;
+            case '\'':
+                token = matchCharLiteral(currentChar, startLocation);
+                break;
+            case '\"':
+                token = matchStringLiteral(currentChar, startLocation);
+                break;
 
             // TODO operators
 
@@ -85,6 +91,86 @@ public class LexicalAnalyzer implements Lexical{
         }
 
         return token;
+    }
+
+    private Token matchStringLiteral(char startChar, Location startLocation) throws UnclosedStringLiteralException,MalformedStringLiteralException, InvalidCharacterException{
+        if (isEndOfFile()) {
+            reachedEndOfFile = true;
+            throw new UnclosedStringLiteralException("", location);
+        }
+
+        char currentChar = getCurrentChar();
+
+
+
+        String lexeme = "";
+        while (Character.compare(currentChar, '\"') != 0) {
+            if (isEndOfFile()) {
+                reachedEndOfFile = true;
+                throw new UnclosedStringLiteralException(lexeme, location);
+            }
+
+            if (currentChar == '\\') {
+                lexeme += matchEscapeChar();
+            } else {
+                if (isValidChar(currentChar)) {
+                    lexeme += currentChar;
+                    location.increaseColumn();
+                    location.increasePosition();
+                    currentChar = getCurrentChar();
+                } else {
+                    throw new MalformedStringLiteralException(lexeme, location);
+                }
+            }
+
+        }
+        location.increaseColumn();
+        location.increasePosition();
+        return new Token(lexeme, Type.STRING_LITERAL, startLocation);
+    }
+
+    private Token matchCharLiteral(char startChar,Location startLocation) throws MalformedCharLiteralException, UnclosedCharLiteralException, InvalidCharacterException {
+        String lexeme = "";
+
+        // Get next char
+        char currentChar = getCurrentChar();
+
+        if (isEndOfFile()) {
+            reachedEndOfFile = true;
+            throw new UnclosedCharLiteralException(lexeme, location);
+        }
+
+        Token token;
+        if (currentChar == '\\') {
+            lexeme += matchEscapeChar();
+        } else {
+            if (isValidChar(currentChar)) {
+                lexeme += currentChar;
+                location.increaseColumn();
+                location.increasePosition();
+            } else {
+                throw new MalformedCharLiteralException(lexeme, location);
+            }
+        }
+
+        if (isEndOfFile()) {
+            reachedEndOfFile = true;
+            throw new UnclosedCharLiteralException(lexeme, location);
+        }
+
+        currentChar = getCurrentChar();
+        if (currentChar != '\'') {
+            lexeme += currentChar;
+            location.increaseColumn();
+            location.increasePosition();
+            throw new MalformedCharLiteralException(lexeme, location);
+        }
+
+
+        location.increaseColumn();
+        location.increasePosition();
+
+        return new Token(lexeme, Type.CHAR_LITERAL, startLocation);
     }
 
     private Token matchComplexString(char startChar, Location startLocation) throws LexicalException {
@@ -238,6 +324,79 @@ public class LexicalAnalyzer implements Lexical{
                 }
             }
         }
+    }
+
+    private String matchEscapeChar() throws InvalidCharacterException {
+        char currentChar = getCurrentChar();
+        String returnString = "";
+        if (!isValidChar(currentChar)) {
+            throw new InvalidCharacterException(currentChar, location);
+        } else {
+           switch (currentChar) {
+               case 'n':
+                   returnString = "\n";
+                   break;
+               case 't':
+                   returnString = "\t";
+                   break;
+               default:
+                   returnString = "" + currentChar;
+                   break;
+           }
+        }
+        return returnString;
+    }
+
+    private boolean isValidChar(char c) {
+        // Common char types
+        return isNumber(c)
+                || isLetter(c)
+                || isWhitespace(c)
+                || isCommonSymbol(c)
+                || isSpanishCharacter(c);
+    }
+
+    private boolean isCommonSymbol(char c) {
+        return c == '('
+                || c == ')'
+                || c == '{'
+                || c == '}'
+                || c == '['
+                || c == ']'
+                || c == '.'
+                || c == ':'
+                || c == ';'
+                || c == ','
+                || c == '\''
+                || c == '\\'
+                || c == '+'
+                || c == '-'
+                || c == '*'
+                || c == '/'
+                || c == '%'
+                || c == '<'
+                || c == '>'
+                || c == '='
+                || c == '!'
+                || c == '&'
+                || c == '|'
+                || c == '^'
+                || c == '~'
+                || c == '?'
+                || c == '@'
+                || c == '#'
+                || c == '$'
+                || c == '_'
+                || c == '¿';
+    }
+
+    private boolean isSpanishCharacter(char c) {
+        return c == 'á'
+                || c == 'é'
+                || c == 'í'
+                || c == 'ó'
+                || c == 'ú'
+                || c == 'ñ';
     }
 
     /**

@@ -7,6 +7,8 @@ public enum Type {
 
     // Literals
     INT_LITERAL,
+    CHAR_LITERAL,
+    STRING_LITERAL,
 
     // Symbols
     OPEN_PAR,
