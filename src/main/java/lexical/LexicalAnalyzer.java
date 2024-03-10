@@ -103,10 +103,11 @@ public class LexicalAnalyzer implements Lexical{
                 // TODO check keywords
                 token = matchIdentifier(startChar, startLocation);
             }
+
+            return token;
         }
 
-
-        return token;
+        throw new InvalidCharacterException(startChar, startLocation);
     }
 
     /**
