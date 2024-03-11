@@ -58,7 +58,7 @@ public class LexicalTest {
                 lexical.nextToken();
             }
         } catch (LexicalException e) {
-            assertEquals(e.getClass(), error);
+            assertEquals(error, e.getClass(), "File: " + input);
         }
     }
 

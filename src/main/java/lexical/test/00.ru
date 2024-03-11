@@ -1,2 +1,1 @@
-/? MalformedClassIdentifierException Class3
 Class3
