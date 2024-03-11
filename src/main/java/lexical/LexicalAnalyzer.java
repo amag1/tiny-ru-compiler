@@ -4,7 +4,7 @@ import exceptions.lexical.*;
 import location.Location;
 import reader.Reader;
 public class LexicalAnalyzer implements Lexical{
-    private char[] chars;
+    private final char[] chars;
     private final Location location;
     private boolean reachedEndOfFile = false;
 
@@ -121,7 +121,7 @@ public class LexicalAnalyzer implements Lexical{
             return new Token(lexeme, Type.ID_CLASS, startLocation);
         }
 
-        char currentChar = chars[location.getPosition()];
+        char currentChar = getCurrentChar();
         while (!reachedEndOfFile && (isLetter(currentChar) || isNumber(currentChar))) {
             lexeme += currentChar;
             location.increaseColumn();
@@ -130,7 +130,7 @@ public class LexicalAnalyzer implements Lexical{
             if (isEndOfFile()) {
                 reachedEndOfFile = true;
             } else {
-                currentChar = chars[location.getPosition()];
+                currentChar = getCurrentChar();
             }
         }
 
@@ -159,7 +159,7 @@ public class LexicalAnalyzer implements Lexical{
             if (isEndOfFile()) {
                 reachedEndOfFile = true;
             } else {
-                currentChar = chars[location.getPosition()];
+                currentChar = getCurrentChar();
             }
         }
 
@@ -187,7 +187,7 @@ public class LexicalAnalyzer implements Lexical{
             if (isEndOfFile()) {
                 reachedEndOfFile = true;
             } else {
-                currentChar = chars[location.getPosition()];
+                currentChar = getCurrentChar();
             }
         }
 
@@ -220,7 +220,7 @@ public class LexicalAnalyzer implements Lexical{
 
     private void removeWhitespaces() {
         if (!reachedEndOfFile) {
-            char currentChar = chars[location.getPosition()];
+            char currentChar = getCurrentChar();
             while (isWhitespace(currentChar)) {
                 if (currentChar == '\n') {
                     location.increaseLine();
@@ -228,13 +228,13 @@ public class LexicalAnalyzer implements Lexical{
                     location.setColumn(0);
                 } else {
                     location.increaseColumn();
-                    location.setPosition(location.getPosition() + 1);
+                    location.increasePosition();
                 }
 
                 if (isEndOfFile()) {
                     reachedEndOfFile = true;
                 } else {
-                    currentChar = chars[location.getPosition()];
+                    currentChar = getCurrentChar();
                 }
             }
         }
@@ -258,5 +258,7 @@ public class LexicalAnalyzer implements Lexical{
         return this.location.getLine();
     }
 
-
+    private char getCurrentChar() {
+        return this.chars[this.location.getPosition()];
+    }
 }
