@@ -14,7 +14,7 @@ public abstract class Logger {
         List result = new ArrayList<String>();
         // Header
         result.add("CORRECTO: ANALISIS LEXICO");
-        result.add(" TOKEN | LEXEMA | NUMERO DE LINEA (NUMERO DE COLUMNA) |");
+        result.add("| TOKEN | LEXEMA | NUMERO DE LINEA (NUMERO DE COLUMNA) |");
         // Body
         for (Token token : tokens) {
         result.add("| " + token.getType() + " | " + token.getLexem() + " | " + token.getLine() + " (" + token.getColumn() + ") |");
