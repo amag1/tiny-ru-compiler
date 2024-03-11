@@ -111,6 +111,9 @@ public class LexicalAnalyzer implements Lexical{
             }
 
             if (currentChar == '\\') {
+                location.increaseColumn();
+                location.increasePosition();
+                currentChar = getCurrentChar();
                 lexeme += matchEscapeChar();
             } else {
                 if (isValidChar(currentChar)) {
@@ -331,6 +334,8 @@ public class LexicalAnalyzer implements Lexical{
             throw new InvalidCharacterException(currentChar, location);
         } else {
            switch (currentChar) {
+               case '0':
+                   throw new InvalidCharacterException('\0', location);
                case 'n':
                    returnString = "\n";
                    break;

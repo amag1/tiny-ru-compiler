@@ -71,7 +71,8 @@ public class LexicalTest {
             Arguments.of(basepath + "00.ru", MalformedClassIdentifierException.class),
             Arguments.of(basepath + "01.ru", MalformedClassIdentifierException.class),
                 Arguments.of(basepath + "02.ru", InvalidCharacterException.class),
-                Arguments.of(basepath + "03.ru", MalformedIntLiteralException.class)
+                Arguments.of(basepath + "03.ru", MalformedIntLiteralException.class),
+                Arguments.of(basepath + "04.ru", InvalidCharacterException.class)
         );
     }
 }
