@@ -1,9 +1,6 @@
 package lexical;
 
-import exceptions.lexical.InvalidCharacterException;
-import exceptions.lexical.LexicalException;
-import exceptions.lexical.MalformedClassIdentifierException;
-import exceptions.lexical.MalformedIntLiteralException;
+import exceptions.lexical.*;
 import location.Location;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -72,7 +69,8 @@ public class LexicalTest {
             Arguments.of(basepath + "01.ru", MalformedClassIdentifierException.class),
                 Arguments.of(basepath + "02.ru", InvalidCharacterException.class),
                 Arguments.of(basepath + "03.ru", MalformedIntLiteralException.class),
-                Arguments.of(basepath + "04.ru", InvalidCharacterException.class)
+                Arguments.of(basepath + "04.ru", InvalidCharacterException.class),
+                Arguments.of(basepath + "05.ru", UnclosedStringLiteralException.class)
         );
     }
 }
