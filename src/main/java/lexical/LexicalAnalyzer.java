@@ -104,8 +104,6 @@ public class LexicalAnalyzer implements Lexical{
                 token = matchIdentifier(startChar, startLocation);
             }
         }
-
-
         return token;
     }
 

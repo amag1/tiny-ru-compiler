@@ -1,7 +1,9 @@
 package lexical;
 
+import exceptions.lexical.InvalidCharacterException;
 import exceptions.lexical.LexicalException;
 import exceptions.lexical.MalformedClassIdentifierException;
+import exceptions.lexical.MalformedIntLiteralException;
 import location.Location;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -55,8 +57,9 @@ public class LexicalTest {
     public void testFailingLexer(String input, Class<? extends LexicalException> error) throws FileNotFoundException {
         Lexical lexical = new LexicalAnalyzer(new FileReader(input));
         try {
-            Token token = lexical.nextToken();
-            fail();
+        while(!lexical.isEndOfFile()) {
+                lexical.nextToken();
+            }
         } catch (LexicalException e) {
             assertEquals(e.getClass(), error);
         }
@@ -66,7 +69,9 @@ public class LexicalTest {
         String basepath = "src/main/java/lexical/test/";
         return Stream.of(
             Arguments.of(basepath + "00.ru", MalformedClassIdentifierException.class),
-            Arguments.of(basepath + "01.ru", MalformedClassIdentifierException.class)
+            Arguments.of(basepath + "01.ru", MalformedClassIdentifierException.class),
+                Arguments.of(basepath + "02.ru", InvalidCharacterException.class),
+                Arguments.of(basepath + "03.ru", MalformedIntLiteralException.class)
         );
     }
 }
