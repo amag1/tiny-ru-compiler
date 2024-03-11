@@ -221,8 +221,9 @@ public class LexicalAnalyzer implements Lexical{
             }
         }
 
-        if (!isLetter(currentChar) && !isWhitespace(currentChar)){
-            lexeme += currentChar;
+        // Last letter must be a letter
+        char lastChar = lexeme.charAt(lexeme.length()-1);
+        if (!isLetter(lastChar)){
             throw new MalformedClassIdentifierException(lexeme, location);
         }
 
@@ -251,7 +252,7 @@ public class LexicalAnalyzer implements Lexical{
         }
 
         if (isLetter(currentChar)) {
-            throw new MalformedIntLiteralException(lexeme, location);
+            throw new MalformedIntLiteralException(lexeme + currentChar, location);
         }
 
         return new Token(lexeme, Type.INT_LITERAL, startLocation);
