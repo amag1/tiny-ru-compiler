@@ -43,7 +43,7 @@ public class LexicalTest {
 
     @Test
     public void testClassNameStringException() {
-        LexicalException expectedError =   new MalformedClassIdentifierException("", new Location(1, 6));
+        LexicalException expectedError =   new MalformedClassIdentifierException("", new Location(1, 7));
         LexicalTestTokenFailure test = new LexicalTestTokenFailure("Class3", expectedError);
 
         test.run();
