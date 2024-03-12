@@ -100,39 +100,35 @@ public class LexicalAnalyzer implements Lexical{
         return token;
     }
 
-    private Token matchStringLiteral(Location startLocation) throws UnclosedStringLiteralException,MalformedStringLiteralException, InvalidCharacterException{
+    private Token matchStringLiteral(Location startLocation) throws UnclosedStringLiteralException, MalformedStringLiteralException, InvalidCharacterException, StringLiteralTooLongException {
+        consumePosition();
         if (isEndOfFile()) {
             reachedEndOfFile = true;
-            throw new UnclosedStringLiteralException("", location);
+            throw new UnclosedStringLiteralException("\"", location);
         }
-
         char currentChar = getCurrentChar();
-
-
-
-        String lexeme = "";
-        while (Character.compare(currentChar, '\"') != 0) {
-            if (isEndOfFile()) {
-                reachedEndOfFile = true;
-                throw new UnclosedStringLiteralException(lexeme, location);
-            }
-
+        String lexeme = "" + currentChar;
+        while (currentChar != '\"') {
             if (currentChar == '\\') {
-                location.increaseColumn();
-                location.increasePosition();
-                currentChar = getCurrentChar();
                 lexeme += matchEscapeChar();
             } else {
                 if (isValidChar(currentChar)) {
                     lexeme += currentChar;
-                    location.increaseColumn();
-                    location.increasePosition();
-                    currentChar = getCurrentChar();
                 } else {
                     throw new MalformedStringLiteralException(lexeme, location);
                 }
             }
 
+            consumePosition();
+            if (isEndOfFile()) {
+                reachedEndOfFile = true;
+                throw new UnclosedStringLiteralException(lexeme, location);
+            }
+            currentChar = getCurrentChar();
+
+        }
+        if (lexeme.length() > 1024) {
+            throw new StringLiteralTooLongException(lexeme, location);
         }
         consumePosition();
         return new Token(lexeme, Type.STRING_LITERAL, startLocation);
@@ -162,6 +158,10 @@ public class LexicalAnalyzer implements Lexical{
             } else {
                 if (currentChar == '\'') {
                     throw new EmptyCharLiteralException(location);
+                }
+
+                if (currentChar == '\0') {
+                    throw new InvalidCharacterException(currentChar, location);
                 }
                 throw new MalformedCharLiteralException(lexeme, location);
             }
@@ -331,14 +331,21 @@ public class LexicalAnalyzer implements Lexical{
     }
 
     private String matchEscapeChar() throws InvalidCharacterException {
+        // Consumes the backslash
         char currentChar = getCurrentChar();
         String returnString = "";
+
+        consumePosition();
+        if (isEndOfFile()) {
+            throw new InvalidCharacterException(currentChar, location);
+        }
+        currentChar = getCurrentChar();
         if (!isValidChar(currentChar)) {
             throw new InvalidCharacterException(currentChar, location);
         } else {
            switch (currentChar) {
                case '0':
-                   throw new InvalidCharacterException('\0', location);
+                throw new InvalidCharacterException(currentChar, location);
                case 'n':
                    returnString = "\n";
                    break;
@@ -373,6 +380,7 @@ public class LexicalAnalyzer implements Lexical{
                 || c == ':'
                 || c == ';'
                 || c == ','
+                || c == '\\'
                 || c == '+'
                 || c == '-'
                 || c == '*'
