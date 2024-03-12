@@ -31,49 +31,56 @@ public class LexicalAnalyzer implements Lexical{
         Location startLocation = location.copy();
         char currentChar = getCurrentChar();
 
-        // Consume position
-        location.increaseColumn();
-        location.increasePosition();
-
         Token token;
 
         switch (currentChar) {
             // Symbols
+            // Consume positiom
             case '(':
-                token = new Token("", Type.OPEN_PAR, startLocation);
+                consumePosition();
+                token = new Token(currentChar, Type.OPEN_PAR, startLocation);
                 break;
             case ')':
-                token = new Token("", Type.ID_CLASS, startLocation);
+                consumePosition();
+                token = new Token(currentChar, Type.CLOSE_PAR, startLocation);
                 break;
             case '{':
-                token = new Token("", Type.OPEN_CURLY, startLocation);
+                consumePosition();
+                token = new Token(currentChar, Type.OPEN_CURLY, startLocation);
                 break;
             case '}':
-                token = new Token("", Type.CLOSE_CURLY, startLocation);
+                consumePosition();
+                token = new Token(currentChar, Type.CLOSE_CURLY, startLocation);
                 break;
             case '[':
-                token = new Token("", Type.OPEN_BRACKET, startLocation);
+                consumePosition();
+                token = new Token(currentChar, Type.OPEN_BRACKET, startLocation);
                 break;
             case ']':
-                token = new Token("", Type.CLOSE_BRACKET, startLocation);
+                consumePosition();
+                token = new Token(currentChar, Type.CLOSE_BRACKET, startLocation);
                 break;
             case '.':
-                token = new Token("", Type.DOT, startLocation);
+                consumePosition();
+                token = new Token(currentChar, Type.DOT, startLocation);
                 break;
             case ':':
-                token = new Token("", Type.COLON, startLocation);
+                consumePosition();
+                token = new Token(currentChar, Type.COLON, startLocation);
                 break;
             case ';':
-                token = new Token("", Type.SEMICOLON, startLocation);
+                consumePosition();
+                token = new Token(currentChar, Type.SEMICOLON, startLocation);
                 break;
             case ',':
-                token = new Token("", Type.COMMA, startLocation);
+                consumePosition();
+                token = new Token(currentChar, Type.COMMA, startLocation);
                 break;
             case '\'':
-                token = matchCharLiteral(currentChar, startLocation);
+                token = matchCharLiteral(startLocation);
                 break;
             case '\"':
-                token = matchStringLiteral(currentChar, startLocation);
+                token = matchStringLiteral(startLocation);
                 break;
 
             // TODO operators
@@ -83,7 +90,7 @@ public class LexicalAnalyzer implements Lexical{
             // TODO string_literal
 
             default:
-                token = matchComplexString(currentChar, startLocation);
+                token = matchComplexString(startLocation);
         }
 
         if (token.getType() == null) {
@@ -93,7 +100,7 @@ public class LexicalAnalyzer implements Lexical{
         return token;
     }
 
-    private Token matchStringLiteral(char startChar, Location startLocation) throws UnclosedStringLiteralException,MalformedStringLiteralException, InvalidCharacterException{
+    private Token matchStringLiteral(Location startLocation) throws UnclosedStringLiteralException,MalformedStringLiteralException, InvalidCharacterException{
         if (isEndOfFile()) {
             reachedEndOfFile = true;
             throw new UnclosedStringLiteralException("", location);
@@ -127,12 +134,11 @@ public class LexicalAnalyzer implements Lexical{
             }
 
         }
-        location.increaseColumn();
-        location.increasePosition();
+        consumePosition();
         return new Token(lexeme, Type.STRING_LITERAL, startLocation);
     }
 
-    private Token matchCharLiteral(char startChar,Location startLocation) throws MalformedCharLiteralException, UnclosedCharLiteralException, InvalidCharacterException {
+    private Token matchCharLiteral(Location startLocation) throws MalformedCharLiteralException, UnclosedCharLiteralException, InvalidCharacterException {
         String lexeme = "";
 
         // Get next char
@@ -170,27 +176,26 @@ public class LexicalAnalyzer implements Lexical{
         }
 
 
-        location.increaseColumn();
-        location.increasePosition();
+        consumePosition();
 
         return new Token(lexeme, Type.CHAR_LITERAL, startLocation);
     }
 
-    private Token matchComplexString(char startChar, Location startLocation) throws LexicalException {
+    private Token matchComplexString(Location startLocation) throws LexicalException {
         Token token = new Token();
-
+        char startChar = getCurrentChar();
 
         if (isNumber(startChar)) {
-            token = matchIntLiteral(startChar, startLocation);
+            token = matchIntLiteral(startLocation);
         }
 
         if (isLetter(startChar)) {
             if (isUppercaseLetter(startChar)) {
                 // TODO check type declaration keywords (Char, Int, Bool, String)
-                token = matchClassIdentifier(startChar, startLocation);
+                token = matchClassIdentifier(startLocation);
             } else {
                 // TODO check keywords
-                token = matchIdentifier(startChar, startLocation);
+                token = matchIdentifier(startLocation);
             }
         }
         return token;
@@ -200,24 +205,22 @@ public class LexicalAnalyzer implements Lexical{
      * @return El siguiente token de tipo ID_CLASS, dadod que ya se matcheó el primer caracter
      * @throws MalformedClassIdentifierException
      */
-    private Token matchClassIdentifier(char startChar, Location startLocation) throws MalformedClassIdentifierException {
-        String lexeme = "" + startChar;
-
+    private Token matchClassIdentifier(Location startLocation) throws MalformedClassIdentifierException {
+        char currentChar = getCurrentChar();
+        String lexeme = "" + currentChar;
         if (isEndOfFile()) {
             reachedEndOfFile = true;
             return new Token(lexeme, Type.ID_CLASS, startLocation);
         }
 
-        char currentChar = getCurrentChar();
         while (!reachedEndOfFile && (isLetter(currentChar) || isNumber(currentChar))) {
-            lexeme += currentChar;
-            location.increaseColumn();
-            location.increasePosition();
+            consumePosition();
 
             if (isEndOfFile()) {
                 reachedEndOfFile = true;
             } else {
                 currentChar = getCurrentChar();
+                lexeme += currentChar;
             }
         }
 
@@ -229,24 +232,23 @@ public class LexicalAnalyzer implements Lexical{
         return new Token(lexeme, Type.ID_CLASS, startLocation);
     }
 
-    private Token matchIntLiteral(char startChar, Location startLocation) throws MalformedIntLiteralException{
-        String lexeme = "" + startChar;
+    private Token matchIntLiteral(Location startLocation) throws MalformedIntLiteralException{
+        char currentChar = getCurrentChar();
+        String lexeme = "" + currentChar;
 
         if (isEndOfFile()) {
             reachedEndOfFile = true;
             return new Token(lexeme, Type.INT_LITERAL, startLocation);
         }
 
-        char currentChar = chars[location.getPosition()];
         while (!reachedEndOfFile && isNumber(currentChar)) {
-            lexeme += currentChar;
-            location.increaseColumn();
-            location.increasePosition();
+            consumePosition();
 
             if (isEndOfFile()) {
                 reachedEndOfFile = true;
             } else {
                 currentChar = getCurrentChar();
+                lexeme += currentChar;
             }
         }
 
@@ -257,24 +259,24 @@ public class LexicalAnalyzer implements Lexical{
         return new Token(lexeme, Type.INT_LITERAL, startLocation);
     }
 
-    private Token matchIdentifier(char startChar, Location startLocation) throws LexicalException {
-        String lexeme = "" + startChar;
+    private Token matchIdentifier(Location startLocation) throws LexicalException {
+        char currentChar = getCurrentChar();
+        String lexeme = "" + currentChar;
 
         if (isEndOfFile()) {
             reachedEndOfFile = true;
             return new Token(lexeme, Type.ID, startLocation);
         }
 
-        char currentChar = chars[location.getPosition()];
+
         while (!reachedEndOfFile && (isLetter(currentChar) || isNumber(currentChar))) {
-            lexeme += currentChar;
-            location.increaseColumn();
-            location.increasePosition();
+            consumePosition();
 
             if (isEndOfFile()) {
                 reachedEndOfFile = true;
             } else {
                 currentChar = getCurrentChar();
+                lexeme += currentChar;
             }
         }
 
@@ -314,8 +316,7 @@ public class LexicalAnalyzer implements Lexical{
                     location.increasePosition();
                     location.setColumn(0);
                 } else {
-                    location.increaseColumn();
-                    location.increasePosition();
+                    consumePosition();
                 }
 
                 if (isEndOfFile()) {
@@ -400,6 +401,11 @@ public class LexicalAnalyzer implements Lexical{
                 || c == 'ó'
                 || c == 'ú'
                 || c == 'ñ';
+    }
+
+    private void consumePosition() {
+        location.increaseColumn();
+        location.increasePosition();
     }
 
     /**
