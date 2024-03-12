@@ -58,8 +58,9 @@ public class LexicalTest {
                 lexical.nextToken();
             }
         } catch (LexicalException e) {
-            assertEquals(e.getClass(), error);
+            assertEquals(e.getClass(), error, "Error en input: " + input);
         }
+
     }
 
     private static Stream<Arguments> provideStringsForClassName() {
@@ -70,7 +71,12 @@ public class LexicalTest {
                 Arguments.of(basepath + "02.ru", InvalidCharacterException.class),
                 Arguments.of(basepath + "03.ru", MalformedIntLiteralException.class),
                 Arguments.of(basepath + "04.ru", InvalidCharacterException.class),
-                Arguments.of(basepath + "05.ru", UnclosedStringLiteralException.class)
+                Arguments.of(basepath + "05.ru", UnclosedStringLiteralException.class),
+                Arguments.of(basepath + "06.ru", MalformedCharLiteralException.class),
+                Arguments.of(basepath + "07.ru", EmptyCharLiteralException.class),
+                Arguments.of(basepath + "08.ru", UnclosedCharLiteralException.class),
+                Arguments.of(basepath + "09.ru", InvalidCharacterException.class)
+
         );
     }
 }

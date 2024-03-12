@@ -138,18 +138,20 @@ public class LexicalAnalyzer implements Lexical{
         return new Token(lexeme, Type.STRING_LITERAL, startLocation);
     }
 
-    private Token matchCharLiteral(Location startLocation) throws MalformedCharLiteralException, UnclosedCharLiteralException, InvalidCharacterException {
+    private Token matchCharLiteral(Location startLocation) throws MalformedCharLiteralException, UnclosedCharLiteralException, InvalidCharacterException, EmptyCharLiteralException {
+        // Start char should be '
+        char currentChar = getCurrentChar();
         String lexeme = "";
 
-        // Get next char
-        char currentChar = getCurrentChar();
-
+        consumePosition();
         if (isEndOfFile()) {
             reachedEndOfFile = true;
             throw new UnclosedCharLiteralException(lexeme, location);
         }
 
         Token token;
+
+        currentChar = getCurrentChar();
         if (currentChar == '\\') {
             lexeme += matchEscapeChar();
         } else {
@@ -158,6 +160,9 @@ public class LexicalAnalyzer implements Lexical{
                 location.increaseColumn();
                 location.increasePosition();
             } else {
+                if (currentChar == '\'') {
+                    throw new EmptyCharLiteralException(location);
+                }
                 throw new MalformedCharLiteralException(lexeme, location);
             }
         }
@@ -170,11 +175,8 @@ public class LexicalAnalyzer implements Lexical{
         currentChar = getCurrentChar();
         if (currentChar != '\'') {
             lexeme += currentChar;
-            location.increaseColumn();
-            location.increasePosition();
             throw new MalformedCharLiteralException(lexeme, location);
         }
-
 
         consumePosition();
 
@@ -371,8 +373,6 @@ public class LexicalAnalyzer implements Lexical{
                 || c == ':'
                 || c == ';'
                 || c == ','
-                || c == '\''
-                || c == '\\'
                 || c == '+'
                 || c == '-'
                 || c == '*'
