@@ -21,4 +21,24 @@ public enum Type {
     COLON,
     SEMICOLON,
     COMMA,
+
+    // Arithmetic Operators
+    MULT,
+    MOD,
+    DIV,
+    PLUS,
+    MINUS,
+    DPLUS,
+    DMINUS,
+
+    // Other operators
+    ASSIGN,
+    EQUAL,
+    GREATER,
+    GREATER_EQUAL,
+    LESS,
+    LESS_EQUAL,
+    NEG,
+    NOT_EQUAL,
+
 }

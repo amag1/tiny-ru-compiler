@@ -9,10 +9,10 @@ import java.util.List;
 import java.util.ArrayList;
 public class Executor {
     public static void main(String[] args) {
-        Lexical lexical = new LexicalAnalyzer(new StringReader("Hola facha como estas"));
+        Lexical lexical = new LexicalAnalyzer(new StringReader("Intx=5!+++-!==="));
         Logger log = new ConsoleLogger();
         try {
-            List<Token> tokens = new ArrayList<Token>();
+            List<Token> tokens = new ArrayList<>();
             while (!lexical.isEndOfFile()) {
                 tokens.add(lexical.nextToken());
             }
