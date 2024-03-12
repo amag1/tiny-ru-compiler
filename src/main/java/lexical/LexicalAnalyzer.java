@@ -336,19 +336,12 @@ public class LexicalAnalyzer implements Lexical{
         if (!isValidChar(currentChar)) {
             throw new InvalidCharacterException(currentChar, location);
         } else {
-           switch (currentChar) {
-               case '0':
-                throw new InvalidCharacterException(currentChar, location);
-               case 'n':
-                   returnString = "\n";
-                   break;
-               case 't':
-                   returnString = "\t";
-                   break;
-               default:
-                   returnString = "" + currentChar;
-                   break;
-           }
+            returnString = switch (currentChar) {
+                case '0' -> throw new InvalidCharacterException(currentChar, location);
+                case 'n' -> "\n";
+                case 't' -> "\t";
+                default -> "" + currentChar;
+            };
         }
         return returnString;
     }
