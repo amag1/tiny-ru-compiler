@@ -209,20 +209,20 @@ public class LexicalAnalyzer implements Lexical{
      */
     private Token matchClassIdentifier(Location startLocation) throws MalformedClassIdentifierException {
         char currentChar = getCurrentChar();
-        String lexeme = "" + currentChar;
+        String lexeme = "";
         if (isEndOfFile()) {
             reachedEndOfFile = true;
             return new Token(lexeme, Type.ID_CLASS, startLocation);
         }
 
         while (!reachedEndOfFile && (isLetter(currentChar) || isNumber(currentChar))) {
+            lexeme += currentChar;
             consumePosition();
-
             if (isEndOfFile()) {
                 reachedEndOfFile = true;
             } else {
                 currentChar = getCurrentChar();
-                lexeme += currentChar;
+
             }
         }
 
@@ -264,7 +264,7 @@ public class LexicalAnalyzer implements Lexical{
 
     private Token matchIdentifier(Location startLocation) throws LexicalException {
         char currentChar = getCurrentChar();
-        String lexeme = "" + currentChar;
+        String lexeme = "";
 
         if (isEndOfFile()) {
             reachedEndOfFile = true;
@@ -273,13 +273,13 @@ public class LexicalAnalyzer implements Lexical{
 
 
         while (!reachedEndOfFile && (isLetter(currentChar) || isNumber(currentChar))) {
+            lexeme += currentChar;
             consumePosition();
 
             if (isEndOfFile()) {
                 reachedEndOfFile = true;
             } else {
                 currentChar = getCurrentChar();
-                lexeme += currentChar;
             }
         }
 
