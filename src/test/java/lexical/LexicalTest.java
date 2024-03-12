@@ -20,7 +20,7 @@ public class LexicalTest {
     public void testClassNameStringSuccess() {
         String codeText = "Class";
         Token[] expectedTokens = {
-                new Token("Class", Type.ID_CLASS, new Location(1, 0)),
+                new Token("Class", Type.ID_CLASS, new Location(1, 1)),
         };
 
         LexicalTestTokenSuccess test = new LexicalTestTokenSuccess(codeText, expectedTokens);
@@ -32,8 +32,8 @@ public class LexicalTest {
     public void MultipleIdsSuccess() {
         String codeText = "pepe meshna";
         Token[] expectedTokens = {
-                new Token("pepe", Type.ID, new Location(1, 0)),
-                new Token("meshna", Type.ID, new Location(1, 5)),
+                new Token("pepe", Type.ID, new Location(1, 1)),
+                new Token("meshna", Type.ID, new Location(1, 6)),
         };
 
         LexicalTestTokenSuccess test = new LexicalTestTokenSuccess(codeText, expectedTokens);
@@ -43,7 +43,7 @@ public class LexicalTest {
 
     @Test
     public void testClassNameStringException() {
-        LexicalException expectedError =   new MalformedClassIdentifierException("", new Location(1, 6));
+        LexicalException expectedError =   new MalformedClassIdentifierException("", new Location(1, 7));
         LexicalTestTokenFailure test = new LexicalTestTokenFailure("Class3", expectedError);
 
         test.run();
@@ -58,7 +58,7 @@ public class LexicalTest {
                 lexical.nextToken();
             }
         } catch (LexicalException e) {
-            assertEquals(e.getClass(), error);
+            assertEquals(error, e.getClass(), "File: " + input);
         }
     }
 
@@ -66,7 +66,7 @@ public class LexicalTest {
         String basepath = "src/main/java/lexical/test/";
         return Stream.of(
             Arguments.of(basepath + "00.ru", MalformedClassIdentifierException.class),
-            Arguments.of(basepath + "01.ru", MalformedClassIdentifierException.class),
+            Arguments.of(basepath + "01.ru", InvalidCharacterException.class),
                 Arguments.of(basepath + "02.ru", InvalidCharacterException.class),
                 Arguments.of(basepath + "03.ru", MalformedIntLiteralException.class),
                 Arguments.of(basepath + "04.ru", InvalidCharacterException.class),
