@@ -15,6 +15,13 @@ public class Token {
         this.location = location;
     }
 
+    public Token(char lexeme, Type type, Location location) {
+        this.lexeme = String.valueOf(lexeme);
+        this.type = type;
+        this.location = location;
+    }
+
+
     public String getLexem() {
         return lexeme;
     }
