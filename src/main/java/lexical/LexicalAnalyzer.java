@@ -107,7 +107,7 @@ public class LexicalAnalyzer implements Lexical{
             throw new UnclosedStringLiteralException("\"", location);
         }
         char currentChar = getCurrentChar();
-        String lexeme = "" + currentChar;
+        String lexeme = "";
         while (currentChar != '\"') {
             if (currentChar == '\\') {
                 lexeme += matchEscapeChar();

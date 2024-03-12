@@ -57,6 +57,7 @@ public class LexicalTest {
         while(!lexical.isEndOfFile()) {
                 lexical.nextToken();
             }
+        fail("Se esperaba una excepción en input " + input);
         } catch (LexicalException e) {
             assertEquals(e.getClass(), error, "Error en input: " + input + ", se esperaba: " + e.getClass());
         }
