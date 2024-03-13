@@ -24,7 +24,7 @@ public enum Type {
 
     // Keywords
     KW_STRUCT,
-    KW_IMPL,
+    KW_IMPL, // Implements
     KW_ELSE,
     KW_FALSE,
     KW_IF,
