@@ -21,4 +21,22 @@ public enum Type {
     COLON,
     SEMICOLON,
     COMMA,
+
+    // Keywords
+    KW_STRUCT,
+    KW_IMPL,
+    KW_ELSE,
+    KW_FALSE,
+    KW_IF,
+    KW_RET, // Return
+    KW_WHILE,
+    KW_TRUE,
+    KW_NIL,
+    KW_NEW,
+    KW_FN, // Function
+    KW_ST, // Static
+    KW_PRI, // Private
+    KW_SELF,
+    KW_VOID,
+
 }
