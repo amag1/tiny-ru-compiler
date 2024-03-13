@@ -7,4 +7,7 @@ public interface Lexical {
     public boolean isEndOfFile();
     public int getColumn();
     public int getLine();
+    public void removeWhitespaces();
+    public void removeComments() throws LexicalException;
+
 }

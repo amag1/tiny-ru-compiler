@@ -14,7 +14,12 @@ public class Executor {
         try {
             List<Token> tokens = new ArrayList<Token>();
             while (!lexical.isEndOfFile()) {
-                tokens.add(lexical.nextToken());
+                lexical.removeWhitespaces();
+                lexical.removeComments();
+
+                if (!lexical.isEndOfFile()) {
+                    tokens.add(lexical.nextToken());
+                }
             }
 
             log.LogLexicSuccess(tokens);

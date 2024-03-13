@@ -24,7 +24,6 @@ public class LexicalAnalyzer implements Lexical{
      */
     @Override
     public Token nextToken() throws LexicalException {
-        removeWhitespaces();
         // TODO: remove comments
         // TODO: remove tabs
 
@@ -310,7 +309,7 @@ public class LexicalAnalyzer implements Lexical{
         return c == ' ' || c == '\t' || c == '\n' || c == '\r';
     }
 
-    private void removeWhitespaces() {
+    public void removeWhitespaces() {
         if (!reachedEndOfFile) {
             char currentChar = getCurrentChar();
             while (isWhitespace(currentChar) && !reachedEndOfFile) {
@@ -329,6 +328,29 @@ public class LexicalAnalyzer implements Lexical{
                 }
             }
         }
+    }
+
+    public void removeComments() throws LexicalException {
+        char currentChar = getCurrentChar();
+
+        // Check if first char is '\'
+        if (currentChar == '\\') {
+            consumePosition();
+
+            currentChar = getCurrentChar();
+
+            // Check if following char is '?'
+            if (currentChar == '?') {
+                while (!isEndOfFile() && currentChar != '\n') {
+                    consumePosition();
+                    currentChar = getCurrentChar();
+                }
+            } else {
+                // If char is not '?' return error
+                throw new InvalidToken(location);
+            }
+        }
+
     }
 
     private String matchEscapeChar() throws InvalidCharacterException {
