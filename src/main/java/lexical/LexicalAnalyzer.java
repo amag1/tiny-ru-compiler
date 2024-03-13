@@ -8,8 +8,6 @@ public class LexicalAnalyzer implements Lexical {
     private final char[] chars;
     private final Location location;
     private boolean reachedEndOfFile = false;
-    private static final Keyword keyword = new Keyword();
-    private static final PrimitiveType primitiveType = new PrimitiveType();
 
     /**
      * @param reader El lector de caracteres
@@ -182,7 +180,6 @@ public class LexicalAnalyzer implements Lexical {
 
         if (isLetter(startChar)) {
             if (isUppercaseLetter(startChar)) {
-                // TODO check type declaration keywords (Char, Int, Bool, String)
                 token = matchClassIdentifier(startLocation);
             } else {
                 token = matchIdentifier(startLocation);
@@ -222,8 +219,8 @@ public class LexicalAnalyzer implements Lexical {
 
         Token token = null;
         // Check if it is a type keyword
-        if (primitiveType.getType(lexeme) != null) {
-            token = new Token(lexeme, primitiveType.getType(lexeme), startLocation);
+        if (PrimitiveType.getType(lexeme) != null) {
+            token = new Token(lexeme, PrimitiveType.getType(lexeme), startLocation);
         } else {
             token = new Token(lexeme, Type.ID_CLASS, startLocation);
         }
