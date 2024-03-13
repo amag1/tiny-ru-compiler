@@ -24,7 +24,6 @@ public class LexicalAnalyzer implements Lexical{
      */
     @Override
     public Token nextToken() throws LexicalException {
-        // TODO: remove comments
         // TODO: remove tabs
 
         Location startLocation = location.copy();
@@ -331,26 +330,33 @@ public class LexicalAnalyzer implements Lexical{
     }
 
     public void removeComments() throws LexicalException {
-        char currentChar = getCurrentChar();
+        if (!isEndOfFile()) {
+            char currentChar = getCurrentChar();
 
-        // Check if first char is '\'
-        if (currentChar == '\\') {
-            consumePosition();
+            // Check if first char is '\'
+            if (currentChar == '\\') {
+                consumePosition();
 
-            currentChar = getCurrentChar();
+                currentChar = getCurrentChar();
 
-            // Check if following char is '?'
-            if (currentChar == '?') {
-                while (!isEndOfFile() && currentChar != '\n') {
-                    consumePosition();
-                    currentChar = getCurrentChar();
+                // Check if following char is '?'
+                if (currentChar == '?') {
+                    boolean newLine = false;
+                    while (!isEndOfFile() && !newLine) {
+                        consumePosition();
+
+                        if (currentChar == '\n')  {
+                            newLine = true;
+                        }
+
+                        currentChar = getCurrentChar();
+                    }
+                } else {
+                    // If char is not '?' return error
+                    throw new InvalidToken(location);
                 }
-            } else {
-                // If char is not '?' return error
-                throw new InvalidToken(location);
             }
         }
-
     }
 
     private String matchEscapeChar() throws InvalidCharacterException {
