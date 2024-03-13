@@ -3,10 +3,13 @@ package lexical;
 import exceptions.lexical.*;
 import location.Location;
 import reader.Reader;
-public class LexicalAnalyzer implements Lexical{
+
+public class LexicalAnalyzer implements Lexical {
     private final char[] chars;
     private final Location location;
     private boolean reachedEndOfFile = false;
+    private static final Keyword keyword = new Keyword();
+    private static final PrimitiveType primitiveType = new PrimitiveType();
 
     /**
      * @param reader El lector de caracteres
@@ -75,12 +78,6 @@ public class LexicalAnalyzer implements Lexical{
             }
             case '\'' -> matchCharLiteral(startLocation);
             case '\"' -> matchStringLiteral(startLocation);
-
-            // TODO operators
-
-            // TODO char_literal
-
-            // TODO string_literal
 
             default -> matchComplexString(startLocation);
         };
@@ -218,29 +215,23 @@ public class LexicalAnalyzer implements Lexical{
         }
 
         // Last letter must be a letter
-        char lastChar = lexeme.charAt(lexeme.length()-1);
-        if (!isLetter(lastChar)){
+        char lastChar = lexeme.charAt(lexeme.length() - 1);
+        if (!isLetter(lastChar)) {
             throw new MalformedClassIdentifierException(lexeme, location);
         }
 
         Token token = null;
         // Check if it is a type keyword
-        if (lexeme.equals("Int") || lexeme.equals("Char") || lexeme.equals("String") || lexeme.equals("Bool")) {
-            token = new Token(lexeme, Type.valueOf("TYPE_" + lexeme.toUpperCase()), startLocation);
-        }
-
-        if (lexeme.equals("Array")) {
-            token = new Token(lexeme, Type.ARRAY, startLocation);
-        }
-
-        if (token == null){
+        if (primitiveType.getType(lexeme) != null) {
+            token = new Token(lexeme, primitiveType.getType(lexeme), startLocation);
+        } else {
             token = new Token(lexeme, Type.ID_CLASS, startLocation);
         }
 
         return token;
     }
 
-    private Token matchIntLiteral(Location startLocation) throws MalformedIntLiteralException{
+    private Token matchIntLiteral(Location startLocation) throws MalformedIntLiteralException {
         char currentChar = getCurrentChar();
         String lexeme = "" + currentChar;
 
@@ -295,13 +286,10 @@ public class LexicalAnalyzer implements Lexical{
         Token token = null;
 
         // Check if it is a keyword
-        switch (lexeme) {
-            case "struct", "impl",  "else", "false", "if", "ret", "while", "true", "nil",
-                    "new", "fn", "st", "pri", "self", "void":
-                token = new Token(lexeme, Type.valueOf("KW_" + lexeme.toUpperCase()), startLocation);
-                break;
-            default:
-                token = new Token(lexeme, Type.ID, startLocation);
+        if (Keyword.getKeywordType(lexeme) != null) {
+            token = new Token(lexeme, Keyword.getKeywordType(lexeme), startLocation);
+        } else {
+            token = new Token(lexeme, Type.ID, startLocation);
         }
 
         return token;
