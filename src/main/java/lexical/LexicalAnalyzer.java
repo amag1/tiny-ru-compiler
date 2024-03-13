@@ -188,7 +188,6 @@ public class LexicalAnalyzer implements Lexical{
                 // TODO check type declaration keywords (Char, Int, Bool, String)
                 token = matchClassIdentifier(startLocation);
             } else {
-                // TODO check keywords
                 token = matchIdentifier(startLocation);
             }
         }
@@ -293,7 +292,19 @@ public class LexicalAnalyzer implements Lexical{
             throw new IdentifierTooLongException(lexeme, location);
         }
 
-        return new Token(lexeme, Type.ID, startLocation);
+        Token token = null;
+
+        // Check if it is a keyword
+        switch (lexeme) {
+            case "struct", "impl",  "else", "false", "if", "ret", "while", "true", "nil",
+                    "new", "fn", "st", "pri", "self", "void":
+                token = new Token(lexeme, Type.valueOf("KW_" + lexeme.toUpperCase()), startLocation);
+                break;
+            default:
+                token = new Token(lexeme, Type.ID, startLocation);
+        }
+
+        return token;
     }
 
     private boolean isLetter(char c) {
