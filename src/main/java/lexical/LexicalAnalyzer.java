@@ -73,14 +73,27 @@ public class LexicalAnalyzer implements Lexical{
                 consumePosition();
                 yield new Token(currentChar, Type.COMMA, startLocation);
             }
+            case '*' -> {
+                consumePosition();
+                yield new Token(currentChar, Type.MULT, startLocation);
+            }
+            case '%' -> {
+                consumePosition();
+                yield new Token(currentChar, Type.MOD, startLocation);
+            }
+            case '/' -> {
+                consumePosition();
+                yield new Token(currentChar, Type.DIV, startLocation);
+            }
+            case '+' -> matchPlusSign(startLocation);
+            case '-' -> matchMinusSign(startLocation);
+            case '=' -> matchEqualSign(startLocation);
+            case '>' -> matchGreaterThan(startLocation);
+            case '<' -> matchLessSign(startLocation);
+            case '!' -> matchNotEqual(startLocation);
             case '\'' -> matchCharLiteral(startLocation);
             case '\"' -> matchStringLiteral(startLocation);
 
-            // TODO operators
-
-            // TODO char_literal
-
-            // TODO string_literal
 
             default -> matchComplexString(startLocation);
         };
@@ -90,6 +103,92 @@ public class LexicalAnalyzer implements Lexical{
         }
 
         return token;
+    }
+
+    private Token matchNotEqual(Location startLocation) {
+        consumePosition();
+        if (isEndOfFile()) {
+            reachedEndOfFile = true;
+            return new Token('!', Type.NEG, startLocation);
+        }
+        char currentChar = getCurrentChar();
+        if (currentChar == '=') {
+            consumePosition();
+            return new Token("!=", Type.NOT_EQUAL, startLocation);
+        }
+        return new Token('!', Type.NEG, startLocation);
+    }
+
+    private Token matchGreaterThan(Location startLocation) {
+        consumePosition();
+        if (isEndOfFile()) {
+            reachedEndOfFile = true;
+            return new Token('>', Type.GREATER, startLocation);
+        }
+        char currentChar = getCurrentChar();
+        if (currentChar == '=') {
+            consumePosition();
+            return new Token(">=", Type.GREATER_EQUAL, startLocation);
+        }
+        return new Token('>', Type.GREATER, startLocation);
+    }
+
+    private Token matchLessSign(Location startLocation) {
+        consumePosition();
+        if (isEndOfFile()) {
+            reachedEndOfFile = true;
+            return new Token('<', Type.LESS, startLocation);
+        }
+        char currentChar = getCurrentChar();
+        if (currentChar == '=') {
+            consumePosition();
+            return new Token("<=", Type.LESS_EQUAL, startLocation);
+        }
+        return new Token('<', Type.LESS, startLocation);
+    }
+
+
+
+    private Token matchEqualSign(Location startLocation) {
+        consumePosition();
+        if (isEndOfFile()) {
+            reachedEndOfFile = true;
+            return new Token('=', Type.ASSIGN, startLocation);
+        }
+        char currentChar = getCurrentChar();
+        if (currentChar == '=') {
+            consumePosition();
+            return new Token("==", Type.EQUAL, startLocation);
+        }
+        return new Token('=', Type.ASSIGN, startLocation);
+    }
+
+    private Token matchPlusSign(Location startLocation) {
+        consumePosition();
+        if (isEndOfFile()) {
+            reachedEndOfFile = true;
+            return new Token('+', Type.PLUS, startLocation);
+        }
+        char currentChar = getCurrentChar();
+        if (currentChar == '+') {
+            consumePosition();
+            return new Token("++", Type.DPLUS, startLocation);
+        }
+        return new Token('+', Type.PLUS, startLocation);
+    }
+
+    private Token matchMinusSign(Location startLocation) {
+        consumePosition();
+        if (isEndOfFile()) {
+            reachedEndOfFile = true;
+            return new Token('-', Type.MINUS, startLocation);
+        }
+        char currentChar = getCurrentChar();
+        if (currentChar == '-') {
+            consumePosition();
+            return new Token("--", Type.DMINUS, startLocation);
+        }
+        return new Token('-', Type.MINUS, startLocation);
     }
 
     private Token matchStringLiteral(Location startLocation) throws UnclosedStringLiteralException, MalformedStringLiteralException, InvalidCharacterException, StringLiteralTooLongException {
@@ -242,21 +341,21 @@ public class LexicalAnalyzer implements Lexical{
 
     private Token matchIntLiteral(Location startLocation) throws MalformedIntLiteralException{
         char currentChar = getCurrentChar();
-        String lexeme = "" + currentChar;
 
         if (isEndOfFile()) {
             reachedEndOfFile = true;
-            return new Token(lexeme, Type.INT_LITERAL, startLocation);
+            return new Token(currentChar, Type.INT_LITERAL, startLocation);
         }
 
+        String lexeme = "";
         while (!reachedEndOfFile && isNumber(currentChar)) {
+            lexeme += currentChar;
             consumePosition();
 
             if (isEndOfFile()) {
                 reachedEndOfFile = true;
             } else {
                 currentChar = getCurrentChar();
-                lexeme += currentChar;
             }
         }
 
