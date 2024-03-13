@@ -22,6 +22,12 @@ public class CharUtils {
         return c == ' ' || c == '\t' || c == '\n' || c == '\r' || c == '\u000b';
     }
 
+    /**
+     * @param c caracter que deseamos saber si es valido
+     * @return un boolean diciendo si es valido o no
+     *
+     * Esta funcion solo deberia usarse para comments y strings
+     */
     public static boolean isValidChar(char c) {
         // Common char types
         return isNumber(c)

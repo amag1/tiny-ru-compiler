@@ -106,89 +106,47 @@ public class LexicalAnalyzer implements Lexical{
     }
 
     private Token matchNotEqual(Location startLocation) {
-        consumePosition();
-        if (isEndOfFile()) {
-            reachedEndOfFile = true;
-            return new Token('!', Type.NEG, startLocation);
-        }
-        char currentChar = getCurrentChar();
-        if (currentChar == '=') {
-            consumePosition();
-            return new Token("!=", Type.NOT_EQUAL, startLocation);
-        }
-        return new Token('!', Type.NEG, startLocation);
+        return matchOneOrTwoCharToken(startLocation, '!', '=');
     }
 
     private Token matchGreaterThan(Location startLocation) {
-        consumePosition();
-        if (isEndOfFile()) {
-            reachedEndOfFile = true;
-            return new Token('>', Type.GREATER, startLocation);
-        }
-        char currentChar = getCurrentChar();
-        if (currentChar == '=') {
-            consumePosition();
-            return new Token(">=", Type.GREATER_EQUAL, startLocation);
-        }
-        return new Token('>', Type.GREATER, startLocation);
+        return matchOneOrTwoCharToken(startLocation, '>', '=');
     }
 
     private Token matchLessSign(Location startLocation) {
-        consumePosition();
-        if (isEndOfFile()) {
-            reachedEndOfFile = true;
-            return new Token('<', Type.LESS, startLocation);
-        }
-        char currentChar = getCurrentChar();
-        if (currentChar == '=') {
-            consumePosition();
-            return new Token("<=", Type.LESS_EQUAL, startLocation);
-        }
-        return new Token('<', Type.LESS, startLocation);
+        return matchOneOrTwoCharToken(startLocation, '<', '=');
     }
 
-
-
     private Token matchEqualSign(Location startLocation) {
-        consumePosition();
-        if (isEndOfFile()) {
-            reachedEndOfFile = true;
-            return new Token('=', Type.ASSIGN, startLocation);
-        }
-        char currentChar = getCurrentChar();
-        if (currentChar == '=') {
-            consumePosition();
-            return new Token("==", Type.EQUAL, startLocation);
-        }
-        return new Token('=', Type.ASSIGN, startLocation);
+        return matchOneOrTwoCharToken(startLocation, '=', '=');
     }
 
     private Token matchPlusSign(Location startLocation) {
-        consumePosition();
-        if (isEndOfFile()) {
-            reachedEndOfFile = true;
-            return new Token('+', Type.PLUS, startLocation);
-        }
-        char currentChar = getCurrentChar();
-        if (currentChar == '+') {
-            consumePosition();
-            return new Token("++", Type.DPLUS, startLocation);
-        }
-        return new Token('+', Type.PLUS, startLocation);
+        return matchOneOrTwoCharToken(startLocation, '+', '+');
     }
 
     private Token matchMinusSign(Location startLocation) {
+        return matchOneOrTwoCharToken(startLocation, '-', '-');
+    }
+
+    private Token matchOneOrTwoCharToken(Location startLocation, char firstChar, char secondChar) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(firstChar);
         consumePosition();
         if (isEndOfFile()) {
+            String lexeme = sb.toString();
             reachedEndOfFile = true;
-            return new Token('-', Type.MINUS, startLocation);
+            return new Token(lexeme, PredefinedLexemeMap.getType(lexeme), startLocation);
         }
+
         char currentChar = getCurrentChar();
-        if (currentChar == '-') {
+        if (currentChar == secondChar) {
             consumePosition();
-            return new Token("--", Type.DMINUS, startLocation);
+            String lexeme = sb.append(secondChar).toString();
+            return new Token(lexeme, PredefinedLexemeMap.getType(lexeme), startLocation);
         }
-        return new Token('-', Type.MINUS, startLocation);
+        String lexeme = sb.toString();
+        return new Token(lexeme, PredefinedLexemeMap.getType(lexeme), startLocation);
     }
 
     private Token matchStringLiteral(Location startLocation) throws UnclosedStringLiteralException, MalformedStringLiteralException, InvalidCharacterException, StringLiteralTooLongException {
