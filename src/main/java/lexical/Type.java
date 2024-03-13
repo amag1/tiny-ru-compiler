@@ -31,6 +31,26 @@ public enum Type {
     SEMICOLON,
     COMMA,
 
+    // Arithmetic Operators
+    MULT,
+    MOD,
+    DIV,
+    PLUS,
+    MINUS,
+    DPLUS,
+    DMINUS,
+
+    // Other operators
+    ASSIGN,
+    EQUAL,
+    GREATER,
+    GREATER_EQUAL,
+    LESS,
+    LESS_EQUAL,
+    NEG,
+    NOT_EQUAL,
+
+
     // Keywords
     KW_STRUCT,
     KW_IMPL, // Implements
