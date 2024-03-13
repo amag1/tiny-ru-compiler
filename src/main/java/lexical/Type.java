@@ -5,6 +5,14 @@ public enum Type {
     ID_CLASS,
     ID,
 
+    // Type
+    TYPE_INT,
+    TYPE_CHAR,
+    TYPE_STRING,
+    TYPE_BOOL,
+    ARRAY,
+
+
     // Literals
     INT_LITERAL,
     CHAR_LITERAL,

@@ -9,7 +9,8 @@ import java.util.List;
 import java.util.ArrayList;
 public class Executor {
     public static void main(String[] args) {
-        Lexical lexical = new LexicalAnalyzer(new StringReader("Intx=5!+++-!==="));
+
+        Lexical lexical = new LexicalAnalyzer(new StringReader("\"hola\""));
         Logger log = new ConsoleLogger();
         try {
             List<Token> tokens = new ArrayList<>();

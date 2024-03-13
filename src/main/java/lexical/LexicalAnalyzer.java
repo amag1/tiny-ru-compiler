@@ -198,7 +198,7 @@ public class LexicalAnalyzer implements Lexical{
             throw new UnclosedStringLiteralException("\"", location);
         }
         char currentChar = getCurrentChar();
-        String lexeme = "" + currentChar;
+        String lexeme = "";
         while (currentChar != '\"') {
             if (currentChar == '\\') {
                 lexeme += matchEscapeChar();
@@ -323,7 +323,21 @@ public class LexicalAnalyzer implements Lexical{
             throw new MalformedClassIdentifierException(lexeme, location);
         }
 
-        return new Token(lexeme, Type.ID_CLASS, startLocation);
+        Token token = null;
+        // Check if it is a type keyword
+        if (lexeme.equals("Int") || lexeme.equals("Char") || lexeme.equals("String") || lexeme.equals("Bool")) {
+            token = new Token(lexeme, Type.valueOf("TYPE_" + lexeme.toUpperCase()), startLocation);
+        }
+
+        if (lexeme.equals("Array")) {
+            token = new Token(lexeme, Type.ARRAY, startLocation);
+        }
+
+        if (token == null){
+            token = new Token(lexeme, Type.ID_CLASS, startLocation);
+        }
+
+        return token;
     }
 
     private Token matchIntLiteral(Location startLocation) throws MalformedIntLiteralException{
