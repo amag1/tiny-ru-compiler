@@ -17,6 +17,7 @@ public class Executor {
             while (!lexical.isEndOfFile()) {
                 lexical.removeWhitespaces();
                 lexical.removeComments();
+                lexical.removeWhitespaces();
 
                 if (!lexical.isEndOfFile()) {
                     tokens.add(lexical.nextToken());
