@@ -49,4 +49,22 @@ public enum Type {
     NEG,
     NOT_EQUAL,
 
+
+    // Keywords
+    KW_STRUCT,
+    KW_IMPL, // Implements
+    KW_ELSE,
+    KW_FALSE,
+    KW_IF,
+    KW_RET, // Return
+    KW_WHILE,
+    KW_TRUE,
+    KW_NIL,
+    KW_NEW,
+    KW_FN, // Function
+    KW_ST, // Static
+    KW_PRI, // Private
+    KW_SELF,
+    KW_VOID,
+
 }
