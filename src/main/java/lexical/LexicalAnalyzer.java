@@ -99,7 +99,7 @@ public class LexicalAnalyzer implements Lexical {
             if (currentChar == '\\') {
                 lexeme += matchEscapeChar();
             } else {
-                if (isValidChar(currentChar)) {
+                if (CharUtils.isValidChar(currentChar)) {
                     lexeme += currentChar;
                 } else {
                     throw new MalformedStringLiteralException(lexeme, location);
@@ -138,10 +138,9 @@ public class LexicalAnalyzer implements Lexical {
         if (currentChar == '\\') {
             lexeme += matchEscapeChar();
         } else {
-            if (isValidChar(currentChar)) {
+            if (CharUtils.isValidChar(currentChar)) {
                 lexeme += currentChar;
-                location.increaseColumn();
-                location.increasePosition();
+                consumePosition();
             } else {
                 if (currentChar == '\'') {
                     throw new EmptyCharLiteralException(location);
@@ -174,12 +173,12 @@ public class LexicalAnalyzer implements Lexical {
         Token token = new Token();
         char startChar = getCurrentChar();
 
-        if (isNumber(startChar)) {
+        if (CharUtils.isNumber(startChar)) {
             token = matchIntLiteral(startLocation);
         }
 
-        if (isLetter(startChar)) {
-            if (isUppercaseLetter(startChar)) {
+        if (CharUtils.isLetter(startChar)) {
+            if (CharUtils.isUppercaseLetter(startChar)) {
                 token = matchClassIdentifier(startLocation);
             } else {
                 token = matchIdentifier(startLocation);
@@ -200,7 +199,7 @@ public class LexicalAnalyzer implements Lexical {
             return new Token(lexeme, Type.ID_CLASS, startLocation);
         }
 
-        while (!reachedEndOfFile && (isLetter(currentChar) || isNumber(currentChar))) {
+        while (!reachedEndOfFile && (CharUtils.isLetter(currentChar) || CharUtils.isNumber(currentChar))) {
             lexeme += currentChar;
             consumePosition();
             if (isEndOfFile()) {
@@ -213,7 +212,7 @@ public class LexicalAnalyzer implements Lexical {
 
         // Last letter must be a letter
         char lastChar = lexeme.charAt(lexeme.length() - 1);
-        if (!isLetter(lastChar)) {
+        if (!CharUtils.isLetter(lastChar)) {
             throw new MalformedClassIdentifierException(lexeme, location);
         }
 
@@ -237,7 +236,7 @@ public class LexicalAnalyzer implements Lexical {
             return new Token(lexeme, Type.INT_LITERAL, startLocation);
         }
 
-        while (!reachedEndOfFile && isNumber(currentChar)) {
+        while (!reachedEndOfFile && CharUtils.isNumber(currentChar)) {
             consumePosition();
 
             if (isEndOfFile()) {
@@ -248,7 +247,7 @@ public class LexicalAnalyzer implements Lexical {
             }
         }
 
-        if (isLetter(currentChar)) {
+        if (CharUtils.isLetter(currentChar)) {
             throw new MalformedIntLiteralException(lexeme + currentChar, location);
         }
 
@@ -265,7 +264,7 @@ public class LexicalAnalyzer implements Lexical {
         }
 
 
-        while (!reachedEndOfFile && (isLetter(currentChar) || isNumber(currentChar))) {
+        while (!reachedEndOfFile && (CharUtils.isLetter(currentChar) || CharUtils.isNumber(currentChar))) {
             lexeme += currentChar;
             consumePosition();
 
@@ -292,30 +291,11 @@ public class LexicalAnalyzer implements Lexical {
         return token;
     }
 
-    private boolean isLetter(char c) {
-        return c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z';
-    }
-
-    private boolean isUppercaseLetter(char c) {
-        return c >= 'A' && c <= 'Z';
-    }
-
-    private boolean isLowercaseLetter(char c) {
-        return c >= 'a' && c <= 'z';
-    }
-
-    private boolean isNumber(char c) {
-        return c >= '0' && c <= '9';
-    }
-
-    private boolean isWhitespace(char c) {
-        return c == ' ' || c == '\t' || c == '\n' || c == '\r';
-    }
 
     private void removeWhitespaces() {
         if (!reachedEndOfFile) {
             char currentChar = getCurrentChar();
-            while (isWhitespace(currentChar)) {
+            while (CharUtils.isWhitespace(currentChar)) {
                 if (currentChar == '\n') {
                     location.increaseLine();
                     location.increasePosition();
@@ -343,7 +323,7 @@ public class LexicalAnalyzer implements Lexical {
             throw new InvalidCharacterException(currentChar, location);
         }
         currentChar = getCurrentChar();
-        if (!isValidChar(currentChar)) {
+        if (!CharUtils.isValidChar(currentChar)) {
             throw new InvalidCharacterException(currentChar, location);
         } else {
             returnString = switch (currentChar) {
@@ -356,56 +336,7 @@ public class LexicalAnalyzer implements Lexical {
         return returnString;
     }
 
-    private boolean isValidChar(char c) {
-        // Common char types
-        return isNumber(c)
-                || isLetter(c)
-                || isWhitespace(c)
-                || isCommonSymbol(c)
-                || isSpanishCharacter(c);
-    }
 
-    private boolean isCommonSymbol(char c) {
-        return c == '('
-                || c == ')'
-                || c == '{'
-                || c == '}'
-                || c == '['
-                || c == ']'
-                || c == '.'
-                || c == ':'
-                || c == ';'
-                || c == ','
-                || c == '\\'
-                || c == '+'
-                || c == '-'
-                || c == '*'
-                || c == '/'
-                || c == '%'
-                || c == '<'
-                || c == '>'
-                || c == '='
-                || c == '!'
-                || c == '&'
-                || c == '|'
-                || c == '^'
-                || c == '~'
-                || c == '?'
-                || c == '@'
-                || c == '#'
-                || c == '$'
-                || c == '_'
-                || c == '¿';
-    }
-
-    private boolean isSpanishCharacter(char c) {
-        return c == 'á'
-                || c == 'é'
-                || c == 'í'
-                || c == 'ó'
-                || c == 'ú'
-                || c == 'ñ';
-    }
 
     private void consumePosition() {
         location.increaseColumn();
