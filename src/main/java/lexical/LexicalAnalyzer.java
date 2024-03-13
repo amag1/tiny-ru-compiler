@@ -313,7 +313,7 @@ public class LexicalAnalyzer implements Lexical{
     private void removeWhitespaces() {
         if (!reachedEndOfFile) {
             char currentChar = getCurrentChar();
-            while (isWhitespace(currentChar)) {
+            while (isWhitespace(currentChar) && !reachedEndOfFile) {
                 if (currentChar == '\n') {
                     location.increaseLine();
                     location.increasePosition();
