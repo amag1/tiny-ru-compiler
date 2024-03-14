@@ -106,89 +106,47 @@ public class LexicalAnalyzer implements Lexical{
     }
 
     private Token matchNotEqual(Location startLocation) {
-        consumePosition();
-        if (isEndOfFile()) {
-            reachedEndOfFile = true;
-            return new Token('!', Type.NEG, startLocation);
-        }
-        char currentChar = getCurrentChar();
-        if (currentChar == '=') {
-            consumePosition();
-            return new Token("!=", Type.NOT_EQUAL, startLocation);
-        }
-        return new Token('!', Type.NEG, startLocation);
+        return matchOneOrTwoCharToken(startLocation, '!', '=');
     }
 
     private Token matchGreaterThan(Location startLocation) {
-        consumePosition();
-        if (isEndOfFile()) {
-            reachedEndOfFile = true;
-            return new Token('>', Type.GREATER, startLocation);
-        }
-        char currentChar = getCurrentChar();
-        if (currentChar == '=') {
-            consumePosition();
-            return new Token(">=", Type.GREATER_EQUAL, startLocation);
-        }
-        return new Token('>', Type.GREATER, startLocation);
+        return matchOneOrTwoCharToken(startLocation, '>', '=');
     }
 
     private Token matchLessSign(Location startLocation) {
-        consumePosition();
-        if (isEndOfFile()) {
-            reachedEndOfFile = true;
-            return new Token('<', Type.LESS, startLocation);
-        }
-        char currentChar = getCurrentChar();
-        if (currentChar == '=') {
-            consumePosition();
-            return new Token("<=", Type.LESS_EQUAL, startLocation);
-        }
-        return new Token('<', Type.LESS, startLocation);
+        return matchOneOrTwoCharToken(startLocation, '<', '=');
     }
 
-
-
     private Token matchEqualSign(Location startLocation) {
-        consumePosition();
-        if (isEndOfFile()) {
-            reachedEndOfFile = true;
-            return new Token('=', Type.ASSIGN, startLocation);
-        }
-        char currentChar = getCurrentChar();
-        if (currentChar == '=') {
-            consumePosition();
-            return new Token("==", Type.EQUAL, startLocation);
-        }
-        return new Token('=', Type.ASSIGN, startLocation);
+        return matchOneOrTwoCharToken(startLocation, '=', '=');
     }
 
     private Token matchPlusSign(Location startLocation) {
-        consumePosition();
-        if (isEndOfFile()) {
-            reachedEndOfFile = true;
-            return new Token('+', Type.PLUS, startLocation);
-        }
-        char currentChar = getCurrentChar();
-        if (currentChar == '+') {
-            consumePosition();
-            return new Token("++", Type.DPLUS, startLocation);
-        }
-        return new Token('+', Type.PLUS, startLocation);
+        return matchOneOrTwoCharToken(startLocation, '+', '+');
     }
 
     private Token matchMinusSign(Location startLocation) {
+        return matchOneOrTwoCharToken(startLocation, '-', '-');
+    }
+
+    private Token matchOneOrTwoCharToken(Location startLocation, char firstChar, char secondChar) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(firstChar);
         consumePosition();
         if (isEndOfFile()) {
+            String lexeme = sb.toString();
             reachedEndOfFile = true;
-            return new Token('-', Type.MINUS, startLocation);
+            return new Token(lexeme, PredefinedLexemeMap.getType(lexeme), startLocation);
         }
+
         char currentChar = getCurrentChar();
-        if (currentChar == '-') {
+        if (currentChar == secondChar) {
             consumePosition();
-            return new Token("--", Type.DMINUS, startLocation);
+            String lexeme = sb.append(secondChar).toString();
+            return new Token(lexeme, PredefinedLexemeMap.getType(lexeme), startLocation);
         }
-        return new Token('-', Type.MINUS, startLocation);
+        String lexeme = sb.toString();
+        return new Token(lexeme, PredefinedLexemeMap.getType(lexeme), startLocation);
     }
 
     private Token matchStringLiteral(Location startLocation) throws UnclosedStringLiteralException, MalformedStringLiteralException, InvalidCharacterException, StringLiteralTooLongException {
@@ -203,7 +161,7 @@ public class LexicalAnalyzer implements Lexical{
             if (currentChar == '\\') {
                 lexeme += matchEscapeChar();
             } else {
-                if (isValidChar(currentChar)) {
+                if (CharUtils.isValidChar(currentChar)) {
                     lexeme += currentChar;
                 } else {
                     throw new MalformedStringLiteralException(lexeme, location);
@@ -242,10 +200,9 @@ public class LexicalAnalyzer implements Lexical{
         if (currentChar == '\\') {
             lexeme += matchEscapeChar();
         } else {
-            if (isValidChar(currentChar)) {
+            if (CharUtils.isValidChar(currentChar)) {
                 lexeme += currentChar;
-                location.increaseColumn();
-                location.increasePosition();
+                consumePosition();
             } else {
                 if (currentChar == '\'') {
                     throw new EmptyCharLiteralException(location);
@@ -278,13 +235,12 @@ public class LexicalAnalyzer implements Lexical{
         Token token = new Token();
         char startChar = getCurrentChar();
 
-        if (isNumber(startChar)) {
+        if (CharUtils.isNumber(startChar)) {
             token = matchIntLiteral(startLocation);
         }
 
-        if (isLetter(startChar)) {
-            if (isUppercaseLetter(startChar)) {
-                // TODO check type declaration keywords (Char, Int, Bool, String)
+        if (CharUtils.isLetter(startChar)) {
+            if (CharUtils.isUppercaseLetter(startChar)) {
                 token = matchClassIdentifier(startLocation);
             } else {
                 token = matchIdentifier(startLocation);
@@ -305,7 +261,7 @@ public class LexicalAnalyzer implements Lexical{
             return new Token(lexeme, Type.ID_CLASS, startLocation);
         }
 
-        while (!reachedEndOfFile && (isLetter(currentChar) || isNumber(currentChar))) {
+        while (!reachedEndOfFile && (CharUtils.isLetter(currentChar) || CharUtils.isNumber(currentChar))) {
             lexeme += currentChar;
             consumePosition();
             if (isEndOfFile()) {
@@ -317,29 +273,23 @@ public class LexicalAnalyzer implements Lexical{
         }
 
         // Last letter must be a letter
-        char lastChar = lexeme.charAt(lexeme.length()-1);
-        if (!isLetter(lastChar)){
+        char lastChar = lexeme.charAt(lexeme.length() - 1);
+        if (!CharUtils.isLetter(lastChar)) {
             throw new MalformedClassIdentifierException(lexeme, location);
         }
 
         Token token = null;
         // Check if it is a type keyword
-        if (lexeme.equals("Int") || lexeme.equals("Char") || lexeme.equals("String") || lexeme.equals("Bool")) {
-            token = new Token(lexeme, Type.valueOf("TYPE_" + lexeme.toUpperCase()), startLocation);
-        }
-
-        if (lexeme.equals("Array")) {
-            token = new Token(lexeme, Type.ARRAY, startLocation);
-        }
-
-        if (token == null){
+        if (PrimitiveType.getType(lexeme) != null) {
+            token = new Token(lexeme, PrimitiveType.getType(lexeme), startLocation);
+        } else {
             token = new Token(lexeme, Type.ID_CLASS, startLocation);
         }
 
         return token;
     }
 
-    private Token matchIntLiteral(Location startLocation) throws MalformedIntLiteralException{
+    private Token matchIntLiteral(Location startLocation) throws MalformedIntLiteralException {
         char currentChar = getCurrentChar();
 
         if (isEndOfFile()) {
@@ -348,7 +298,7 @@ public class LexicalAnalyzer implements Lexical{
         }
 
         String lexeme = "";
-        while (!reachedEndOfFile && isNumber(currentChar)) {
+        while (!reachedEndOfFile && CharUtils.isNumber(currentChar)) {
             lexeme += currentChar;
             consumePosition();
 
@@ -359,7 +309,7 @@ public class LexicalAnalyzer implements Lexical{
             }
         }
 
-        if (isLetter(currentChar)) {
+        if (CharUtils.isLetter(currentChar)) {
             throw new MalformedIntLiteralException(lexeme + currentChar, location);
         }
 
@@ -376,7 +326,7 @@ public class LexicalAnalyzer implements Lexical{
         }
 
 
-        while (!reachedEndOfFile && (isLetter(currentChar) || isNumber(currentChar))) {
+        while (!reachedEndOfFile && (CharUtils.isLetter(currentChar) || CharUtils.isNumber(currentChar))) {
             lexeme += currentChar;
             consumePosition();
 
@@ -394,42 +344,20 @@ public class LexicalAnalyzer implements Lexical{
         Token token = null;
 
         // Check if it is a keyword
-        switch (lexeme) {
-            case "struct", "impl",  "else", "false", "if", "ret", "while", "true", "nil",
-                    "new", "fn", "st", "pri", "self", "void":
-                token = new Token(lexeme, Type.valueOf("KW_" + lexeme.toUpperCase()), startLocation);
-                break;
-            default:
-                token = new Token(lexeme, Type.ID, startLocation);
+        if (Keyword.getKeywordType(lexeme) != null) {
+            token = new Token(lexeme, Keyword.getKeywordType(lexeme), startLocation);
+        } else {
+            token = new Token(lexeme, Type.ID, startLocation);
         }
 
         return token;
     }
 
-    private boolean isLetter(char c) {
-        return c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z';
-    }
-
-    private boolean isUppercaseLetter(char c) {
-        return c >= 'A' && c <= 'Z';
-    }
-
-    private boolean isLowercaseLetter(char c) {
-        return c >= 'a' && c <= 'z';
-    }
-
-    private boolean isNumber(char c) {
-        return c >= '0' && c <= '9';
-    }
-
-    private boolean isWhitespace(char c) {
-        return c == ' ' || c == '\t' || c == '\n' || c == '\r';
-    }
 
     private void removeWhitespaces() {
         if (!reachedEndOfFile) {
             char currentChar = getCurrentChar();
-            while (isWhitespace(currentChar)) {
+            while (CharUtils.isWhitespace(currentChar)) {
                 if (currentChar == '\n') {
                     location.increaseLine();
                     location.increasePosition();
@@ -457,7 +385,7 @@ public class LexicalAnalyzer implements Lexical{
             throw new InvalidCharacterException(currentChar, location);
         }
         currentChar = getCurrentChar();
-        if (!isValidChar(currentChar)) {
+        if (!CharUtils.isValidChar(currentChar)) {
             throw new InvalidCharacterException(currentChar, location);
         } else {
             returnString = switch (currentChar) {
@@ -470,56 +398,7 @@ public class LexicalAnalyzer implements Lexical{
         return returnString;
     }
 
-    private boolean isValidChar(char c) {
-        // Common char types
-        return isNumber(c)
-                || isLetter(c)
-                || isWhitespace(c)
-                || isCommonSymbol(c)
-                || isSpanishCharacter(c);
-    }
 
-    private boolean isCommonSymbol(char c) {
-        return c == '('
-                || c == ')'
-                || c == '{'
-                || c == '}'
-                || c == '['
-                || c == ']'
-                || c == '.'
-                || c == ':'
-                || c == ';'
-                || c == ','
-                || c == '\\'
-                || c == '+'
-                || c == '-'
-                || c == '*'
-                || c == '/'
-                || c == '%'
-                || c == '<'
-                || c == '>'
-                || c == '='
-                || c == '!'
-                || c == '&'
-                || c == '|'
-                || c == '^'
-                || c == '~'
-                || c == '?'
-                || c == '@'
-                || c == '#'
-                || c == '$'
-                || c == '_'
-                || c == '¿';
-    }
-
-    private boolean isSpanishCharacter(char c) {
-        return c == 'á'
-                || c == 'é'
-                || c == 'í'
-                || c == 'ó'
-                || c == 'ú'
-                || c == 'ñ';
-    }
 
     private void consumePosition() {
         location.increaseColumn();

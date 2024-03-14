@@ -10,6 +10,7 @@ public enum Type {
     TYPE_CHAR,
     TYPE_STRING,
     TYPE_BOOL,
+    TYPE_VOID,
     ARRAY,
 
 
