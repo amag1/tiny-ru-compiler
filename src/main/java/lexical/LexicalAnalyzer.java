@@ -3,7 +3,8 @@ package lexical;
 import exceptions.lexical.*;
 import location.Location;
 import reader.Reader;
-public class LexicalAnalyzer implements Lexical{
+
+public class LexicalAnalyzer implements Lexical {
     private final char[] chars;
     private final Location location;
 
@@ -21,12 +22,31 @@ public class LexicalAnalyzer implements Lexical{
      */
     @Override
     public Token nextToken() throws LexicalException {
-        removeWhitespaces();
-        // TODO: remove comments
-        // TODO: remove tabs
+        if (isEndOfFile()) {
+            return null;
+        }
+
+        char currentChar = getCurrentChar();
+        while ( !isEndOfFile() && (CharUtils.isWhitespace(currentChar) || isCommentStart())) {
+            if (CharUtils.isWhitespace(currentChar)){
+                removeWhitespaces();
+            }
+
+            if (isCommentStart()){
+                removeComments();
+            }
+
+            if (!isEndOfFile()) {
+                currentChar = getCurrentChar();
+            }
+        }
+
+        if (isEndOfFile()) {
+            return null;
+        }
 
         Location startLocation = location.copy();
-        char currentChar = getCurrentChar();
+        currentChar = getCurrentChar();
 
         Token token = switch (currentChar) {
             // Symbols
@@ -124,6 +144,15 @@ public class LexicalAnalyzer implements Lexical{
     }
 
     private Token matchMinusSign(Location startLocation) {
+        try {
+            if (peekNextChar() == '>') {
+                consumePosition();
+                consumePosition();
+                return new Token("->", Type.ARROW, startLocation);
+            }
+        } catch (ArrayIndexOutOfBoundsException e) {
+        }
+
         return matchOneOrTwoCharToken(startLocation, '-', '-');
     }
 
@@ -338,20 +367,18 @@ public class LexicalAnalyzer implements Lexical{
 
 
     private void removeWhitespaces() {
-        if (!isEndOfFile()) {
-            char currentChar = getCurrentChar();
-            while (CharUtils.isWhitespace(currentChar)) {
-                if (currentChar == '\n') {
-                    location.increaseLine();
-                    location.increasePosition();
-                    location.setColumn(0);
-                } else {
-                    consumePosition();
-                }
+        char currentChar = getCurrentChar();
+        while (!isEndOfFile() && CharUtils.isWhitespace(currentChar)) {
+            if (currentChar == '\n') {
+                location.increaseLine();
+                location.increasePosition();
+                location.setColumn(1);
+            } else {
+                consumePosition();
+            }
 
-                if (!isEndOfFile()) {
-                    currentChar = getCurrentChar();
-                }
+            if (!isEndOfFile()) {
+                currentChar = getCurrentChar();
             }
         }
     }
@@ -376,9 +403,9 @@ public class LexicalAnalyzer implements Lexical{
                 default -> "" + currentChar;
             };
         }
+        consumePosition();
         return returnString;
     }
-
 
 
     private void consumePosition() {
@@ -405,6 +432,39 @@ public class LexicalAnalyzer implements Lexical{
     }
 
     private char getCurrentChar() {
-        return this.chars[this.location.getPosition()];
+        return chars[location.getPosition()];
+    }
+
+    private char peekNextChar() throws ArrayIndexOutOfBoundsException {
+        return chars[location.getPosition() + 1];
+    }
+
+
+    private boolean isCommentStart() {
+        char currentChar = getCurrentChar();
+        if (currentChar == '/') {
+            try {
+                char nextChar = peekNextChar();
+                return nextChar == '?';
+            } catch (ArrayIndexOutOfBoundsException e) {
+
+            }
+        }
+
+        return false;
+    }
+
+    private void removeComments() {
+        if (!isEndOfFile()) {
+            char currentChar = getCurrentChar();
+            while (currentChar != '\n') {
+                consumePosition();
+                if (!isEndOfFile()) {
+                    currentChar = getCurrentChar();
+                } else {
+                    break;
+                }
+            }
+        }
     }
 }

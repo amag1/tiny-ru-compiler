@@ -49,6 +49,7 @@ public enum Type {
     LESS_EQUAL,
     NEG,
     NOT_EQUAL,
+    ARROW,
 
 
     // Keywords
