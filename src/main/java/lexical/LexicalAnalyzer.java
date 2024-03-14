@@ -3,10 +3,10 @@ package lexical;
 import exceptions.lexical.*;
 import location.Location;
 import reader.Reader;
-public class LexicalAnalyzer implements Lexical{
+
+public class LexicalAnalyzer implements Lexical {
     private final char[] chars;
     private final Location location;
-    private boolean reachedEndOfFile = false;
 
     /**
      * @param reader El lector de caracteres
@@ -15,7 +15,6 @@ public class LexicalAnalyzer implements Lexical{
         this.chars = reader.getChars();
         // Inicializa una nueva location vacia
         this.location = new Location();
-        this.reachedEndOfFile = isEndOfFile();
     }
 
     /**
@@ -26,10 +25,19 @@ public class LexicalAnalyzer implements Lexical{
     public Token nextToken() throws LexicalException {
         // TODO: remove tabs
 
+
         Location startLocation = location.copy();
         char currentChar = getCurrentChar();
 
         Token token;
+
+        // remove comments and whitespaces
+        while ((isCommentStart() || isWhitespace(currentChar)) && !isEndOfFile()) {
+            currentChar = getCurrentChar();
+            removeWhitespaces();
+            removeComments();
+        }
+
 
         switch (currentChar) {
             // Symbols
@@ -98,10 +106,10 @@ public class LexicalAnalyzer implements Lexical{
         return token;
     }
 
+
     private Token matchStringLiteral(Location startLocation) throws UnclosedStringLiteralException, MalformedStringLiteralException, InvalidCharacterException, StringLiteralTooLongException {
         consumePosition();
         if (isEndOfFile()) {
-            reachedEndOfFile = true;
             throw new UnclosedStringLiteralException("\"", location);
         }
         char currentChar = getCurrentChar();
@@ -119,7 +127,6 @@ public class LexicalAnalyzer implements Lexical{
 
             consumePosition();
             if (isEndOfFile()) {
-                reachedEndOfFile = true;
                 throw new UnclosedStringLiteralException(lexeme, location);
             }
             currentChar = getCurrentChar();
@@ -139,7 +146,6 @@ public class LexicalAnalyzer implements Lexical{
 
         consumePosition();
         if (isEndOfFile()) {
-            reachedEndOfFile = true;
             throw new UnclosedCharLiteralException(lexeme, location);
         }
 
@@ -166,7 +172,6 @@ public class LexicalAnalyzer implements Lexical{
         }
 
         if (isEndOfFile()) {
-            reachedEndOfFile = true;
             throw new UnclosedCharLiteralException(lexeme, location);
         }
 
@@ -209,15 +214,13 @@ public class LexicalAnalyzer implements Lexical{
         char currentChar = getCurrentChar();
         String lexeme = "";
         if (isEndOfFile()) {
-            reachedEndOfFile = true;
             return new Token(lexeme, Type.ID_CLASS, startLocation);
         }
 
-        while (!reachedEndOfFile && (isLetter(currentChar) || isNumber(currentChar))) {
+        while (!isEndOfFile() && (isLetter(currentChar) || isNumber(currentChar))) {
             lexeme += currentChar;
             consumePosition();
             if (isEndOfFile()) {
-                reachedEndOfFile = true;
             } else {
                 currentChar = getCurrentChar();
 
@@ -225,28 +228,26 @@ public class LexicalAnalyzer implements Lexical{
         }
 
         // Last letter must be a letter
-        char lastChar = lexeme.charAt(lexeme.length()-1);
-        if (!isLetter(lastChar)){
+        char lastChar = lexeme.charAt(lexeme.length() - 1);
+        if (!isLetter(lastChar)) {
             throw new MalformedClassIdentifierException(lexeme, location);
         }
 
         return new Token(lexeme, Type.ID_CLASS, startLocation);
     }
 
-    private Token matchIntLiteral(Location startLocation) throws MalformedIntLiteralException{
+    private Token matchIntLiteral(Location startLocation) throws MalformedIntLiteralException {
         char currentChar = getCurrentChar();
         String lexeme = "" + currentChar;
 
         if (isEndOfFile()) {
-            reachedEndOfFile = true;
             return new Token(lexeme, Type.INT_LITERAL, startLocation);
         }
 
-        while (!reachedEndOfFile && isNumber(currentChar)) {
+        while (!isEndOfFile() && isNumber(currentChar)) {
             consumePosition();
 
             if (isEndOfFile()) {
-                reachedEndOfFile = true;
             } else {
                 currentChar = getCurrentChar();
                 lexeme += currentChar;
@@ -265,17 +266,15 @@ public class LexicalAnalyzer implements Lexical{
         String lexeme = "";
 
         if (isEndOfFile()) {
-            reachedEndOfFile = true;
             return new Token(lexeme, Type.ID, startLocation);
         }
 
 
-        while (!reachedEndOfFile && (isLetter(currentChar) || isNumber(currentChar))) {
+        while (!isEndOfFile() && (isLetter(currentChar) || isNumber(currentChar))) {
             lexeme += currentChar;
             consumePosition();
 
             if (isEndOfFile()) {
-                reachedEndOfFile = true;
             } else {
                 currentChar = getCurrentChar();
             }
@@ -309,9 +308,9 @@ public class LexicalAnalyzer implements Lexical{
     }
 
     public void removeWhitespaces() {
-        if (!reachedEndOfFile) {
+        if (!isEndOfFile()) {
             char currentChar = getCurrentChar();
-            while (isWhitespace(currentChar) && !reachedEndOfFile) {
+            while (isWhitespace(currentChar) && !isEndOfFile()) {
                 if (currentChar == '\n') {
                     location.increaseLine();
                     location.increasePosition();
@@ -320,9 +319,7 @@ public class LexicalAnalyzer implements Lexical{
                     consumePosition();
                 }
 
-                if (isEndOfFile()) {
-                    reachedEndOfFile = true;
-                } else {
+                if (!isEndOfFile()) {
                     currentChar = getCurrentChar();
                 }
             }
@@ -333,30 +330,48 @@ public class LexicalAnalyzer implements Lexical{
         if (!isEndOfFile()) {
             char currentChar = getCurrentChar();
 
-            // Check if first char is '\'
-            if (currentChar == '\\') {
-                consumePosition();
+            // Check if first char is '/'
+            if (currentChar == '/') {
+                try {
+                    char nextChar = getNextChar();
 
-                currentChar = getCurrentChar();
+                    // Check if following char is '?'
+                    if (nextChar == '?') {
+                        boolean newLine = false;
+                        while (!isEndOfFile() && !newLine) {
+                            consumePosition();
 
-                // Check if following char is '?'
-                if (currentChar == '?') {
-                    boolean newLine = false;
-                    while (!isEndOfFile() && !newLine) {
-                        consumePosition();
+                            if (currentChar == '\n') {
+                                newLine = true;
+                            }
 
-                        if (currentChar == '\n')  {
-                            newLine = true;
+                            currentChar = getCurrentChar();
                         }
-
-                        currentChar = getCurrentChar();
                     }
-                } else {
-                    // If char is not '?' return error
-                    throw new InvalidToken(location);
+                } catch (ArrayIndexOutOfBoundsException e) {
                 }
             }
         }
+    }
+
+    private boolean isCommentStart() {
+        char currentChar = getCurrentChar();
+
+        boolean isCommentStart = false;
+
+        // Check if first char is '/'
+        if (currentChar == '/') {
+            try {
+                char nextChar = getNextChar();
+
+                // Check if following char is '?'
+                isCommentStart = nextChar == '?';
+            } catch (ArrayIndexOutOfBoundsException e) {
+                isCommentStart = false;
+            }
+        }
+
+        return  isCommentStart;
     }
 
     private String matchEscapeChar() throws InvalidCharacterException {
@@ -372,19 +387,19 @@ public class LexicalAnalyzer implements Lexical{
         if (!isValidChar(currentChar)) {
             throw new InvalidCharacterException(currentChar, location);
         } else {
-           switch (currentChar) {
-               case '0':
-                throw new InvalidCharacterException(currentChar, location);
-               case 'n':
-                   returnString = "\n";
-                   break;
-               case 't':
-                   returnString = "\t";
-                   break;
-               default:
-                   returnString = "" + currentChar;
-                   break;
-           }
+            switch (currentChar) {
+                case '0':
+                    throw new InvalidCharacterException(currentChar, location);
+                case 'n':
+                    returnString = "\n";
+                    break;
+                case 't':
+                    returnString = "\t";
+                    break;
+                default:
+                    returnString = "" + currentChar;
+                    break;
+            }
         }
         return returnString;
     }
@@ -464,6 +479,12 @@ public class LexicalAnalyzer implements Lexical{
     }
 
     private char getCurrentChar() {
-        return this.chars[this.location.getPosition()];
+        return chars[location.getPosition()];
     }
+
+    private char getNextChar() throws ArrayIndexOutOfBoundsException {
+        int position = this.location.getPosition() + 1;
+        return chars[position];
+    }
+
 }
