@@ -301,7 +301,7 @@ public class LexicalAnalyzer implements Lexical {
             return new Token(lexeme, Type.ID_CLASS, startLocation);
         }
 
-        while (!isEndOfFile() && (CharUtils.isLetter(currentChar) || CharUtils.isNumber(currentChar))) {
+        while (!isEndOfFile() && (CharUtils.isLetter(currentChar) || CharUtils.isNumber(currentChar) || currentChar == '_')) {
             lexeme += currentChar;
             consumePosition();
             if (!isEndOfFile()) {
@@ -366,6 +366,11 @@ public class LexicalAnalyzer implements Lexical {
             if (!isEndOfFile()) {
                 currentChar = getCurrentChar();
             }
+        }
+
+        // The last character cannot be an underscode
+        if (lexeme.charAt(lexeme.length() - 1) == '_') {
+            throw new MalformedIdentifierException(lexeme, location);
         }
 
         if (lexeme.length() > 1024) {
