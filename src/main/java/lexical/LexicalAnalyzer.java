@@ -111,6 +111,7 @@ public class LexicalAnalyzer implements Lexical {
             case '!' -> matchNotEqual(startLocation);
             case '\'' -> matchCharLiteral(startLocation);
             case '\"' -> matchStringLiteral(startLocation);
+            case '|', '&' -> matchTwoSymbolsOrFail(startLocation, currentChar);
 
 
             default -> matchComplexString(startLocation);
@@ -173,6 +174,24 @@ public class LexicalAnalyzer implements Lexical {
         }
         String lexeme = sb.toString();
         return new Token(lexeme, PredefinedLexemeMap.getType(lexeme), startLocation);
+    }
+
+    private Token matchTwoSymbolsOrFail(Location location, char charToMatch) throws MalformedDoubleSymbolException {
+        char currentChar = getCurrentChar();
+        if (currentChar != charToMatch){
+            throw new MalformedDoubleSymbolException(charToMatch, location);
+        }
+        consumePosition();
+        if (!isEndOfFile()) {
+            currentChar = getCurrentChar();
+            if (currentChar == charToMatch) {
+                consumePosition();
+                String lexeme = "" + charToMatch + charToMatch;
+                return new Token(lexeme, PredefinedLexemeMap.getType(lexeme), location);
+            }
+        }
+
+        throw new MalformedDoubleSymbolException(charToMatch, location);
     }
 
     private Token matchStringLiteral(Location startLocation) throws UnclosedStringLiteralException, MalformedStringLiteralException, InvalidCharacterException, StringLiteralTooLongException {
@@ -340,7 +359,7 @@ public class LexicalAnalyzer implements Lexical {
         }
 
 
-        while (!isEndOfFile() && (CharUtils.isLetter(currentChar) || CharUtils.isNumber(currentChar))) {
+        while (!isEndOfFile() && (CharUtils.isLetter(currentChar) || CharUtils.isNumber(currentChar) || currentChar == '_')) {
             lexeme += currentChar;
             consumePosition();
 
@@ -403,7 +422,6 @@ public class LexicalAnalyzer implements Lexical {
                 default -> "" + currentChar;
             };
         }
-        consumePosition();
         return returnString;
     }
 
