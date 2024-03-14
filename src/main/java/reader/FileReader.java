@@ -12,6 +12,11 @@ public class FileReader implements Reader{
         this.file = new File(path);
         Scanner scanner = new Scanner(this.file);
 
+        if (!scanner.hasNextLine()) {
+            this.chars = new char[0];
+            return;
+        }
+
         String returnString = scanner.nextLine();
         while (scanner.hasNextLine()) {
             returnString += "\n" + scanner.nextLine();

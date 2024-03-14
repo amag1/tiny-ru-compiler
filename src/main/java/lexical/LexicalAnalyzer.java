@@ -27,12 +27,12 @@ public class LexicalAnalyzer implements Lexical {
         }
 
         char currentChar = getCurrentChar();
-        while ( !isEndOfFile() && (CharUtils.isWhitespace(currentChar) || isCommentStart())) {
-            if (CharUtils.isWhitespace(currentChar)){
+        while (!isEndOfFile() && (CharUtils.isWhitespace(currentChar) || isCommentStart())) {
+            if (CharUtils.isWhitespace(currentChar)) {
                 removeWhitespaces();
             }
 
-            if (isCommentStart()){
+            if (isCommentStart()) {
                 removeComments();
             }
 
@@ -441,13 +441,15 @@ public class LexicalAnalyzer implements Lexical {
 
 
     private boolean isCommentStart() {
-        char currentChar = getCurrentChar();
-        if (currentChar == '/') {
-            try {
-                char nextChar = peekNextChar();
-                return nextChar == '?';
-            } catch (ArrayIndexOutOfBoundsException e) {
-
+        if (!isEndOfFile()) {
+            char currentChar = getCurrentChar();
+            if (currentChar == '/') {
+                try {
+                    char nextChar = peekNextChar();
+                    return nextChar == '?';
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    return false;
+                }
             }
         }
 

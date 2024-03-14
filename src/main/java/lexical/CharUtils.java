@@ -22,6 +22,10 @@ public class CharUtils {
         return c == ' ' || c == '\t' || c == '\n' || c == '\r' || c == '\u000b';
     }
 
+    public static boolean isValidCharWhitespace(char c) {
+        return c == ' ' || c == '\t';
+    }
+
     /**
      * @param c caracter que deseamos saber si es valido
      * @return un boolean diciendo si es valido o no
@@ -32,7 +36,7 @@ public class CharUtils {
         // Common char types
         return isNumber(c)
                 || isLetter(c)
-                || isWhitespace(c)
+                || isValidCharWhitespace(c)
                 || isCommonSymbol(c)
                 || isSpanishCharacter(c);
     }
