@@ -3,10 +3,10 @@ package lexical;
 import exceptions.lexical.*;
 import location.Location;
 import reader.Reader;
-public class LexicalAnalyzer implements Lexical{
+
+public class LexicalAnalyzer implements Lexical {
     private final char[] chars;
     private final Location location;
-    private boolean reachedEndOfFile = false;
 
     /**
      * @param reader El lector de caracteres
@@ -15,7 +15,6 @@ public class LexicalAnalyzer implements Lexical{
         this.chars = reader.getChars();
         // Inicializa una nueva location vacia
         this.location = new Location();
-        this.reachedEndOfFile = isEndOfFile();
     }
 
     /**
@@ -26,6 +25,10 @@ public class LexicalAnalyzer implements Lexical{
         removeWhitespaces();
         // TODO: remove comments
         // TODO: remove tabs
+
+        if (isEndOfFile()) {
+            return null;
+        }
 
         Location startLocation = location.copy();
         char currentChar = getCurrentChar();
@@ -135,7 +138,6 @@ public class LexicalAnalyzer implements Lexical{
         consumePosition();
         if (isEndOfFile()) {
             String lexeme = sb.toString();
-            reachedEndOfFile = true;
             return new Token(lexeme, PredefinedLexemeMap.getType(lexeme), startLocation);
         }
 
@@ -152,7 +154,6 @@ public class LexicalAnalyzer implements Lexical{
     private Token matchStringLiteral(Location startLocation) throws UnclosedStringLiteralException, MalformedStringLiteralException, InvalidCharacterException, StringLiteralTooLongException {
         consumePosition();
         if (isEndOfFile()) {
-            reachedEndOfFile = true;
             throw new UnclosedStringLiteralException("\"", location);
         }
         char currentChar = getCurrentChar();
@@ -170,7 +171,6 @@ public class LexicalAnalyzer implements Lexical{
 
             consumePosition();
             if (isEndOfFile()) {
-                reachedEndOfFile = true;
                 throw new UnclosedStringLiteralException(lexeme, location);
             }
             currentChar = getCurrentChar();
@@ -190,7 +190,6 @@ public class LexicalAnalyzer implements Lexical{
 
         consumePosition();
         if (isEndOfFile()) {
-            reachedEndOfFile = true;
             throw new UnclosedCharLiteralException(lexeme, location);
         }
 
@@ -216,7 +215,6 @@ public class LexicalAnalyzer implements Lexical{
         }
 
         if (isEndOfFile()) {
-            reachedEndOfFile = true;
             throw new UnclosedCharLiteralException(lexeme, location);
         }
 
@@ -257,15 +255,13 @@ public class LexicalAnalyzer implements Lexical{
         char currentChar = getCurrentChar();
         String lexeme = "";
         if (isEndOfFile()) {
-            reachedEndOfFile = true;
             return new Token(lexeme, Type.ID_CLASS, startLocation);
         }
 
-        while (!reachedEndOfFile && (CharUtils.isLetter(currentChar) || CharUtils.isNumber(currentChar))) {
+        while (!isEndOfFile() && (CharUtils.isLetter(currentChar) || CharUtils.isNumber(currentChar))) {
             lexeme += currentChar;
             consumePosition();
             if (isEndOfFile()) {
-                reachedEndOfFile = true;
             } else {
                 currentChar = getCurrentChar();
 
@@ -293,17 +289,15 @@ public class LexicalAnalyzer implements Lexical{
         char currentChar = getCurrentChar();
 
         if (isEndOfFile()) {
-            reachedEndOfFile = true;
             return new Token(currentChar, Type.INT_LITERAL, startLocation);
         }
 
         String lexeme = "";
-        while (!reachedEndOfFile && CharUtils.isNumber(currentChar)) {
+        while (!isEndOfFile() && CharUtils.isNumber(currentChar)) {
             lexeme += currentChar;
             consumePosition();
 
             if (isEndOfFile()) {
-                reachedEndOfFile = true;
             } else {
                 currentChar = getCurrentChar();
             }
@@ -321,17 +315,15 @@ public class LexicalAnalyzer implements Lexical{
         String lexeme = "";
 
         if (isEndOfFile()) {
-            reachedEndOfFile = true;
             return new Token(lexeme, Type.ID, startLocation);
         }
 
 
-        while (!reachedEndOfFile && (CharUtils.isLetter(currentChar) || CharUtils.isNumber(currentChar))) {
+        while (!isEndOfFile() && (CharUtils.isLetter(currentChar) || CharUtils.isNumber(currentChar))) {
             lexeme += currentChar;
             consumePosition();
 
             if (isEndOfFile()) {
-                reachedEndOfFile = true;
             } else {
                 currentChar = getCurrentChar();
             }
@@ -355,24 +347,22 @@ public class LexicalAnalyzer implements Lexical{
 
 
     private void removeWhitespaces() {
-        if (!reachedEndOfFile) {
-            char currentChar = getCurrentChar();
-            while (CharUtils.isWhitespace(currentChar)) {
-                if (currentChar == '\n') {
-                    location.increaseLine();
-                    location.increasePosition();
-                    location.setColumn(0);
-                } else {
-                    consumePosition();
-                }
-
-                if (isEndOfFile()) {
-                    reachedEndOfFile = true;
-                } else {
-                    currentChar = getCurrentChar();
-                }
+        char currentChar = getCurrentChar();
+        while (CharUtils.isWhitespace(currentChar) && !isEndOfFile()) {
+            if (currentChar == '\n') {
+                location.increaseLine();
+                location.increasePosition();
+                location.setColumn(1);
+            } else {
+                consumePosition();
             }
+
+            if (!isEndOfFile()){
+                currentChar = getCurrentChar();
+            }
+
         }
+
     }
 
     private String matchEscapeChar() throws InvalidCharacterException {
@@ -395,9 +385,9 @@ public class LexicalAnalyzer implements Lexical{
                 default -> "" + currentChar;
             };
         }
+        consumePosition();
         return returnString;
     }
-
 
 
     private void consumePosition() {

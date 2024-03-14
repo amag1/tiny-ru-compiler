@@ -1,24 +1,29 @@
 package lexical;
 
 import exceptions.lexical.LexicalException;
+import reader.FileReader;
 import reader.StringReader;
 import logger.ConsoleLogger;
 import logger.Logger;
 
+import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.ArrayList;
 public class Executor {
     public static void main(String[] args) {
-        Lexical lexical = new LexicalAnalyzer(new StringReader(": struct, impl, else, false, if, ret, while, true, nil, false,\n" +
-                "new, fn, st, pri, self, void, hola pepe como estas"));
         Logger log = new ConsoleLogger();
         try {
+            Lexical lexical = new LexicalAnalyzer(new FileReader("C:\\Users\\Usuario\\Documents\\Andrés\\Facu\\2024\\tiny-ru-compiler\\src\\main\\java\\lexical\\test\\testcrlf.ru"));
             List<Token> tokens = new ArrayList<Token>();
-            while (!lexical.isEndOfFile()) {
-                tokens.add(lexical.nextToken());
+            Token token = lexical.nextToken();
+            while (!lexical.isEndOfFile() && token != null) {
+                tokens.add(token);
+                token = lexical.nextToken();
             }
 
             log.LogLexicSuccess(tokens);
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found");
         } catch (LexicalException e) {
             log.LogLexicError(e);
         }
