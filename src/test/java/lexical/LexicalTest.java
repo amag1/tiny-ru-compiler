@@ -64,7 +64,7 @@ public class LexicalTest {
     }
 
     private static Stream<Arguments> provideStringsForClassName() {
-        String basepath = "src/main/java/lexical/test/";
+        String basepath = "src/main/java/lexical/test/failing/";
         return Stream.of(
             Arguments.of(basepath + "00.ru", MalformedClassIdentifierException.class),
             Arguments.of(basepath + "01.ru", InvalidCharacterException.class),
