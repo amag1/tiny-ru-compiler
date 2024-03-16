@@ -178,7 +178,7 @@ public class LexicalAnalyzer implements Lexical {
 
     private Token matchTwoSymbolsOrFail(Location location, char charToMatch) throws MalformedDoubleSymbolException {
         char currentChar = getCurrentChar();
-        if (currentChar != charToMatch){
+        if (currentChar != charToMatch) {
             throw new MalformedDoubleSymbolException(charToMatch, location);
         }
         consumePosition();
@@ -480,16 +480,8 @@ public class LexicalAnalyzer implements Lexical {
     }
 
     private void removeComments() {
-        if (!isEndOfFile()) {
-            char currentChar = getCurrentChar();
-            while (currentChar != '\n') {
-                consumePosition();
-                if (!isEndOfFile()) {
-                    currentChar = getCurrentChar();
-                } else {
-                    break;
-                }
-            }
+        while (!isEndOfFile() && getCurrentChar() != '\n') {
+            consumePosition();
         }
     }
 }
