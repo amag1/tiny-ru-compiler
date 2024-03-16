@@ -50,6 +50,8 @@ public enum Type {
     NEG,
     NOT_EQUAL,
     ARROW,
+    AND,
+    OR,
 
 
     // Keywords
@@ -67,6 +69,6 @@ public enum Type {
     KW_ST, // Static
     KW_PRI, // Private
     KW_SELF,
-    KW_VOID,
+    KW_START
 
 }

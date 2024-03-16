@@ -23,6 +23,7 @@ public class Keyword {
         keywords.put("pri", Type.KW_PRI);
         keywords.put("self", Type.KW_SELF);
         keywords.put("void", Type.TYPE_VOID);
+        keywords.put("start", Type.KW_START);
     }
 
     public static Type getKeywordType(String keyword) {

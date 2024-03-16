@@ -13,7 +13,7 @@ public class Executor {
     public static void main(String[] args) {
         Logger log = new ConsoleLogger();
         try {
-            Lexical lexical = new LexicalAnalyzer(new FileReader("/home/andres/IdeaProjects/tiny-ru-compiler/src/main/java/lexical/test/test.ru"));
+            Lexical lexical = new LexicalAnalyzer(new StringReader("" + (char) (-1)));
 
 
             List<Token> tokens = new ArrayList<Token>();
@@ -26,8 +26,6 @@ public class Executor {
                 }
             }
             log.LogLexicSuccess(tokens);
-        } catch (FileNotFoundException e) {
-            System.out.println("Archivo no encontrado");
         } catch (LexicalException e) {
             log.LogLexicError(e);
         }

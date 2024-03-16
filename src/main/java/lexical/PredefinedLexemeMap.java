@@ -18,6 +18,8 @@ public class PredefinedLexemeMap {
         types.put("-", Type.MINUS);
         types.put("++", Type.DPLUS);
         types.put("--", Type.DMINUS);
+        types.put("||", Type.OR);
+        types.put("&&", Type.AND);
     }
 
     public static Type getType(String type) {
