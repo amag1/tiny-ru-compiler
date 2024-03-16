@@ -457,16 +457,8 @@ public class LexicalAnalyzer implements Lexical {
     }
 
     private void removeComments() {
-        if (!isEndOfFile()) {
-            char currentChar = getCurrentChar();
-            while (currentChar != '\n') {
-                consumePosition();
-                if (!isEndOfFile()) {
-                    currentChar = getCurrentChar();
-                } else {
-                    break;
-                }
-            }
+        while (!isEndOfFile() && getCurrentChar() != '\n') {
+            consumePosition();
         }
     }
 }
