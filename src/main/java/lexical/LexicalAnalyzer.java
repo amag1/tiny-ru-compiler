@@ -246,18 +246,19 @@ public class LexicalAnalyzer implements Lexical {
             consumePosition();
         }
         else {
+            if (currentChar == '\'') {
+                throw new EmptyCharLiteralException(location);
+            }
+
+            if (currentChar == '\0') {
+                throw new InvalidCharacterException(currentChar, location);
+            }
+
             if (CharUtils.isValidChar(currentChar)) {
                 lexeme += currentChar;
                 consumePosition();
             }
             else {
-                if (currentChar == '\'') {
-                    throw new EmptyCharLiteralException(location);
-                }
-
-                if (currentChar == '\0') {
-                    throw new InvalidCharacterException(currentChar, location);
-                }
                 throw new MalformedCharLiteralException(lexeme, location);
             }
         }
@@ -446,7 +447,6 @@ public class LexicalAnalyzer implements Lexical {
     /**
      * @return Si se llegó al final del archivo
      */
-    @Override
     public boolean isEndOfFile() {
         return this.location.getPosition() > (chars.length - 1);
     }

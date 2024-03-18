@@ -17,14 +17,14 @@ public class LexicalTestTokenSuccess {
     public void run(boolean lexemChecking, boolean locationChecking) {
         Lexical lexical = new LexicalAnalyzer(new StringReader(codeText));
         Token currentToken;
-        for (Token expectedToken: expectedTokens) {
+        for (Token expectedToken : expectedTokens) {
             try {
                 currentToken = lexical.nextToken();
 
-                assertEquals(expectedToken.getType(),currentToken.getType(), "Different token types");
+                assertEquals(expectedToken.getType(), currentToken.getType(), "Different token types");
 
                 if (lexemChecking) {
-                    assertEquals(expectedToken.getLexem(),currentToken.getLexem(), "Different token lexems") ;
+                    assertEquals(expectedToken.getLexem(), currentToken.getLexem(), "Different token lexems");
                 }
 
                 if (locationChecking) {
@@ -34,6 +34,16 @@ public class LexicalTestTokenSuccess {
             } catch (LexicalException e) {
                 fail(e.getMessage());
             }
+        }
+
+        // Ensure that there are not more tokens
+        try {
+            Token nextToken = lexical.nextToken();
+            if (nextToken != null) {
+                fail("There are more tokens than expected");
+            }
+        } catch (LexicalException e){
+        fail(e.getMessage());
         }
     }
 

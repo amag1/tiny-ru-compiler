@@ -7,9 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Logger {
-
     public abstract void LogLexicSuccess(List<Token> tokens);
-    public abstract void LogLexicError(LexicalException e);
+
     protected List<String> GetLexicSuccessMessage(List<Token> tokens) {
         List result = new ArrayList<String>();
         // Header
