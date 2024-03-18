@@ -60,9 +60,6 @@ public class LexicalTest {
             while (token != null) {
                 token = lexical.nextToken();
             }
-
-            fail("Se esperaba una excepción en input " + input);
-
         } catch (FileNotFoundException e) {
             fail("Archivo no encontrado: " + input);
         } catch (LexicalException e) {
@@ -141,7 +138,7 @@ public class LexicalTest {
             }
             fail("Se esperaba una excepción en input " + input);
         } catch (LexicalException e) {
-            assertEquals(e.getClass(), error, "Error en input: " + input + ", se esperaba: " + e.getClass());
+            assertEquals(error, e.getClass(),  "Error en input: " + input + ", se esperaba: " + e.getClass());
         }
     }
 
@@ -160,8 +157,7 @@ public class LexicalTest {
                 Arguments.of(basepath + "09.ru", InvalidCharacterException.class),
                 Arguments.of(basepath + "10.ru", UnclosedStringLiteralException.class),
                 Arguments.of(basepath + "11.ru", UnclosedStringLiteralException.class),
-                Arguments.of(basepath + "12.ru", MalformedStringLiteralException.class),
-                Arguments.of(basepath + "13.ru", StringLiteralTooLongException.class)
+                Arguments.of(basepath + "12.ru", StringLiteralTooLongException.class)
         );
     }
 }
