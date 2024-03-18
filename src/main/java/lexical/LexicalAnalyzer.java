@@ -49,71 +49,37 @@ public class LexicalAnalyzer implements Lexical {
         currentChar = getCurrentChar();
 
         Token token = switch (currentChar) {
-            // Symbols
-            // Consume positiom
-            case '(' -> {
-                consumePosition();
-                yield new Token(currentChar, Type.OPEN_PAR, startLocation);
-            }
-            case ')' -> {
-                consumePosition();
-                yield new Token(currentChar, Type.CLOSE_PAR, startLocation);
-            }
-            case '{' -> {
-                consumePosition();
-                yield new Token(currentChar, Type.OPEN_CURLY, startLocation);
-            }
-            case '}' -> {
-                consumePosition();
-                yield new Token(currentChar, Type.CLOSE_CURLY, startLocation);
-            }
-            case '[' -> {
-                consumePosition();
-                yield new Token(currentChar, Type.OPEN_BRACKET, startLocation);
-            }
-            case ']' -> {
-                consumePosition();
-                yield new Token(currentChar, Type.CLOSE_BRACKET, startLocation);
-            }
-            case '.' -> {
-                consumePosition();
-                yield new Token(currentChar, Type.DOT, startLocation);
-            }
-            case ':' -> {
-                consumePosition();
-                yield new Token(currentChar, Type.COLON, startLocation);
-            }
-            case ';' -> {
-                consumePosition();
-                yield new Token(currentChar, Type.SEMICOLON, startLocation);
-            }
-            case ',' -> {
-                consumePosition();
-                yield new Token(currentChar, Type.COMMA, startLocation);
-            }
-            case '*' -> {
-                consumePosition();
-                yield new Token(currentChar, Type.MULT, startLocation);
-            }
-            case '%' -> {
-                consumePosition();
-                yield new Token(currentChar, Type.MOD, startLocation);
-            }
-            case '/' -> {
-                consumePosition();
-                yield new Token(currentChar, Type.DIV, startLocation);
-            }
+            // Símbolos
+            case '(' -> createToken(Type.OPEN_PAR);
+            case ')' -> createToken(Type.CLOSE_PAR);
+            case '{' -> createToken(Type.OPEN_CURLY);
+            case '}' -> createToken(Type.CLOSE_CURLY);
+            case '[' -> createToken(Type.OPEN_BRACKET);
+            case ']' -> createToken(Type.CLOSE_BRACKET);
+            case '.' -> createToken(Type.DOT);
+            case ':' -> createToken(Type.COLON);
+            case ';' -> createToken(Type.SEMICOLON);
+            case ',' -> createToken(Type.COMMA);
+
+            // Operadores
+            case '*' -> createToken(Type.MULT);
+            case '%' -> createToken(Type.MOD);
+            case '/' -> createToken(Type.DIV);
             case '+' -> matchPlusSign(startLocation);
             case '-' -> matchMinusSign(startLocation);
             case '=' -> matchEqualSign(startLocation);
             case '>' -> matchGreaterThan(startLocation);
             case '<' -> matchLessSign(startLocation);
             case '!' -> matchNotEqual(startLocation);
-            case '\'' -> matchCharLiteral(startLocation);
-            case '\"' -> matchStringLiteral(startLocation);
             case '|', '&' -> matchTwoSymbolsOrFail(startLocation, currentChar);
 
+            // Caracteres
+            case '\'' -> matchCharLiteral(startLocation);
 
+            // Strings
+            case '\"' -> matchStringLiteral(startLocation);
+
+            // Identificdore y palabras reservadas
             default -> matchComplexString(startLocation);
         };
 
@@ -122,6 +88,13 @@ public class LexicalAnalyzer implements Lexical {
         }
 
         return token;
+    }
+
+    private Token createToken(Type type) {
+        Location startLocation = location.copy();
+        char currentChar = getCurrentChar();
+        consumePosition();
+        return new Token(currentChar, type, startLocation);
     }
 
     private Token matchNotEqual(Location startLocation) {
