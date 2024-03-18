@@ -1,16 +1,11 @@
-import exceptions.lexical.LexicalException;
 import executor.Executor;
 import lexical.LexicalExecutor;
-import lexical.Lexical;
-import lexical.LexicalAnalyzer;
-import lexical.Token;
 import logger.ConsoleLogger;
 import logger.FileLogger;
 import logger.Logger;
 import reader.FileReader;
 
 import java.io.FileNotFoundException;
-import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
@@ -38,7 +33,7 @@ public class Main {
             outputLogger = new FileLogger(outputFilePath);
         } else {
             // Logs the result in console
-            outputLogger = new ConsoleLogger();;
+            outputLogger = new ConsoleLogger();
         }
 
         // Execute
