@@ -29,7 +29,7 @@ public class CharUtils {
     /**
      * @param c caracter que deseamos saber si es valido
      * @return un boolean diciendo si es valido o no
-     *
+     * <p>
      * Esta funcion solo deberia usarse para comments y strings
      */
     public static boolean isValidChar(char c) {
@@ -62,6 +62,7 @@ public class CharUtils {
                 || c == '>'
                 || c == '='
                 || c == '!'
+                || c == '¡'
                 || c == '&'
                 || c == '|'
                 || c == '^'
@@ -71,7 +72,10 @@ public class CharUtils {
                 || c == '#'
                 || c == '$'
                 || c == '_'
-                || c == '¿';
+                || c == '¿'
+                || c == '\''
+                || c == '\"';
+
     }
 
     public static boolean isSpanishCharacter(char c) {
@@ -80,6 +84,12 @@ public class CharUtils {
                 || c == 'í'
                 || c == 'ó'
                 || c == 'ú'
-                || c == 'ñ';
+                || c == 'ñ'
+                || c == 'Á'
+                || c == 'É'
+                || c == 'Í'
+                || c == 'Ó'
+                || c == 'Ú'
+                || c == 'Ñ';
     }
 }
