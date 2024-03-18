@@ -2,7 +2,10 @@ package exceptions.lexical;
 
 import location.Location;
 
-public class MalformedIntLiteralException extends LexicalException{
+/**
+ * Excepción lanzada cuando se encuentra un literal entero mal formado.
+ */
+public class MalformedIntLiteralException extends LexicalException {
     public MalformedIntLiteralException(String lexeme, Location location) {
         super("Literal entero mal formado: " + lexeme, location);
     }
