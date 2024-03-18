@@ -430,6 +430,7 @@ public class LexicalAnalyzer implements Lexical {
                 case '0' -> throw new InvalidCharacterException(currentChar, location);
                 case 'n' -> "\n";
                 case 't' -> "\t";
+                case 'v' -> "" + (char) 11;
                 default -> "" + currentChar;
             };
         }
