@@ -16,7 +16,7 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        Logger log = new ConsoleLogger();
+        ConsoleLogger log = new ConsoleLogger();
 
         // Return error if no args
         if (args.length < 1) {
