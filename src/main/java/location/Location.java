@@ -1,8 +1,20 @@
 package location;
 
+/**
+ * Clase que representa la ubicación de un token en el archivo.
+ */
 public class Location {
+    /**
+     * Numero de línea
+     */
     private int line;
+    /**
+     * Numero de columna
+     */
     private int column;
+    /**
+     * Posición en el archivo como un offset comenzando desde cero
+     */
     private int position;
 
     public Location(int line, int column, int position) {
@@ -20,6 +32,9 @@ public class Location {
         this(1, 1, 0);
     }
 
+    /**
+     * @return una copia de la ubicación
+     */
     public Location copy() {
         return new Location(this.line, this.column, this.position);
     }
