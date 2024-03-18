@@ -45,106 +45,79 @@ public class LexicalAnalyzer implements Lexical {
             return null;
         }
 
-        Location startLocation = location.copy();
         currentChar = getCurrentChar();
 
         Token token = switch (currentChar) {
-            // Symbols
-            // Consume positiom
-            case '(' -> {
-                consumePosition();
-                yield new Token(currentChar, Type.OPEN_PAR, startLocation);
-            }
-            case ')' -> {
-                consumePosition();
-                yield new Token(currentChar, Type.CLOSE_PAR, startLocation);
-            }
-            case '{' -> {
-                consumePosition();
-                yield new Token(currentChar, Type.OPEN_CURLY, startLocation);
-            }
-            case '}' -> {
-                consumePosition();
-                yield new Token(currentChar, Type.CLOSE_CURLY, startLocation);
-            }
-            case '[' -> {
-                consumePosition();
-                yield new Token(currentChar, Type.OPEN_BRACKET, startLocation);
-            }
-            case ']' -> {
-                consumePosition();
-                yield new Token(currentChar, Type.CLOSE_BRACKET, startLocation);
-            }
-            case '.' -> {
-                consumePosition();
-                yield new Token(currentChar, Type.DOT, startLocation);
-            }
-            case ':' -> {
-                consumePosition();
-                yield new Token(currentChar, Type.COLON, startLocation);
-            }
-            case ';' -> {
-                consumePosition();
-                yield new Token(currentChar, Type.SEMICOLON, startLocation);
-            }
-            case ',' -> {
-                consumePosition();
-                yield new Token(currentChar, Type.COMMA, startLocation);
-            }
-            case '*' -> {
-                consumePosition();
-                yield new Token(currentChar, Type.MULT, startLocation);
-            }
-            case '%' -> {
-                consumePosition();
-                yield new Token(currentChar, Type.MOD, startLocation);
-            }
-            case '/' -> {
-                consumePosition();
-                yield new Token(currentChar, Type.DIV, startLocation);
-            }
-            case '+' -> matchPlusSign(startLocation);
-            case '-' -> matchMinusSign(startLocation);
-            case '=' -> matchEqualSign(startLocation);
-            case '>' -> matchGreaterThan(startLocation);
-            case '<' -> matchLessSign(startLocation);
-            case '!' -> matchNotEqual(startLocation);
-            case '\'' -> matchCharLiteral(startLocation);
-            case '\"' -> matchStringLiteral(startLocation);
-            case '|', '&' -> matchTwoSymbolsOrFail(startLocation, currentChar);
+            // Símbolos
+            case '(' -> createToken(Type.OPEN_PAR);
+            case ')' -> createToken(Type.CLOSE_PAR);
+            case '{' -> createToken(Type.OPEN_CURLY);
+            case '}' -> createToken(Type.CLOSE_CURLY);
+            case '[' -> createToken(Type.OPEN_BRACKET);
+            case ']' -> createToken(Type.CLOSE_BRACKET);
+            case '.' -> createToken(Type.DOT);
+            case ':' -> createToken(Type.COLON);
+            case ';' -> createToken(Type.SEMICOLON);
+            case ',' -> createToken(Type.COMMA);
 
+            // Operadores
+            case '*' -> createToken(Type.MULT);
+            case '%' -> createToken(Type.MOD);
+            case '/' -> createToken(Type.DIV);
+            case '+' -> matchPlusSign();
+            case '-' -> matchMinusSign();
+            case '=' -> matchEqualSign();
+            case '>' -> matchGreaterThan();
+            case '<' -> matchLessSign();
+            case '!' -> matchNotEqual();
+            case '|', '&' -> matchTwoSymbolsOrFail(currentChar);
 
-            default -> matchComplexString(startLocation);
+            // Caracteres
+            case '\'' -> matchCharLiteral();
+
+            // Strings
+            case '\"' -> matchStringLiteral();
+
+            // Identificdore y palabras reservadas
+            default -> matchComplexString();
         };
 
         if (token.getType() == null) {
-            throw new InvalidCharacterException(currentChar, startLocation);
+            throw new InvalidCharacterException(currentChar, location);
         }
 
         return token;
     }
 
-    private Token matchNotEqual(Location startLocation) {
-        return matchOneOrTwoCharToken(startLocation, '!', '=');
+    private Token createToken(Type type) {
+        Location startLocation = location.copy();
+        char currentChar = getCurrentChar();
+        consumePosition();
+        return new Token(currentChar, type, startLocation);
     }
 
-    private Token matchGreaterThan(Location startLocation) {
-        return matchOneOrTwoCharToken(startLocation, '>', '=');
+    private Token matchNotEqual() {
+        return matchOneOrTwoCharToken('!', '=');
     }
 
-    private Token matchLessSign(Location startLocation) {
-        return matchOneOrTwoCharToken(startLocation, '<', '=');
+    private Token matchGreaterThan() {
+        return matchOneOrTwoCharToken('>', '=');
     }
 
-    private Token matchEqualSign(Location startLocation) {
-        return matchOneOrTwoCharToken(startLocation, '=', '=');
+    private Token matchLessSign() {
+        return matchOneOrTwoCharToken('<', '=');
     }
 
-    private Token matchPlusSign(Location startLocation) {
-        return matchOneOrTwoCharToken(startLocation, '+', '+');
+    private Token matchEqualSign() {
+        return matchOneOrTwoCharToken('=', '=');
     }
 
-    private Token matchMinusSign(Location startLocation) {
+    private Token matchPlusSign() {
+        return matchOneOrTwoCharToken('+', '+');
+    }
+
+    private Token matchMinusSign() {
+        Location startLocation = location.copy();
         try {
             if (peekNextChar() == '>') {
                 consumePosition();
@@ -154,10 +127,11 @@ public class LexicalAnalyzer implements Lexical {
         } catch (ArrayIndexOutOfBoundsException e) {
         }
 
-        return matchOneOrTwoCharToken(startLocation, '-', '-');
+        return matchOneOrTwoCharToken('-', '-');
     }
 
-    private Token matchOneOrTwoCharToken(Location startLocation, char firstChar, char secondChar) {
+    private Token matchOneOrTwoCharToken(char firstChar, char secondChar) {
+        Location startLocation = location.copy();
         StringBuilder sb = new StringBuilder();
         sb.append(firstChar);
         consumePosition();
@@ -176,7 +150,8 @@ public class LexicalAnalyzer implements Lexical {
         return new Token(lexeme, PredefinedLexemeMap.getType(lexeme), startLocation);
     }
 
-    private Token matchTwoSymbolsOrFail(Location location, char charToMatch) throws MalformedDoubleSymbolException {
+    private Token matchTwoSymbolsOrFail(char charToMatch) throws MalformedDoubleSymbolException {
+        Location startLocation = location.copy();
         char currentChar = getCurrentChar();
         if (currentChar != charToMatch) {
             throw new MalformedDoubleSymbolException(charToMatch, location);
@@ -187,14 +162,15 @@ public class LexicalAnalyzer implements Lexical {
             if (currentChar == charToMatch) {
                 consumePosition();
                 String lexeme = "" + charToMatch + charToMatch;
-                return new Token(lexeme, PredefinedLexemeMap.getType(lexeme), location);
+                return new Token(lexeme, PredefinedLexemeMap.getType(lexeme), startLocation);
             }
         }
 
         throw new MalformedDoubleSymbolException(charToMatch, location);
     }
 
-    private Token matchStringLiteral(Location startLocation) throws UnclosedStringLiteralException, MalformedStringLiteralException, InvalidCharacterException, StringLiteralTooLongException {
+    private Token matchStringLiteral() throws UnclosedStringLiteralException, MalformedStringLiteralException, InvalidCharacterException, StringLiteralTooLongException {
+        Location startLocation = location.copy();
         consumePosition();
         if (isEndOfFile()) {
             throw new UnclosedStringLiteralException("\"", location);
@@ -228,7 +204,8 @@ public class LexicalAnalyzer implements Lexical {
         return new Token(lexeme, Type.STRING_LITERAL, startLocation);
     }
 
-    private Token matchCharLiteral(Location startLocation) throws MalformedCharLiteralException, UnclosedCharLiteralException, InvalidCharacterException, EmptyCharLiteralException {
+    private Token matchCharLiteral() throws MalformedCharLiteralException, UnclosedCharLiteralException, InvalidCharacterException, EmptyCharLiteralException {
+        Location startLocation = location.copy();
         // Start char should be '
         char currentChar = getCurrentChar();
         String lexeme = "";
@@ -278,7 +255,9 @@ public class LexicalAnalyzer implements Lexical {
         return new Token(lexeme, Type.CHAR_LITERAL, startLocation);
     }
 
-    private Token matchComplexString(Location startLocation) throws LexicalException {
+    private Token matchComplexString() throws LexicalException {
+        Location startLocation = location.copy();
+
         Token token = new Token();
         char startChar = getCurrentChar();
 
