@@ -439,7 +439,6 @@ public class LexicalAnalyzer implements Lexical {
     /**
      * @return Si se llegó al final del archivo
      */
-    @Override
     public boolean isEndOfFile() {
         return this.location.getPosition() > (chars.length - 1);
     }
