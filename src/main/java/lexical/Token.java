@@ -2,12 +2,18 @@ package lexical;
 
 import location.Location;
 
+/**
+ * Clase que representa un token.
+ * Un token es un par de la forma (lexema, tipo).
+ * El lexema es la cadena de caracteres que representa el token.
+ */
 public class Token {
     private String lexeme;
     private Type type;
     private Location location;
 
-    public Token() {}
+    public Token() {
+    }
 
     public Token(String lexeme, Type type, Location location) {
         this.lexeme = lexeme;
