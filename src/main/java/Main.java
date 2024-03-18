@@ -1,5 +1,6 @@
 import exceptions.lexical.LexicalException;
-import lexical.Executor;
+import executor.Executor;
+import lexical.LexicalExecutor;
 import lexical.Lexical;
 import lexical.LexicalAnalyzer;
 import lexical.Token;
@@ -7,20 +8,15 @@ import logger.ConsoleLogger;
 import logger.FileLogger;
 import logger.Logger;
 import reader.FileReader;
-import reader.StringReader;
 
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        ConsoleLogger log = new ConsoleLogger();
-
         // Return error if no args
         if (args.length < 1) {
-            log.LogText("No se especificó ningún archivo fuente");
+            System.out.println("No se especificó ningún archivo fuente");
             return;
         }
 
@@ -30,22 +26,11 @@ public class Main {
         try {
             fileReader = new FileReader(filePath);
         } catch (FileNotFoundException e) {
-            log.LogText("No se encontró el archivo: \n" + filePath);
+            System.out.println("No se encontró el archivo: \n" + filePath);
             return;
         }
 
-        // Get the token
-        Lexical lexical = new LexicalAnalyzer(fileReader);
-        Executor executor = new Executor(lexical);
-        List<Token> tokens;
-        try {
-            tokens = executor.getTokens();
-        } catch (LexicalException e) {
-            // Log the error
-            log.LogLexicError(e);
-            return;
-        }
-
+        // Get the output logger;
         Logger outputLogger;
         if (args.length > 1) {
             // Save the tokens in output file
@@ -53,9 +38,11 @@ public class Main {
             outputLogger = new FileLogger(outputFilePath);
         } else {
             // Logs the result in console
-            outputLogger = log;
+            outputLogger = new ConsoleLogger();;
         }
 
-        outputLogger.LogLexicSuccess(tokens);
+        // Execute
+        Executor executor = new LexicalExecutor(fileReader, outputLogger);
+        executor.execute();
     }
 }
