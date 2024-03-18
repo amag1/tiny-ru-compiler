@@ -243,6 +243,7 @@ public class LexicalAnalyzer implements Lexical {
         currentChar = getCurrentChar();
         if (currentChar == '\\') {
             lexeme += matchEscapeChar();
+            consumePosition();
         }
         else {
             if (CharUtils.isValidChar(currentChar)) {
@@ -373,7 +374,7 @@ public class LexicalAnalyzer implements Lexical {
                 currentChar = getCurrentChar();
             }
         }
-        
+
 
         if (lexeme.length() > 1024) {
             throw new IdentifierTooLongException(lexeme, location);
