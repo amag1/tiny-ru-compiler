@@ -23,4 +23,8 @@ public class ConsoleLogger extends Logger{
             System.out.println(line);
         }
     }
+
+    public void LogText(String text) {
+        System.out.println(text);
+    }
 }
