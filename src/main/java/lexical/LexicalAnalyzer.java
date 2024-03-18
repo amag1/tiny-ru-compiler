@@ -204,10 +204,12 @@ public class LexicalAnalyzer implements Lexical {
         while (currentChar != '\"') {
             if (currentChar == '\\') {
                 lexeme += matchEscapeChar();
-            } else {
+            }
+            else {
                 if (CharUtils.isValidChar(currentChar)) {
                     lexeme += currentChar;
-                } else {
+                }
+                else {
                     throw new MalformedStringLiteralException(lexeme, location);
                 }
             }
@@ -241,11 +243,13 @@ public class LexicalAnalyzer implements Lexical {
         currentChar = getCurrentChar();
         if (currentChar == '\\') {
             lexeme += matchEscapeChar();
-        } else {
+        }
+        else {
             if (CharUtils.isValidChar(currentChar)) {
                 lexeme += currentChar;
                 consumePosition();
-            } else {
+            }
+            else {
                 if (currentChar == '\'') {
                     throw new EmptyCharLiteralException(location);
                 }
@@ -283,7 +287,8 @@ public class LexicalAnalyzer implements Lexical {
         if (CharUtils.isLetter(startChar)) {
             if (CharUtils.isUppercaseLetter(startChar)) {
                 token = matchClassIdentifier(startLocation);
-            } else {
+            }
+            else {
                 token = matchIdentifier(startLocation);
             }
         }
@@ -319,7 +324,8 @@ public class LexicalAnalyzer implements Lexical {
         // Check if it is a type keyword
         if (PrimitiveType.getType(lexeme) != null) {
             token = new Token(lexeme, PrimitiveType.getType(lexeme), startLocation);
-        } else {
+        }
+        else {
             token = new Token(lexeme, Type.ID_CLASS, startLocation);
         }
 
@@ -367,11 +373,7 @@ public class LexicalAnalyzer implements Lexical {
                 currentChar = getCurrentChar();
             }
         }
-
-        // The last character cannot be an underscode
-        if (lexeme.charAt(lexeme.length() - 1) == '_') {
-            throw new MalformedIdentifierException(lexeme, location);
-        }
+        
 
         if (lexeme.length() > 1024) {
             throw new IdentifierTooLongException(lexeme, location);
@@ -382,7 +384,8 @@ public class LexicalAnalyzer implements Lexical {
         // Check if it is a keyword
         if (Keyword.getKeywordType(lexeme) != null) {
             token = new Token(lexeme, Keyword.getKeywordType(lexeme), startLocation);
-        } else {
+        }
+        else {
             token = new Token(lexeme, Type.ID, startLocation);
         }
 
@@ -397,7 +400,8 @@ public class LexicalAnalyzer implements Lexical {
                 location.increaseLine();
                 location.increasePosition();
                 location.setColumn(1);
-            } else {
+            }
+            else {
                 consumePosition();
             }
 
@@ -419,7 +423,8 @@ public class LexicalAnalyzer implements Lexical {
         currentChar = getCurrentChar();
         if (!CharUtils.isValidChar(currentChar)) {
             throw new InvalidCharacterException(currentChar, location);
-        } else {
+        }
+        else {
             returnString = switch (currentChar) {
                 case '0' -> throw new InvalidCharacterException(currentChar, location);
                 case 'n' -> "\n";
