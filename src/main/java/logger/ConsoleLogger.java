@@ -16,15 +16,4 @@ public class ConsoleLogger extends Logger{
             System.out.println(line);
         }
     }
-
-    public void LogLexicError(LexicalException e) {
-        List<String> message = GetLexicErrorMessage(e);
-        for (String line : message) {
-            System.out.println(line);
-        }
-    }
-
-    public void LogText(String text) {
-        System.out.println(text);
-    }
 }
