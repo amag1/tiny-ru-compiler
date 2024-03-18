@@ -10,6 +10,8 @@ import reader.FileReader;
 import reader.StringReader;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -54,10 +56,16 @@ public class LexicalTest {
     public void testFailingLexer(String input, Class<? extends LexicalException> error) throws FileNotFoundException {
         Lexical lexical = new LexicalAnalyzer(new FileReader(input));
         try {
-        while(!lexical.isEndOfFile()) {
-                lexical.nextToken();
+            List<Token> tokens = new ArrayList<>();
+
+            Token token = lexical.nextToken();
+            while (token != null) {
+                tokens.add(token);
+                token = lexical.nextToken();
             }
-        fail("Se esperaba una excepción en input " + input);
+
+            fail("Se esperaba una excepción en input " + input);
+
         } catch (LexicalException e) {
             assertEquals(e.getClass(), error, "Error en input: " + input + ", se esperaba: " + e.getClass());
         }

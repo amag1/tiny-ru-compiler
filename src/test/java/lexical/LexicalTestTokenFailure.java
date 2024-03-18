@@ -5,6 +5,9 @@ import exceptions.lexical.MalformedClassIdentifierException;
 import location.Location;
 import reader.StringReader;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -19,19 +22,24 @@ public class LexicalTestTokenFailure {
 
     public void run(boolean locationChecking) {
         Lexical lexical = new LexicalAnalyzer(new StringReader(codeText));
-        while (!lexical.isEndOfFile()) {
-            try {
-                Token currentToken = lexical.nextToken();
-            } catch (LexicalException e) {
-                assertEquals(this.expectedException.getClass(), e.getClass(), "Different exception classes");
 
-                if (locationChecking) {
+        List<Token> tokens = new ArrayList<Token>();
+        try {
+            Token token = lexical.nextToken();
+
+            while (token != null) {
+                tokens.add(token);
+                token = lexical.nextToken();
+            }
+        } catch (LexicalException e) {
+            assertEquals(this.expectedException.getClass(), e.getClass(), "Different exception classes");
+
+            if (locationChecking) {
                 assertEquals(this.expectedException.getColumn(), lexical.getColumn(), "Different exception columns");
                 assertEquals(this.expectedException.getLine(), lexical.getLine(), "Different exception lines");
-                }
-
-                return;
             }
+
+            return;
         }
 
         // No se encontró la excepción
