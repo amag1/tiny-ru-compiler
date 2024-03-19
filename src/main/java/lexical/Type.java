@@ -1,5 +1,8 @@
 package lexical;
 
+/**
+ * Enumeración que representa los tipos de tokens que se pueden encontrar en el lenguaje.
+ */
 public enum Type {
     // Identifiers
     ID_CLASS,

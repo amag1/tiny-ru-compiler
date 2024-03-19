@@ -4,10 +4,17 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
-public class FileReader implements Reader{
+/**
+ * Implementación de Reader que lee de un archivo.
+ */
+public class FileReader implements Reader {
     private File file;
     private char[] chars;
 
+    /**
+     * @param path la ruta del archivo
+     * @throws FileNotFoundException si el archivo no existe
+     */
     public FileReader(String path) throws FileNotFoundException {
         this.file = new File(path);
         Scanner scanner = new Scanner(this.file);

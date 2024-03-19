@@ -4,7 +4,14 @@ import lexical.Type;
 
 import java.util.HashMap;
 
+/**
+ * Esta clase se encarga de manejar las palabras reservadas del lenguaje.
+ * Permite recuperar el tipo asociado a una palabra reservada
+ */
 public class Keyword {
+    /**
+     * Mapa que asocia una palabra reservada con su tipo
+     */
     private static final HashMap<String, Type> keywords = new HashMap<String, Type>();
 
     static {
@@ -26,6 +33,10 @@ public class Keyword {
         keywords.put("start", Type.KW_START);
     }
 
+    /**
+     * @param keyword una palabra reservada
+     * @return el tipo asociado a la palabra reservada
+     */
     public static Type getKeywordType(String keyword) {
         return keywords.get(keyword);
     }

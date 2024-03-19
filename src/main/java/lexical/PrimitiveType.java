@@ -2,7 +2,13 @@ package lexical;
 
 import java.util.HashMap;
 
+/**
+ * Esta clase se encarga de manejar los tipos primitivos del lenguaje.
+ */
 public class PrimitiveType {
+    /**
+     * Mapa que asocia un tipo primitivo con su tipo
+     */
     private static final HashMap<String, Type> types = new HashMap<String, Type>();
 
     static {
@@ -13,6 +19,10 @@ public class PrimitiveType {
         types.put("Array", Type.ARRAY);
     }
 
+    /**
+     * @param type un tipo primitivo
+     * @return el tipo asociado al tipo primitivo
+     */
     public static Type getType(String type) {
         return types.get(type);
     }

@@ -4,6 +4,12 @@ import exceptions.lexical.*;
 import location.Location;
 import reader.Reader;
 
+/**
+ * Clase que implementa la interfaz Lexical.
+ * Se encarga de matchear los tokens del archivo.
+ * Además, se encarga de manejar los comentarios y los espacios en blanco.
+ * Para esto, implementa una estrategia `switch-case` con diferentes métodos que matchean los tokens.
+ */
 public class LexicalAnalyzer implements Lexical {
     private final char[] chars;
     private final Location location;
@@ -19,14 +25,22 @@ public class LexicalAnalyzer implements Lexical {
 
     /**
      * @return El siguiente token
+     * @throws LexicalException una excepción léxica detallando el error.
+     *                          <p>
+     *                          El método se encarga de matchear el siguiente token del archivo.
+     *                          Si se llegó al final del archivo, retorna null.
+     *                          Si se encuentra un caracter inválido, lanza una excepción.
+     *                          También lanza excepciones si al encontrar errores al matchear tokens.
      */
     @Override
     public Token nextToken() throws LexicalException {
+        // Si se llegó al final del archivo, retorna null
         if (isEndOfFile()) {
             return null;
         }
 
         char currentChar = getCurrentChar();
+        // Se encarga de remover los espacios en blanco y los comentarios
         while (!isEndOfFile() && (CharUtils.isWhitespace(currentChar) || isCommentStart())) {
             if (CharUtils.isWhitespace(currentChar)) {
                 removeWhitespaces();
@@ -41,12 +55,16 @@ public class LexicalAnalyzer implements Lexical {
             }
         }
 
+        // Si se llegó al final del archivo, retorna null
         if (isEndOfFile()) {
             return null;
         }
 
+        // Objeto location que guarda la posición inicial del token
+        Location startLocation = location.copy();
         currentChar = getCurrentChar();
 
+        // Matchea el token
         Token token = switch (currentChar) {
             // Símbolos
             case '(' -> createToken(Type.OPEN_PAR);
@@ -89,6 +107,10 @@ public class LexicalAnalyzer implements Lexical {
         return token;
     }
 
+    /**
+     * @param type El tipo del token
+     * @return Un token con el tipo especificado
+     */
     private Token createToken(Type type) {
         Location startLocation = location.copy();
         char currentChar = getCurrentChar();
@@ -117,6 +139,8 @@ public class LexicalAnalyzer implements Lexical {
     }
 
     private Token matchMinusSign() {
+        // Intenta matchear el operador flecha
+        // Si esto no es posible, matchea el operador menos
         Location startLocation = location.copy();
         try {
             if (peekNextChar() == '>') {
@@ -130,6 +154,11 @@ public class LexicalAnalyzer implements Lexical {
         return matchOneOrTwoCharToken('-', '-');
     }
 
+    /**
+     * @param firstChar El primer caracter
+     * @param secondChar El segundo caracter
+     * @return Un token cuyo lexema contiene a ambos caracteres si es posible. De lo contrario, un token con el primer caracter
+     */
     private Token matchOneOrTwoCharToken(char firstChar, char secondChar) {
         Location startLocation = location.copy();
         StringBuilder sb = new StringBuilder();
@@ -150,6 +179,11 @@ public class LexicalAnalyzer implements Lexical {
         return new Token(lexeme, PredefinedLexemeMap.getType(lexeme), startLocation);
     }
 
+    /**
+     * @param charToMatch El caracter a matchear
+     * @return Un token con el lexema que contiene dos veces el caracter a matchear
+     * @throws MalformedDoubleSymbolException Si el caracter a matchear no es el siguiente
+     */
     private Token matchTwoSymbolsOrFail(char charToMatch) throws MalformedDoubleSymbolException {
         Location startLocation = location.copy();
         char currentChar = getCurrentChar();
@@ -169,6 +203,13 @@ public class LexicalAnalyzer implements Lexical {
         throw new MalformedDoubleSymbolException(charToMatch, location);
     }
 
+    /**
+     * @return El siguiente token de tipo STRING_LITERAL
+     * @throws UnclosedStringLiteralException Si el string no está cerrado
+     * @throws MalformedStringLiteralException Si el string es inválido
+     * @throws InvalidCharacterException Si el string contiene un caracter inválido
+     * @throws StringLiteralTooLongException Si el string supera el límite de 1024 caracteres
+     */
     private Token matchStringLiteral() throws UnclosedStringLiteralException, MalformedStringLiteralException, InvalidCharacterException, StringLiteralTooLongException {
         Location startLocation = location.copy();
         consumePosition();
@@ -204,6 +245,13 @@ public class LexicalAnalyzer implements Lexical {
         return new Token(lexeme, Type.STRING_LITERAL, startLocation);
     }
 
+    /**
+     * @return El siguiente token de tipo CHAR_LITERAL
+     * @throws MalformedCharLiteralException Si el char es inválido
+     * @throws UnclosedCharLiteralException Si el char no está cerrado
+     * @throws InvalidCharacterException Si el char contiene un caracter inválido
+     * @throws EmptyCharLiteralException Si el char está vacío
+     */
     private Token matchCharLiteral() throws MalformedCharLiteralException, UnclosedCharLiteralException, InvalidCharacterException, EmptyCharLiteralException {
         Location startLocation = location.copy();
         // Start char should be '
@@ -255,6 +303,10 @@ public class LexicalAnalyzer implements Lexical {
         return new Token(lexeme, Type.CHAR_LITERAL, startLocation);
     }
 
+    /**
+     * @return El siguiente token de tipo ID, ID_CLASS o INT_LITERAL
+     * @throws LexicalException Si el token no es ninguno de los anteriores
+     */
     private Token matchComplexString() throws LexicalException {
         Location startLocation = location.copy();
 
@@ -262,14 +314,17 @@ public class LexicalAnalyzer implements Lexical {
         char startChar = getCurrentChar();
 
         if (CharUtils.isNumber(startChar)) {
+            // Match literal int
             token = matchIntLiteral(startLocation);
         }
 
         if (CharUtils.isLetter(startChar)) {
             if (CharUtils.isUppercaseLetter(startChar)) {
+                // Match identificador de clase
                 token = matchClassIdentifier(startLocation);
             }
             else {
+                // Match identificador de método o atributo
                 token = matchIdentifier(startLocation);
             }
         }
@@ -278,7 +333,7 @@ public class LexicalAnalyzer implements Lexical {
 
     /**
      * @return El siguiente token de tipo ID_CLASS, dadod que ya se matcheó el primer caracter
-     * @throws MalformedClassIdentifierException
+     * @throws MalformedClassIdentifierException Si el identificador de clase es inválido
      */
     private Token matchClassIdentifier(Location startLocation) throws MalformedClassIdentifierException {
         char currentChar = getCurrentChar();
@@ -287,6 +342,8 @@ public class LexicalAnalyzer implements Lexical {
             return new Token(lexeme, Type.ID_CLASS, startLocation);
         }
 
+        // Da por hecho que el primer caracter es una letra mayúscula
+        // Añade caraceres mientras sean letras, números o guiones bajos
         while (!isEndOfFile() && (CharUtils.isLetter(currentChar) || CharUtils.isNumber(currentChar) || currentChar == '_')) {
             lexeme += currentChar;
             consumePosition();
@@ -295,24 +352,30 @@ public class LexicalAnalyzer implements Lexical {
             }
         }
 
-        // Last letter must be a letter
+        // El último carater debe ser una letra
         char lastChar = lexeme.charAt(lexeme.length() - 1);
         if (!CharUtils.isLetter(lastChar)) {
             throw new MalformedClassIdentifierException(lexeme, location);
         }
 
         Token token = null;
-        // Check if it is a type keyword
+        // Verificar si la palabra es un tipo primitivo
         if (PrimitiveType.getType(lexeme) != null) {
             token = new Token(lexeme, PrimitiveType.getType(lexeme), startLocation);
         }
         else {
+            // De otro modo es un identificador de clase
             token = new Token(lexeme, Type.ID_CLASS, startLocation);
         }
 
         return token;
     }
 
+    /**
+     * @param startLocation La posición inicial del token
+     * @return El siguiente token de tipo INT_LITERAL
+     * @throws MalformedIntLiteralException Si el literal entero es inválido
+     */
     private Token matchIntLiteral(Location startLocation) throws MalformedIntLiteralException {
         char currentChar = getCurrentChar();
 
@@ -321,6 +384,7 @@ public class LexicalAnalyzer implements Lexical {
         }
 
         String lexeme = "";
+        // Añade caracteres al lexema mientras sean números
         while (!isEndOfFile() && CharUtils.isNumber(currentChar)) {
             lexeme += currentChar;
             consumePosition();
@@ -330,6 +394,8 @@ public class LexicalAnalyzer implements Lexical {
             }
         }
 
+        // Lanza un error si hay letras a continuación
+        // Por ejemplo, 123a
         if (CharUtils.isLetter(currentChar)) {
             throw new MalformedIntLiteralException(lexeme + currentChar, location);
         }
@@ -337,7 +403,13 @@ public class LexicalAnalyzer implements Lexical {
         return new Token(lexeme, Type.INT_LITERAL, startLocation);
     }
 
-    private Token matchIdentifier(Location startLocation) throws LexicalException {
+
+    /**
+     * @param startLocation La posición inicial del token
+     * @return El siguiente token de tipo ID
+     * @throws IdentifierTooLongException si el identificador supera el límte de 1024 caracteres
+     */
+    private Token matchIdentifier(Location startLocation) throws IdentifierTooLongException {
         char currentChar = getCurrentChar();
         String lexeme = "";
 
@@ -362,7 +434,7 @@ public class LexicalAnalyzer implements Lexical {
 
         Token token = null;
 
-        // Check if it is a keyword
+        // Verificar si se trata de una palabra clave
         if (Keyword.getKeywordType(lexeme) != null) {
             token = new Token(lexeme, Keyword.getKeywordType(lexeme), startLocation);
         }
@@ -374,6 +446,10 @@ public class LexicalAnalyzer implements Lexical {
     }
 
 
+    /**
+     * Remueve los espacios en blanco
+     * Avanza la posición de la location hasta el próximo caracter no-whitespace
+     */
     private void removeWhitespaces() {
         char currentChar = getCurrentChar();
         while (!isEndOfFile() && CharUtils.isWhitespace(currentChar)) {
@@ -392,6 +468,10 @@ public class LexicalAnalyzer implements Lexical {
         }
     }
 
+    /**
+     * @return El string asociado al caracter de escape
+     * @throws InvalidCharacterException Si el caracter de escape es inválido
+     */
     private String matchEscapeChar() throws InvalidCharacterException {
         // Consumes the backslash
         char currentChar = getCurrentChar();
@@ -407,10 +487,13 @@ public class LexicalAnalyzer implements Lexical {
         }
         else {
             returnString = switch (currentChar) {
+                // \0 es el caracter nulo
                 case '0' -> throw new InvalidCharacterException(currentChar, location);
+                // Los caracteres \n, \t y \v son especiales
                 case 'n' -> "\n";
                 case 't' -> "\t";
                 case 'v' -> "" + (char) 11;
+                // Los demás caracteres simplemente se devuelven sin el backslash
                 default -> "" + currentChar;
             };
         }
@@ -418,6 +501,9 @@ public class LexicalAnalyzer implements Lexical {
     }
 
 
+    /**
+     * Avanza la posición de la location
+     */
     private void consumePosition() {
         location.increaseColumn();
         location.increasePosition();
@@ -444,11 +530,19 @@ public class LexicalAnalyzer implements Lexical {
         return chars[location.getPosition()];
     }
 
+    /**
+     * @return El siguiente caracter, sin consumir
+     * @throws ArrayIndexOutOfBoundsException Si se llegó al final del archivo
+     */
     private char peekNextChar() throws ArrayIndexOutOfBoundsException {
         return chars[location.getPosition() + 1];
     }
 
 
+    /**
+     * @return Si el siguiente token es un comentario
+     * Observa el siguiente caracter y verifica si es el inicio de un comentario
+     */
     private boolean isCommentStart() {
         if (!isEndOfFile()) {
             char currentChar = getCurrentChar();
@@ -465,6 +559,9 @@ public class LexicalAnalyzer implements Lexical {
         return false;
     }
 
+    /**
+     * Ignora todos los caracteres hasta encontrar un salto de linea
+     */
     private void removeComments() {
         while (!isEndOfFile() && getCurrentChar() != '\n') {
             consumePosition();

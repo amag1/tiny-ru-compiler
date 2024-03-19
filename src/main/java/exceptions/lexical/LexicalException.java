@@ -2,8 +2,14 @@ package exceptions.lexical;
 
 import location.Location;
 
-public class LexicalException extends Exception{
+/**
+ * Excepción lanzada cuando se encuentra un error léxico.
+ * Esta excepción contiene la ubicación del error.
+ * Las demás excepciones de errores léxicos heredan de esta clase.
+ */
+public class LexicalException extends Exception {
     private Location location;
+
     public LexicalException(String message, Location location) {
 
         super(message);

@@ -2,7 +2,13 @@ package lexical;
 
 import java.util.HashMap;
 
+/**
+ * Esta clase se encarga de manejar los lexemas predefinidos del lenguaje.
+ */
 public class PredefinedLexemeMap {
+    /**
+     * Mapa que asocia un lexema con su tipo
+     */
     private static final HashMap<String, Type> types = new HashMap<String, Type>();
 
     static {
@@ -22,6 +28,10 @@ public class PredefinedLexemeMap {
         types.put("&&", Type.AND);
     }
 
+    /**
+     * @param type un lexema
+     * @return el tipo asociado al lexema
+     */
     public static Type getType(String type) {
         return types.get(type);
     }
