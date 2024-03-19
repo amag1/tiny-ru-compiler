@@ -1,6 +1,3 @@
-"hola" "esto" "Es" "un tést dé áéíóúñ" "Strings" "\n\v\t"
-
-
 /? CORRECTO: ANALISIS LEXICO
 /? | TOKEN | LEXEMA | NUMERO DE LINEA (NUMERO DE COLUMNA) |
 /? | STRING_LITERAL | hola | 1 (1) |
@@ -10,3 +7,6 @@
 /? | STRING_LITERAL | Strings | 1 (40) |
 /? | STRING_LITERAL |
 /? 	 | 1 (50) |
+"hola" "esto" "Es" "un tést dé áéíóúñ" "Strings" "\n\v\t"
+
+
