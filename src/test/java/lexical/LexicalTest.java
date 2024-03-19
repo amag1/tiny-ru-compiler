@@ -145,19 +145,22 @@ public class LexicalTest {
     private static Stream<Arguments> provideStringsForClassName() {
         String basepath = "src/main/java/lexical/test/failing/";
         return Stream.of(
-                Arguments.of(basepath + "00.ru", MalformedClassIdentifierException.class),
+                Arguments.of(basepath + "07.ru", EmptyCharLiteralException.class),
+                Arguments.of(basepath + "13.ru", IdentifierTooLongException.class),
                 Arguments.of(basepath + "01.ru", InvalidCharacterException.class),
                 Arguments.of(basepath + "02.ru", InvalidCharacterException.class),
-                Arguments.of(basepath + "03.ru", MalformedIntLiteralException.class),
-                Arguments.of(basepath + "04.ru", InvalidCharacterException.class),
-                Arguments.of(basepath + "05.ru", UnclosedStringLiteralException.class),
-                Arguments.of(basepath + "06.ru", MalformedCharLiteralException.class),
-                Arguments.of(basepath + "07.ru", EmptyCharLiteralException.class),
-                Arguments.of(basepath + "08.ru", UnclosedCharLiteralException.class),
                 Arguments.of(basepath + "09.ru", InvalidCharacterException.class),
+                Arguments.of(basepath + "04.ru", InvalidCharacterException.class),
+                Arguments.of(basepath + "06.ru", MalformedCharLiteralException.class),
+                Arguments.of(basepath + "00.ru", MalformedClassIdentifierException.class),
+                Arguments.of(basepath + "14.ru", MalformedDoubleSymbolException.class),
+                Arguments.of(basepath + "03.ru", MalformedIntLiteralException.class),
+                Arguments.of(basepath + "15.ru", MalformedStringLiteralException.class),
+                Arguments.of(basepath + "12.ru", StringLiteralTooLongException.class),
+                Arguments.of(basepath + "unclosedChar.ru", UnclosedCharLiteralException.class),
+                Arguments.of(basepath + "05.ru", UnclosedStringLiteralException.class),
                 Arguments.of(basepath + "10.ru", UnclosedStringLiteralException.class),
-                Arguments.of(basepath + "11.ru", UnclosedStringLiteralException.class),
-                Arguments.of(basepath + "12.ru", StringLiteralTooLongException.class)
+                Arguments.of(basepath + "11.ru", UnclosedStringLiteralException.class)
         );
     }
 }
