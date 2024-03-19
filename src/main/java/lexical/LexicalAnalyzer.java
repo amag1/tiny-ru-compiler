@@ -66,93 +66,90 @@ public class LexicalAnalyzer implements Lexical {
 
         // Matchea el token
         Token token = switch (currentChar) {
-            // Símbolos simples
-            case '(' -> {
-                consumePosition();
-                yield new Token(currentChar, Type.OPEN_PAR, startLocation);
-            }
-            case ')' -> {
-                consumePosition();
-                yield new Token(currentChar, Type.CLOSE_PAR, startLocation);
-            }
-            case '{' -> {
-                consumePosition();
-                yield new Token(currentChar, Type.OPEN_CURLY, startLocation);
-            }
-            case '}' -> {
-                consumePosition();
-                yield new Token(currentChar, Type.CLOSE_CURLY, startLocation);
-            }
-            case '[' -> {
-                consumePosition();
-                yield new Token(currentChar, Type.OPEN_BRACKET, startLocation);
-            }
-            case ']' -> {
-                consumePosition();
-                yield new Token(currentChar, Type.CLOSE_BRACKET, startLocation);
-            }
-            case '.' -> {
-                consumePosition();
-                yield new Token(currentChar, Type.DOT, startLocation);
-            }
-            case ':' -> {
-                consumePosition();
-                yield new Token(currentChar, Type.COLON, startLocation);
-            }
-            case ';' -> {
-                consumePosition();
-                yield new Token(currentChar, Type.SEMICOLON, startLocation);
-            }
-            case ',' -> {
-                consumePosition();
-                yield new Token(currentChar, Type.COMMA, startLocation);
-            }
-            case '*' -> {
-                consumePosition();
-                yield new Token(currentChar, Type.MULT, startLocation);
-            }
-            case '%' -> {
-                consumePosition();
-                yield new Token(currentChar, Type.MOD, startLocation);
-            }
-            case '/' -> {
-                consumePosition();
-                yield new Token(currentChar, Type.DIV, startLocation);
-            }
+            // Símbolos
+            case '(' -> createToken(Type.OPEN_PAR);
+            case ')' -> createToken(Type.CLOSE_PAR);
+            case '{' -> createToken(Type.OPEN_CURLY);
+            case '}' -> createToken(Type.CLOSE_CURLY);
+            case '[' -> createToken(Type.OPEN_BRACKET);
+            case ']' -> createToken(Type.CLOSE_BRACKET);
+            case '.' -> createToken(Type.DOT);
+            case ':' -> createToken(Type.COLON);
+            case ';' -> createToken(Type.SEMICOLON);
+            case ',' -> createToken(Type.COMMA);
 
-            // Operadores aritméticos
-            case '+' -> matchPlusSign(startLocation);
-            case '-' -> matchMinusSign(startLocation);
-            case '=' -> matchEqualSign(startLocation);
-            case '>' -> matchGreaterThan(startLocation);
-            case '<' -> matchLessSign(startLocation);
-            case '!' -> matchNotEqual(startLocation);
+            // Operadores
+            case '*' -> createToken(Type.MULT);
+            case '%' -> createToken(Type.MOD);
+            case '/' -> createToken(Type.DIV);
+            case '+' -> matchPlusSign();
+            case '-' -> matchMinusSign();
+            case '=' -> matchEqualSign();
+            case '>' -> matchGreaterThan();
+            case '<' -> matchLessSign();
+            case '!' -> matchNotEqual();
+            case '|', '&' -> matchTwoSymbolsOrFail(currentChar);
 
-            // Literales
-            case '\'' -> matchCharLiteral(startLocation);
-            case '\"' -> matchStringLiteral(startLocation);
+            // Caracteres
+            case '\'' -> matchCharLiteral();
 
-            // Operadores lógicos
-            case '|', '&' -> matchTwoSymbolsOrFail(startLocation, currentChar);
+            // Strings
+            case '\"' -> matchStringLiteral();
 
-            // Por defecto, matchea un string complejo
-            default -> matchComplexString(startLocation);
+            // Identificdore y palabras reservadas
+            default -> matchComplexString();
         };
 
         if (token.getType() == null) {
-            throw new InvalidCharacterException(currentChar, startLocation);
+            throw new InvalidCharacterException(currentChar, location);
         }
 
         return token;
     }
 
-    /**
-     * @param startLocation La posición inicial del token
-     * @param firstChar     El primer caracter esperado del token
-     * @param secondChar    El segundo caracter esperado del token
-     * @return Un token de uno o dos caracteres.
-     */
-    private Token matchOneOrTwoCharToken(Location startLocation, char firstChar, char secondChar) {
+    private Token createToken(Type type) {
+        Location startLocation = location.copy();
+        char currentChar = getCurrentChar();
+        consumePosition();
+        return new Token(currentChar, type, startLocation);
+    }
+
+    private Token matchNotEqual() {
+        return matchOneOrTwoCharToken('!', '=');
+    }
+
+    private Token matchGreaterThan() {
+        return matchOneOrTwoCharToken('>', '=');
+    }
+
+    private Token matchLessSign() {
+        return matchOneOrTwoCharToken('<', '=');
+    }
+
+    private Token matchEqualSign() {
+        return matchOneOrTwoCharToken('=', '=');
+    }
+
+    private Token matchPlusSign() {
+        return matchOneOrTwoCharToken('+', '+');
+    }
+
+    private Token matchMinusSign() {
+        Location startLocation = location.copy();
+        try {
+            if (peekNextChar() == '>') {
+                consumePosition();
+                consumePosition();
+                return new Token("->", Type.ARROW, startLocation);
+            }
+        } catch (ArrayIndexOutOfBoundsException e) {
+        }
+
+        return matchOneOrTwoCharToken('-', '-');
+    }
+
+    private Token matchOneOrTwoCharToken(char firstChar, char secondChar) {
+        Location startLocation = location.copy();
         StringBuilder sb = new StringBuilder();
         sb.append(firstChar);
         consumePosition();
@@ -171,49 +168,8 @@ public class LexicalAnalyzer implements Lexical {
         return new Token(lexeme, PredefinedLexemeMap.getType(lexeme), startLocation);
     }
 
-    private Token matchNotEqual(Location startLocation) {
-        return matchOneOrTwoCharToken(startLocation, '!', '=');
-    }
-
-    private Token matchGreaterThan(Location startLocation) {
-        return matchOneOrTwoCharToken(startLocation, '>', '=');
-    }
-
-    private Token matchLessSign(Location startLocation) {
-        return matchOneOrTwoCharToken(startLocation, '<', '=');
-    }
-
-    private Token matchEqualSign(Location startLocation) {
-        return matchOneOrTwoCharToken(startLocation, '=', '=');
-    }
-
-    private Token matchPlusSign(Location startLocation) {
-        return matchOneOrTwoCharToken(startLocation, '+', '+');
-    }
-
-    private Token matchMinusSign(Location startLocation) {
-        // Intenta matchear con el token flecha
-        try {
-            if (peekNextChar() == '>') {
-                consumePosition();
-                consumePosition();
-                return new Token("->", Type.ARROW, startLocation);
-            }
-        } catch (ArrayIndexOutOfBoundsException e) {
-        }
-
-        // Si no lo consigue, matchea con el token menos
-        return matchOneOrTwoCharToken(startLocation, '-', '-');
-    }
-
-
-    /**
-     * @param location    La posición inicial del token
-     * @param charToMatch El caracter que se espera matchear
-     * @return Un token de dos caracteres
-     * @throws MalformedDoubleSymbolException Si no se matchea el token
-     */
-    private Token matchTwoSymbolsOrFail(Location location, char charToMatch) throws MalformedDoubleSymbolException {
+    private Token matchTwoSymbolsOrFail(char charToMatch) throws MalformedDoubleSymbolException {
+        Location startLocation = location.copy();
         char currentChar = getCurrentChar();
         if (currentChar != charToMatch) {
             throw new MalformedDoubleSymbolException(charToMatch, location);
@@ -224,22 +180,15 @@ public class LexicalAnalyzer implements Lexical {
             if (currentChar == charToMatch) {
                 consumePosition();
                 String lexeme = "" + charToMatch + charToMatch;
-                return new Token(lexeme, PredefinedLexemeMap.getType(lexeme), location);
+                return new Token(lexeme, PredefinedLexemeMap.getType(lexeme), startLocation);
             }
         }
 
         throw new MalformedDoubleSymbolException(charToMatch, location);
     }
 
-    /**
-     * @param startLocation La posición inicial del token
-     * @return Un token de tipo STRING_LITERAL
-     * @throws UnclosedStringLiteralException  Si se llega al final del archivo sin cerrar el string
-     * @throws MalformedStringLiteralException Error genérico al matchear el string
-     * @throws InvalidCharacterException       Si se encuentra un caracter inválido
-     * @throws StringLiteralTooLongException   Si el string supera los 1024 caracteres de longitud
-     */
-    private Token matchStringLiteral(Location startLocation) throws UnclosedStringLiteralException, MalformedStringLiteralException, InvalidCharacterException, StringLiteralTooLongException {
+    private Token matchStringLiteral() throws UnclosedStringLiteralException, MalformedStringLiteralException, InvalidCharacterException, StringLiteralTooLongException {
+        Location startLocation = location.copy();
         consumePosition();
         if (isEndOfFile()) {
             throw new UnclosedStringLiteralException("\"", location);
@@ -273,15 +222,8 @@ public class LexicalAnalyzer implements Lexical {
         return new Token(lexeme, Type.STRING_LITERAL, startLocation);
     }
 
-    /**
-     * @param startLocation La posición inicial del token
-     * @return Un token de tipo CHAR_LITERAL
-     * @throws MalformedCharLiteralException Si el char no es válido
-     * @throws UnclosedCharLiteralException  Si se llega al final del archivo sin cerrar el char
-     * @throws InvalidCharacterException     Si se encuentra un caracter inválido
-     * @throws EmptyCharLiteralException     Si el char está vacío
-     */
-    private Token matchCharLiteral(Location startLocation) throws MalformedCharLiteralException, UnclosedCharLiteralException, InvalidCharacterException, EmptyCharLiteralException {
+    private Token matchCharLiteral() throws MalformedCharLiteralException, UnclosedCharLiteralException, InvalidCharacterException, EmptyCharLiteralException {
+        Location startLocation = location.copy();
         // Start char should be '
         char currentChar = getCurrentChar();
         String lexeme = "";
@@ -299,18 +241,19 @@ public class LexicalAnalyzer implements Lexical {
             consumePosition();
         }
         else {
+            if (currentChar == '\'') {
+                throw new EmptyCharLiteralException(location);
+            }
+
+            if (currentChar == '\0') {
+                throw new InvalidCharacterException(currentChar, location);
+            }
+
             if (CharUtils.isValidChar(currentChar)) {
                 lexeme += currentChar;
                 consumePosition();
             }
             else {
-                if (currentChar == '\'') {
-                    throw new EmptyCharLiteralException(location);
-                }
-
-                if (currentChar == '\0') {
-                    throw new InvalidCharacterException(currentChar, location);
-                }
                 throw new MalformedCharLiteralException(lexeme, location);
             }
         }
@@ -330,14 +273,9 @@ public class LexicalAnalyzer implements Lexical {
         return new Token(lexeme, Type.CHAR_LITERAL, startLocation);
     }
 
-    /**
-     * @param startLocation La posición inicial del token
-     * @return Un token de tipo ID_CLASS, ID o INT_LITERAL
-     * @throws LexicalException Si se encuentra un error al matchear el token
-     *                          Esta funcion se llama en el caso default del switch, y matchea un string complejo,
-     *                          que puede ser un ID_CLASS, ID o INT_LITERAL.
-     */
-    private Token matchComplexString(Location startLocation) throws LexicalException {
+    private Token matchComplexString() throws LexicalException {
+        Location startLocation = location.copy();
+
         Token token = new Token();
         char startChar = getCurrentChar();
 
@@ -540,7 +478,6 @@ public class LexicalAnalyzer implements Lexical {
     /**
      * @return Si se llegó al final del archivo
      */
-    @Override
     public boolean isEndOfFile() {
         return this.location.getPosition() > (chars.length - 1);
     }

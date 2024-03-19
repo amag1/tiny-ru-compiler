@@ -7,9 +7,10 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import reader.FileReader;
-import reader.StringReader;
 
+import java.io.FileNotFoundException;
 import java.io.*;
+
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -54,8 +55,10 @@ public class LexicalTest {
     public void testPassingLexer(String input) {
         try {
             Lexical lexical = new LexicalAnalyzer(new FileReader(input));
-            while (!lexical.isEndOfFile()) {
-                lexical.nextToken();
+
+            Token token = lexical.nextToken();
+            while (token != null) {
+                token = lexical.nextToken();
             }
         } catch (FileNotFoundException e) {
             fail("Archivo no encontrado: " + input);
@@ -91,8 +94,9 @@ public class LexicalTest {
         try {
             Lexical lexical = new LexicalAnalyzer(new FileReader(input));
             try {
-                while (!lexical.isEndOfFile()) {
-                    lexical.nextToken();
+                Token token = lexical.nextToken();
+                while (token != null) {
+                    token = lexical.nextToken();
                 }
                 fail("Se esperaba una excepción en input " + input);
             } catch (LexicalException e) {
@@ -128,12 +132,13 @@ public class LexicalTest {
     public void testFailingLexerWithErrorAssertion(String input, Class<? extends LexicalException> error) throws FileNotFoundException {
         Lexical lexical = new LexicalAnalyzer(new FileReader(input));
         try {
-            while (!lexical.isEndOfFile()) {
-                lexical.nextToken();
+            Token token = lexical.nextToken();
+            while (token != null) {
+                token = lexical.nextToken();
             }
             fail("Se esperaba una excepción en input " + input);
         } catch (LexicalException e) {
-            assertEquals(e.getClass(), error, "Error en input: " + input + ", se esperaba: " + e.getClass());
+            assertEquals(error, e.getClass(),  "Error en input: " + input + ", se esperaba: " + e.getClass());
         }
     }
 
@@ -152,9 +157,7 @@ public class LexicalTest {
                 Arguments.of(basepath + "09.ru", InvalidCharacterException.class),
                 Arguments.of(basepath + "10.ru", UnclosedStringLiteralException.class),
                 Arguments.of(basepath + "11.ru", UnclosedStringLiteralException.class),
-                Arguments.of(basepath + "12.ru", MalformedStringLiteralException.class),
-                Arguments.of(basepath + "13.ru", StringLiteralTooLongException.class)
-
+                Arguments.of(basepath + "12.ru", StringLiteralTooLongException.class)
         );
     }
 }
