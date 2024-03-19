@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.uncuyo.tinyrucompiler</groupId>
-    <artifactId>etapa1</artifactId>
+    <artifactId>tiny-ru-compiler</artifactId>
     <version>1</version>
 
     <properties>
