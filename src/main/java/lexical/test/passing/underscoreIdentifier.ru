@@ -1,1 +1,5 @@
 hola_aa_
+
+/? CORRECTO: ANALISIS LEXICO
+/? | TOKEN | LEXEMA | NUMERO DE LINEA (NUMERO DE COLUMNA) |
+/? | ID | hola_aa_ | 1 (1) |

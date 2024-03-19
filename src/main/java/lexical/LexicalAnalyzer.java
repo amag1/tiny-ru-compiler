@@ -429,7 +429,7 @@ public class LexicalAnalyzer implements Lexical {
 
 
         if (lexeme.length() > 1024) {
-            throw new IdentifierTooLongException(lexeme, location);
+            throw new IdentifierTooLongException(lexeme.substring(0,8) + "...", location);
         }
 
         Token token = null;
@@ -488,7 +488,7 @@ public class LexicalAnalyzer implements Lexical {
         else {
             returnString = switch (currentChar) {
                 // \0 es el caracter nulo
-                case '0' -> throw new InvalidCharacterException(currentChar, location);
+                case '0' -> throw new InvalidCharacterException('\0', location);
                 // Los caracteres \n, \t y \v son especiales
                 case 'n' -> "\n";
                 case 't' -> "\t";
