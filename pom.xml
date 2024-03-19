@@ -5,8 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.uncuyo.tinyrucompiler</groupId>
-    <artifactId>tiny-ru-compiler</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <artifactId>etapa1</artifactId>
+    <version>1</version>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
