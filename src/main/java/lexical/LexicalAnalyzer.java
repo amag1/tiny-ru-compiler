@@ -107,6 +107,10 @@ public class LexicalAnalyzer implements Lexical {
         return token;
     }
 
+    /**
+     * @param type El tipo del token
+     * @return Un token con el tipo especificado
+     */
     private Token createToken(Type type) {
         Location startLocation = location.copy();
         char currentChar = getCurrentChar();
@@ -135,6 +139,8 @@ public class LexicalAnalyzer implements Lexical {
     }
 
     private Token matchMinusSign() {
+        // Intenta matchear el operador flecha
+        // Si esto no es posible, matchea el operador menos
         Location startLocation = location.copy();
         try {
             if (peekNextChar() == '>') {
@@ -148,6 +154,11 @@ public class LexicalAnalyzer implements Lexical {
         return matchOneOrTwoCharToken('-', '-');
     }
 
+    /**
+     * @param firstChar El primer caracter
+     * @param secondChar El segundo caracter
+     * @return Un token cuyo lexema contiene a ambos caracteres si es posible. De lo contrario, un token con el primer caracter
+     */
     private Token matchOneOrTwoCharToken(char firstChar, char secondChar) {
         Location startLocation = location.copy();
         StringBuilder sb = new StringBuilder();
@@ -168,6 +179,11 @@ public class LexicalAnalyzer implements Lexical {
         return new Token(lexeme, PredefinedLexemeMap.getType(lexeme), startLocation);
     }
 
+    /**
+     * @param charToMatch El caracter a matchear
+     * @return Un token con el lexema que contiene dos veces el caracter a matchear
+     * @throws MalformedDoubleSymbolException Si el caracter a matchear no es el siguiente
+     */
     private Token matchTwoSymbolsOrFail(char charToMatch) throws MalformedDoubleSymbolException {
         Location startLocation = location.copy();
         char currentChar = getCurrentChar();
@@ -187,6 +203,13 @@ public class LexicalAnalyzer implements Lexical {
         throw new MalformedDoubleSymbolException(charToMatch, location);
     }
 
+    /**
+     * @return El siguiente token de tipo STRING_LITERAL
+     * @throws UnclosedStringLiteralException Si el string no está cerrado
+     * @throws MalformedStringLiteralException Si el string es inválido
+     * @throws InvalidCharacterException Si el string contiene un caracter inválido
+     * @throws StringLiteralTooLongException Si el string supera el límite de 1024 caracteres
+     */
     private Token matchStringLiteral() throws UnclosedStringLiteralException, MalformedStringLiteralException, InvalidCharacterException, StringLiteralTooLongException {
         Location startLocation = location.copy();
         consumePosition();
@@ -222,6 +245,13 @@ public class LexicalAnalyzer implements Lexical {
         return new Token(lexeme, Type.STRING_LITERAL, startLocation);
     }
 
+    /**
+     * @return El siguiente token de tipo CHAR_LITERAL
+     * @throws MalformedCharLiteralException Si el char es inválido
+     * @throws UnclosedCharLiteralException Si el char no está cerrado
+     * @throws InvalidCharacterException Si el char contiene un caracter inválido
+     * @throws EmptyCharLiteralException Si el char está vacío
+     */
     private Token matchCharLiteral() throws MalformedCharLiteralException, UnclosedCharLiteralException, InvalidCharacterException, EmptyCharLiteralException {
         Location startLocation = location.copy();
         // Start char should be '
@@ -273,6 +303,10 @@ public class LexicalAnalyzer implements Lexical {
         return new Token(lexeme, Type.CHAR_LITERAL, startLocation);
     }
 
+    /**
+     * @return El siguiente token de tipo ID, ID_CLASS o INT_LITERAL
+     * @throws LexicalException Si el token no es ninguno de los anteriores
+     */
     private Token matchComplexString() throws LexicalException {
         Location startLocation = location.copy();
 
