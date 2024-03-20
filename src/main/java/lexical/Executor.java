@@ -14,7 +14,7 @@ public class Executor {
     public static void main(String[] args) {
         ConsoleLogger log = new ConsoleLogger();
         try {
-            Lexical lexical = new LexicalAnalyzer(new FileReader("C:\\Users\\Usuario\\Documents\\Andrés\\Facu\\2024\\tiny-ru-compiler\\src\\main\\java\\lexical\\test\\passing\\underscoreidentifier.ru"));
+            Lexical lexical = new LexicalAnalyzer(new FileReader("/home/andres/IdeaProjects/tiny-ru-compiler/src/main/java/lexical/test/passing/fibonacci.ru"));
 
 
             List<Token> tokens = new ArrayList<Token>();

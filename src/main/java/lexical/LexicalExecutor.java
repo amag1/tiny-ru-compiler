@@ -10,16 +10,21 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Locale;
 
+/**
+ * Implementación concreta de executor para analizador sintáctico
+ * Implementa el método abstracto `execute`
+ * Además, ofrece una funcion para obtener todos los tokens de un código fuente
+ */
 public class LexicalExecutor extends Executor {
 
-    private Lexical lexical;
+    private final Lexical lexical;
 
     public LexicalExecutor(Reader reader, Logger logger) {
         super(reader, logger);
         lexical = new LexicalAnalyzer(reader);
     }
 
-    public List<Token> getTokens() throws LexicalException {
+    private List<Token> getTokens() throws LexicalException {
         List<Token> tokens = new ArrayList<Token>();
 
         Token token = lexical.nextToken();
@@ -42,6 +47,6 @@ public class LexicalExecutor extends Executor {
             return;
         }
 
-        this.logger.LogLexicSuccess(tokens);
+        logger.LogLexicSuccess(tokens);
     }
 }

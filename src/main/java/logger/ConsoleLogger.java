@@ -5,7 +5,10 @@ import lexical.Token;
 
 import java.util.List;
 
-public class ConsoleLogger extends Logger{
+/**
+ * Implementación de Logger para imprimir por consola.
+ */
+public class ConsoleLogger extends Logger {
     public ConsoleLogger() {
         super();
     }

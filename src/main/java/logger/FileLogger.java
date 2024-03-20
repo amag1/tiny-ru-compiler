@@ -7,11 +7,14 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
-public class FileLogger extends Logger{
+/**
+ * Implementación de logger que permite escribir el éxito sintáctico en un nuevo archivo.
+ */
+public class FileLogger extends Logger {
 
     File file;
 
-    public FileLogger(String path){
+    public FileLogger(String path) {
         this.file = new File(path);
         try {
             this.file.createNewFile();
@@ -20,7 +23,7 @@ public class FileLogger extends Logger{
         }
     }
 
-    public  void LogLexicSuccess(List<Token> tokens) {
+    public void LogLexicSuccess(List<Token> tokens) {
         List<String> message = GetLexicSuccessMessage(tokens);
 
         try {
