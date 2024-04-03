@@ -1,6 +1,7 @@
 package logger;
 
 import exceptions.lexical.LexicalException;
+import exceptions.syntactic.SyntacticException;
 import lexical.Token;
 
 import java.util.ArrayList;
@@ -34,6 +35,20 @@ public abstract class Logger {
     protected List<String> GetLexicErrorMessage(LexicalException e) {
         List result = new ArrayList<String>();
         result.add("ERROR: LEXICO");
+        result.add("| NUMERO DE LINEA: | NUMERO DE COLUMNA: | DESCRIPCION: |");
+        result.add("| " + e.getLine() + " | " + e.getColumn() + " | " + e.getMessage() + " |");
+        return result;
+    }
+
+    protected List<String> GetSyntacticSuccessMessage() {
+        List result = new ArrayList<String>();
+        result.add("CORRECTO: ANALISIS SINTACTICO");
+        return result;
+    }
+
+    protected List<String> GetSyntacticErrorMessage(SyntacticException e) {
+        List result = new ArrayList<String>();
+        result.add("ERROR: SINTACTICO");
         result.add("| NUMERO DE LINEA: | NUMERO DE COLUMNA: | DESCRIPCION: |");
         result.add("| " + e.getLine() + " | " + e.getColumn() + " | " + e.getMessage() + " |");
         return result;
