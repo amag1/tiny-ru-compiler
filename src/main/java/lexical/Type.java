@@ -72,6 +72,8 @@ public enum Type {
     KW_ST, // Static
     KW_PRI, // Private
     KW_SELF,
-    KW_START
+    KW_START,
+
+    EOF
 
 }

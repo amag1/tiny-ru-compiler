@@ -44,4 +44,7 @@ public class Token {
         return location.getColumn();
     }
 
+    public Location getLocation() {
+        return location;
+    }
 }
