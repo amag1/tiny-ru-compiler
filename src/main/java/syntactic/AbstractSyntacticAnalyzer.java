@@ -62,4 +62,8 @@ public abstract class AbstractSyntacticAnalyzer {
 
         throw new SyntacticException(currentToken, expected);
     }
+
+    protected void throwSyntacticException(Type... expected) throws SyntacticException {
+        throw new SyntacticException(currentToken, expected);
+    }
 }

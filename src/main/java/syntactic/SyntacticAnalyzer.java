@@ -32,6 +32,12 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         match(Type.EOF);
     }
 
+    private void start() throws SyntacticException, LexicalException {
+        match(Type.KW_START);
+        match(Type.OPEN_CURLY);
+        match(Type.CLOSE_CURLY);
+    }
+
     private void listaDefiniciones() throws SyntacticException, LexicalException {
         Type[] follow = {Type.KW_START};
         // Cuando un no terminal deriva lambda, se chequea si el token actual es uno de los siguientes
@@ -53,10 +59,6 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         }
     }
 
-    private void impl() throws SyntacticException, LexicalException {
-        match(Type.KW_IMPL);
-    }
-
     private void struct() throws SyntacticException, LexicalException {
         match(Type.KW_STRUCT);
         match(Type.ID_CLASS);
@@ -73,8 +75,110 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         match(Type.CLOSE_CURLY);
     }
 
+    private void structAtributo() throws SyntacticException, LexicalException {
+        Type[] follow = {Type.CLOSE_CURLY};
+        for (Type type : follow) {
+            if (getTokenType() == type) {
+                return;
+            }
+        }
+
+        atributo();
+        structAtributo();
+    }
+
+    private void atributo() throws SyntacticException, LexicalException {
+        // Visibilidad opcional
+        if (getTokenType() == Type.KW_PRI) {
+            match(Type.KW_PRI);
+        }
+        tipo();
+        match(Type.ID);
+        match(Type.SEMICOLON);
+    }
+
+    private void impl() throws SyntacticException, LexicalException {
+        match(Type.KW_IMPL);
+        match(Type.ID_CLASS);
+        match(Type.OPEN_CURLY);
+        miembro();
+        miembroOpcional();
+        match(Type.CLOSE_CURLY);
+
+    }
+
+    private void miembroOpcional() throws SyntacticException, LexicalException {
+        if (getTokenType() == Type.CLOSE_CURLY) {
+            return;
+        }
+
+        miembro();
+        miembroOpcional();
+    }
+
+    private void miembro() throws SyntacticException, LexicalException {
+        metodo();
+    }
+
+    private void metodo() throws SyntacticException, LexicalException {
+        // Opcional: forma-metodo
+        if (getTokenType() == Type.KW_ST) {
+            match(Type.KW_ST);
+        }
+
+        match(Type.KW_FN);
+        match(Type.ID);
+        argumentosFormales();
+        match(Type.ARROW);
+        tipoMetodo();
+        bloqueMetodo();
+    }
+
     private void herencia() throws SyntacticException, LexicalException {
         match(Type.COLON);
+        tipo();
+    }
+
+    private void bloqueMetodo() throws SyntacticException, LexicalException {
+        match(Type.OPEN_CURLY);
+        match(Type.CLOSE_CURLY);
+    }
+
+    private void argumentosFormales() throws SyntacticException, LexicalException {
+        match(Type.OPEN_PAR);
+        if (getTokenType() == Type.CLOSE_PAR) {
+            match(Type.CLOSE_PAR);
+            return;
+        }
+
+        listaArgumentosFormales();
+        match(Type.CLOSE_PAR);
+    }
+
+    private void listaArgumentosFormales() throws SyntacticException, LexicalException {
+        argumentoFormal();
+        argumentoFormalOLambda();
+    }
+
+    private void argumentoFormal() throws SyntacticException, LexicalException {
+        tipo();
+        match(Type.ID);
+    }
+
+    private void argumentoFormalOLambda() throws SyntacticException, LexicalException {
+        if (getTokenType() == Type.COMMA) {
+            match(Type.COMMA);
+            listaArgumentosFormales();
+        }
+    }
+
+
+    private void tipoMetodo() throws SyntacticException, LexicalException {
+        if (getTokenType() == Type.TYPE_VOID) {
+            match(Type.TYPE_VOID);
+            return;
+        }
+
         tipo();
     }
 
@@ -89,36 +193,23 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         // O simplemente un tipo primitivo
         if (getTokenType() == Type.ARRAY) {
             match(Type.ARRAY);
+            tipoPrimitivo();
+            return;
         }
 
-        tipoPrimitivo();
+        Type[] primitive = {Type.TYPE_INT, Type.TYPE_CHAR, Type.TYPE_STRING, Type.TYPE_BOOL};
+        for (Type type : primitive) {
+            if (getTokenType() == type) {
+                tipoPrimitivo();
+                return;
+            }
+        }
+
+        throwSyntacticException(Type.ID_CLASS, Type.ARRAY, Type.TYPE_INT, Type.TYPE_CHAR, Type.TYPE_STRING, Type.TYPE_BOOL);
     }
 
     private void tipoPrimitivo() throws SyntacticException, LexicalException {
         Type[] first = {Type.TYPE_INT, Type.TYPE_CHAR, Type.TYPE_STRING, Type.TYPE_BOOL};
         match(first);
-    }
-
-    private void structAtributo() throws SyntacticException, LexicalException {
-        Type[] follow = {Type.CLOSE_CURLY};
-        for (Type type : follow) {
-            if (getTokenType() == type) {
-                return;
-            }
-        }
-
-        atributo();
-        structAtributo();
-    }
-
-    private void atributo() throws SyntacticException, LexicalException {
-        tipo();
-        match(Type.ID);
-        match(Type.SEMICOLON);
-    }
-
-
-    private void start() throws SyntacticException, LexicalException {
-        match(Type.KW_START);
     }
 }
