@@ -28,7 +28,7 @@ impl Hola {
     }
 
     fn testMetodo(Int a, Class b, Otherclass sandnaskd) -> SomeClassName {
-        ret;
+        ;;;;;;;
     }
 }
 start {

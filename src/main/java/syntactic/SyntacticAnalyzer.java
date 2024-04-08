@@ -143,19 +143,20 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
     private void bloqueMetodo() throws SyntacticException, LexicalException {
         match(Type.OPEN_CURLY);
         declVariableLocalesMetodo();
+        sentenciaMetodo();
         match(Type.CLOSE_CURLY);
     }
 
     private void declVariableLocalesMetodo() throws SyntacticException, LexicalException {
-        Type[] follow = {Type.CLOSE_CURLY};
-        for (Type type : follow) {
+        Type[] first = {Type.ID_CLASS, Type.ARRAY, Type.TYPE_INT, Type.TYPE_CHAR, Type.TYPE_STRING, Type.TYPE_BOOL};
+        for (Type type : first) {
             if (getTokenType() == type) {
-                return;
+                declaracionVariablesLocales();
+                declVariableLocalesMetodo();
             }
         }
 
-        declaracionVariablesLocales();
-        declVariableLocalesMetodo();
+        // Si no hay match, asumimos que deriva lambda
     }
 
     private void declaracionVariablesLocales() throws SyntacticException, LexicalException {
