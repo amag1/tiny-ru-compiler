@@ -24,9 +24,15 @@ impl Hola {
     }
 
     fn testMetodo(Int a, Class b, Otherclass sandnaskd) -> String {
+        ;
     }
 
     fn testMetodo(Int a, Class b, Otherclass sandnaskd) -> SomeClassName {
+        ret;
     }
 }
-start {}
+start {
+    String hola, que, tal;
+
+    ret;
+}

@@ -34,8 +34,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
 
     private void start() throws SyntacticException, LexicalException {
         match(Type.KW_START);
-        match(Type.OPEN_CURLY);
-        match(Type.CLOSE_CURLY);
+        bloqueMetodo();
     }
 
     private void listaDefiniciones() throws SyntacticException, LexicalException {
@@ -143,7 +142,26 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
 
     private void bloqueMetodo() throws SyntacticException, LexicalException {
         match(Type.OPEN_CURLY);
+        declVariableLocalesMetodo();
         match(Type.CLOSE_CURLY);
+    }
+
+    private void declVariableLocalesMetodo() throws SyntacticException, LexicalException {
+        Type[] follow = {Type.CLOSE_CURLY};
+        for (Type type : follow) {
+            if (getTokenType() == type) {
+                return;
+            }
+        }
+
+        declaracionVariablesLocales();
+        declVariableLocalesMetodo();
+    }
+
+    private void declaracionVariablesLocales() throws SyntacticException, LexicalException {
+        tipo();
+        listaDeclaracionVariables();
+        match(Type.SEMICOLON);
     }
 
     private void listaDeclaracionVariables() throws SyntacticException, LexicalException {
@@ -154,6 +172,19 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
             match(Type.COMMA);
             listaDeclaracionVariables();
         }
+    }
+
+    private void sentenciaMetodo() throws SyntacticException, LexicalException {
+        // Follow = }
+        Type[] follow = {Type.CLOSE_CURLY};
+        for (Type type : follow) {
+            if (getTokenType() == type) {
+                return;
+            }
+        }
+
+        sentencia();
+        sentenciaMetodo();
     }
 
     private void argumentosFormales() throws SyntacticException, LexicalException {
@@ -230,5 +261,17 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
     private void tipoPrimitivo() throws SyntacticException, LexicalException {
         Type[] first = {Type.TYPE_INT, Type.TYPE_CHAR, Type.TYPE_STRING, Type.TYPE_BOOL};
         match(first);
+    }
+
+    private void sentencia() throws SyntacticException, LexicalException {
+        if (getTokenType() == Type.SEMICOLON) {
+            match(Type.SEMICOLON);
+            return;
+        }
+
+        if (getTokenType() == Type.KW_RET) {
+            match(Type.KW_RET);
+            match(Type.SEMICOLON);
+        }
     }
 }
