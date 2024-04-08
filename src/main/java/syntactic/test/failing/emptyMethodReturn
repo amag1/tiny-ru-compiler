@@ -1,0 +1,5 @@
+impl Test {
+    st fn testMetodo() {
+            /? aca deberia ir el cuerpo del metodo
+        }
+}
