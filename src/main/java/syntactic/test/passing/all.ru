@@ -1,8 +1,9 @@
 struct Hola:Hola{
-    pri String hola;
+    pri String hola, que, tal;
     Array Int test;
     Array Bool test;
     pri OtraClase test;
+    Char test1, test2;
 }
 struct Hola{
     /? esta struct no tiene atributos

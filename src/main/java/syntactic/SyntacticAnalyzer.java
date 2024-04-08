@@ -94,7 +94,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
             match(Type.KW_PRI);
         }
         tipo();
-        match(Type.ID);
+        listaDeclaracionVariables();
         match(Type.SEMICOLON);
     }
 
@@ -144,6 +144,16 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
     private void bloqueMetodo() throws SyntacticException, LexicalException {
         match(Type.OPEN_CURLY);
         match(Type.CLOSE_CURLY);
+    }
+
+    private void listaDeclaracionVariables() throws SyntacticException, LexicalException {
+        match(Type.ID);
+
+        // Si el siguiente token no es una coma, asumimos que termino
+        if (getTokenType() == Type.COMMA) {
+            match(Type.COMMA);
+            listaDeclaracionVariables();
+        }
     }
 
     private void argumentosFormales() throws SyntacticException, LexicalException {
