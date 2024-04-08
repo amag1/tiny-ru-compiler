@@ -66,6 +66,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
     }
 
     private void structOHerencia() throws SyntacticException, LexicalException {
+        // No terminal Herencia es opcional. No hay un metodo encargado de matchearlo
         if (getTokenType() == Type.COLON) {
             herencia();
         }
@@ -88,7 +89,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
     }
 
     private void atributo() throws SyntacticException, LexicalException {
-        // Visibilidad opcional
+        // Visibilidad es opcional
         if (getTokenType() == Type.KW_PRI) {
             match(Type.KW_PRI);
         }
@@ -108,6 +109,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
     }
 
     private void miembroOpcional() throws SyntacticException, LexicalException {
+        // Siguientes de miembro opcional. Indica que el no terminal deriva lambda
         if (getTokenType() == Type.CLOSE_CURLY) {
             return;
         }
@@ -146,11 +148,14 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
 
     private void argumentosFormales() throws SyntacticException, LexicalException {
         match(Type.OPEN_PAR);
+
+        // Si el siguiente token es un CLOSE_PAR, entonces no hay argumentos formales
         if (getTokenType() == Type.CLOSE_PAR) {
             match(Type.CLOSE_PAR);
             return;
         }
 
+        // De otro modo, intentar matchear los atributos formales
         listaArgumentosFormales();
         match(Type.CLOSE_PAR);
     }
@@ -166,6 +171,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
     }
 
     private void argumentoFormalOLambda() throws SyntacticException, LexicalException {
+        // Si no viene una coma, asumimos que viene lambda
         if (getTokenType() == Type.COMMA) {
             match(Type.COMMA);
             listaArgumentosFormales();
@@ -174,6 +180,8 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
 
 
     private void tipoMetodo() throws SyntacticException, LexicalException {
+        // El tipo de retorno de un método puede ser cualqueir tipo hallado en `tipo()`
+        // O tambien puede ser void
         if (getTokenType() == Type.TYPE_VOID) {
             match(Type.TYPE_VOID);
             return;
@@ -205,6 +213,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
             }
         }
 
+        // Lanzar error sintactico con TODOS los posibles tipos que podrían haber aparecido
         throwSyntacticException(Type.ID_CLASS, Type.ARRAY, Type.TYPE_INT, Type.TYPE_CHAR, Type.TYPE_STRING, Type.TYPE_BOOL);
     }
 
