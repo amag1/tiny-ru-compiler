@@ -337,7 +337,9 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
     }
 
     private void expresion() throws SyntacticException, LexicalException {
-        // TODO
+        // ⟨ExpAnd⟩ ⟨ExpOr`⟩
+        expAnd();
+        expOrPrima();
     }
 
     private void elseOLambda() throws SyntacticException, LexicalException {
@@ -351,5 +353,75 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
     private void sentenciaBloque() throws SyntacticException, LexicalException {
         // TODO
     }
+
+    private void expAnd() throws SyntacticException, LexicalException {
+        // ⟨ExpIgual⟩ ⟨ExpAnd`⟩
+        expIgual();
+        expAndPrima();
+    }
+
+    private void expOrPrima() throws SyntacticException, LexicalException {
+        // TODO
+    }
+
+    private void expIgual() throws SyntacticException, LexicalException {
+        // ⟨ExpCompuesta⟩ ⟨ExpIgual`⟩
+        expCompuesta();
+        expIgualPrima();
+    }
+
+    private void expAndPrima() throws SyntacticException, LexicalException {
+        // TODO
+    }
+
+    private void expCompuesta() throws SyntacticException, LexicalException {
+        // ⟨ExpAd⟩ ⟨ExpAd`⟩
+        expAd();
+        expAdPrima();
+    }
+
+    private void expIgualPrima() throws SyntacticException, LexicalException {
+        // TODO
+    }
+
+    private void expAd() throws SyntacticException, LexicalException {
+        // ⟨ExpMul⟩ ⟨ExpAd`⟩
+        expMul();
+        expAdPrima();
+    }
+
+    private void expAdPrima() throws SyntacticException, LexicalException {
+        // TODO
+    }
+
+    private void expMul() throws SyntacticException, LexicalException {
+        // ⟨ExpUn⟩ ⟨ExpMul`⟩
+        expUn();
+        expMulPrima();
+    }
+
+    private void expUn() throws SyntacticException, LexicalException {
+        // ( + | - | ! | ++ | -- ) ⟨ExpUn⟩
+        Type[] first = {Type.PLUS, Type.MINUS, Type.NEG, Type.DPLUS, Type.DMINUS};
+        for (Type type : first) {
+            if (getTokenType() == type) {
+                match(type);
+                expUn();
+                return;
+            }
+        }
+
+        // ⟨Operando⟩
+        operando();
+    }
+
+    private void expMulPrima() throws SyntacticException, LexicalException {
+        // TODO
+    }
+
+    private void operando() throws SyntacticException, LexicalException {
+        // TODO
+    }
+
 
 }
