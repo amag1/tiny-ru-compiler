@@ -1,6 +1,7 @@
 package logger;
 
 import exceptions.lexical.LexicalException;
+import exceptions.syntactic.SyntacticException;
 import lexical.Token;
 
 import java.util.List;
@@ -22,6 +23,20 @@ public class ConsoleLogger extends Logger {
 
     public void LogLexicError(LexicalException e) {
         List<String> message = GetLexicErrorMessage(e);
+        for (String line : message) {
+            System.out.println(line);
+        }
+    }
+
+    public void LogSyntacticSuccess() {
+        List<String> message = GetSyntacticSuccessMessage();
+        for (String line : message) {
+            System.out.println(line);
+        }
+    }
+
+    public void LogSyntacticError(SyntacticException e) {
+        List<String> message = GetSyntacticErrorMessage(e);
         for (String line : message) {
             System.out.println(line);
         }

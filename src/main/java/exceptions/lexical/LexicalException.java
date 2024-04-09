@@ -1,5 +1,6 @@
 package exceptions.lexical;
 
+import exceptions.TinyRuException;
 import location.Location;
 
 /**
@@ -7,20 +8,8 @@ import location.Location;
  * Esta excepción contiene la ubicación del error.
  * Las demás excepciones de errores léxicos heredan de esta clase.
  */
-public class LexicalException extends Exception {
-    private Location location;
-
+public class LexicalException extends TinyRuException {
     public LexicalException(String message, Location location) {
-
-        super(message);
-        this.location = location;
-    }
-
-    public int getLine() {
-        return location.getLine();
-    }
-
-    public int getColumn() {
-        return location.getColumn();
+        super(message, location);
     }
 }
