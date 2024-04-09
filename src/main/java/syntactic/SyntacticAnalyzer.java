@@ -265,14 +265,91 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
     }
 
     private void sentencia() throws SyntacticException, LexicalException {
+        // ;
         if (getTokenType() == Type.SEMICOLON) {
             match(Type.SEMICOLON);
             return;
         }
 
+        // ret ⟨Expresion-O-Semicolon⟩
         if (getTokenType() == Type.KW_RET) {
             match(Type.KW_RET);
+            expresionOSemicolon();
+            return;
+        }
+
+        // if ( ⟨Expresión⟩ ) ⟨Sentencia⟩ ⟨Else-O-Lambda⟩
+        if (getTokenType() == Type.KW_IF) {
+            match(Type.KW_IF);
+            match(Type.OPEN_PAR);
+            expresion();
+            match(Type.CLOSE_PAR);
+            sentencia();
+            elseOLambda();
+            return;
+        }
+
+        // while ( ⟨Expresión⟩ ) ⟨Sentencia⟩
+        if (getTokenType() == Type.KW_WHILE) {
+            match(Type.KW_WHILE);
+            match(Type.OPEN_PAR);
+            expresion();
+            match(Type.CLOSE_PAR);
+            sentencia();
+            return;
+        }
+
+        // ⟨Asignación⟩ ;
+        Type[] first = {Type.ID, Type.KW_SELF};
+        for (Type type : first) {
+            if (getTokenType() == type) {
+                asignacion();
+                match(Type.SEMICOLON);
+                return;
+            }
+        }
+
+        // ( ⟨Expresión⟩ ) ;
+        if (getTokenType() == Type.OPEN_PAR) {
+            match(Type.OPEN_PAR);
+            expresion();
+            match(Type.CLOSE_PAR);
             match(Type.SEMICOLON);
+            return;
+        }
+
+        // { ⟨Sentencia-Bloque⟩ }
+        if (getTokenType() == Type.OPEN_CURLY) {
+            match(Type.OPEN_CURLY);
+            sentenciaBloque();
+            match(Type.CLOSE_CURLY);
+            return;
         }
     }
+    private void expresionOSemicolon() throws SyntacticException, LexicalException  {
+        if (getTokenType() == Type.SEMICOLON) {
+            match(Type.SEMICOLON);
+            return;
+        }
+
+        expresion();
+        match(Type.SEMICOLON);
+    }
+
+    private void expresion() throws SyntacticException, LexicalException {
+        // TODO
+    }
+
+    private void elseOLambda() throws SyntacticException, LexicalException {
+        // TODO
+    }
+
+    private void asignacion() throws SyntacticException, LexicalException {
+        // TODO
+    }
+
+    private void sentenciaBloque() throws SyntacticException, LexicalException {
+        // TODO
+    }
+
 }
