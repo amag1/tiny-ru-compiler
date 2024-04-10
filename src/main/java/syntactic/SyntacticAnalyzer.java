@@ -27,12 +27,14 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
      * En la carpeta /grammar está la gramática final en formato BNF
      */
     private void program() throws SyntacticException, LexicalException {
+        // ⟨Lista-Definiciones⟩ ⟨Start⟩
         listaDefiniciones();
         start();
         match(Type.EOF);
     }
 
     private void start() throws SyntacticException, LexicalException {
+        // start ⟨Bloque-Método⟩
         match(Type.KW_START);
         bloqueMetodo();
     }
@@ -46,12 +48,14 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
             }
         }
 
+        // ⟨Impl⟩ ⟨Lista-Definiciones⟩
         if (getTokenType() == Type.KW_IMPL) {
             impl();
             listaDefiniciones();
             return;
         }
 
+        // ⟨Struct⟩ ⟨Lista-Definiciones⟩
         if (getTokenType() == Type.KW_STRUCT) {
             struct();
             listaDefiniciones();
@@ -59,12 +63,15 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
     }
 
     private void struct() throws SyntacticException, LexicalException {
+        // struct idStruct ⟨Struct-O-Herencia⟩
         match(Type.KW_STRUCT);
         match(Type.ID_CLASS);
         structOHerencia();
     }
 
     private void structOHerencia() throws SyntacticException, LexicalException {
+        // ⟨Herencia⟩ { ⟨Struct-Atributo⟩ } | { ⟨Struct-Atributo⟩ }
+
         // No terminal Herencia es opcional. No hay un metodo encargado de matchearlo
         if (getTokenType() == Type.COLON) {
             herencia();
@@ -76,6 +83,9 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
     }
 
     private void structAtributo() throws SyntacticException, LexicalException {
+        // ⟨Atributo⟩ ⟨Struct-Atributo⟩ | λ
+
+        // Cuando un no terminal deriva lambda, se chequea si el token actual es uno de los siguientes
         Type[] follow = {Type.CLOSE_CURLY};
         for (Type type : follow) {
             if (getTokenType() == type) {
@@ -88,26 +98,31 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
     }
 
     private void atributo() throws SyntacticException, LexicalException {
+        // ⟨Visibilidad⟩ ⟨Tipo⟩ ⟨Lista-Declaración-Variables⟩ ; | ⟨Tipo⟩ ⟨Lista-Declaración-Variables⟩ ;
+
         // Visibilidad es opcional
         if (getTokenType() == Type.KW_PRI) {
             match(Type.KW_PRI);
         }
+
         tipo();
         listaDeclaracionVariables();
         match(Type.SEMICOLON);
     }
 
     private void impl() throws SyntacticException, LexicalException {
+        // impl idStruct { ⟨Miembro⟩ ⟨Miembro-Opcional⟩ }
         match(Type.KW_IMPL);
         match(Type.ID_CLASS);
         match(Type.OPEN_CURLY);
         miembro();
         miembroOpcional();
         match(Type.CLOSE_CURLY);
-
     }
 
     private void miembroOpcional() throws SyntacticException, LexicalException {
+        // ⟨Miembro⟩ ⟨Miembro-Opcional⟩ | λ
+
         // Siguientes de miembro opcional. Indica que el no terminal deriva lambda
         if (getTokenType() == Type.CLOSE_CURLY) {
             return;
@@ -118,7 +133,9 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
     }
 
     private void miembro() throws SyntacticException, LexicalException {
+        // ⟨Método⟩ | ⟨Constructor⟩
         metodo();
+        // TODO constructor
     }
 
     private void metodo() throws SyntacticException, LexicalException {
@@ -379,8 +396,8 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
 
     private void sentenciaBloque() throws SyntacticException, LexicalException {
         // ⟨Sentencia⟩ ⟨Sentencia-Bloque⟩ | λ
-        Type[] follow = {Type.SEMICOLON, Type.KW_RET, Type.KW_IF, Type.KW_WHILE, Type.KW_SELF, Type.OPEN_PAR, Type.OPEN_CURLY};
-        for (Type type : follow) {
+        Type[] first = {Type.SEMICOLON, Type.KW_RET, Type.KW_IF, Type.KW_WHILE, Type.KW_SELF, Type.OPEN_PAR, Type.OPEN_CURLY};
+        for (Type type : first) {
             if (getTokenType() == type) {
                 sentencia();
                 sentenciaBloque();

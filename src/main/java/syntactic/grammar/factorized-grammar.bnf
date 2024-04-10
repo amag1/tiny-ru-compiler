@@ -46,8 +46,8 @@
 ⟨ExpAnd`⟩ ::= && ⟨ExpIgual⟩ ⟨ExpAnd`⟩ | λ
 ⟨ExpIgual⟩ ::= ⟨ExpCompuesta⟩ ⟨ExpIgual`⟩
 ⟨ExpIgual`⟩ ::= ⟨OpIgual⟩ ⟨ExpCompuesta⟩ ⟨ExpIgual`⟩ | λ
-⟨ExpCompuesta⟩ ::= ⟨ExpAd⟩ ⟨ExpAd`⟩
-⟨ExpAd`⟩ ::= ⟨OpCompuesto⟩ ⟨ExpAd⟩ | λ
+⟨ExpCompuesta⟩ ::= ⟨ExpAd⟩ ⟨ExpCompuesta`⟩
+⟨ExpCompuesta`⟩ ::= ⟨OpCompuesto⟩ ⟨ExpAd⟩ | λ
 ⟨ExpAd⟩ ::= ⟨ExpMul⟩ ⟨ExpAd`⟩
 ⟨ExpAd`⟩ ::= ⟨OpAd⟩ ⟨ExpMul⟩ ⟨ExpAd`⟩ | λ
 ⟨ExpMul⟩ ::= ⟨ExpUn⟩ ⟨ExpMul`⟩
