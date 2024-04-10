@@ -368,7 +368,12 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
     }
 
     private void expOrPrima() throws SyntacticException, LexicalException {
-        // TODO
+        // or ⟨ExpAnd⟩ ⟨ExpOr`⟩ | λ
+        if (getTokenType() == Type.OR) {
+            match(Type.OR);
+            expAnd();
+            expOrPrima();
+        }
     }
 
     private void expIgual() throws SyntacticException, LexicalException {
@@ -378,7 +383,14 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
     }
 
     private void expAndPrima() throws SyntacticException, LexicalException {
-        // TODO
+        // && ⟨ExpIgual⟩ ⟨ExpAnd`⟩ | λ
+        if (getTokenType() == Type.AND) {
+            match(Type.AND);
+            expIgual();
+            expAdPrima();
+        }
+
+        // Otro caso, lambda
     }
 
     private void expCompuesta() throws SyntacticException, LexicalException {
@@ -388,7 +400,18 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
     }
 
     private void expIgualPrima() throws SyntacticException, LexicalException {
-        // TODO
+        // ⟨OpIgual⟩ ⟨ExpCompuesta⟩ ⟨ExpIgual`⟩ | λ
+        Type[] opIgual = {Type.EQUAL, Type.NOT_EQUAL};
+        for (Type type : opIgual) {
+            if (getTokenType() == type) {
+                expMul();
+                expCompuesta();
+                expIgualPrima();
+                return;
+            }
+        }
+
+        // Otro caso, lambda
     }
 
     private void expAd() throws SyntacticException, LexicalException {
@@ -398,7 +421,15 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
     }
 
     private void expAdPrima() throws SyntacticException, LexicalException {
-        // TODO
+        // ⟨OpAd⟩ ⟨ExpMul⟩ ⟨ExpAd'⟩ | λ
+        Type[] opAd = {Type.PLUS, Type.MINUS};
+        for (Type type : opAd) {
+            if (getTokenType() == type) {
+                expMul();
+                expAdPrima();
+                return;
+            }
+        }
     }
 
     private void expMul() throws SyntacticException, LexicalException {
@@ -423,7 +454,18 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
     }
 
     private void expMulPrima() throws SyntacticException, LexicalException {
-        // TODO
+        // ⟨OpMul⟩ ⟨ExpUn⟩ ⟨ExpMul`⟩ | λ
+        Type[] opMul = {Type.MULT, Type.DIV, Type.MOD};
+        for (Type type : opMul) {
+            if (getTokenType() == type) {
+                match(type);
+                expUn();
+                expMulPrima();
+                return;
+            }
+        }
+
+        // Otro caso, lambda
     }
 
     private void operando() throws SyntacticException, LexicalException {
@@ -506,7 +548,12 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
     }
 
     private void primarios() throws SyntacticException, LexicalException {
-        // TODO
+        // ⟨Encadenado⟩ | λ
+        if (getTokenType() == Type.DOT) {
+            encadenado();
+        }
+
+        // Otro caso, lambda
     }
 
     private void accesoVar() throws SyntacticException, LexicalException {
@@ -585,6 +632,8 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
     private void argumentosActuales() throws SyntacticException, LexicalException {
         // TODO
     }
+
+
 
 
 
