@@ -709,9 +709,31 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
 
     private void encadenado() throws SyntacticException, LexicalException {
         // . id ⟨Llamada-Método-Encadenado-O-AccesoVar⟩
+        // ⟨Llamada-Método-Encadenado-O-AccesoVar⟩ ::= ⟨Llamada-Método-Encadenado⟩ | ⟨AccesoVar⟩
+
         match(Type.DOT);
         match(Type.ID);
 
+        // ⟨AccesoVar⟩
+        Type[] first = {Type.DOT, Type.OPEN_BRACKET };
+        for (Type type : first) {
+            if (getTokenType() == type) {
+                accesoVar();
+                return;
+            }
+        }
+
+        // ⟨Llamada-Método-Encadenado⟩ ::= ⟨Argumentos-Actuales⟩ ⟨Encadenado-O-Lambda⟩
+        if (getTokenType() == Type.OPEN_PAR) {
+            argumentosActuales();
+
+            if (getTokenType() == Type.DOT) {
+                encadenado();
+            }
+        }
+
+        Type []expected = {Type.DOT, Type.OPEN_BRACKET, Type.OPEN_PAR };
+        throwSyntacticException(expected);
     }
 
     private void argumentosActuales() throws SyntacticException, LexicalException {
