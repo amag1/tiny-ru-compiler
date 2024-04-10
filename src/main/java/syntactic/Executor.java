@@ -7,7 +7,7 @@ import java.io.FileNotFoundException;
 
 public class Executor {
     public static void main(String[] args) {
-        Reader reader = new StringReader("start { if () {}}");
+        Reader reader = new StringReader("start { if (x -> x) {}}");
 
         //try {
 

@@ -471,7 +471,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
 
         // ⟨AccesoVar⟩ | ⟨Llamada-Método⟩
         if (getTokenType() == Type.ID) {
-            match(Type.ID);
+            match(Type.ID); // TODO fix
 
             // ⟨Llamada-Método⟩
             if (getTokenType() == Type.OPEN_PAR) {
@@ -502,14 +502,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         }
 
         // Devolver error en otro caso
-        Type[] expected = {
-                Type.OPEN_CURLY,
-                Type.KW_SELF,
-                Type.ID,
-                Type.ID_CLASS,
-                Type.KW_NEW
-        };
-        throwSyntacticException(expected);
+        throwSyntacticException();
     }
 
     private void primarios() throws SyntacticException, LexicalException {
@@ -517,15 +510,61 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
     }
 
     private void accesoVar() throws SyntacticException, LexicalException {
-        // TODO
+        //  id
+        match(Type.ID);
+
+        // id ⟨Encadenado⟩
+        if (getTokenType() == Type.DOT) {
+            encadenado();
+            return;
+        }
+
+        // id [ ⟨Expresión⟩ ]
+        if (getTokenType() == Type.OPEN_BRACKET) {
+            match(Type.OPEN_BRACKET);
+            expresion();
+            match(Type.CLOSE_BRACKET);
+
+            // id [ ⟨Expresión⟩ ] ⟨Encadenado⟩
+            if (getTokenType() == Type.DOT) {
+                encadenado();
+            }
+        }
     }
 
     private void llamadaMetodo() throws SyntacticException, LexicalException {
-        // TODO
+        // id ⟨Argumentos-Actuales⟩
+        match(Type.ID);
+        argumentosActuales();
+
+        // id ⟨Argumentos-Actuales⟩ ⟨Encadenado⟩
+        if (getTokenType() == Type.DOT) {
+            encadenado();
+        }
     }
 
     private void llamadaNew() throws SyntacticException, LexicalException {
-        // TODO
+        // idStruct ⟨Argumentos-Actuales⟩ ⟨Encadenado-O-Lambda⟩
+        if (getTokenType() == Type.ID_CLASS) {
+            match(Type.ID_CLASS);
+            argumentosActuales();
+            encadenadoOLambda();
+            return;
+        }
+
+
+        // ⟨Tipo-Primitivo⟩ [ ⟨Expresion⟩ ]
+        Type[] primitive = {Type.TYPE_INT, Type.TYPE_CHAR, Type.TYPE_STRING, Type.TYPE_BOOL};
+        for (Type type : primitive) {
+            if (getTokenType() == type) {
+                tipoPrimitivo();
+                return;
+            }
+        }
+
+        Type[] expected = {Type.TYPE_INT, Type.TYPE_CHAR, Type.TYPE_STRING, Type.TYPE_BOOL, Type.ID_CLASS};
+
+        throwSyntacticException(expected);
     }
 
     private void encadenadoOLambda() throws SyntacticException, LexicalException {
@@ -533,6 +572,17 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
     }
 
     private void encadenado() throws SyntacticException, LexicalException {
+        // .
+        match(Type.DOT);
+
+        // . id ⟨Argumentos-Actuales⟩
+        if (getTokenType() == Type.ID) {
+            match(Type.ID);
+            argumentosActuales();
+        }
+    }
+
+    private void argumentosActuales() throws SyntacticException, LexicalException {
         // TODO
     }
 
