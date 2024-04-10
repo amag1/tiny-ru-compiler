@@ -325,6 +325,9 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
             match(Type.CLOSE_CURLY);
             return;
         }
+
+        // Devolver error en caso de no matchear ninguno de los anteriores
+        throwSyntacticException(Type.SEMICOLON, Type.KW_RET, Type.KW_IF, Type.KW_WHILE, Type.KW_SELF, Type.OPEN_PAR, Type.OPEN_CURLY);
     }
     private void expresionOSemicolon() throws SyntacticException, LexicalException  {
         if (getTokenType() == Type.SEMICOLON) {
@@ -337,9 +340,13 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
     }
 
     private void expresion() throws SyntacticException, LexicalException {
-        // ⟨ExpAnd⟩ ⟨ExpOr`⟩
-        expAnd();
-        expOrPrima();
+        try {
+            // ⟨ExpAnd⟩ ⟨ExpOr`⟩
+            expAnd();
+            expOrPrima();
+        } catch (SyntacticException e) {
+            throwSyntacticException("expresión");
+        }
     }
 
     private void elseOLambda() throws SyntacticException, LexicalException {
@@ -420,8 +427,115 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
     }
 
     private void operando() throws SyntacticException, LexicalException {
+        // nil | true | false | intLiteral | StrLiteral | charLiteral
+        Type[] literals = {
+                Type.KW_NIL,
+                Type.KW_TRUE,
+                Type.KW_FALSE,
+                Type.INT_LITERAL,
+                Type.STRING_LITERAL,
+                Type.CHAR_LITERAL
+        };
+        for (Type type : literals) {
+            if (getTokenType() == type) {
+                match(type);
+                return;
+            }
+        }
+
+        // ⟨Primario⟩ ⟨Primarios⟩
+        primario();
+        primarios();
+    }
+
+    private void primario() throws SyntacticException, LexicalException {
+        // ( ⟨Expresion⟩ ) ⟨Encadenado-O-Lambda⟩
+        if (getTokenType() == Type.OPEN_PAR) {
+            match(Type.OPEN_PAR);
+            expresion();
+            match(Type.CLOSE_PAR);
+            encadenadoOLambda();
+            return;
+        }
+
+        // self ⟨Encadenado⟩ | self
+        if (getTokenType() == Type.KW_SELF) {
+            match(Type.KW_SELF);
+
+            // ⟨Encadenado⟩
+            if (getTokenType() == Type.DOT) {
+                encadenado();
+            }
+            return;
+        }
+
+        // ⟨AccesoVar⟩ | ⟨Llamada-Método⟩
+        if (getTokenType() == Type.ID) {
+            match(Type.ID);
+
+            // ⟨Llamada-Método⟩
+            if (getTokenType() == Type.OPEN_PAR) {
+                llamadaMetodo();
+                return;
+            }
+
+            // ⟨AccesoVar⟩
+            // Puede ser lambda
+            else {
+                accesoVar();
+                return;
+            }
+        }
+
+        // idStruct . ⟨Llamada-Método⟩
+        if (getTokenType() == Type.ID_CLASS) {
+            match(Type.ID_CLASS);
+            match(Type.DOT);
+            llamadaMetodo();
+            return;
+        }
+
+        // ⟨Llamada-Constructor⟩
+        if (getTokenType() == Type.KW_NEW) {
+            match(Type.KW_NEW);
+            llamadaNew();
+        }
+
+        // Devolver error en otro caso
+        Type[] expected = {
+                Type.OPEN_CURLY,
+                Type.KW_SELF,
+                Type.ID,
+                Type.ID_CLASS,
+                Type.KW_NEW
+        };
+        throwSyntacticException(expected);
+    }
+
+    private void primarios() throws SyntacticException, LexicalException {
         // TODO
     }
+
+    private void accesoVar() throws SyntacticException, LexicalException {
+        // TODO
+    }
+
+    private void llamadaMetodo() throws SyntacticException, LexicalException {
+        // TODO
+    }
+
+    private void llamadaNew() throws SyntacticException, LexicalException {
+        // TODO
+    }
+
+    private void encadenadoOLambda() throws SyntacticException, LexicalException {
+        // TODO
+    }
+
+    private void encadenado() throws SyntacticException, LexicalException {
+        // TODO
+    }
+
 
 
 }
