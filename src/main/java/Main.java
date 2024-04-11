@@ -4,6 +4,7 @@ import logger.ConsoleLogger;
 import logger.FileLogger;
 import logger.Logger;
 import reader.FileReader;
+import syntactic.SyntacticExecutor;
 
 import java.io.FileNotFoundException;
 
@@ -37,7 +38,7 @@ public class Main {
         }
 
         // Execute
-        Executor executor = new LexicalExecutor(fileReader, outputLogger);
+        Executor executor = new SyntacticExecutor(fileReader, outputLogger);
         executor.execute();
     }
 }

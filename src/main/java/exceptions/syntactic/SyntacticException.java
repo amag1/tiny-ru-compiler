@@ -11,4 +11,7 @@ public class SyntacticException extends TinyRuException {
         super("Se esperaba " + Arrays.toString(expected) + " pero se encontró " + token.getType(), token.getLocation());
     }
 
+    public SyntacticException(Token token, String expected) {
+        super("Se esperaba " + expected + " pero se encontró " + token.getType(), token.getLocation());
+    }
 }
