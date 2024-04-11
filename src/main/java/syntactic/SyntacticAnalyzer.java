@@ -132,10 +132,23 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         miembroOpcional();
     }
 
+    private void herencia() throws SyntacticException, LexicalException {
+        // : ⟨Tipo⟩
+        match(Type.COLON);
+        tipo();
+    }
+
     private void miembro() throws SyntacticException, LexicalException {
         // ⟨Método⟩ | ⟨Constructor⟩
         metodo();
-        // TODO constructor
+        constructor();
+    }
+
+    private void constructor() throws SyntacticException, LexicalException {
+        // . ⟨Argumentos-Formales⟩ ⟨Bloque-Método⟩
+        match(Type.DOT);
+        argumentosFormales();
+        bloqueMetodo();
     }
 
     private void metodo() throws SyntacticException, LexicalException {
@@ -153,12 +166,6 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         match(Type.ARROW);
         tipoMetodo();
         bloqueMetodo();
-    }
-
-    private void herencia() throws SyntacticException, LexicalException {
-        // : ⟨Tipo⟩
-        match(Type.COLON);
-        tipo();
     }
 
     private void bloqueMetodo() throws SyntacticException, LexicalException {
@@ -182,6 +189,22 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         // Si no hay match, asumimos que deriva lambda
     }
 
+    private void sentenciaMetodo() throws SyntacticException, LexicalException {
+        // ⟨Sentencia⟩ ⟨Sentencia-Metodo⟩ | λ
+
+        // Follow = }
+        // Cuando un no terminal deriva lambda, se chequea si el token actual es uno de los siguientes
+        Type[] follow = {Type.CLOSE_CURLY};
+        for (Type type : follow) {
+            if (getTokenType() == type) {
+                return;
+            }
+        }
+
+        sentencia();
+        sentenciaMetodo();
+    }
+
     private void declaracionVariablesLocales() throws SyntacticException, LexicalException {
         // ⟨Tipo⟩ ⟨Lista-Declaración-Variables⟩ ;
         tipo();
@@ -198,22 +221,6 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
             match(Type.COMMA);
             listaDeclaracionVariables();
         }
-    }
-
-    private void sentenciaMetodo() throws SyntacticException, LexicalException {
-        // ⟨Sentencia⟩ ⟨Sentencia-Metodo⟩ | λ
-
-        // Follow = }
-        // Cuando un no terminal deriva lambda, se chequea si el token actual es uno de los siguientes
-        Type[] follow = {Type.CLOSE_CURLY};
-        for (Type type : follow) {
-            if (getTokenType() == type) {
-                return;
-            }
-        }
-
-        sentencia();
-        sentenciaMetodo();
     }
 
     private void argumentosFormales() throws SyntacticException, LexicalException {
@@ -362,14 +369,17 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         }
 
         // Devolver error en caso de no matchear ninguno de los anteriores
-        throwSyntacticException(Type.SEMICOLON, Type.KW_RET, Type.KW_IF, Type.KW_WHILE, Type.KW_SELF, Type.OPEN_PAR, Type.OPEN_CURLY);
+        throwSyntacticException(Type.SEMICOLON, Type.KW_RET, Type.KW_IF, Type.KW_WHILE, Type.KW_SELF, Type.OPEN_PAR, Type.OPEN_CURLY, Type.ID);
     }
 
-    private void sentenciaSimple() throws SyntacticException, LexicalException {
-        // ( ⟨Expresión⟩ ) ;
-        match(Type.OPEN_PAR);
+    private void expresionOSemicolon() throws SyntacticException, LexicalException  {
+        // ⟨Expresión⟩ ; | ;
+        if (getTokenType() == Type.SEMICOLON) {
+            match(Type.SEMICOLON);
+            return;
+        }
+
         expresion();
-        match(Type.CLOSE_PAR);
         match(Type.SEMICOLON);
     }
 
@@ -380,16 +390,77 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         match(Type.CLOSE_CURLY);
     }
 
+    private void sentenciaBloque() throws SyntacticException, LexicalException {
+        // ⟨Sentencia⟩ ⟨Sentencia-Bloque⟩ | λ
+        Type[] first = {Type.SEMICOLON, Type.KW_RET, Type.KW_IF, Type.KW_WHILE, Type.KW_SELF, Type.OPEN_PAR, Type.OPEN_CURLY, Type.ID};
+        for (Type type : first) {
+            if (getTokenType() == type) {
+                sentencia();
+                sentenciaBloque();
+            }
+        }
 
+        // Otro caso, lambda
+    }
 
-    private void expresionOSemicolon() throws SyntacticException, LexicalException  {
-        // ⟨Expresión⟩ ; | ;
-        if (getTokenType() == Type.SEMICOLON) {
-            match(Type.SEMICOLON);
+    private void asignacion() throws SyntacticException, LexicalException {
+        // ⟨AccesoVar-Simple⟩ = ⟨Expresión⟩
+        if (getTokenType() == Type.ID) {
+            accesoVarSimple();
+            match(Type.ASSIGN);
+            expresion();
             return;
         }
 
+        // self ⟨Encadenado-Simple⟩ = ⟨Expresión⟩
+        if (getTokenType() == Type.KW_SELF) {
+            match(Type.KW_SELF);
+            encadenadoSimple();
+            match(Type.ASSIGN);
+            expresion();
+            return;
+        }
+
+        throwSyntacticException("asignación");
+    }
+
+    private void accesoVarSimple() throws SyntacticException, LexicalException {
+        // id ⟨Encadenado-O-Bracket⟩
+        match(Type.ID);
+        encadenadoOBracket();
+    }
+
+    private void encadenadoOBracket() throws SyntacticException, LexicalException {
+        // ⟨Encadenado-Simple⟩ | [ ⟨Expresión⟩ ]
+
+        // [ ⟨Expresión⟩ ]
+        if (getTokenType() == Type.OPEN_BRACKET) {
+            match(Type.OPEN_BRACKET);
+            expresion();
+            match(Type.CLOSE_BRACKET);
+            return;
+        }
+
+        // ⟨Encadenado-Simple⟩
+        encadenadoSimple();
+    }
+
+    private void encadenadoSimple() throws SyntacticException, LexicalException {
+        // . id ⟨Encadenado-Simple⟩ | λ
+        if (getTokenType() == Type.ID) {
+            match(Type.DOT);
+            match(Type.ID);
+            encadenadoSimple();
+        }
+
+        // Otro caso, lambda
+    }
+
+    private void sentenciaSimple() throws SyntacticException, LexicalException {
+        // ( ⟨Expresión⟩ ) ;
+        match(Type.OPEN_PAR);
         expresion();
+        match(Type.CLOSE_PAR);
         match(Type.SEMICOLON);
     }
 
@@ -406,47 +477,6 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         }
     }
 
-
-    private void asignacion() throws SyntacticException, LexicalException {
-        // ⟨AccesoVar-Simple⟩ = ⟨Expresión⟩
-        if (getTokenType() == Type.ID) {
-            accesoVarSimple();
-            match(Type.EQUAL);
-            expresion();
-            return;
-        }
-
-        // self ⟨Encadenado-Simple⟩ = ⟨Expresión⟩
-        if (getTokenType() == Type.KW_SELF) {
-            match(Type.KW_SELF);
-            encadenadoSimple();
-            match(Type.EQUAL);
-            expresion();
-            return;
-        }
-
-        throwSyntacticException("asignación");
-    }
-
-    private void sentenciaBloque() throws SyntacticException, LexicalException {
-        // ⟨Sentencia⟩ ⟨Sentencia-Bloque⟩ | λ
-        Type[] first = {Type.SEMICOLON, Type.KW_RET, Type.KW_IF, Type.KW_WHILE, Type.KW_SELF, Type.OPEN_PAR, Type.OPEN_CURLY};
-        for (Type type : first) {
-            if (getTokenType() == type) {
-                sentencia();
-                sentenciaBloque();
-            }
-        }
-
-        // Otro caso, lambda
-    }
-
-    private void expAnd() throws SyntacticException, LexicalException {
-        // ⟨ExpIgual⟩ ⟨ExpAnd`⟩
-        expIgual();
-        expAndPrima();
-    }
-
     private void expOrPrima() throws SyntacticException, LexicalException {
         // or ⟨ExpAnd⟩ ⟨ExpOr`⟩ | λ
         if (getTokenType() == Type.OR) {
@@ -456,10 +486,10 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         }
     }
 
-    private void expIgual() throws SyntacticException, LexicalException {
-        // ⟨ExpCompuesta⟩ ⟨ExpIgual`⟩
-        expCompuesta();
-        expIgualPrima();
+    private void expAnd() throws SyntacticException, LexicalException {
+        // ⟨ExpIgual⟩ ⟨ExpAnd`⟩
+        expIgual();
+        expAndPrima();
     }
 
     private void expAndPrima() throws SyntacticException, LexicalException {
@@ -473,10 +503,10 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         // Otro caso, lambda
     }
 
-    private void expCompuesta() throws SyntacticException, LexicalException {
-        // ⟨ExpAd⟩ ⟨ExpCompuesta`⟩
-        expAd();
-        expAdPrima(); // TODO fix
+    private void expIgual() throws SyntacticException, LexicalException {
+        // ⟨ExpCompuesta⟩ ⟨ExpIgual`⟩
+        expCompuesta();
+        expIgualPrima();
     }
 
     private void expIgualPrima() throws SyntacticException, LexicalException {
@@ -484,7 +514,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         Type[] opIgual = {Type.EQUAL, Type.NOT_EQUAL};
         for (Type type : opIgual) {
             if (getTokenType() == type) {
-                expMul();
+                opIgual();
                 expCompuesta();
                 expIgualPrima();
                 return;
@@ -492,6 +522,24 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         }
 
         // Otro caso, lambda
+    }
+
+    private void expCompuesta() throws SyntacticException, LexicalException {
+        // ⟨ExpAd⟩ ⟨ExpCompuesta`⟩
+        expAd();
+        expCompuestaPrima();
+    }
+
+    private void expCompuestaPrima() throws SyntacticException, LexicalException {
+        // ⟨OpCompuesto⟩ ⟨ExpAd⟩ | λ
+        Type[] opCompuesto = {Type.GREATER, Type.LESS, Type.GREATER_EQUAL, Type.LESS_EQUAL};
+        for (Type type : opCompuesto) {
+            if (getTokenType() == type) {
+                opCompuesto();
+                expAd();
+                return;
+            }
+        }
     }
 
     private void expAd() throws SyntacticException, LexicalException {
@@ -505,6 +553,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         Type[] opAd = {Type.PLUS, Type.MINUS};
         for (Type type : opAd) {
             if (getTokenType() == type) {
+                opAd();
                 expMul();
                 expAdPrima();
                 return;
@@ -518,12 +567,27 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         expMulPrima();
     }
 
+    private void expMulPrima() throws SyntacticException, LexicalException {
+        // ⟨OpMul⟩ ⟨ExpUn⟩ ⟨ExpMul`⟩ | λ
+        Type[] opMul = {Type.MULT, Type.DIV, Type.MOD};
+        for (Type type : opMul) {
+            if (getTokenType() == type) {
+                opMul();
+                expUn();
+                expMulPrima();
+                return;
+            }
+        }
+
+        // Otro caso, lambda
+    }
+
     private void expUn() throws SyntacticException, LexicalException {
         // ⟨OpUnario⟩ ⟨ExpUn⟩ | ⟨Operando⟩
         Type[] opUnario = {Type.PLUS, Type.MINUS, Type.NEG, Type.DPLUS, Type.DMINUS};
         for (Type type : opUnario) {
             if (getTokenType() == type) {
-                match(type);
+                opUnario();
                 expUn();
                 return;
             }
@@ -533,19 +597,29 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         operando();
     }
 
-    private void expMulPrima() throws SyntacticException, LexicalException {
-        // ⟨OpMul⟩ ⟨ExpUn⟩ ⟨ExpMul`⟩ | λ
-        Type[] opMul = {Type.MULT, Type.DIV, Type.MOD};
-        for (Type type : opMul) {
-            if (getTokenType() == type) {
-                match(type);
-                expUn();
-                expMulPrima();
-                return;
-            }
-        }
+    private void opIgual() throws SyntacticException, LexicalException {
+        Type[] opIgual = {Type.EQUAL, Type.NOT_EQUAL};
+        match(opIgual);
+    }
 
-        // Otro caso, lambda
+    private void opCompuesto() throws SyntacticException, LexicalException {
+        Type[] opCompuesto = {Type.GREATER, Type.LESS, Type.GREATER_EQUAL, Type.LESS_EQUAL};
+        match(opCompuesto);
+    }
+
+    private void opAd() throws SyntacticException, LexicalException {
+        Type[] opAd = {Type.PLUS, Type.MINUS};
+        match(opAd);
+    }
+
+    private void opUnario() throws SyntacticException, LexicalException {
+        Type[] opUnario = {Type.PLUS, Type.MINUS, Type.NEG, Type.DPLUS, Type.DMINUS};
+        match(opUnario);
+    }
+
+    private void opMul() throws SyntacticException, LexicalException {
+        Type[] opMul = {Type.MULT, Type.DIV, Type.MOD};
+        match(opMul);
     }
 
     private void operando() throws SyntacticException, LexicalException {
@@ -570,6 +644,15 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         primarios();
     }
 
+    private void primarios() throws SyntacticException, LexicalException {
+        // ⟨Encadenado⟩ | λ
+        if (getTokenType() == Type.DOT) {
+            encadenado();
+        }
+
+        // Otro caso, lambda
+    }
+
     private void primario() throws SyntacticException, LexicalException {
         // ⟨ExpresionParentizada⟩
         if (getTokenType() == Type.OPEN_PAR) {
@@ -581,11 +664,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         // ⟨AccesoSelf⟩ ::= self ⟨Encadenado-O-Lambda⟩
         if (getTokenType() == Type.KW_SELF) {
             match(Type.KW_SELF);
-
-            // ⟨Encadenado⟩
-            if (getTokenType() == Type.DOT) {
-                encadenado();
-            }
+            encadenadoOLambda();
             return;
         }
 
@@ -596,11 +675,9 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
             return;
         }
 
-        // idStruct . ⟨Llamada-Método⟩
+        //  ⟨Llamada-Método-Estático⟩
         if (getTokenType() == Type.ID_CLASS) {
-            match(Type.ID_CLASS);
-            match(Type.DOT);
-            llamadaMetodo();
+            llamadaMetodoEstatico();
             return;
         }
 
@@ -612,17 +689,6 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
 
         // Devolver error en otro caso
         throwSyntacticException();
-    }
-
-    private void expresionParentizada() throws SyntacticException, LexicalException {
-        // ( ⟨Expresion⟩ ) ⟨Encadenado-O-Lambda⟩
-        match(Type.OPEN_PAR);
-        expresion();
-        match(Type.CLOSE_PAR);
-
-        if (getTokenType() == Type.DOT) {
-            encadenado();
-        }
     }
 
     private void accesoVarOLLamadaMetodo() throws SyntacticException, LexicalException {
@@ -638,45 +704,47 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         }
     }
 
-    private void primarios() throws SyntacticException, LexicalException {
+    private void expresionParentizada() throws SyntacticException, LexicalException {
+        // ( ⟨Expresion⟩ ) ⟨Encadenado-O-Lambda⟩
+        match(Type.OPEN_PAR);
+        expresion();
+        match(Type.CLOSE_PAR);
+        encadenadoOLambda();
+    }
+
+    private void encadenadoOLambda() throws SyntacticException, LexicalException {
         // ⟨Encadenado⟩ | λ
-        if (getTokenType() == Type.DOT) {
+        if (getTokenType() == Type.COMMA){
             encadenado();
         }
-
-        // Otro caso, lambda
     }
 
     private void accesoVar() throws SyntacticException, LexicalException {
-        // ⟨Encadenado⟩
-        if (getTokenType() == Type.DOT) {
-            encadenado();
-            return;
-        }
+        // ⟨Encadenado-O-Lambda⟩
+        encadenadoOLambda();
 
-        // [ ⟨Expresión⟩ ]
+        // [ ⟨Expresión⟩ ] ⟨Encadenado-O-Lambda⟩
         if (getTokenType() == Type.OPEN_BRACKET) {
             match(Type.OPEN_BRACKET);
             expresion();
             match(Type.CLOSE_BRACKET);
-
-            // id [ ⟨Expresión⟩ ] ⟨Encadenado⟩
-            if (getTokenType() == Type.DOT) {
-                encadenado();
-            }
+            encadenadoOLambda();
         }
-
-        Type[] expected = {Type.OPEN_BRACKET, Type.DOT};
-        throwSyntacticException(expected);
     }
 
     private void llamadaMetodo() throws SyntacticException, LexicalException {
         //  ⟨Argumentos-Actuales⟩ ⟨Encadenado-O-Lambda⟩
         argumentosActuales();
+        encadenadoOLambda();
+    }
 
-        if (getTokenType() == Type.DOT) {
-            encadenado();
-        }
+    private void llamadaMetodoEstatico() throws SyntacticException, LexicalException {
+        // idStruct . id ⟨Llamada-Método⟩ ⟨Encadenado-O-Lambda⟩
+        match(Type.ID_CLASS);
+        match(Type.DOT);
+        match(Type.ID);
+        llamadaMetodo();
+        encadenadoOLambda();
     }
 
     private void llamadaNew() throws SyntacticException, LexicalException {
@@ -684,11 +752,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         if (getTokenType() == Type.ID_CLASS) {
             match(Type.ID_CLASS);
             argumentosActuales();
-
-            if (getTokenType() == Type.DOT) {
-                encadenado();
-            }
-
+            encadenadoOLambda();
             return;
         }
 
@@ -706,6 +770,29 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         throwSyntacticException(expected);
     }
 
+    private void argumentosActuales() throws SyntacticException, LexicalException {
+        // ( ⟨Lista-Expresiones⟩ ) | ( )
+        match(Type.OPEN_PAR);
+
+        if (getTokenType() == Type.CLOSE_PAR) {
+            match(Type.CLOSE_PAR);
+        }
+        else {
+            listaExpresiones();
+            match(Type.CLOSE_PAR);
+        }
+    }
+
+    private void listaExpresiones() throws SyntacticException, LexicalException {
+        // ⟨Expresión⟩ ⟨Expresiones⟩
+        expresion();
+
+        // ⟨Expresiones⟩ ::= λ | , ⟨Lista-Expresiones⟩
+        if (getTokenType() == Type.COMMA){
+            match(Type.COMMA);
+            listaExpresiones();
+        }
+    }
 
     private void encadenado() throws SyntacticException, LexicalException {
         // . id ⟨Llamada-Método-Encadenado-O-AccesoVar⟩
@@ -734,69 +821,5 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
 
         Type []expected = {Type.DOT, Type.OPEN_BRACKET, Type.OPEN_PAR };
         throwSyntacticException(expected);
-    }
-
-    private void argumentosActuales() throws SyntacticException, LexicalException {
-        // ( ⟨Lista-Expresiones⟩ ) | ( )
-        match(Type.OPEN_PAR);
-
-        if (getTokenType() == Type.CLOSE_PAR) {
-            match(Type.CLOSE_PAR);
-        }
-        else {
-            listaExpresiones();
-            match(Type.CLOSE_PAR);
-        }
-    }
-
-    private void accesoVarSimple() throws SyntacticException, LexicalException {
-        // id ⟨Encadenado-O-Bracket⟩
-        match(Type.ID);
-        encadenadoOBracket();
-    }
-
-    private void encadenadoOBracket() throws SyntacticException, LexicalException {
-        // ⟨Encadenado-Simple⟩ | [ ⟨Expresión⟩ ]
-        // ⟨Encadenado-Simple⟩
-        if (getTokenType() == Type.DOT) {
-            encadenadoSimple();
-            return;
-        }
-
-        // [ ⟨Expresión⟩ ]
-        if (getTokenType() == Type.OPEN_BRACKET) {
-            match(Type.OPEN_BRACKET);
-            expresion();
-            match(Type.CLOSE_BRACKET);
-            return;
-        }
-
-        // Otro caso, devolver error
-        throwSyntacticException(Type.DOT, Type.OPEN_BRACKET);
-    }
-
-
-
-    private void encadenadoSimple() throws SyntacticException, LexicalException {
-        // . id ⟨Encadenado-Simple⟩ | λ
-        if (getTokenType() == Type.ID) {
-            match(Type.DOT);
-            match(Type.ID);
-            encadenadoSimple();
-        }
-
-        // Otro caso, lambda
-    }
-
-
-    private void listaExpresiones() throws SyntacticException, LexicalException {
-        // ⟨Expresión⟩ ⟨Expresiones⟩
-        expresion();
-
-        // ⟨Expresiones⟩ ::= λ | , ⟨Lista-Expresiones⟩
-        if (getTokenType() == Type.COMMA){
-            match(Type.COMMA);
-            listaExpresiones();
-        }
     }
 }
