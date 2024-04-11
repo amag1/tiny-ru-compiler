@@ -404,10 +404,9 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
             return;
         }
 
-        // self ⟨Encadenado-Simple⟩ = ⟨Expresión⟩
+        // ⟨AccesoSelf-Simple⟩ ⟨Encadenado-Simple⟩ = ⟨Expresión⟩
         if (getTokenType() == Type.KW_SELF) {
-            match(Type.KW_SELF);
-            encadenadoSimple();
+            accesoSelfSimple();
             match(Type.ASSIGN);
             expresion();
             return;
@@ -434,16 +433,25 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         }
 
         // ⟨Encadenado-Simple⟩
-        encadenadoSimple();
+        encadenadosSimples();
+    }
+
+    private void encadenadosSimples() throws SyntacticException, LexicalException {
+        // ⟨Encadenado-Simple⟩ ⟨Encadenados-Simples⟩ | λ
+        if (getTokenType() == Type.DOT) {
+            encadenadoSimple();
+            encadenadosSimples();
+        }
     }
 
     private void encadenadoSimple() throws SyntacticException, LexicalException {
-        // . id ⟨Encadenado-Simple⟩ | λ
-        if (getTokenType() == Type.ID) {
-            match(Type.DOT);
-            match(Type.ID);
-            encadenadoSimple();
-        }
+        match(Type.DOT);
+        match(Type.ID);
+    }
+
+    private void accesoSelfSimple() throws SyntacticException, LexicalException {
+        match(Type.KW_SELF);
+        encadenadosSimples();
     }
 
     private void sentenciaSimple() throws SyntacticException, LexicalException {
@@ -724,7 +732,6 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
             encadenadoOLambda();
             return;
         }
-
 
         // ⟨Tipo-Primitivo⟩ [ ⟨Expresion⟩ ]
         Type[] primitive = {Type.TYPE_INT, Type.TYPE_CHAR, Type.TYPE_STRING, Type.TYPE_BOOL};
