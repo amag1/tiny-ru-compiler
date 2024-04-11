@@ -140,8 +140,12 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
 
     private void miembro() throws SyntacticException, LexicalException {
         // ⟨Método⟩ | ⟨Constructor⟩
+        if (getTokenType() == Type.DOT) {
+            constructor();
+            return;
+        }
+
         metodo();
-        constructor();
     }
 
     private void constructor() throws SyntacticException, LexicalException {
@@ -369,10 +373,10 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         }
 
         // Devolver error en caso de no matchear ninguno de los anteriores
-        throwSyntacticException(Type.SEMICOLON, Type.KW_RET, Type.KW_IF, Type.KW_WHILE, Type.KW_SELF, Type.OPEN_PAR, Type.OPEN_CURLY, Type.ID);
+        throwSyntacticException("Sentencia");
     }
 
-    private void expresionOSemicolon() throws SyntacticException, LexicalException  {
+    private void expresionOSemicolon() throws SyntacticException, LexicalException {
         // ⟨Expresión⟩ ; | ;
         if (getTokenType() == Type.SEMICOLON) {
             match(Type.SEMICOLON);
@@ -715,7 +719,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
 
     private void encadenadoOLambda() throws SyntacticException, LexicalException {
         // ⟨Encadenado⟩ | λ
-        if (getTokenType() == Type.DOT){
+        if (getTokenType() == Type.DOT) {
             encadenado();
         }
     }
@@ -792,7 +796,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         expresion();
 
         // ⟨Expresiones⟩ ::= λ | , ⟨Lista-Expresiones⟩
-        if (getTokenType() == Type.COMMA){
+        if (getTokenType() == Type.COMMA) {
             match(Type.COMMA);
             listaExpresiones();
         }
@@ -806,7 +810,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         match(Type.ID);
 
         // ⟨AccesoVar⟩
-        Type[] first = {Type.DOT, Type.OPEN_BRACKET };
+        Type[] first = {Type.DOT, Type.OPEN_BRACKET};
         for (Type type : first) {
             if (getTokenType() == type) {
                 accesoVar();
