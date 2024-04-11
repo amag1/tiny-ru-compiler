@@ -29,9 +29,11 @@
 ⟨Bloque⟩ ::= { ⟨Sentencia-Bloque⟩ }
 ⟨Sentencia-Bloque⟩ ::= ⟨Sentencia⟩ ⟨Sentencia-Bloque⟩ | λ
 ⟨Asignación⟩ ::= ⟨AccesoVar-Simple⟩ = ⟨Expresión⟩ | ⟨AccesoSelf-Simple⟩ = ⟨Expresión⟩
-⟨AccesoVar-Simple⟩ ::= id ⟨Encadenado-Simple⟩ | id [ ⟨Expresión⟩ ]
+⟨AccesoVar-Simple⟩ ::= id ⟨Encadenados-Simples⟩ | id [ ⟨Expresión⟩ ]
+⟨Encadenados-Simples⟩ ::= ⟨Encadenado-Simple⟩ ⟨Encadenados-Simples⟩ | λ
+⟨Encadenado-Simple⟩ ::= . id ⟨Encadenado-Simple⟩
 ⟨Encadenado-Simple⟩ ::= . id ⟨Encadenado-Simple⟩ | λ
-⟨AccesoSelf-Simple⟩ ::= self ⟨Encadenado-Simple⟩
+⟨AccesoSelf-Simple⟩ ::= self ⟨Encadenados-Simples⟩
 ⟨Sentencia-Simple⟩ ::= ( ⟨Expresión⟩ )
 ⟨Expresión⟩ ::= ⟨ExpOr⟩
 ⟨ExpOr⟩ ::= ⟨ExpAnd⟩ ⟨ExpOr`⟩
