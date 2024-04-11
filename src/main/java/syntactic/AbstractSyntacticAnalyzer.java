@@ -7,6 +7,8 @@ import lexical.Token;
 import lexical.Type;
 import location.Location;
 
+import java.util.Arrays;
+
 /**
  * Clase abstracta con layout para implementaciones concretas
  * de analizadores sintácticos.
@@ -61,6 +63,14 @@ public abstract class AbstractSyntacticAnalyzer {
         }
 
         throw new SyntacticException(currentToken, expected);
+    }
+
+    /**
+     * @param expected tipos de tokens esperados.
+     * @return Un boolean representando si el token actual es de alguno de los tipos esperados
+     */
+    protected boolean contains(Type... expected) {
+        return Arrays.asList(expected).contains(getTokenType());
     }
 
     protected void throwSyntacticException(Type... expected) throws SyntacticException {
