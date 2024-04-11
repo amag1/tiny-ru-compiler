@@ -685,6 +685,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         if (getTokenType() == Type.KW_NEW) {
             match(Type.KW_NEW);
             llamadaNew();
+            return;
         }
 
         // Devolver error en otro caso
@@ -714,7 +715,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
 
     private void encadenadoOLambda() throws SyntacticException, LexicalException {
         // ⟨Encadenado⟩ | λ
-        if (getTokenType() == Type.COMMA){
+        if (getTokenType() == Type.DOT){
             encadenado();
         }
     }
@@ -762,6 +763,9 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         for (Type type : primitive) {
             if (getTokenType() == type) {
                 tipoPrimitivo();
+                match(Type.OPEN_BRACKET);
+                expresion();
+                match(Type.CLOSE_BRACKET);
                 return;
             }
         }
@@ -818,8 +822,5 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
                 encadenado();
             }
         }
-
-        Type []expected = {Type.DOT, Type.OPEN_BRACKET, Type.OPEN_PAR };
-        throwSyntacticException(expected);
     }
 }
