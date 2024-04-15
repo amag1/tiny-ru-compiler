@@ -13,7 +13,7 @@ import java.util.Arrays;
  * Clase abstracta con layout para implementaciones concretas
  * de analizadores sintácticos.
  * <p>
- * Esta clase provee métodos para el análisis sintáctico a partir de un analizador lexico.
+ * Esta clase provee métodos de utilidad para el análisis sintáctico a partir de un analizador lexico.
  */
 public abstract class AbstractSyntacticAnalyzer {
     private final Lexical lexicalAnalyzer;
@@ -50,7 +50,7 @@ public abstract class AbstractSyntacticAnalyzer {
      * Si el token actual es de uno de los tipos esperados, se llama a nextToken()
      * para avanzar con el analisis sintactico.
      *
-     * @param expected tipos de tokens esperados.
+     * @param expected lista con tipos de tokens esperados.
      * @throws LexicalException   si ocurre un error en el análisis léxico.
      * @throws SyntacticException si el token actual no es de uno de los tipos esperados.
      */
@@ -73,10 +73,18 @@ public abstract class AbstractSyntacticAnalyzer {
         return Arrays.asList(expected).contains(getTokenType());
     }
 
+    /**
+     * @param expected lista con tipos de tokens esperados
+     * @throws SyntacticException una excepción sintáctica con el mensaje "Se esperaba uno de los siguientes tokens: ..."
+     */
     protected void throwSyntacticException(Type... expected) throws SyntacticException {
         throw new SyntacticException(currentToken, expected);
     }
 
+    /**
+     * @param expected mensaje con los tokens esperados
+     * @throws SyntacticException una excepción sintáctica con el mensaje "Se esperaba: ..."
+     */
     protected void throwSyntacticException(String expected) throws SyntacticException {
         throw new SyntacticException(currentToken, expected);
     }

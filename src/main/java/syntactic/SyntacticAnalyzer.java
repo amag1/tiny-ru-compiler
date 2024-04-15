@@ -5,6 +5,13 @@ import exceptions.syntactic.SyntacticException;
 import lexical.Lexical;
 import lexical.Type;
 
+/**
+ * Analizador sintáctico concreto.
+ * Implementa la interfaz Syntactic para analizar un programa en el lenguaje TinyRU.
+ * <p>
+ *     Este analizador sintáctico se encarga de verificar que el programa cumpla con la gramática
+ *     definida en el archivo /grammar/factorized-grammar.bnf
+ */
 public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Syntactic {
     public SyntacticAnalyzer(Lexical lexicalAnalyzer) {
         super(lexicalAnalyzer);
