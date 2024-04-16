@@ -14,7 +14,7 @@ public class PrimitiveType {
     static {
         types.put("Int", Type.TYPE_INT);
         types.put("Char", Type.TYPE_CHAR);
-        types.put("String", Type.TYPE_STRING);
+        types.put("Str", Type.TYPE_STRING);
         types.put("Bool", Type.TYPE_BOOL);
         types.put("Array", Type.ARRAY);
     }
