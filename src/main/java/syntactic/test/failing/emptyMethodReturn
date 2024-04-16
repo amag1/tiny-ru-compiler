@@ -3,3 +3,7 @@ impl Test {
             /? aca deberia ir el cuerpo del metodo
         }
 }
+
+/? ERROR: SINTACTICO
+/? | NUMERO DE LINEA: | NUMERO DE COLUMNA: | DESCRIPCION: |
+/? | 2 | 24 | Se esperaba [ARROW] pero se encontró OPEN_CURLY: { |

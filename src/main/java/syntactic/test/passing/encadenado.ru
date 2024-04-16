@@ -3,3 +3,5 @@ start{
     self.a.b.c.d = 2;
     a = 3;
 }
+
+/? CORRECTO: ANALISIS SINTACTICO
