@@ -47,4 +47,8 @@ public class Token {
     public Location getLocation() {
         return location;
     }
+
+    public int getPosition() {
+        return location.getPosition();
+    }
 }
