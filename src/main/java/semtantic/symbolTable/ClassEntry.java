@@ -19,6 +19,7 @@ public class ClassEntry {
     public ClassEntry(Token token) {
         this.token = token;
         this.name = token.getLexem();
+        this.inherits = "Object";
     }
 
     public Token getToken() {

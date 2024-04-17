@@ -44,6 +44,10 @@ public abstract class AbstractSyntacticAnalyzer {
         return currentToken.getType();
     }
 
+    protected Token getCurrentToken() {
+        return currentToken;
+    }
+
     /**
      * Metodo para matchear el token actual con uno de los tipos esperados.
      * <p>

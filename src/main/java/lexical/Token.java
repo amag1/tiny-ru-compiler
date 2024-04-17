@@ -7,7 +7,7 @@ import location.Location;
  * Un token es un par de la forma (lexema, tipo).
  * El lexema es la cadena de caracteres que representa el token.
  */
-public class Token {
+public class Token implements Comparable<Token> {
     private String lexeme;
     private Type type;
     private Location location;
@@ -51,4 +51,9 @@ public class Token {
     public int getPosition() {
         return location.getPosition();
     }
+
+    public int compareTo(Token token) {
+        return this.getPosition() - token.getPosition();
+    }
+
 }

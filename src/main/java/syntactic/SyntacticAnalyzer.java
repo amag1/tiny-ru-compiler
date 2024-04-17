@@ -4,17 +4,21 @@ import exceptions.lexical.LexicalException;
 import exceptions.syntactic.SyntacticException;
 import lexical.Lexical;
 import lexical.Type;
+import semtantic.symbolTable.SymbolTable;
 
 /**
  * Analizador sintáctico concreto.
  * Implementa la interfaz Syntactic para analizar un programa en el lenguaje TinyRU.
  * <p>
- *     Este analizador sintáctico se encarga de verificar que el programa cumpla con la gramática
- *     definida en el archivo /grammar/factorized-grammar.bnf
+ * Este analizador sintáctico se encarga de verificar que el programa cumpla con la gramática
+ * definida en el archivo /grammar/factorized-grammar.bnf
  */
 public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Syntactic {
+    private SymbolTable st;
+
     public SyntacticAnalyzer(Lexical lexicalAnalyzer) {
         super(lexicalAnalyzer);
+        this.st = new SymbolTable();
     }
 
     /**
@@ -72,6 +76,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         // struct idStruct ⟨Struct-O-Herencia⟩
         match(Type.KW_STRUCT);
         match(Type.ID_CLASS);
+        st.handleNewClass(this.getCurrentToken());
         structOHerencia();
     }
 

@@ -24,9 +24,10 @@ public class SymbolTable {
     }
 
     public void handleNewClass(Token token) {
-        currentClass = new ClassEntry(token);
-        currentClass.setFoundStruct(true);
-        classes.put(token, currentClass);
-        this.currentClass = currentClass;
+        ClassEntry newClass = new ClassEntry(token);
+        newClass.setFoundStruct(true);
+        classes.put(token, newClass);
+
+        this.currentClass = newClass;
     }
 }
