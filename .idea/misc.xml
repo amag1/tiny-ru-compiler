@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="JavadocGenerationManager">
-    <option name="OUTPUT_DIRECTORY" value="$USER_HOME$/Documents/LCC/Compiladores/Etapas/etapa2/javadocs" />
+    <option name="OUTPUT_DIRECTORY" value="$PROJECT_DIR$/../.." />
     <option name="OPTION_SCOPE" value="package" />
   </component>
   <component name="MavenProjectsManager">

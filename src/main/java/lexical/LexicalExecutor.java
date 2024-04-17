@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 /**
- * Implementación concreta de executor para analizador sintáctico
+ * Implementación concreta de executor para analizador lexico
  * Implementa el método abstracto `execute`
  * Además, ofrece una funcion para obtener todos los tokens de un código fuente
  */

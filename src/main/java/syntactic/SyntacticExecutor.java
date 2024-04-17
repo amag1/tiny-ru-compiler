@@ -8,7 +8,10 @@ import logger.ConsoleLogger;
 import logger.Logger;
 import reader.Reader;
 
-
+/**
+ * Implementación concreta de executor para analizador sintáctico
+ * Implementa el método abstracto `execute`
+ */
 public class SyntacticExecutor extends Executor {
 
     private final Syntactic syntacticAnalyzer;
