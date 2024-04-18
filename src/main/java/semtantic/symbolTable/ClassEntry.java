@@ -29,4 +29,40 @@ public class ClassEntry {
     public void setFoundStruct(boolean foundStruct) {
         this.foundStruct = foundStruct;
     }
+
+    public boolean isFoundStruct() {
+        return foundStruct;
+    }
+
+    public boolean isFoundImpl() {
+        return foundImpl;
+    }
+
+    public void setFoundImpl(boolean foundImpl) {
+        this.foundImpl = foundImpl;
+    }
+
+    public String getInherits() {
+        return inherits;
+    }
+
+    public void setInherits(String inherits) {
+        this.inherits = inherits;
+    }
+
+    public boolean isHasConstructor() {
+        return hasConstructor;
+    }
+
+    public void setHasConstructor(boolean hasConstructor) {
+        this.hasConstructor = hasConstructor;
+    }
+
+    public MethodEntry getConstructor() {
+        return constructor;
+    }
+
+    public void setConstructor(MethodEntry constructor) {
+        this.constructor = constructor;
+    }
 }
