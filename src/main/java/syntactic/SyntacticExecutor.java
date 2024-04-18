@@ -1,6 +1,7 @@
 package syntactic;
 
 import exceptions.lexical.LexicalException;
+import exceptions.semantic.SemanticException;
 import exceptions.syntactic.SyntacticException;
 import executor.Executor;
 import lexical.LexicalAnalyzer;
@@ -28,6 +29,8 @@ public class SyntacticExecutor extends Executor {
             clogger.LogLexicError(e);
         } catch (SyntacticException e) {
             clogger.LogSyntacticError(e);
+        } catch (SemanticException e) {
+            clogger.LogSemanticError(e);
         }
     }
 }
