@@ -2,6 +2,7 @@ package logger;
 
 import exceptions.lexical.LexicalException;
 import exceptions.syntactic.SyntacticException;
+import exceptions.semantic.SemanticException;
 import lexical.Token;
 
 import java.util.ArrayList;
@@ -49,6 +50,20 @@ public abstract class Logger {
     protected List<String> GetSyntacticErrorMessage(SyntacticException e) {
         List result = new ArrayList<String>();
         result.add("ERROR: SINTACTICO");
+        result.add("| NUMERO DE LINEA: | NUMERO DE COLUMNA: | DESCRIPCION: |");
+        result.add("| " + e.getLine() + " | " + e.getColumn() + " | " + e.getMessage() + " |");
+        return result;
+    }
+
+    protected List<String> GetSemanticSuccessMessage() {
+        List result = new ArrayList<String>();
+        result.add("CORRECTO: ANALISIS SEMANTICO - TABLA DE SIMBOLOS");
+        return result;
+    }
+
+    protected List<String> GetSemanticErrorMessage(SemanticException e) {
+        List result = new ArrayList<String>();
+        result.add("ERROR: SEMANTICO");
         result.add("| NUMERO DE LINEA: | NUMERO DE COLUMNA: | DESCRIPCION: |");
         result.add("| " + e.getLine() + " | " + e.getColumn() + " | " + e.getMessage() + " |");
         return result;
