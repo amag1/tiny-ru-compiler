@@ -1,1 +1,1 @@
-struct A:int{}
+struct A:Int{}
