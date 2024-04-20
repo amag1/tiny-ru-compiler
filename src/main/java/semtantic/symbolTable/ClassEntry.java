@@ -1,6 +1,7 @@
 package semtantic.symbolTable;
 
 import lexical.Token;
+import location.Location;
 
 import java.util.Map;
 
@@ -65,4 +66,8 @@ public class ClassEntry {
     public void setConstructor(MethodEntry constructor) {
         this.constructor = constructor;
     }
+
+    public String getName() {return  this.name;}
+
+    public Location getLocation() {return this.getToken().getLocation();}
 }

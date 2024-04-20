@@ -1,8 +1,6 @@
 package semtantic.symbolTable;
 
-import exceptions.semantic.InvalidInheritanceException;
-import exceptions.semantic.RedefinedStructException;
-import exceptions.semantic.SemanticException;
+import exceptions.semantic.*;
 import lexical.Token;
 import lexical.Type;
 
@@ -62,4 +60,63 @@ public class SymbolTableHandler {
         return true;
     }
 
+    /**
+     * Chequea si el struct del implement ya existe o si no lo crea.
+     * En caso de existir, chequea también si ya se ha encontrado un implement para ese struct
+     * @param token
+     * @throws SemanticException
+     */
+    public void handleNewImpl(Token token) throws SemanticException {
+        ClassEntry currentClass = this.st.getClassByName(token.getLexem());
+        if (currentClass != null) {
+            // Si ya se ha encontrado un implement para el struct, lanzar un error
+            if (currentClass.isFoundImpl()) {
+                throw new RedefinedImplementException(currentClass, token.getLocation());
+            }
+        }
+
+        else {
+            // Si no existe el struct, se crea
+            currentClass = new ClassEntry(token);
+            this.st.insertClass(currentClass);
+        }
+
+        currentClass.setFoundImpl(true);
+        this.st.setCurrentClass(currentClass);
+    }
+
+    /**
+     * Chequea si el metodo constructor ha sido llamado y actualiza la tabla de símbolos
+     * @throws SemanticException
+     */
+    public void handleFinishImpl() throws SemanticException {
+
+        // Chequea si se ha declarado el constructor
+        ClassEntry currentClass = st.getCurrentClass();
+        if (!currentClass.isHasConstructor()) {
+            throw  new MissingConstructorException(currentClass);
+        }
+
+        // Actualiza la tabla de símbolos
+        st.setCurrentClass(null);
+    }
+
+    /**
+     * Chequea que el struct no posea ya un constructor definido.
+     * Agrega el constructor al struct
+     * @param token
+     * @throws SemanticException
+     */
+    public void handleConstructor(Token token) throws SemanticException {
+        // Chequea si ya se ha declarado el constructor
+        ClassEntry currentClass = st.getCurrentClass();
+        if (currentClass.isHasConstructor()) {
+            throw  new RedefinedConstructorException(currentClass, token.getLocation());
+        }
+
+        // Agrega el constructor a la clase
+        MethodEntry constructor = new MethodEntry();
+        currentClass.setConstructor(constructor);
+        currentClass.setHasConstructor(true);
+    }
 }

@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="syntatic" pattern="gitignore||src:syntactic..*" />
+</component>
