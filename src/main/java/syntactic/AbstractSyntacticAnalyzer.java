@@ -44,6 +44,10 @@ public abstract class AbstractSyntacticAnalyzer {
         return currentToken.getType();
     }
 
+    protected Token getCurrentToken() {
+        return currentToken;
+    }
+
     /**
      * Metodo para matchear el token actual con uno de los tipos esperados.
      * <p>
@@ -54,11 +58,12 @@ public abstract class AbstractSyntacticAnalyzer {
      * @throws LexicalException   si ocurre un error en el análisis léxico.
      * @throws SyntacticException si el token actual no es de uno de los tipos esperados.
      */
-    protected void match(Type... expected) throws LexicalException, SyntacticException {
+    protected Token match(Type... expected) throws LexicalException, SyntacticException {
         for (Type type : expected) {
             if (getTokenType() == type) {
+                Token token = currentToken;
                 nextToken();
-                return;
+                return token;
             }
         }
 

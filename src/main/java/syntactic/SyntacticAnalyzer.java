@@ -1,20 +1,28 @@
 package syntactic;
 
 import exceptions.lexical.LexicalException;
+import exceptions.semantic.InvalidInheritanceException;
+import exceptions.semantic.SemanticException;
 import exceptions.syntactic.SyntacticException;
 import lexical.Lexical;
+import lexical.Token;
 import lexical.Type;
+import semtantic.symbolTable.SymbolTable;
+import semtantic.symbolTable.SymbolTableHandler;
 
 /**
  * Analizador sintáctico concreto.
  * Implementa la interfaz Syntactic para analizar un programa en el lenguaje TinyRU.
  * <p>
- *     Este analizador sintáctico se encarga de verificar que el programa cumpla con la gramática
- *     definida en el archivo /grammar/factorized-grammar.bnf
+ * Este analizador sintáctico se encarga de verificar que el programa cumpla con la gramática
+ * definida en el archivo /grammar/factorized-grammar.bnf
  */
 public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Syntactic {
+    private SymbolTableHandler st;
+
     public SyntacticAnalyzer(Lexical lexicalAnalyzer) {
         super(lexicalAnalyzer);
+        this.st = new SymbolTableHandler();
     }
 
     /**
@@ -24,7 +32,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
      * @throws LexicalException   si ocurre un error lexico
      */
     @Override
-    public void analyze() throws SyntacticException, LexicalException {
+    public void analyze() throws SyntacticException, LexicalException, SemanticException {
         nextToken();
         program();
     }
@@ -33,7 +41,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
      * A partir de acá, cada método está asociado a un no terminal de la gramática
      * En la carpeta /grammar está la gramática final en formato BNF
      */
-    private void program() throws SyntacticException, LexicalException {
+    private void program() throws SyntacticException, LexicalException, SemanticException {
         // ⟨Lista-Definiciones⟩ ⟨Start⟩
         listaDefiniciones();
         start();
@@ -46,7 +54,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         bloqueMetodo();
     }
 
-    private void listaDefiniciones() throws SyntacticException, LexicalException {
+    private void listaDefiniciones() throws SyntacticException, LexicalException, SemanticException {
         Type[] follow = {Type.KW_START};
         // Cuando un no terminal deriva lambda, se chequea si el token actual es uno de los siguientes
         if (contains(follow)) {
@@ -68,14 +76,15 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         }
     }
 
-    private void struct() throws SyntacticException, LexicalException {
+    private void struct() throws SyntacticException, LexicalException, SemanticException {
         // struct idStruct ⟨Struct-O-Herencia⟩
         match(Type.KW_STRUCT);
-        match(Type.ID_CLASS);
+        Token idClass = match(Type.ID_CLASS);
+        st.handleNewClass(idClass);
         structOHerencia();
     }
 
-    private void structOHerencia() throws SyntacticException, LexicalException {
+    private void structOHerencia() throws SyntacticException, LexicalException, InvalidInheritanceException {
         // ⟨Herencia⟩ { ⟨Struct-Atributo⟩ } | { ⟨Struct-Atributo⟩ }
 
         // No terminal Herencia es opcional. No hay un metodo encargado de matchearlo
@@ -136,10 +145,11 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         miembroOpcional();
     }
 
-    private void herencia() throws SyntacticException, LexicalException {
+    private void herencia() throws SyntacticException, LexicalException, InvalidInheritanceException {
         // : ⟨Tipo⟩
         match(Type.COLON);
-        tipo();
+        Token token = tipo();
+        st.handleInheritance(token);
     }
 
     private void miembro() throws SyntacticException, LexicalException {
@@ -277,34 +287,33 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         tipo();
     }
 
-    private void tipo() throws SyntacticException, LexicalException {
+    private Token tipo() throws SyntacticException, LexicalException {
         // Un tipo puede ser un ID_CLASS
         if (getTokenType() == Type.ID_CLASS) {
-            match(Type.ID_CLASS);
-            return;
+            return match(Type.ID_CLASS);
         }
 
         // Tambien puede ser Array seguido de un tipo primitivo
         // O simplemente un tipo primitivo
         if (getTokenType() == Type.ARRAY) {
-            match(Type.ARRAY);
-            tipoPrimitivo();
-            return;
+            Token array = match(Type.ARRAY);
+            Token tipo = tipoPrimitivo();
+            return new Token(array.getLexem() + " " + tipo.getLexem(), array.getType(), array.getLocation());
         }
 
         Type[] primitive = {Type.TYPE_INT, Type.TYPE_CHAR, Type.TYPE_STRING, Type.TYPE_BOOL};
         if (contains(primitive)) {
-            tipoPrimitivo();
-            return;
+            return tipoPrimitivo();
         }
 
         // Lanzar error sintactico con TODOS los posibles tipos que podrían haber aparecido
         throwSyntacticException("tipo");
+        return null;
     }
 
-    private void tipoPrimitivo() throws SyntacticException, LexicalException {
+    private Token tipoPrimitivo() throws SyntacticException, LexicalException {
         Type[] first = {Type.TYPE_INT, Type.TYPE_CHAR, Type.TYPE_STRING, Type.TYPE_BOOL};
-        match(first);
+        return match(first);
     }
 
     private void sentencia() throws SyntacticException, LexicalException {

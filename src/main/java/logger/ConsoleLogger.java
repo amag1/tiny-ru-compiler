@@ -1,6 +1,7 @@
 package logger;
 
 import exceptions.lexical.LexicalException;
+import exceptions.semantic.SemanticException;
 import exceptions.syntactic.SyntacticException;
 import lexical.Token;
 
@@ -37,6 +38,20 @@ public class ConsoleLogger extends Logger {
 
     public void LogSyntacticError(SyntacticException e) {
         List<String> message = GetSyntacticErrorMessage(e);
+        for (String line : message) {
+            System.out.println(line);
+        }
+    }
+
+    public void LogSemanticSuccess() {
+        List<String> message = GetSemanticSuccessMessage();
+        for (String line : message) {
+            System.out.println(line);
+        }
+    }
+
+    public void LogSemanticError(SemanticException e) {
+        List<String> message = GetSemanticErrorMessage(e);
         for (String line : message) {
             System.out.println(line);
         }
