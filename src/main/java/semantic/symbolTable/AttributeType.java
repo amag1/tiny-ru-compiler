@@ -1,4 +1,4 @@
-package semtantic.symbolTable;
+package semantic.symbolTable;
 
 import lexical.Token;
 

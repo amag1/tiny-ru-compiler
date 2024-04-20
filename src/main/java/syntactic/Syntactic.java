@@ -9,4 +9,6 @@ import exceptions.syntactic.SyntacticException;
  */
 public interface Syntactic {
     void analyze() throws LexicalException, SyntacticException, SemanticException;
+
+    String getSymbolTableJson();
 }

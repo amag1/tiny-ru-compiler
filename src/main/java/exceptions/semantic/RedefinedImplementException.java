@@ -1,8 +1,7 @@
 package exceptions.semantic;
 
-import lexical.Token;
 import location.Location;
-import semtantic.symbolTable.ClassEntry;
+import semantic.symbolTable.ClassEntry;
 
 public class RedefinedImplementException extends SemanticException {
     public RedefinedImplementException(ClassEntry currentClass, Location location) {

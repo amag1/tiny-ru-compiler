@@ -40,4 +40,14 @@ public class FileLogger extends Logger {
             System.out.println("Ocurrió un error al guardar el archivo destino");
         }
     }
+
+    public void LogSymbolTable(String symbolTableJson) {
+        try {
+            FileWriter writer = new FileWriter(this.file);
+            writer.write(symbolTableJson);
+            writer.close();
+        } catch (IOException e) {
+            System.out.println("Ocurrió un error al guardar el archivo destino");
+        }
+    }
 }
