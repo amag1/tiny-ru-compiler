@@ -123,14 +123,16 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         match(Type.SEMICOLON);
     }
 
-    private void impl() throws SyntacticException, LexicalException {
+    private void impl() throws SyntacticException, LexicalException,SemanticException {
         // impl idStruct { ⟨Miembro⟩ ⟨Miembro-Opcional⟩ }
         match(Type.KW_IMPL);
-        match(Type.ID_CLASS);
+        Token structToken = match(Type.ID_CLASS);
+        st.handleNewImpl(structToken);
         match(Type.OPEN_CURLY);
         miembro();
         miembroOpcional();
         match(Type.CLOSE_CURLY);
+        st.handleFinishImpl();
     }
 
     private void miembroOpcional() throws SyntacticException, LexicalException {
