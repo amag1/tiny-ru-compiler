@@ -165,8 +165,8 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
 
     private void constructor() throws SyntacticException, LexicalException, SemanticException {
         // . ⟨Argumentos-Formales⟩ ⟨Bloque-Método⟩
-        match(Type.DOT);
-        st.handleConstructor();
+        Token dotToken = match(Type.DOT);
+        st.handleConstructor(dotToken);
         // TODO: Add data about constructor
         argumentosFormales();
         bloqueMetodo();

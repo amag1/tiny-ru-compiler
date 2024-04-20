@@ -71,7 +71,7 @@ public class SymbolTableHandler {
         if (currentClass != null) {
             // Si ya se ha encontrado un implement para el struct, lanzar un error
             if (currentClass.isFoundImpl()) {
-                throw new RedefinedImplementException(currentClass);
+                throw new RedefinedImplementException(currentClass, token.getLocation());
             }
         }
 
@@ -101,11 +101,11 @@ public class SymbolTableHandler {
         st.setCurrentClass(null);
     }
 
-    public void handleConstructor() throws SemanticException {
+    public void handleConstructor(Token token) throws SemanticException {
         // Chequea si ya se ha declarado el constructor
         ClassEntry currentClass = st.getCurrentClass();
         if (currentClass.isHasConstructor()) {
-            throw  new RedefinedConstructorException(currentClass);
+            throw  new RedefinedConstructorException(currentClass, token.getLocation());
         }
 
         // Agrega el constructor a la clase
