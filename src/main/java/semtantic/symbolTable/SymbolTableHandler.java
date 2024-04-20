@@ -101,6 +101,12 @@ public class SymbolTableHandler {
         st.setCurrentClass(null);
     }
 
+    /**
+     * Chequea que el struct no posea ya un constructor definido.
+     * Agrega el constructor al struct
+     * @param token
+     * @throws SemanticException
+     */
     public void handleConstructor(Token token) throws SemanticException {
         // Chequea si ya se ha declarado el constructor
         ClassEntry currentClass = st.getCurrentClass();
