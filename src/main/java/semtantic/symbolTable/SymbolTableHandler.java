@@ -85,7 +85,12 @@ public class SymbolTableHandler {
         this.st.setCurrentClass(currentClass);
     }
 
+    /**
+     * Chequea si el metodo constructor ha sido llamado y actualiza la tabla de símbolos
+     * @throws SemanticException
+     */
     public void handleFinishImpl() throws SemanticException {
+
         // Chequea si se ha declarado el constructor
         ClassEntry currentClass = st.getCurrentClass();
         if (!currentClass.isHasConstructor()) {
@@ -94,5 +99,18 @@ public class SymbolTableHandler {
 
         // Actualiza la tabla de símbolos
         st.setCurrentClass(null);
+    }
+
+    public void handleConstructor() throws SemanticException {
+        // Chequea si ya se ha declarado el constructor
+        ClassEntry currentClass = st.getCurrentClass();
+        if (currentClass.isHasConstructor()) {
+            throw  new RedefinedConstructorException(currentClass);
+        }
+
+        // Agrega el constructor a la clase
+        MethodEntry constructor = new MethodEntry();
+        currentClass.setConstructor(constructor);
+        currentClass.setHasConstructor(true);
     }
 }

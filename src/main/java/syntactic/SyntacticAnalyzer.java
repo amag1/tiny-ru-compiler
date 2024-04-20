@@ -61,7 +61,6 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
             return;
         }
 
-
         // ⟨Impl⟩ ⟨Lista-Definiciones⟩
         if (getTokenType() == Type.KW_IMPL) {
             impl();
@@ -135,7 +134,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         st.handleFinishImpl();
     }
 
-    private void miembroOpcional() throws SyntacticException, LexicalException {
+    private void miembroOpcional() throws SyntacticException, LexicalException, SemanticException {
         // ⟨Miembro⟩ ⟨Miembro-Opcional⟩ | λ
 
         // Siguientes de miembro opcional. Indica que el no terminal deriva lambda
@@ -154,7 +153,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         st.handleInheritance(token);
     }
 
-    private void miembro() throws SyntacticException, LexicalException {
+    private void miembro() throws SyntacticException, LexicalException, SemanticException {
         // ⟨Método⟩ | ⟨Constructor⟩
         if (getTokenType() == Type.DOT) {
             constructor();
@@ -164,9 +163,11 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         metodo();
     }
 
-    private void constructor() throws SyntacticException, LexicalException {
+    private void constructor() throws SyntacticException, LexicalException, SemanticException {
         // . ⟨Argumentos-Formales⟩ ⟨Bloque-Método⟩
         match(Type.DOT);
+        st.handleConstructor();
+        // TODO: Add data about constructor
         argumentosFormales();
         bloqueMetodo();
     }

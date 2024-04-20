@@ -6,6 +6,6 @@ import location.Location;
 
 public class SemanticException extends TinyRuException {
     public SemanticException(String message, Location location) {
-        super(message, location);
+        super(message,  location);
     }
 }
