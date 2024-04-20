@@ -41,28 +41,34 @@ public class SymbolTableHandler {
         }
     }
 
-    public void handleInheritance(Token token) throws InvalidInheritanceException {
-        if (!isValidInheritance(token)) {
-            throw new InvalidInheritanceException(token);
+    public void handleNewAttribute(Token att, AttributeType type, boolean isPrivate) throws RedefinedVariableException {
+        ClassEntry currentClass = this.st.getCurrentClass();
+        if (currentClass.getAttribute(att.getLexem()) != null) {
+            throw new RedefinedVariableException(att);
+        }
+
+        // Create new attribute
+        AttributeEntry newAtt = new AttributeEntry(type, att, isPrivate);
+        currentClass.addAttribute(newAtt);
+    }
+
+    public void handleInheritance(AttributeType type) throws InvalidInheritanceException {
+        if (!isValidInheritance(type)) {
+            throw new InvalidInheritanceException(type.getToken());
         }
         ClassEntry currentClass = this.st.getCurrentClass();
-        currentClass.setInherits(token.getLexem());
+        currentClass.setInherits(type.getType());
     }
 
-    private boolean isValidInheritance(Token token) {
-        Type[] invalidType = {Type.TYPE_INT, Type.TYPE_CHAR, Type.TYPE_STRING, Type.TYPE_BOOL, Type.ARRAY};
-        for (Type type : invalidType) {
-            if (type == token.getType()) {
-                return false;
-            }
-        }
-
-        return true;
+    private boolean isValidInheritance(AttributeType type) {
+        return !type.isArray() && !type.isPrimitive();
     }
+
 
     /**
      * Chequea si el struct del implement ya existe o si no lo crea.
      * En caso de existir, chequea también si ya se ha encontrado un implement para ese struct
+     *
      * @param token
      * @throws SemanticException
      */
@@ -87,6 +93,7 @@ public class SymbolTableHandler {
 
     /**
      * Chequea si el metodo constructor ha sido llamado y actualiza la tabla de símbolos
+     *
      * @throws SemanticException
      */
     public void handleFinishImpl() throws SemanticException {
@@ -94,7 +101,7 @@ public class SymbolTableHandler {
         // Chequea si se ha declarado el constructor
         ClassEntry currentClass = st.getCurrentClass();
         if (!currentClass.isHasConstructor()) {
-            throw  new MissingConstructorException(currentClass);
+            throw new MissingConstructorException(currentClass);
         }
 
         // Actualiza la tabla de símbolos
@@ -104,6 +111,7 @@ public class SymbolTableHandler {
     /**
      * Chequea que el struct no posea ya un constructor definido.
      * Agrega el constructor al struct
+     *
      * @param token
      * @throws SemanticException
      */
@@ -111,7 +119,7 @@ public class SymbolTableHandler {
         // Chequea si ya se ha declarado el constructor
         ClassEntry currentClass = st.getCurrentClass();
         if (currentClass.isHasConstructor()) {
-            throw  new RedefinedConstructorException(currentClass, token.getLocation());
+            throw new RedefinedConstructorException(currentClass, token.getLocation());
         }
 
         // Agrega el constructor a la clase

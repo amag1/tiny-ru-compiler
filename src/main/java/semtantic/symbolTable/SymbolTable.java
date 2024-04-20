@@ -14,7 +14,7 @@ public class SymbolTable {
         this.currentClass = null;
         this.currentMethod = null;
         this.start = null;
-        this.classes = new TreeMap<>();
+        this.classes = new TreeMap<String, ClassEntry>();
     }
 
     public ClassEntry getClassByName(String name) {

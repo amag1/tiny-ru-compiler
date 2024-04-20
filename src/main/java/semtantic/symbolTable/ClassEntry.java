@@ -4,12 +4,13 @@ import lexical.Token;
 import location.Location;
 
 import java.util.Map;
+import java.util.TreeMap;
 
 public class ClassEntry {
     private String name;
     private Token token;
-    private Map<Token, AttributeEntry> attributes;
-    private Map<Token, MethodEntry> methods;
+    private Map<String, AttributeEntry> attributes;
+    private Map<String, MethodEntry> methods;
     private boolean foundStruct;
     private boolean foundImpl;
     private String inherits;
@@ -21,6 +22,11 @@ public class ClassEntry {
         this.token = token;
         this.name = token.getLexem();
         this.inherits = "Object";
+        this.foundStruct = false;
+        this.foundImpl = false;
+        this.hasConstructor = false;
+        this.attributes = new TreeMap<String, AttributeEntry>();
+        this.methods = new TreeMap<String, MethodEntry>();
     }
 
     public Token getToken() {
@@ -67,7 +73,19 @@ public class ClassEntry {
         this.constructor = constructor;
     }
 
-    public String getName() {return  this.name;}
+    public String getName() {
+        return this.name;
+    }
 
-    public Location getLocation() {return this.getToken().getLocation();}
+    public Location getLocation() {
+        return this.getToken().getLocation();
+    }
+
+    public AttributeEntry getAttribute(String name) {
+        return attributes.get(name);
+    }
+
+    public void addAttribute(AttributeEntry attribute) {
+        attributes.put(attribute.getName(), attribute);
+    }
 }

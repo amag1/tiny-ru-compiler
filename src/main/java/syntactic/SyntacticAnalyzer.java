@@ -7,6 +7,8 @@ import exceptions.syntactic.SyntacticException;
 import lexical.Lexical;
 import lexical.Token;
 import lexical.Type;
+import semtantic.symbolTable.AttributeEntry;
+import semtantic.symbolTable.AttributeType;
 import semtantic.symbolTable.SymbolTable;
 import semtantic.symbolTable.SymbolTableHandler;
 
@@ -48,7 +50,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         match(Type.EOF);
     }
 
-    private void start() throws SyntacticException, LexicalException {
+    private void start() throws SyntacticException, LexicalException, SemanticException {
         // start ⟨Bloque-Método⟩
         match(Type.KW_START);
         bloqueMetodo();
@@ -83,7 +85,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         structOHerencia();
     }
 
-    private void structOHerencia() throws SyntacticException, LexicalException, InvalidInheritanceException {
+    private void structOHerencia() throws SyntacticException, LexicalException, SemanticException {
         // ⟨Herencia⟩ { ⟨Struct-Atributo⟩ } | { ⟨Struct-Atributo⟩ }
 
         // No terminal Herencia es opcional. No hay un metodo encargado de matchearlo
@@ -96,7 +98,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         match(Type.CLOSE_CURLY);
     }
 
-    private void structAtributo() throws SyntacticException, LexicalException {
+    private void structAtributo() throws SyntacticException, LexicalException, SemanticException {
         // ⟨Atributo⟩ ⟨Struct-Atributo⟩ | λ
 
         // Cuando un no terminal deriva lambda, se chequea si el token actual es uno de los siguientes
@@ -109,20 +111,21 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         structAtributo();
     }
 
-    private void atributo() throws SyntacticException, LexicalException {
+    private void atributo() throws SyntacticException, LexicalException, SemanticException {
         // ⟨Visibilidad⟩ ⟨Tipo⟩ ⟨Lista-Declaración-Variables⟩ ; | ⟨Tipo⟩ ⟨Lista-Declaración-Variables⟩ ;
-
+        boolean isPrivate = false;
         // Visibilidad es opcional
         if (getTokenType() == Type.KW_PRI) {
             match(Type.KW_PRI);
+            isPrivate = true;
         }
 
-        tipo();
-        listaDeclaracionVariables();
+        AttributeType type = tipo();
+        listaDeclaracionVariables(type, isPrivate);
         match(Type.SEMICOLON);
     }
 
-    private void impl() throws SyntacticException, LexicalException,SemanticException {
+    private void impl() throws SyntacticException, LexicalException, SemanticException {
         // impl idStruct { ⟨Miembro⟩ ⟨Miembro-Opcional⟩ }
         match(Type.KW_IMPL);
         Token structToken = match(Type.ID_CLASS);
@@ -149,7 +152,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
     private void herencia() throws SyntacticException, LexicalException, InvalidInheritanceException {
         // : ⟨Tipo⟩
         match(Type.COLON);
-        Token token = tipo();
+        AttributeType token = tipo();
         st.handleInheritance(token);
     }
 
@@ -172,7 +175,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         bloqueMetodo();
     }
 
-    private void metodo() throws SyntacticException, LexicalException {
+    private void metodo() throws SyntacticException, LexicalException, SemanticException {
         // st fn idMetAt ⟨Argumentos-Formales⟩ -⟩ ⟨Tipo-Método⟩ ⟨Bloque-Método⟩
         // | fn idMetAt ⟨Argumentos-Formales⟩ -⟩ ⟨Tipo-Método⟩ ⟨Bloque-Método⟩
 
@@ -189,7 +192,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         bloqueMetodo();
     }
 
-    private void bloqueMetodo() throws SyntacticException, LexicalException {
+    private void bloqueMetodo() throws SyntacticException, LexicalException, SemanticException {
         // { ⟨Decl-Var-Locales-Metodo⟩ ⟨Sentencia-Metodo⟩ }
         match(Type.OPEN_CURLY);
         declVariableLocalesMetodo();
@@ -197,7 +200,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         match(Type.CLOSE_CURLY);
     }
 
-    private void declVariableLocalesMetodo() throws SyntacticException, LexicalException {
+    private void declVariableLocalesMetodo() throws SyntacticException, LexicalException, SemanticException {
         // ⟨Decl-Var-Locales⟩ ⟨Decl-Var-Locales-Metodo⟩ | λ
         Type[] first = {Type.ID_CLASS, Type.ARRAY, Type.TYPE_INT, Type.TYPE_CHAR, Type.TYPE_STRING, Type.TYPE_BOOL};
         if (contains(first)) {
@@ -222,21 +225,22 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         sentenciaMetodo();
     }
 
-    private void declaracionVariablesLocales() throws SyntacticException, LexicalException {
+    private void declaracionVariablesLocales() throws SyntacticException, LexicalException, SemanticException {
         // ⟨Tipo⟩ ⟨Lista-Declaración-Variables⟩ ;
-        tipo();
-        listaDeclaracionVariables();
+        AttributeType type = tipo();
+        listaDeclaracionVariables(type, false);
         match(Type.SEMICOLON);
     }
 
-    private void listaDeclaracionVariables() throws SyntacticException, LexicalException {
+    private void listaDeclaracionVariables(AttributeType type, boolean isPrivate) throws SyntacticException, LexicalException, SemanticException {
         // idMetAt ⟨Lambda-O-Variables⟩
-        match(Type.ID);
+        Token att = match(Type.ID);
+        st.handleNewAttribute(att, type, isPrivate);
 
         // Si el siguiente token no es una coma, asumimos que termino
         if (getTokenType() == Type.COMMA) {
             match(Type.COMMA);
-            listaDeclaracionVariables();
+            listaDeclaracionVariables(type, isPrivate);
         }
     }
 
@@ -290,23 +294,25 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         tipo();
     }
 
-    private Token tipo() throws SyntacticException, LexicalException {
+    private AttributeType tipo() throws SyntacticException, LexicalException {
         // Un tipo puede ser un ID_CLASS
         if (getTokenType() == Type.ID_CLASS) {
-            return match(Type.ID_CLASS);
+            Token id = match(Type.ID_CLASS);
+            return new AttributeType(false, false, id);
         }
 
         // Tambien puede ser Array seguido de un tipo primitivo
         // O simplemente un tipo primitivo
         if (getTokenType() == Type.ARRAY) {
-            Token array = match(Type.ARRAY);
-            Token tipo = tipoPrimitivo();
-            return new Token(array.getLexem() + " " + tipo.getLexem(), array.getType(), array.getLocation());
+            match(Type.ARRAY);
+            Token type = tipoPrimitivo();
+            return new AttributeType(true, true, type);
         }
 
         Type[] primitive = {Type.TYPE_INT, Type.TYPE_CHAR, Type.TYPE_STRING, Type.TYPE_BOOL};
         if (contains(primitive)) {
-            return tipoPrimitivo();
+            Token type = tipoPrimitivo();
+            return new AttributeType(false, true, type);
         }
 
         // Lanzar error sintactico con TODOS los posibles tipos que podrían haber aparecido

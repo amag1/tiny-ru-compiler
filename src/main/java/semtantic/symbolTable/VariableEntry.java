@@ -7,7 +7,19 @@ public class VariableEntry {
     private AttributeType type;
     private Token token;
     private int position;
-    
+
+    public VariableEntry(AttributeType type, Token token, int position) {
+        this.type = type;
+        this.token = token;
+        this.position = position;
+        this.name = token.getLexem();
+    }
+
+    public VariableEntry(AttributeType type, Token token) {
+        this.type = type;
+        this.token = token;
+        this.name = token.getLexem();
+    }
 
     public AttributeType getType() {
         return type;
