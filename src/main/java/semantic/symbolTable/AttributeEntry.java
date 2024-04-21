@@ -21,4 +21,24 @@ public class AttributeEntry extends VariableEntry implements Json {
                 "\t\"position\": " + this.getPosition() + "\n" +
                 "}";
     }
+
+    public boolean isPrivate() {
+        return isPrivate;
+    }
+
+    public void setPrivate(boolean aPrivate) {
+        isPrivate = aPrivate;
+    }
+
+    public boolean isInherited() {
+        return isInherited;
+    }
+
+    public void setInherited(boolean inherited) {
+        isInherited = inherited;
+    }
+
+    public void setPosition(int position) {
+        super.setPosition(position);
+    }
 }
