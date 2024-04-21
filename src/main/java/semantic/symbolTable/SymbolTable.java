@@ -6,10 +6,10 @@ import semantic.JsonHelper;
 import java.util.*;
 
 public class SymbolTable implements Json {
-    private Map<String, ClassEntry> classes;
+    private final Map<String, ClassEntry> classes;
     private ClassEntry currentClass;
-    private MethodEntry currentMethod;
-    private MethodEntry start;
+    private final MethodEntry currentMethod;
+    private final MethodEntry start;
 
     public SymbolTable() {
         this.currentClass = null;
@@ -19,12 +19,13 @@ public class SymbolTable implements Json {
     }
 
     public String toJson() {
-        StringBuilder json = new StringBuilder("{\n");
-        json.append("\t\"classes\": ").append(JsonHelper.json(classes)).append(",\n");
-        json.append("\t\"start\": ").append(start.toJson()).append("\n");
-        json.append("}");
+        return "{\n" + "\t\"classes\": " + JsonHelper.json(classes) + ",\n" +
+                "\t\"start\": " + start.toJson() + "\n" +
+                "}";
+    }
 
-        return json.toString();
+    public List<ClassEntry> getClasses() {
+        return new ArrayList<>(classes.values());
     }
 
     public ClassEntry getClassByName(String name) {
