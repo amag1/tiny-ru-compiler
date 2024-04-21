@@ -35,6 +35,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
     public void analyze() throws SyntacticException, LexicalException, SemanticException {
         nextToken();
         program();
+        st.consolidate();
     }
 
     @Override
