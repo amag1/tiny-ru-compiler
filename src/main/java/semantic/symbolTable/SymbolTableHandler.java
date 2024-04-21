@@ -1,10 +1,10 @@
 package semantic.symbolTable;
 
 import exceptions.semantic.*;
+import exceptions.semantic.ClassNotFoundException;
 import lexical.Token;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class SymbolTableHandler {
     private SymbolTable st;
@@ -16,6 +16,14 @@ public class SymbolTableHandler {
 
     public String toJson() {
         return this.st.toJson();
+    }
+
+    public void consolidate() throws SemanticException {
+        // Chequear herencia valida
+        consolidateInheritance();
+        // Pasar atributos heredados a las subclases
+        // TODO: este metodo tambien deberia manejar los metodos heredados
+        setInheritedAttributes();
     }
 
     public void initNewClasses() {
@@ -129,5 +137,98 @@ public class SymbolTableHandler {
         MethodEntry constructor = new MethodEntry();
         currentClass.setConstructor(constructor);
         currentClass.setHasConstructor(true);
+    }
+
+    private void consolidateInheritance() throws ClassNotFoundException, CyclicInheritanceException {
+        // Recorre todas las clases
+        // Para cada una, revisar que la clase de la que hereda existe
+        // al mismo tiempo crear un nuevo set con las clases que ya se han visitado para detectar herencia cíclica
+        Map<String, ClassEntry> existingClasses = new HashMap<>();
+        for (ClassEntry classEntry : this.st.getClasses()) {
+            String inherits = classEntry.getInherits();
+            if (!inherits.equals("Object")) {
+                ClassEntry parent = this.st.getClassByName(inherits);
+                if (parent == null) {
+                    throw new ClassNotFoundException(classEntry.getToken(), inherits);
+                }
+                existingClasses.put(classEntry.getName(), classEntry);
+            }
+        }
+
+        // Chequear herencia ciclica
+        while (!existingClasses.isEmpty()) {
+            String firstNode = existingClasses.values().iterator().next().getName();
+            // Eliminar primer item del hashmap
+            existingClasses.remove(firstNode);
+            Set<String> visited = new HashSet<>();
+            Stack<String> path = new Stack<>();
+            path.add(firstNode);
+
+            while (!path.isEmpty()) {
+                String current = path.pop();
+                visited.add(current);
+
+                ClassEntry currentClass = this.st.getClassByName(current);
+                String inherits = currentClass.getInherits();
+                // Ignorar clases que heredan de object
+                if (!inherits.equals("Object")) {
+                    // Si la clase actual ya ha sido visitada, entonces hay herencia cíclica
+                    if (visited.contains(inherits)) {
+                        throw new CyclicInheritanceException(currentClass.getToken(), visited);
+                    }
+                    // Si no, agregar la clase de la que hereda a la pila
+                    else {
+                        path.add(inherits);
+                    }
+                }
+            }
+
+        }
+    }
+
+    private void setInheritedAttributes() {
+        for (ClassEntry classEntry : this.st.getClasses()) {
+            if (!classEntry.handledInheritance()) {
+                String inherits = classEntry.getInherits();
+                if (!inherits.equals("Object")) {
+                    setInheritedAttributesWrapped(classEntry);
+                }
+                else {
+                    classEntry.setHandledInheritance(true);
+                }
+            }
+        }
+    }
+
+    private void setInheritedAttributesWrapped(ClassEntry classEntry) {
+        ClassEntry parent = this.st.getClassByName(classEntry.getInherits());
+        if (!parent.getInherits().equals("Object")) {
+            setInheritedAttributesWrapped(parent);
+        }
+
+        int position = 0;
+        for (Map.Entry<String, AttributeEntry> entry : parent.getAttributes().entrySet()) {
+            if (!entry.getValue().isPrivate()) {
+                // Copy attribute
+                AttributeEntry attribute = entry.getValue();
+                AttributeEntry newAttribute = new AttributeEntry(attribute.getType(), attribute.getToken(), attribute.isPrivate());
+                newAttribute.setInherited(true);
+                newAttribute.setPosition(position);
+                // Add attribute to class
+                classEntry.addAttribute(newAttribute);
+            }
+
+            position++;
+        }
+
+        // Set position for non inherited attributes
+        for (Map.Entry<String, AttributeEntry> entry : classEntry.getAttributes().entrySet()) {
+            AttributeEntry attribute = entry.getValue();
+            if (!attribute.isInherited()) {
+                attribute.setPosition(position++);
+            }
+        }
+
+        classEntry.setHandledInheritance(true);
     }
 }
