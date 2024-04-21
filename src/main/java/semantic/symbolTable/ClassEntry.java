@@ -18,6 +18,7 @@ public class ClassEntry implements Json {
     private String inherits;
     private boolean hasConstructor;
     private MethodEntry constructor;
+    private boolean handledInheritance;
 
 
     public ClassEntry(Token token) {
@@ -101,7 +102,19 @@ public class ClassEntry implements Json {
         return attributes.get(name);
     }
 
+    public TreeMap<String, AttributeEntry> getAttributes() {
+        return new TreeMap<>(attributes);
+    }
+
     public void addAttribute(AttributeEntry attribute) {
         attributes.put(attribute.getName(), attribute);
+    }
+
+    public boolean handledInheritance() {
+        return handledInheritance;
+    }
+
+    public void setHandledInheritance(boolean handledInheritance) {
+        this.handledInheritance = handledInheritance;
     }
 }
