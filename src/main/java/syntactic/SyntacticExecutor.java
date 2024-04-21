@@ -27,7 +27,9 @@ public class SyntacticExecutor extends Executor {
         ConsoleLogger clogger = new ConsoleLogger();
         try {
             syntacticAnalyzer.analyze();
+            String symbolTableJson = syntacticAnalyzer.getSymbolTableJson();
             clogger.LogSyntacticSuccess();
+            clogger.LogSymbolTable(symbolTableJson);
         } catch (LexicalException e) {
             clogger.LogLexicError(e);
         } catch (SyntacticException e) {

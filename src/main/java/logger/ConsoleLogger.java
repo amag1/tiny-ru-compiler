@@ -56,4 +56,8 @@ public class ConsoleLogger extends Logger {
             System.out.println(line);
         }
     }
+
+    public void LogSymbolTable(String symbolTableJson) {
+        System.out.println(symbolTableJson);
+    }
 }

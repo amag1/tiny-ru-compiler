@@ -1,8 +1,7 @@
-package semtantic.symbolTable;
+package semantic.symbolTable;
 
 import exceptions.semantic.*;
 import lexical.Token;
-import lexical.Type;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +12,10 @@ public class SymbolTableHandler {
     public SymbolTableHandler() {
         this.st = new SymbolTable();
         initNewClasses();
+    }
+
+    public String toJson() {
+        return this.st.toJson();
     }
 
     public void initNewClasses() {

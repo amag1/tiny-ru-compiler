@@ -1,8 +1,9 @@
-package semtantic.symbolTable;
+package semantic.symbolTable;
 
 import lexical.Token;
+import semantic.Json;
 
-public class VariableEntry {
+public class VariableEntry implements Json {
     private String name;
     private AttributeType type;
     private Token token;
@@ -51,5 +52,13 @@ public class VariableEntry {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String toJson() {
+        return "{\n" +
+                "\t\"name\": \"" + this.getName() + "\",\n" +
+                "\t\"type\": \"" + this.getType().getType() + "\",\n" +
+                "\t\"position\": " + this.getPosition() + "\n" +
+                "}";
     }
 }

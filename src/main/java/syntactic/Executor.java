@@ -10,11 +10,11 @@ public class Executor {
         Reader reader;
 
         try {
-            reader = new FileReader("/home/andres/IdeaProjects/tiny-ru-compiler/src/main/java/semtantic/symbolTable/test/failing/redefinedAttribute.ru");
+            reader = new FileReader("/home/andres/IdeaProjects/tiny-ru-compiler/src/main/java/semantic/symbolTable/test/passing/inheritance.ru");
             SyntacticExecutor executor = new SyntacticExecutor(reader, new ConsoleLogger());
             executor.execute();
         } catch (FileNotFoundException e) {
-            System.out.println("Arquivo não encontrado");
+            System.out.println("Archivo no encontrado");
         }
 
 

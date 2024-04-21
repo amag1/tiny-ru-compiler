@@ -1,0 +1,63 @@
+{
+  "classes": [
+    {
+      "name": "A",
+      "inherits": "B",
+      "foundStruct": true,
+      "foundImpl": true,
+      "hasConstructor": true,
+      "attributes": [
+        {
+          "name": "a",
+          "type": "Int",
+          "isPrivate": true,
+          "isInherited": false,
+          "position": 0
+        }
+      ],
+      "methods": [
+      ]
+    },
+    {
+      "name": "B",
+      "inherits": "Object",
+      "foundStruct": true,
+      "foundImpl": true,
+      "hasConstructor": true,
+      "attributes": [
+        {
+          "name": "b",
+          "type": "Int",
+          "isPrivate": true,
+          "isInherited": false,
+          "position": 0
+        }
+      ],
+      "methods": [
+      ]
+    },
+    {
+      "name": "C",
+      "inherits": "B",
+      "foundStruct": true,
+      "foundImpl": true,
+      "hasConstructor": true,
+      "attributes": [
+        {
+          "name": "c",
+          "type": "Int",
+          "isPrivate": true,
+          "isInherited": false,
+          "position": 0
+        }
+      ],
+      "methods": [
+      ]
+    }
+  ],
+  "start": {
+    "isStatic": false,
+    "isInherited": false,
+    "position": 0
+  }
+}

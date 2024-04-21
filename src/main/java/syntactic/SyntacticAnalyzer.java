@@ -7,10 +7,8 @@ import exceptions.syntactic.SyntacticException;
 import lexical.Lexical;
 import lexical.Token;
 import lexical.Type;
-import semtantic.symbolTable.AttributeEntry;
-import semtantic.symbolTable.AttributeType;
-import semtantic.symbolTable.SymbolTable;
-import semtantic.symbolTable.SymbolTableHandler;
+import semantic.symbolTable.AttributeType;
+import semantic.symbolTable.SymbolTableHandler;
 
 /**
  * Analizador sintáctico concreto.
@@ -37,6 +35,11 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
     public void analyze() throws SyntacticException, LexicalException, SemanticException {
         nextToken();
         program();
+    }
+
+    @Override
+    public String getSymbolTableJson() {
+        return st.toJson();
     }
 
     /**

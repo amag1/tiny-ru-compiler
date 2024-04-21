@@ -1,12 +1,14 @@
-package semtantic.symbolTable;
+package semantic.symbolTable;
 
 import lexical.Token;
 import location.Location;
+import semantic.Json;
+import semantic.JsonHelper;
 
 import java.util.Map;
 import java.util.TreeMap;
 
-public class ClassEntry {
+public class ClassEntry implements Json {
     private String name;
     private Token token;
     private Map<String, AttributeEntry> attributes;
@@ -27,6 +29,20 @@ public class ClassEntry {
         this.hasConstructor = false;
         this.attributes = new TreeMap<String, AttributeEntry>();
         this.methods = new TreeMap<String, MethodEntry>();
+    }
+
+    public String toJson() {
+        StringBuilder json = new StringBuilder("{\n");
+        json.append("\t\"name\": \"").append(this.name).append("\",\n");
+        json.append("\t\"inherits\": \"").append(this.inherits).append("\",\n");
+        json.append("\t\"foundStruct\": ").append(this.foundStruct).append(",\n");
+        json.append("\t\"foundImpl\": ").append(this.foundImpl).append(",\n");
+        json.append("\t\"hasConstructor\": ").append(this.hasConstructor).append(",\n");
+        json.append("\t\"attributes\": ").append(JsonHelper.json(attributes)).append(",\n");
+        json.append("\t\"methods\": ").append(JsonHelper.json(methods)).append("\n");
+        json.append("}");
+
+        return json.toString();
     }
 
     public Token getToken() {
