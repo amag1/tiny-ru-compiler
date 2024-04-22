@@ -254,6 +254,6 @@ public class SymbolTableHandler {
     }
 
     public void setMethodReturn(AttributeType type) throws SemanticException {
-        // TODO
+        st.getCurrentMethod().setReturnType(type);
     }
 }

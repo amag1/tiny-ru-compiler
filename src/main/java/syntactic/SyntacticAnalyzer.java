@@ -183,7 +183,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         // st fn idMetAt ⟨Argumentos-Formales⟩ -⟩ ⟨Tipo-Método⟩ ⟨Bloque-Método⟩
         // | fn idMetAt ⟨Argumentos-Formales⟩ -⟩ ⟨Tipo-Método⟩ ⟨Bloque-Método⟩
 
-        Boolean isStatic = false;
+        boolean isStatic = false;
 
         // Opcional: forma-metodo
         if (getTokenType() == Type.KW_ST) {
@@ -197,8 +197,13 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         st.handleNewMethod(methodToken, isStatic);
 
         argumentosFormales();
+
         match(Type.ARROW);
-        tipoMetodo();
+
+        AttributeType type = tipoMetodo();
+
+        st.setMethodReturn(type);
+
         bloqueMetodo();
     }
 
@@ -293,15 +298,15 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
     }
 
 
-    private void tipoMetodo() throws SyntacticException, LexicalException {
+    private AttributeType tipoMetodo() throws SyntacticException, LexicalException {
         // El tipo de retorno de un método puede ser cualqueir tipo hallado en `tipo()`
         // O tambien puede ser void
         if (getTokenType() == Type.TYPE_VOID) {
             match(Type.TYPE_VOID);
-            return;
+            return null; // TODO: ok?
         }
 
-        tipo();
+        return tipo();
     }
 
     private AttributeType tipo() throws SyntacticException, LexicalException {

@@ -12,7 +12,7 @@ public class MethodEntry implements Json {
     private Token token;
     private boolean isStatic;
     private boolean isInherited;
-    private AttributeEntry returnType;
+    private AttributeType returnType;
     private Map<String, VariableEntry> formalParameters;
     private Map<String, VariableEntry> localVariables;
     private int position;
@@ -37,7 +37,7 @@ public class MethodEntry implements Json {
         json.append("\t\"isInherited\": ").append(this.isInherited).append(",\n");
         json.append("\t\"position\": ").append(this.position).append(",\n");
         if (this.returnType != null) {
-            json.append("\t\"returnType\": ").append(this.returnType.toJson()).append(",\n");
+            // json.append("\t\"returnType\": ").append(this.returnType.toJson()).append(",\n"); TODO
         }
         if (this.formalParameters != null) {
             json.append("\t\"formalParameters\": ").append(JsonHelper.json(formalParameters)).append(",\n");
@@ -61,4 +61,5 @@ public class MethodEntry implements Json {
 
     public Location getLocation() {return  this.token.getLocation();}
 
+    public void setReturnType(AttributeType type) {this.returnType = type;}
 }
