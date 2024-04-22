@@ -7,8 +7,10 @@ import exceptions.syntactic.SyntacticException;
 import lexical.Lexical;
 import lexical.Token;
 import lexical.Type;
+import semantic.symbolTable.AttributeEntry;
 import semantic.symbolTable.AttributeType;
 import semantic.symbolTable.SymbolTableHandler;
+import java.util.*;
 
 /**
  * Analizador sintáctico concreto.
@@ -125,7 +127,12 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         }
 
         AttributeType type = tipo();
-        listaDeclaracionVariables(type, isPrivate);
+        List<AttributeEntry> attributes = listaDeclaracionVariables(type, isPrivate);
+
+        for (AttributeEntry attribute : attributes) {
+            // st.handleNewAttribute(attribute, type, isPrivate); TODO
+        }
+
         match(Type.SEMICOLON);
     }
 
@@ -244,16 +251,21 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         match(Type.SEMICOLON);
     }
 
-    private void listaDeclaracionVariables(AttributeType type, boolean isPrivate) throws SyntacticException, LexicalException, SemanticException {
+    private List<AttributeEntry> listaDeclaracionVariables(AttributeType type, boolean isPrivate) throws SyntacticException, LexicalException, SemanticException {
         // idMetAt ⟨Lambda-O-Variables⟩
-        Token att = match(Type.ID);
-        st.handleNewAttribute(att, type, isPrivate);
+        Token attributeToken = match(Type.ID);
+        AttributeEntry attribute = new AttributeEntry(type, attributeToken, isPrivate);
+
+        List<AttributeEntry> attributes = new ArrayList<>();
 
         // Si el siguiente token no es una coma, asumimos que termino
         if (getTokenType() == Type.COMMA) {
             match(Type.COMMA);
-            listaDeclaracionVariables(type, isPrivate);
+            attributes = listaDeclaracionVariables(type, isPrivate);
         }
+
+        attributes.add(attribute);
+        return attributes;
     }
 
     private void argumentosFormales() throws SyntacticException, LexicalException, SemanticException {
