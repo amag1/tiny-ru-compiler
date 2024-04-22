@@ -264,7 +264,7 @@ public class SymbolTableHandler {
      * @param type
      * @throws SemanticException
      */
-    public void addMethodParam(Token paramToken, AttributeType type) throws SemanticException {
+    public void addMethodParam(Token paramToken, AttributeType type, int position) throws SemanticException {
         MethodEntry currentMethod = st.getCurrentMethod();
 
         // Cheque si ya se ha definido un parametro con ese nombre
@@ -274,7 +274,7 @@ public class SymbolTableHandler {
         }
 
         // Agrega el parametro formal a la lista
-        VariableEntry formalParam = new VariableEntry(type, paramToken);
+        VariableEntry formalParam = new VariableEntry(type, paramToken, position);
         currentMethod.addFormalParam(formalParam);
     }
 
@@ -287,7 +287,7 @@ public class SymbolTableHandler {
     }
 
     /**
-     * Agrega una varaible local al metodo
+     * Agrega una variable local al metodo
      * Si ya eiste la variable entre los parametros o variables locales del metodo, lanza error
      * @param variableToken
      * @param type

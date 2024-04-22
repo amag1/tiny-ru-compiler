@@ -289,28 +289,28 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         }
 
         // De otro modo, intentar matchear los atributos formales
-        listaArgumentosFormales();
+        listaArgumentosFormales(1);
         match(Type.CLOSE_PAR);
     }
 
-    private void listaArgumentosFormales() throws SyntacticException, LexicalException, SemanticException {
+    private void listaArgumentosFormales(int currentParamPosition) throws SyntacticException, LexicalException, SemanticException {
         // ⟨Argumento-Formal⟩ ⟨Argumento-Formal-O-Lambda⟩
-        argumentoFormal();
-        argumentoFormalOLambda();
+        argumentoFormal(currentParamPosition);
+        argumentoFormalOLambda(currentParamPosition);
     }
 
-    private void argumentoFormal() throws SyntacticException, LexicalException, SemanticException {
+    private void argumentoFormal(int position) throws SyntacticException, LexicalException, SemanticException {
         // ⟨Tipo⟩ idMetAt
         AttributeType type = tipo();
         Token paramToken =  match(Type.ID);
-        st.addMethodParam(paramToken, type);
+        st.addMethodParam(paramToken, type, position);
     }
 
-    private void argumentoFormalOLambda() throws SyntacticException, LexicalException, SemanticException {
+    private void argumentoFormalOLambda(int currentParamPosition) throws SyntacticException, LexicalException, SemanticException {
         // , ⟨Lista-Argumentos-Formales⟩ | λ
         if (getTokenType() == Type.COMMA) {
             match(Type.COMMA);
-            listaArgumentosFormales();
+            listaArgumentosFormales(currentParamPosition +1);
         }
 
         // Si el token no es una coma, asumimos que es lambda
