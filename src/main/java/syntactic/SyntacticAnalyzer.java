@@ -183,13 +183,19 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         // st fn idMetAt ⟨Argumentos-Formales⟩ -⟩ ⟨Tipo-Método⟩ ⟨Bloque-Método⟩
         // | fn idMetAt ⟨Argumentos-Formales⟩ -⟩ ⟨Tipo-Método⟩ ⟨Bloque-Método⟩
 
+        Boolean isStatic = false;
+
         // Opcional: forma-metodo
         if (getTokenType() == Type.KW_ST) {
+            isStatic = true;
             match(Type.KW_ST);
         }
 
         match(Type.KW_FN);
-        match(Type.ID);
+        Token methodToken = match(Type.ID);
+
+        st.handleNewMethod(methodToken, isStatic);
+
         argumentosFormales();
         match(Type.ARROW);
         tipoMetodo();

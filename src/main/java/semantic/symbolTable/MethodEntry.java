@@ -1,6 +1,7 @@
 package semantic.symbolTable;
 
 import lexical.Token;
+import location.Location;
 import semantic.Json;
 import semantic.JsonHelper;
 
@@ -15,6 +16,15 @@ public class MethodEntry implements Json {
     private Map<String, VariableEntry> formalParameters;
     private Map<String, VariableEntry> localVariables;
     private int position;
+
+    public MethodEntry() {}
+
+    public MethodEntry(Token token, Boolean isStatic) {
+        this.name = token.getLexem();
+        this.token = token;
+        this.isStatic = isStatic;
+        this.isInherited = false;
+    }
 
 
     public String toJson() {
@@ -44,5 +54,11 @@ public class MethodEntry implements Json {
         json.append("\n}");
         return json.toString();
     }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public Location getLocation() {return  this.token.getLocation();}
 
 }

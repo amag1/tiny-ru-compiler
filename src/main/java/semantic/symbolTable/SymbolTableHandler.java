@@ -231,4 +231,29 @@ public class SymbolTableHandler {
 
         classEntry.setHandledInheritance(true);
     }
+
+    public void handleNewMethod(Token token, Boolean isStatic) throws SemanticException {
+        ClassEntry currentClass = st.getCurrentClass();
+
+        // Chequea si ya existe el metodo
+        MethodEntry existingMethod = currentClass.getMethod(token.getLexem());
+        if (existingMethod != null) {
+            throw new RedefinedMethodException(existingMethod, token.getLocation()) ;
+        }
+
+        // Agrega el nuevo metodo
+        MethodEntry newMethod = new MethodEntry(token, isStatic);
+        currentClass.addMethod(newMethod);
+
+        // Actualiza tabla de simbolos
+        st.setCurrentMethod(newMethod);
+    }
+
+    public void addMethodParam() throws SemanticException {
+        // TODO
+    }
+
+    public void setMethodReturn(AttributeType type) throws SemanticException {
+        // TODO
+    }
 }

@@ -117,4 +117,8 @@ public class ClassEntry implements Json {
     public void setHandledInheritance(boolean handledInheritance) {
         this.handledInheritance = handledInheritance;
     }
+
+    public void addMethod(MethodEntry method) {methods.put(method.getName(), method);}
+
+    public MethodEntry getMethod(String name) {return methods.get(name);}
 }

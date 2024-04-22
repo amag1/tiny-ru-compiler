@@ -8,13 +8,13 @@ import java.util.*;
 public class SymbolTable implements Json {
     private final Map<String, ClassEntry> classes;
     private ClassEntry currentClass;
-    private final MethodEntry currentMethod;
+    private MethodEntry currentMethod;
     private final MethodEntry start;
 
     public SymbolTable() {
         this.currentClass = null;
         this.currentMethod = null;
-        this.start = new MethodEntry();
+        this.start = new MethodEntry(); // TODO
         this.classes = new TreeMap<String, ClassEntry>();
     }
 
@@ -43,4 +43,9 @@ public class SymbolTable implements Json {
     public ClassEntry getCurrentClass() {
         return currentClass;
     }
+
+    public MethodEntry getCurrentMethod() {return currentMethod;}
+
+    public void setCurrentMethod(MethodEntry method) {this.currentMethod = method;}
 }
+
