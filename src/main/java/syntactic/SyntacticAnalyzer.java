@@ -120,8 +120,9 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
 
     private void atributo() throws SyntacticException, LexicalException, SemanticException {
         // ⟨Visibilidad⟩ ⟨Tipo⟩ ⟨Lista-Declaración-Variables⟩ ; | ⟨Tipo⟩ ⟨Lista-Declaración-Variables⟩ ;
-        boolean isPrivate = false;
+
         // Visibilidad es opcional
+        boolean isPrivate = false;
         if (getTokenType() == Type.KW_PRI) {
             match(Type.KW_PRI);
             isPrivate = true;

@@ -232,6 +232,13 @@ public class SymbolTableHandler {
         classEntry.setHandledInheritance(true);
     }
 
+    /**
+     * Agrega un nuevo metodo a la clase actual.
+     * Si hay otro metodo definido con el mismo nombre en la clase lanza error
+     * @param token
+     * @param isStatic
+     * @throws SemanticException
+     */
     public void handleNewMethod(Token token, Boolean isStatic) throws SemanticException {
         ClassEntry currentClass = st.getCurrentClass();
 
@@ -249,6 +256,13 @@ public class SymbolTableHandler {
         st.setCurrentMethod(newMethod);
     }
 
+    /**
+     * Agrega un nuevo parametro formal al metodo actual.
+     * Si hay otro parametro definido con el mismo nombre en el metodo lanza error
+     * @param paramToken
+     * @param type
+     * @throws SemanticException
+     */
     public void addMethodParam(Token paramToken, AttributeType type) throws SemanticException {
         MethodEntry currentMethod = st.getCurrentMethod();
 
@@ -263,7 +277,11 @@ public class SymbolTableHandler {
         currentMethod.addFormalParam(formalParam);
     }
 
-    public void setMethodReturn(AttributeType type) throws SemanticException {
+    /**
+     * Setea el tipo de retorno al metodo actual
+     * @param type
+     */
+    public void setMethodReturn(AttributeType type)  {
         st.getCurrentMethod().setReturnType(type);
     }
 }
