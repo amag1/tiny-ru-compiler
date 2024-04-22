@@ -37,7 +37,7 @@ public class MethodEntry implements Json {
         json.append("\t\"isInherited\": ").append(this.isInherited).append(",\n");
         json.append("\t\"position\": ").append(this.position).append(",\n");
         if (this.returnType != null) {
-            // json.append("\t\"returnType\": ").append(this.returnType.toJson()).append(",\n"); TODO
+            json.append("\t\"returnType\": ").append(this.returnType.toJson()).append(",\n");
         }
         if (this.formalParameters != null) {
             json.append("\t\"formalParameters\": ").append(JsonHelper.json(formalParameters)).append(",\n");
@@ -65,5 +65,5 @@ public class MethodEntry implements Json {
 
     public VariableEntry getFormalParam(String name) {return  this.formalParameters.get(name);}
 
-    public void addFormalParam(VariableEntry param) {this.formalParameters.put(param.getName(), param)}
+    public void addFormalParam(VariableEntry param) {this.formalParameters.put(param.getName(), param);}
 }
