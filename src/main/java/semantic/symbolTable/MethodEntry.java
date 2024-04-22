@@ -70,4 +70,8 @@ public class MethodEntry implements Json {
     public VariableEntry getFormalParam(String name) {return  this.formalParameters.get(name);}
 
     public void addFormalParam(VariableEntry param) {this.formalParameters.put(param.getName(), param);}
+
+    public VariableEntry getLocalVariable(String name) {return  this.localVariables.get(name);}
+
+    public void addLocalVariable(VariableEntry variable) {this.localVariables.put(variable.getName(), variable);}
 }

@@ -185,6 +185,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         st.handleConstructor(dotToken);
         argumentosFormales();
         bloqueMetodo();
+        st.handleFinishMethod();
     }
 
     private void metodo() throws SyntacticException, LexicalException, SemanticException {
@@ -211,6 +212,8 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         st.setMethodReturn(type);
 
         bloqueMetodo();
+
+        st.handleFinishMethod();
     }
 
     private void bloqueMetodo() throws SyntacticException, LexicalException, SemanticException {
@@ -249,7 +252,12 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
     private void declaracionVariablesLocales() throws SyntacticException, LexicalException, SemanticException {
         // ⟨Tipo⟩ ⟨Lista-Declaración-Variables⟩ ;
         AttributeType type = tipo();
-        listaDeclaracionVariables();
+        List<Token> attributeTokens = listaDeclaracionVariables();
+
+        for (Token attributeToken : attributeTokens) {
+            st.handleLocalVar(attributeToken, type);
+        }
+
         match(Type.SEMICOLON);
     }
 

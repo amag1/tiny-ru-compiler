@@ -134,7 +134,8 @@ public class SymbolTableHandler {
         }
 
         // Agrega el constructor a la clase
-        MethodEntry constructor = new MethodEntry();
+        MethodEntry constructor = new MethodEntry(token, false);
+        st.setCurrentMethod(constructor);
         currentClass.setConstructor(constructor);
         currentClass.setHasConstructor(true);
     }
@@ -283,5 +284,39 @@ public class SymbolTableHandler {
      */
     public void setMethodReturn(AttributeType type)  {
         st.getCurrentMethod().setReturnType(type);
+    }
+
+    /**
+     * Agrega una varaible local al metodo
+     * Si ya eiste la variable entre los parametros o variables locales del metodo, lanza error
+     * @param variableToken
+     * @param type
+     * @throws SemanticException
+     */
+    public void handleLocalVar(Token variableToken, AttributeType type) throws SemanticException {
+        MethodEntry currentMethod = st.getCurrentMethod();
+
+        // Chequea si la variable está definida como parametro formal del método
+        VariableEntry existingVar = currentMethod.getFormalParam(variableToken.getLexem());
+        if (existingVar != null) {
+            throw new RedefinedVariableException(variableToken);
+        }
+
+        // Chequa si la variable está definida dentro del cuerpo del método
+        existingVar = currentMethod.getLocalVariable(variableToken.getLexem());
+        if (existingVar != null) {
+            throw new RedefinedVariableException(variableToken);
+        }
+
+        // Agrega la variable al metodo
+        VariableEntry localVar = new VariableEntry(type, variableToken);
+        currentMethod.addLocalVariable(localVar);
+    }
+
+    /**
+     * Setea el metodo actual como null
+     */
+    public void handleFinishMethod() {
+        st.setCurrentMethod(null);
     }
 }
