@@ -197,9 +197,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         st.handleNewMethod(methodToken, isStatic);
 
         argumentosFormales();
-
         match(Type.ARROW);
-
         AttributeType type = tipoMetodo();
 
         st.setMethodReturn(type);
@@ -259,7 +257,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         }
     }
 
-    private void argumentosFormales() throws SyntacticException, LexicalException {
+    private void argumentosFormales() throws SyntacticException, LexicalException, SemanticException {
         // ( ) | ( ⟨Lista-Argumentos-Formales⟩ )
 
         match(Type.OPEN_PAR);
@@ -275,19 +273,20 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         match(Type.CLOSE_PAR);
     }
 
-    private void listaArgumentosFormales() throws SyntacticException, LexicalException {
+    private void listaArgumentosFormales() throws SyntacticException, LexicalException, SemanticException {
         // ⟨Argumento-Formal⟩ ⟨Argumento-Formal-O-Lambda⟩
         argumentoFormal();
         argumentoFormalOLambda();
     }
 
-    private void argumentoFormal() throws SyntacticException, LexicalException {
+    private void argumentoFormal() throws SyntacticException, LexicalException, SemanticException {
         // ⟨Tipo⟩ idMetAt
-        tipo();
-        match(Type.ID);
+        AttributeType type = tipo();
+        Token paramToken =  match(Type.ID);
+        st.addMethodParam(paramToken, type);
     }
 
-    private void argumentoFormalOLambda() throws SyntacticException, LexicalException {
+    private void argumentoFormalOLambda() throws SyntacticException, LexicalException, SemanticException {
         // , ⟨Lista-Argumentos-Formales⟩ | λ
         if (getTokenType() == Type.COMMA) {
             match(Type.COMMA);

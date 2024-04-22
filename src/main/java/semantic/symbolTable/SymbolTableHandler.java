@@ -249,8 +249,18 @@ public class SymbolTableHandler {
         st.setCurrentMethod(newMethod);
     }
 
-    public void addMethodParam() throws SemanticException {
-        // TODO
+    public void addMethodParam(Token paramToken, AttributeType type) throws SemanticException {
+        MethodEntry currentMethod = st.getCurrentMethod();
+
+        // Cheque si ya se ha definido un parametro con ese nombre
+        VariableEntry existingParam  = currentMethod.getFormalParam(paramToken.getLexem());
+        if (existingParam != null) {
+            throw new RedefinedVariableException(paramToken);
+        }
+
+        // Agrega el parametro formal a la lista
+        VariableEntry formalParam = new VariableEntry(type, paramToken);
+        currentMethod.addFormalParam(formalParam);
     }
 
     public void setMethodReturn(AttributeType type) throws SemanticException {

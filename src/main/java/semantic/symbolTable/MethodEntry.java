@@ -62,4 +62,8 @@ public class MethodEntry implements Json {
     public Location getLocation() {return  this.token.getLocation();}
 
     public void setReturnType(AttributeType type) {this.returnType = type;}
+
+    public VariableEntry getFormalParam(String name) {return  this.formalParameters.get(name);}
+
+    public void addFormalParam(VariableEntry param) {this.formalParameters.put(param.getName(), param)}
 }
