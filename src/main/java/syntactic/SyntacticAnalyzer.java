@@ -174,7 +174,6 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         // . ⟨Argumentos-Formales⟩ ⟨Bloque-Método⟩
         Token dotToken = match(Type.DOT);
         st.handleConstructor(dotToken);
-        // TODO: Add data about constructor
         argumentosFormales();
         bloqueMetodo();
     }

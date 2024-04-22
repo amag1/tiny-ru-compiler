@@ -5,7 +5,9 @@ import location.Location;
 import semantic.Json;
 import semantic.JsonHelper;
 
+import java.sql.Array;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class MethodEntry implements Json {
     private String name;
@@ -22,6 +24,8 @@ public class MethodEntry implements Json {
     public MethodEntry(Token token, Boolean isStatic) {
         this.name = token.getLexem();
         this.token = token;
+        this.formalParameters = new TreeMap<String, VariableEntry>();
+        this.localVariables = new TreeMap<String, VariableEntry>();
         this.isStatic = isStatic;
         this.isInherited = false;
     }
