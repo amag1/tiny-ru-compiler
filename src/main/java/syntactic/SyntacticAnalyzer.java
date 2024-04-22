@@ -7,6 +7,7 @@ import exceptions.syntactic.SyntacticException;
 import lexical.Lexical;
 import lexical.Token;
 import lexical.Type;
+import org.w3c.dom.Attr;
 import semantic.symbolTable.AttributeEntry;
 import semantic.symbolTable.AttributeType;
 import semantic.symbolTable.SymbolTableHandler;
@@ -127,10 +128,10 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         }
 
         AttributeType type = tipo();
-        List<AttributeEntry> attributes = listaDeclaracionVariables(type, isPrivate);
+        List<Token> attributeTokens = listaDeclaracionVariables();
 
-        for (AttributeEntry attribute : attributes) {
-            // st.handleNewAttribute(attribute, type, isPrivate); TODO
+        for (Token attributeToken : attributeTokens) {
+            st.handleNewAttribute(attributeToken, type, isPrivate);
         }
 
         match(Type.SEMICOLON);
@@ -247,25 +248,24 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
     private void declaracionVariablesLocales() throws SyntacticException, LexicalException, SemanticException {
         // ⟨Tipo⟩ ⟨Lista-Declaración-Variables⟩ ;
         AttributeType type = tipo();
-        listaDeclaracionVariables(type, false);
+        listaDeclaracionVariables();
         match(Type.SEMICOLON);
     }
 
-    private List<AttributeEntry> listaDeclaracionVariables(AttributeType type, boolean isPrivate) throws SyntacticException, LexicalException, SemanticException {
+    private List<Token> listaDeclaracionVariables() throws SyntacticException, LexicalException, SemanticException {
         // idMetAt ⟨Lambda-O-Variables⟩
         Token attributeToken = match(Type.ID);
-        AttributeEntry attribute = new AttributeEntry(type, attributeToken, isPrivate);
 
-        List<AttributeEntry> attributes = new ArrayList<>();
+        List<Token> attributeTokens = new ArrayList<>();
 
         // Si el siguiente token no es una coma, asumimos que termino
         if (getTokenType() == Type.COMMA) {
             match(Type.COMMA);
-            attributes = listaDeclaracionVariables(type, isPrivate);
+            attributeTokens = listaDeclaracionVariables();
         }
 
-        attributes.add(attribute);
-        return attributes;
+        attributeTokens.add(attributeToken);
+        return attributeTokens;
     }
 
     private void argumentosFormales() throws SyntacticException, LexicalException, SemanticException {
