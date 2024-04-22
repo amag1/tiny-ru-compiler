@@ -21,9 +21,8 @@ public class SymbolTableHandler {
     public void consolidate() throws SemanticException {
         // Chequear herencia valida
         consolidateInheritance();
-        // Pasar atributos heredados a las subclases
-        // TODO: este metodo tambien deberia manejar los metodos heredados
-        setInheritedAttributes();
+        // Pasar atributos  y metodos heredados a las subclases
+        setInheritance();
     }
 
     public void initNewClasses() {
@@ -187,12 +186,12 @@ public class SymbolTableHandler {
         }
     }
 
-    private void setInheritedAttributes() {
+    private void setInheritance() {
         for (ClassEntry classEntry : this.st.getClasses()) {
             if (!classEntry.handledInheritance()) {
                 String inherits = classEntry.getInherits();
                 if (!inherits.equals("Object")) {
-                    setInheritedAttributesWrapped(classEntry);
+                    setInheritanceWrapped(classEntry);
                 }
                 else {
                     classEntry.setHandledInheritance(true);
@@ -201,12 +200,22 @@ public class SymbolTableHandler {
         }
     }
 
-    private void setInheritedAttributesWrapped(ClassEntry classEntry) {
+    private void setInheritanceWrapped(ClassEntry classEntry) {
         ClassEntry parent = this.st.getClassByName(classEntry.getInherits());
         if (!parent.getInherits().equals("Object")) {
-            setInheritedAttributesWrapped(parent);
+            setInheritanceWrapped(parent);
         }
 
+        setInheritedAttributes(classEntry, parent);
+
+        // TODO method
+
+
+
+        classEntry.setHandledInheritance(true);
+    }
+
+    public void setInheritedAttributes(ClassEntry classEntry, ClassEntry parent) {
         int position = 0;
         for (Map.Entry<String, AttributeEntry> entry : parent.getAttributes().entrySet()) {
             if (!entry.getValue().isPrivate()) {
@@ -229,8 +238,6 @@ public class SymbolTableHandler {
                 attribute.setPosition(position++);
             }
         }
-
-        classEntry.setHandledInheritance(true);
     }
 
     /**

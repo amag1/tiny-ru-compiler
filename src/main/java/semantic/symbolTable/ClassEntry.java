@@ -121,4 +121,6 @@ public class ClassEntry implements Json {
     public void addMethod(MethodEntry method) {methods.put(method.getName(), method);}
 
     public MethodEntry getMethod(String name) {return methods.get(name);}
+
+    public void replaceMethod(MethodEntry method) {this.methods.replace(method.getName(), method);}
 }
