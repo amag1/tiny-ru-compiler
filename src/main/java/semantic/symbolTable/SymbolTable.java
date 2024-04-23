@@ -19,7 +19,7 @@ public class SymbolTable implements Json {
     }
 
     public String toJson() {
-        return "{\n" + "\t\"classes\": " + JsonHelper.json(classes) + ",\n" +
+        return "{\n" + JsonHelper.json("classes",classes) + ",\n" +
                 "\t\"start\": " + start.toJson() + "\n" +
                 "}";
     }

@@ -34,31 +34,23 @@ public class MethodEntry implements Json {
 
 
     public String toJson() {
-        StringBuilder json = new StringBuilder("{\n");
 
-        if (this.name != null) {
-            json.append("\t\"name\": \"").append(this.name).append("\",\n");
-        }
-        json.append("\t\"isStatic\": ").append(this.isStatic).append(",\n");
-        json.append("\t\"isInherited\": ").append(this.isInherited).append(",\n");
-        json.append("\t\"position\": ").append(this.position).append(",\n");
+        String returnJson = "void";
         if (this.returnType != null) {
-            json.append("\t\"returnType\": ").append(this.returnType.toJson()).append(",\n");
-        }
-        if (this.formalParameters != null) {
-            json.append("\t\"formalParameters\": ").append(JsonHelper.json(formalParameters)).append(",\n");
-        }
-        if (this.localVariables != null) {
-            json.append("\t\"localVariables\": ").append(JsonHelper.json(localVariables)).append(",\n");
+            returnJson = this.returnType.toJson();
         }
 
-        // Remove the last comma and newline
-        if (json.length() > 2) {
-            json.delete(json.length() - 2, json.length());
-        }
+        String json = "{" +
+            JsonHelper.json("name", this.name) + "," +
+            JsonHelper.json("isStatic", this.isStatic) + "," +
+            JsonHelper.json("isInherited", this.isInherited) + "," +
+            JsonHelper.json("position", this.position) + "," +
+            JsonHelper.json("return", returnJson) + "," +
+            JsonHelper.json("formalParameters",formalParameters)+ "," +
+            JsonHelper.json("localVariables",localVariables) +
+            "}";
 
-        json.append("\n}");
-        return json.toString();
+        return json;
     }
 
     public String getName() {

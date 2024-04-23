@@ -2,6 +2,7 @@ package semantic.symbolTable;
 
 import lexical.Token;
 import semantic.Json;
+import semantic.JsonHelper;
 
 public class VariableEntry implements Json {
     private String name;
@@ -55,10 +56,10 @@ public class VariableEntry implements Json {
     }
 
     public String toJson() {
-        return "{\n" +
-                "\t\"name\": \"" + this.getName() + "\",\n" +
-                "\t\"type\": \"" + this.getType().getType() + "\",\n" +
-                "\t\"position\": " + this.getPosition() + "\n" +
+        return "{" +
+                JsonHelper.json("name",  this.getName()) + "," +
+                JsonHelper.json("type",  this.getType().getType()) + "," +
+                JsonHelper.json("position", this.getPosition()) +
                 "}";
     }
 }

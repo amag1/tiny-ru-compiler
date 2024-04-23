@@ -33,17 +33,23 @@ public class ClassEntry implements Json {
     }
 
     public String toJson() {
-        StringBuilder json = new StringBuilder("{\n");
-        json.append("\t\"name\": \"").append(this.name).append("\",\n");
-        json.append("\t\"inherits\": \"").append(this.inherits).append("\",\n");
-        json.append("\t\"foundStruct\": ").append(this.foundStruct).append(",\n");
-        json.append("\t\"foundImpl\": ").append(this.foundImpl).append(",\n");
-        json.append("\t\"hasConstructor\": ").append(this.hasConstructor).append(",\n");
-        json.append("\t\"attributes\": ").append(JsonHelper.json(attributes)).append(",\n");
-        json.append("\t\"methods\": ").append(JsonHelper.json(methods)).append("\n");
-        json.append("}");
+        String constructorJson = "null";
+        if (this.constructor != null) {
+            constructorJson = this.constructor.toJson();
+        }
 
-        return json.toString();
+        String json = "{"+
+            JsonHelper.json("name", this.name) + "," +
+            JsonHelper.json("inherits",this.inherits) + "," +
+            JsonHelper.json("foundStruct",this.foundStruct) + "," +
+            JsonHelper.json("foundImpl",this.foundImpl) + "," +
+            JsonHelper.json("hasConstructor",this.hasConstructor) + "," +
+            JsonHelper.json("attributes", attributes) + "," +
+            JsonHelper.json("methods",methods) + "," +
+            JsonHelper.json("constructor", constructorJson) +
+            "}";
+
+        return json;
     }
 
     public Token getToken() {
