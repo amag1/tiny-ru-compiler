@@ -148,6 +148,7 @@ public class SymbolTableHandler {
 
         // Agrega el constructor a la clase
         MethodEntry constructor = new MethodEntry(token, false);
+        constructor.setReturnType(new AttributeType(false, false, currentClass.getToken()));
         st.setCurrentMethod(constructor);
         currentClass.setConstructor(constructor);
         currentClass.setHasConstructor(true);

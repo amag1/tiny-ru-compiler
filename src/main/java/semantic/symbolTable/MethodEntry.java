@@ -45,6 +45,7 @@ public class MethodEntry implements Json {
             JsonHelper.json("name", this.name, identationIndex) + "," +
             JsonHelper.json("isStatic", this.isStatic, identationIndex) + "," +
             JsonHelper.json("isInherited", this.isInherited, identationIndex) + "," +
+            JsonHelper.json("isRedefined", this.isRedefined, identationIndex) + "," +
             JsonHelper.json("position", this.position, identationIndex) + "," +
             JsonHelper.json("return", returnJson, identationIndex) + "," +
             JsonHelper.json("formalParameters",formalParameters, identationIndex)+ "," +
