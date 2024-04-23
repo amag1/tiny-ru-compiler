@@ -21,8 +21,12 @@ public class SymbolTableHandler {
     public void consolidate() throws SemanticException {
         // Chequear herencia valida
         consolidateInheritance();
+
         // Pasar atributos  y metodos heredados a las subclases
         setInheritance();
+
+        // Chequea que las clases tengan Struct e Impl
+        checkFoundImplAndStruct();
     }
 
     public void initNewClasses() {
@@ -74,6 +78,16 @@ public class SymbolTableHandler {
         return !type.isArray() && !type.isPrimitive();
     }
 
+    private void checkFoundImplAndStruct() throws SemanticException {
+        for (ClassEntry currentClass : this.st.getClasses()) {
+            if (!currentClass.isFoundStruct()) {
+                throw  new UndefinedStructException(currentClass);
+            }
+            if (!currentClass.isFoundImpl()) {
+                throw new UndefinedImplException(currentClass);
+            }
+        }
+    }
 
     /**
      * Chequea si el struct del implement ya existe o si no lo crea.
