@@ -207,10 +207,7 @@ public class SymbolTableHandler {
         }
 
         setInheritedAttributes(classEntry, parent);
-
-        // TODO method
-
-
+        setInheritedMethods(classEntry, parent);
 
         classEntry.setHandledInheritance(true);
     }
@@ -238,6 +235,39 @@ public class SymbolTableHandler {
                 attribute.setPosition(position++);
             }
         }
+    }
+
+    public void setInheritedMethods(ClassEntry currentClass, ClassEntry parent) {
+        int position = 0;
+        for (Map.Entry<String, MethodEntry> entry : parent.getMethods().entrySet()){
+            MethodEntry inheritedMethod = entry.getValue().copy();
+
+            // Chequeamos si el metodo es redefinido
+            MethodEntry existingMethod = currentClass.getMethod(inheritedMethod.getName());
+            if (existingMethod != null) {
+                // Metodo redefinido
+                existingMethod.setRedefined(true);
+                existingMethod.setInherited(true);
+                existingMethod.setPosition(position);
+            }
+            else {
+                // Metodo heredado
+                inheritedMethod.setInherited(true);
+                inheritedMethod.setPosition(position);
+                currentClass.addMethod(inheritedMethod);
+            }
+
+            position++;
+        }
+
+        // Setea la posicion para los metodos no heredados
+        for (Map.Entry<String, MethodEntry> entry : currentClass.getMethods().entrySet()) {
+            MethodEntry method = entry.getValue();
+            if (!method.isInherited() && !method.isRedefined()) {
+                method.setPosition(position++);
+            }
+        }
+
     }
 
     /**

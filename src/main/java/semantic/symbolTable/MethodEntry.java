@@ -18,6 +18,8 @@ public class MethodEntry implements Json {
     private Map<String, VariableEntry> formalParameters;
     private Map<String, VariableEntry> localVariables;
     private int position;
+    private boolean isRedefined;
+
 
     public MethodEntry() {}
 
@@ -74,4 +76,17 @@ public class MethodEntry implements Json {
     public VariableEntry getLocalVariable(String name) {return  this.localVariables.get(name);}
 
     public void addLocalVariable(VariableEntry variable) {this.localVariables.put(variable.getName(), variable);}
+
+    public MethodEntry copy() {
+        return new MethodEntry(this.token, this.isStatic);
+    }
+
+    public  void setInherited(boolean isInherited) {this.isInherited = isInherited;}
+    public void setPosition(int position) {this.position = position;}
+
+    public boolean isRedefined() {return isRedefined;}
+
+    public void setRedefined(boolean redefined) {isRedefined = redefined;}
+
+    public boolean isInherited() {return isInherited;}
 }

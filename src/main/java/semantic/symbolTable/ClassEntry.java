@@ -122,5 +122,5 @@ public class ClassEntry implements Json {
 
     public MethodEntry getMethod(String name) {return methods.get(name);}
 
-    public void replaceMethod(MethodEntry method) {this.methods.replace(method.getName(), method);}
+    public TreeMap<String, MethodEntry> getMethods() { return new TreeMap<>(methods);}
 }
