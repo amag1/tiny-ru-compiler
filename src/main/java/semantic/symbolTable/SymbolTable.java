@@ -18,10 +18,12 @@ public class SymbolTable implements Json {
         this.classes = new TreeMap<String, ClassEntry>();
     }
 
-    public String toJson() {
-        return "{\n" + JsonHelper.json("classes",classes) + ",\n" +
-                "\t\"start\": " + start.toJson() + "\n" +
-                "}";
+    public String toJson(int identationIndex) {
+        identationIndex ++;
+        return "{" +
+                JsonHelper.json("classes",classes, identationIndex) + "," +
+                JsonHelper.json("start", this.start.toJson(identationIndex), identationIndex) +
+                "\n" + JsonHelper.getIdentationString(identationIndex-1) + "}";
     }
 
     public List<ClassEntry> getClasses() {

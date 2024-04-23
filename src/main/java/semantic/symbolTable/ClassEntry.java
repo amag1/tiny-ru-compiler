@@ -32,22 +32,24 @@ public class ClassEntry implements Json {
         this.methods = new TreeMap<String, MethodEntry>();
     }
 
-    public String toJson() {
+    public String toJson(int identationIndex) {
         String constructorJson = "null";
         if (this.constructor != null) {
-            constructorJson = this.constructor.toJson();
+            constructorJson = this.constructor.toJson(identationIndex+1);
         }
 
+        identationIndex ++;
+
         String json = "{"+
-            JsonHelper.json("name", this.name) + "," +
-            JsonHelper.json("inherits",this.inherits) + "," +
-            JsonHelper.json("foundStruct",this.foundStruct) + "," +
-            JsonHelper.json("foundImpl",this.foundImpl) + "," +
-            JsonHelper.json("hasConstructor",this.hasConstructor) + "," +
-            JsonHelper.json("attributes", attributes) + "," +
-            JsonHelper.json("methods",methods) + "," +
-            JsonHelper.json("constructor", constructorJson) +
-            "}";
+            JsonHelper.json("name", this.name, identationIndex) + "," +
+            JsonHelper.json("inherits",this.inherits, identationIndex) + "," +
+            JsonHelper.json("foundStruct",this.foundStruct, identationIndex) + "," +
+            JsonHelper.json("foundImpl",this.foundImpl, identationIndex) + "," +
+            JsonHelper.json("hasConstructor",this.hasConstructor, identationIndex) + "," +
+            JsonHelper.json("attributes", attributes, identationIndex) + "," +
+            JsonHelper.json("methods",methods, identationIndex) + "," +
+            JsonHelper.json("constructor", constructorJson, identationIndex) +
+            "\n" + JsonHelper.getIdentationString(identationIndex-1) + "}";
 
         return json;
     }

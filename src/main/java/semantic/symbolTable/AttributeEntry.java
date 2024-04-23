@@ -13,14 +13,16 @@ public class AttributeEntry extends VariableEntry implements Json {
         this.isPrivate = isPrivate;
     }
 
-    public String toJson() {
+    public String toJson(int identationIndex) {
+        identationIndex ++;
+
         return "{" +
-            JsonHelper.json("name", this.getName()) + "," +
-            JsonHelper.json("type",  this.getType().toJson()) + "," +
-            JsonHelper.json("isPrivate", this.isPrivate)+ "," +
-            JsonHelper.json("isInherited", this.isInherited) + "," +
-            JsonHelper.json("position", this.getPosition()) +
-            "}";
+            JsonHelper.json("name", this.getName(), identationIndex) + "," +
+            JsonHelper.json("type",  this.getType().toJson(identationIndex), identationIndex) + "," +
+            JsonHelper.json("isPrivate", this.isPrivate, identationIndex)+ "," +
+            JsonHelper.json("isInherited", this.isInherited, identationIndex) + "," +
+            JsonHelper.json("position", this.getPosition(), identationIndex) +
+            "\n" + JsonHelper.getIdentationString(identationIndex-1) + "}";
     }
 
     public boolean isPrivate() {

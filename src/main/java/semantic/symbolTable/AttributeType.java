@@ -17,7 +17,7 @@ public class AttributeType implements Json {
     }
 
     @Override
-    public String toJson() {
+    public String toJson(int identationIndex) {
         String json = "";
 
         if (this.isArray) {

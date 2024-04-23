@@ -15,7 +15,7 @@ public class SymbolTableHandler {
     }
 
     public String toJson() {
-        return this.st.toJson();
+        return this.st.toJson(0);
     }
 
     public void consolidate() throws SemanticException {

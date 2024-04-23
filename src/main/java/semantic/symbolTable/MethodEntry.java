@@ -33,22 +33,23 @@ public class MethodEntry implements Json {
     }
 
 
-    public String toJson() {
+    public String toJson(int identationIndex) {
+        identationIndex++;
 
         String returnJson = "void";
         if (this.returnType != null) {
-            returnJson = this.returnType.toJson();
+            returnJson = this.returnType.toJson(identationIndex);
         }
 
         String json = "{" +
-            JsonHelper.json("name", this.name) + "," +
-            JsonHelper.json("isStatic", this.isStatic) + "," +
-            JsonHelper.json("isInherited", this.isInherited) + "," +
-            JsonHelper.json("position", this.position) + "," +
-            JsonHelper.json("return", returnJson) + "," +
-            JsonHelper.json("formalParameters",formalParameters)+ "," +
-            JsonHelper.json("localVariables",localVariables) +
-            "}";
+            JsonHelper.json("name", this.name, identationIndex) + "," +
+            JsonHelper.json("isStatic", this.isStatic, identationIndex) + "," +
+            JsonHelper.json("isInherited", this.isInherited, identationIndex) + "," +
+            JsonHelper.json("position", this.position, identationIndex) + "," +
+            JsonHelper.json("return", returnJson, identationIndex) + "," +
+            JsonHelper.json("formalParameters",formalParameters, identationIndex)+ "," +
+            JsonHelper.json("localVariables",localVariables, identationIndex) +
+            "\n" + JsonHelper.getIdentationString(identationIndex-1) + "}";
 
         return json;
     }

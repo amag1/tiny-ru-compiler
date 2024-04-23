@@ -55,11 +55,12 @@ public class VariableEntry implements Json {
         this.name = name;
     }
 
-    public String toJson() {
+    public String toJson(int identationIndex) {
+        identationIndex ++;
         return "{" +
-                JsonHelper.json("name",  this.getName()) + "," +
-                JsonHelper.json("type",  this.getType().getType()) + "," +
-                JsonHelper.json("position", this.getPosition()) +
-                "}";
+                JsonHelper.json("name",  this.getName(), identationIndex) + "," +
+                JsonHelper.json("type",  this.getType().toJson(0), identationIndex) + "," +
+                JsonHelper.json("position", this.getPosition(), identationIndex) +
+                "\n" + JsonHelper.getIdentationString(identationIndex-1) + "}";
     }
 }
