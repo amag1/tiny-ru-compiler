@@ -4,7 +4,6 @@ import lexical.Token;
 import lexical.Type;
 import location.Location;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

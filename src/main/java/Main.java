@@ -1,5 +1,4 @@
 import executor.Executor;
-import lexical.LexicalExecutor;
 import logger.ConsoleLogger;
 import logger.FileLogger;
 import logger.Logger;
@@ -32,7 +31,8 @@ public class Main {
             // Save the tokens in output file
             String outputFilePath = args[1];
             outputLogger = new FileLogger(outputFilePath);
-        } else {
+        }
+        else {
             // Logs the result in console
             outputLogger = new ConsoleLogger();
         }

@@ -2,9 +2,7 @@ package lexical;
 
 import exceptions.lexical.LexicalException;
 import reader.FileReader;
-import reader.StringReader;
 import logger.ConsoleLogger;
-import logger.Logger;
 
 import java.io.FileNotFoundException;
 import java.util.List;

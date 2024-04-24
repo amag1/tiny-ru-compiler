@@ -8,7 +8,6 @@ import logger.Logger;
 
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Locale;
 
 /**
  * Implementación concreta de executor para analizador lexico

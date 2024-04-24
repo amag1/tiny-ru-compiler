@@ -7,9 +7,9 @@ public class JsonHelper {
 
         String identationStr = getIdentationString(identationIndex);
 
-        String json = "\n" +  identationStr + "\"" + name + "\": ";
+        String json = "\n" + identationStr + "\"" + name + "\": ";
         if (map == null || map.isEmpty()) {
-            return  json + "[]";
+            return json + "[]";
         }
 
         identationIndex++;
@@ -18,26 +18,26 @@ public class JsonHelper {
         json += "[";
 
         for (String key : map.keySet()) {
-            json +=  "\n" + identationStr + map.get(key).toJson(identationIndex) + ",";
+            json += "\n" + identationStr + map.get(key).toJson(identationIndex) + ",";
         }
 
         // Remove last comma
-        json = json.substring(0, json.length()-1);
+        json = json.substring(0, json.length() - 1);
 
-        json +=  "\n" + JsonHelper.getIdentationString(identationIndex-1) + "]";;
+        json += "\n" + JsonHelper.getIdentationString(identationIndex - 1) + "]";
         return json;
     }
 
     public static String json(String name, int value, int identationIndex) {
-        return   "\n" + getIdentationString(identationIndex) +  "\"" + name + "\": " + value;
+        return "\n" + getIdentationString(identationIndex) + "\"" + name + "\": " + value;
     }
 
     public static String json(String name, String value, int identationIndex) {
-        return "\n" +  getIdentationString(identationIndex) +  "\"" + name + "\": " + value;
+        return "\n" + getIdentationString(identationIndex) + "\"" + name + "\": " + value;
     }
 
     public static String json(String name, boolean value, int identationIndex) {
-        return "\n" +  getIdentationString(identationIndex) + "\"" + name + "\": " + value;
+        return "\n" + getIdentationString(identationIndex) + "\"" + name + "\": " + value;
     }
 
     public static String getIdentationString(int identationIndex) {
