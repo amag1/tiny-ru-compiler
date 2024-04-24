@@ -21,7 +21,10 @@ public class MethodEntry implements Json {
     private boolean isRedefined;
 
 
-    public MethodEntry() {}
+    public MethodEntry() {
+        this.formalParameters = new TreeMap<String, VariableEntry>();
+        this.localVariables = new TreeMap<String, VariableEntry>();
+    }
 
     public MethodEntry(Token token, Boolean isStatic) {
         this.name = token.getLexem();

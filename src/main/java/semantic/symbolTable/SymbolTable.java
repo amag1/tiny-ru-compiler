@@ -14,7 +14,7 @@ public class SymbolTable implements Json {
     public SymbolTable() {
         this.currentClass = null;
         this.currentMethod = null;
-        this.start = new MethodEntry(); // TODO
+        this.start = new MethodEntry();
         this.classes = new TreeMap<String, ClassEntry>();
     }
 
@@ -49,5 +49,7 @@ public class SymbolTable implements Json {
     public MethodEntry getCurrentMethod() {return currentMethod;}
 
     public void setCurrentMethod(MethodEntry method) {this.currentMethod = method;}
+
+    public MethodEntry getStart() {return  this.start;}
 }
 

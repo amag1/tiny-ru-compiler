@@ -371,4 +371,6 @@ public class SymbolTableHandler {
     public void handleFinishMethod() {
         st.setCurrentMethod(null);
     }
+
+    public void handleStart() {st.setCurrentMethod(st.getStart());}
 }
