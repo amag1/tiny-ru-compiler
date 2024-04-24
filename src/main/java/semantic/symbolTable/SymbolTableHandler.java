@@ -31,7 +31,7 @@ public class SymbolTableHandler {
 
     public void initNewClasses() {
         // Generate classes
-        List<ClassEntry> prefedinedClasses = new ArrayList<ClassEntry>();
+        List<ClassEntry> prefedinedClasses = new PredefinedClassCreator().generatePredefinedClasses();
         for (ClassEntry classEntry : prefedinedClasses) {
             this.st.insertClass(classEntry);
         }
@@ -81,7 +81,7 @@ public class SymbolTableHandler {
     private void checkFoundImplAndStruct() throws SemanticException {
         for (ClassEntry currentClass : this.st.getClasses()) {
             if (!currentClass.isFoundStruct()) {
-                throw  new UndefinedStructException(currentClass);
+                throw new UndefinedStructException(currentClass);
             }
             if (!currentClass.isFoundImpl()) {
                 throw new UndefinedImplException(currentClass);
@@ -254,7 +254,7 @@ public class SymbolTableHandler {
 
     public void setInheritedMethods(ClassEntry currentClass, ClassEntry parent) {
         int position = 0;
-        for (Map.Entry<String, MethodEntry> entry : parent.getMethods().entrySet()){
+        for (Map.Entry<String, MethodEntry> entry : parent.getMethods().entrySet()) {
             MethodEntry inheritedMethod = entry.getValue().copy();
 
             // Chequeamos si el metodo es redefinido
@@ -288,6 +288,7 @@ public class SymbolTableHandler {
     /**
      * Agrega un nuevo metodo a la clase actual.
      * Si hay otro metodo definido con el mismo nombre en la clase lanza error
+     *
      * @param token
      * @param isStatic
      * @throws SemanticException
@@ -298,7 +299,7 @@ public class SymbolTableHandler {
         // Chequea si ya existe el metodo
         MethodEntry existingMethod = currentClass.getMethod(token.getLexem());
         if (existingMethod != null) {
-            throw new RedefinedMethodException(existingMethod, token.getLocation()) ;
+            throw new RedefinedMethodException(existingMethod, token.getLocation());
         }
 
         // Agrega el nuevo metodo
@@ -312,6 +313,7 @@ public class SymbolTableHandler {
     /**
      * Agrega un nuevo parametro formal al metodo actual.
      * Si hay otro parametro definido con el mismo nombre en el metodo lanza error
+     *
      * @param paramToken
      * @param type
      * @throws SemanticException
@@ -320,7 +322,7 @@ public class SymbolTableHandler {
         MethodEntry currentMethod = st.getCurrentMethod();
 
         // Cheque si ya se ha definido un parametro con ese nombre
-        VariableEntry existingParam  = currentMethod.getFormalParam(paramToken.getLexem());
+        VariableEntry existingParam = currentMethod.getFormalParam(paramToken.getLexem());
         if (existingParam != null) {
             throw new RedefinedVariableException(paramToken);
         }
@@ -332,15 +334,17 @@ public class SymbolTableHandler {
 
     /**
      * Setea el tipo de retorno al metodo actual
+     *
      * @param type
      */
-    public void setMethodReturn(AttributeType type)  {
+    public void setMethodReturn(AttributeType type) {
         st.getCurrentMethod().setReturnType(type);
     }
 
     /**
      * Agrega una variable local al metodo
      * Si ya eiste la variable entre los parametros o variables locales del metodo, lanza error
+     *
      * @param variableToken
      * @param type
      * @throws SemanticException
@@ -372,5 +376,7 @@ public class SymbolTableHandler {
         st.setCurrentMethod(null);
     }
 
-    public void handleStart() {st.setCurrentMethod(st.getStart());}
+    public void handleStart() {
+        st.setCurrentMethod(st.getStart());
+    }
 }
