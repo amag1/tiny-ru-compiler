@@ -60,6 +60,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
     private void start() throws SyntacticException, LexicalException, SemanticException {
         // start ⟨Bloque-Método⟩
         match(Type.KW_START);
+        st.handleStart();
         bloqueMetodo();
     }
 
