@@ -289,7 +289,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         }
 
         // De otro modo, intentar matchear los atributos formales
-        listaArgumentosFormales(1);
+        listaArgumentosFormales(0);
         match(Type.CLOSE_PAR);
     }
 
