@@ -7,8 +7,6 @@ import exceptions.syntactic.SyntacticException;
 import lexical.Lexical;
 import lexical.Token;
 import lexical.Type;
-import org.w3c.dom.Attr;
-import semantic.symbolTable.AttributeEntry;
 import semantic.symbolTable.AttributeType;
 import semantic.symbolTable.SymbolTableHandler;
 import java.util.*;
