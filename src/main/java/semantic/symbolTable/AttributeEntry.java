@@ -2,6 +2,7 @@ package semantic.symbolTable;
 
 import lexical.Token;
 import semantic.Json;
+import semantic.JsonHelper;
 
 public class AttributeEntry extends VariableEntry implements Json {
     private boolean isPrivate;
@@ -12,14 +13,16 @@ public class AttributeEntry extends VariableEntry implements Json {
         this.isPrivate = isPrivate;
     }
 
-    public String toJson() {
-        return "{\n" +
-                "\t\"name\": \"" + this.getName() + "\",\n" +
-                "\t\"type\": \"" + this.getType().getType() + "\",\n" +
-                "\t\"isPrivate\": " + this.isPrivate + ",\n" +
-                "\t\"isInherited\": " + this.isInherited + ",\n" +
-                "\t\"position\": " + this.getPosition() + "\n" +
-                "}";
+    public String toJson(int identationIndex) {
+        identationIndex ++;
+
+        return "{" +
+            JsonHelper.json("name", this.getName(), identationIndex) + "," +
+            JsonHelper.json("type",  this.getType().toJson(identationIndex), identationIndex) + "," +
+            JsonHelper.json("isPrivate", this.isPrivate, identationIndex)+ "," +
+            JsonHelper.json("isInherited", this.isInherited, identationIndex) + "," +
+            JsonHelper.json("position", this.getPosition(), identationIndex) +
+            "\n" + JsonHelper.getIdentationString(identationIndex-1) + "}";
     }
 
     public boolean isPrivate() {

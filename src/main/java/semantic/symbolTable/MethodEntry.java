@@ -1,48 +1,86 @@
 package semantic.symbolTable;
 
 import lexical.Token;
+import location.Location;
 import semantic.Json;
 import semantic.JsonHelper;
 
+import java.sql.Array;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class MethodEntry implements Json {
     private String name;
     private Token token;
     private boolean isStatic;
     private boolean isInherited;
-    private AttributeEntry returnType;
+    private AttributeType returnType;
     private Map<String, VariableEntry> formalParameters;
     private Map<String, VariableEntry> localVariables;
     private int position;
+    private boolean isRedefined;
 
 
-    public String toJson() {
-        StringBuilder json = new StringBuilder("{\n");
+    public MethodEntry() {}
 
-        if (this.name != null) {
-            json.append("\t\"name\": \"").append(this.name).append("\",\n");
-        }
-        json.append("\t\"isStatic\": ").append(this.isStatic).append(",\n");
-        json.append("\t\"isInherited\": ").append(this.isInherited).append(",\n");
-        json.append("\t\"position\": ").append(this.position).append(",\n");
-        if (this.returnType != null) {
-            json.append("\t\"returnType\": ").append(this.returnType.toJson()).append(",\n");
-        }
-        if (this.formalParameters != null) {
-            json.append("\t\"formalParameters\": ").append(JsonHelper.json(formalParameters)).append(",\n");
-        }
-        if (this.localVariables != null) {
-            json.append("\t\"localVariables\": ").append(JsonHelper.json(localVariables)).append(",\n");
-        }
-
-        // Remove the last comma and newline
-        if (json.length() > 2) {
-            json.delete(json.length() - 2, json.length());
-        }
-
-        json.append("\n}");
-        return json.toString();
+    public MethodEntry(Token token, Boolean isStatic) {
+        this.name = token.getLexem();
+        this.token = token;
+        this.formalParameters = new TreeMap<String, VariableEntry>();
+        this.localVariables = new TreeMap<String, VariableEntry>();
+        this.isStatic = isStatic;
+        this.isInherited = false;
     }
 
+
+    public String toJson(int identationIndex) {
+        identationIndex++;
+
+        String returnJson = "void";
+        if (this.returnType != null) {
+            returnJson = this.returnType.toJson(identationIndex);
+        }
+
+        String json = "{" +
+            JsonHelper.json("name", this.name, identationIndex) + "," +
+            JsonHelper.json("isStatic", this.isStatic, identationIndex) + "," +
+            JsonHelper.json("isInherited", this.isInherited, identationIndex) + "," +
+            JsonHelper.json("isRedefined", this.isRedefined, identationIndex) + "," +
+            JsonHelper.json("position", this.position, identationIndex) + "," +
+            JsonHelper.json("return", returnJson, identationIndex) + "," +
+            JsonHelper.json("formalParameters",formalParameters, identationIndex)+ "," +
+            JsonHelper.json("localVariables",localVariables, identationIndex) +
+            "\n" + JsonHelper.getIdentationString(identationIndex-1) + "}";
+
+        return json;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public Location getLocation() {return  this.token.getLocation();}
+
+    public void setReturnType(AttributeType type) {this.returnType = type;}
+
+    public VariableEntry getFormalParam(String name) {return  this.formalParameters.get(name);}
+
+    public void addFormalParam(VariableEntry param) {this.formalParameters.put(param.getName(), param);}
+
+    public VariableEntry getLocalVariable(String name) {return  this.localVariables.get(name);}
+
+    public void addLocalVariable(VariableEntry variable) {this.localVariables.put(variable.getName(), variable);}
+
+    public MethodEntry copy() {
+        return new MethodEntry(this.token, this.isStatic);
+    }
+
+    public  void setInherited(boolean isInherited) {this.isInherited = isInherited;}
+    public void setPosition(int position) {this.position = position;}
+
+    public boolean isRedefined() {return isRedefined;}
+
+    public void setRedefined(boolean redefined) {isRedefined = redefined;}
+
+    public boolean isInherited() {return isInherited;}
 }

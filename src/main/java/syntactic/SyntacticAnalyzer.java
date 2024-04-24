@@ -7,8 +7,11 @@ import exceptions.syntactic.SyntacticException;
 import lexical.Lexical;
 import lexical.Token;
 import lexical.Type;
+import org.w3c.dom.Attr;
+import semantic.symbolTable.AttributeEntry;
 import semantic.symbolTable.AttributeType;
 import semantic.symbolTable.SymbolTableHandler;
+import java.util.*;
 
 /**
  * Analizador sintáctico concreto.
@@ -117,15 +120,21 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
 
     private void atributo() throws SyntacticException, LexicalException, SemanticException {
         // ⟨Visibilidad⟩ ⟨Tipo⟩ ⟨Lista-Declaración-Variables⟩ ; | ⟨Tipo⟩ ⟨Lista-Declaración-Variables⟩ ;
-        boolean isPrivate = false;
+
         // Visibilidad es opcional
+        boolean isPrivate = false;
         if (getTokenType() == Type.KW_PRI) {
             match(Type.KW_PRI);
             isPrivate = true;
         }
 
         AttributeType type = tipo();
-        listaDeclaracionVariables(type, isPrivate);
+        List<Token> attributeTokens = listaDeclaracionVariables();
+
+        for (Token attributeToken : attributeTokens) {
+            st.handleNewAttribute(attributeToken, type, isPrivate);
+        }
+
         match(Type.SEMICOLON);
     }
 
@@ -174,26 +183,37 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         // . ⟨Argumentos-Formales⟩ ⟨Bloque-Método⟩
         Token dotToken = match(Type.DOT);
         st.handleConstructor(dotToken);
-        // TODO: Add data about constructor
         argumentosFormales();
         bloqueMetodo();
+        st.handleFinishMethod();
     }
 
     private void metodo() throws SyntacticException, LexicalException, SemanticException {
         // st fn idMetAt ⟨Argumentos-Formales⟩ -⟩ ⟨Tipo-Método⟩ ⟨Bloque-Método⟩
         // | fn idMetAt ⟨Argumentos-Formales⟩ -⟩ ⟨Tipo-Método⟩ ⟨Bloque-Método⟩
 
+        boolean isStatic = false;
+
         // Opcional: forma-metodo
         if (getTokenType() == Type.KW_ST) {
+            isStatic = true;
             match(Type.KW_ST);
         }
 
         match(Type.KW_FN);
-        match(Type.ID);
+        Token methodToken = match(Type.ID);
+
+        st.handleNewMethod(methodToken, isStatic);
+
         argumentosFormales();
         match(Type.ARROW);
-        tipoMetodo();
+        AttributeType type = tipoMetodo();
+
+        st.setMethodReturn(type);
+
         bloqueMetodo();
+
+        st.handleFinishMethod();
     }
 
     private void bloqueMetodo() throws SyntacticException, LexicalException, SemanticException {
@@ -232,23 +252,32 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
     private void declaracionVariablesLocales() throws SyntacticException, LexicalException, SemanticException {
         // ⟨Tipo⟩ ⟨Lista-Declaración-Variables⟩ ;
         AttributeType type = tipo();
-        listaDeclaracionVariables(type, false);
+        List<Token> attributeTokens = listaDeclaracionVariables();
+
+        for (Token attributeToken : attributeTokens) {
+            st.handleLocalVar(attributeToken, type);
+        }
+
         match(Type.SEMICOLON);
     }
 
-    private void listaDeclaracionVariables(AttributeType type, boolean isPrivate) throws SyntacticException, LexicalException, SemanticException {
+    private List<Token> listaDeclaracionVariables() throws SyntacticException, LexicalException, SemanticException {
         // idMetAt ⟨Lambda-O-Variables⟩
-        Token att = match(Type.ID);
-        st.handleNewAttribute(att, type, isPrivate);
+        Token attributeToken = match(Type.ID);
+
+        List<Token> attributeTokens = new ArrayList<>();
 
         // Si el siguiente token no es una coma, asumimos que termino
         if (getTokenType() == Type.COMMA) {
             match(Type.COMMA);
-            listaDeclaracionVariables(type, isPrivate);
+            attributeTokens = listaDeclaracionVariables();
         }
+
+        attributeTokens.add(attributeToken);
+        return attributeTokens;
     }
 
-    private void argumentosFormales() throws SyntacticException, LexicalException {
+    private void argumentosFormales() throws SyntacticException, LexicalException, SemanticException {
         // ( ) | ( ⟨Lista-Argumentos-Formales⟩ )
 
         match(Type.OPEN_PAR);
@@ -260,42 +289,43 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         }
 
         // De otro modo, intentar matchear los atributos formales
-        listaArgumentosFormales();
+        listaArgumentosFormales(0);
         match(Type.CLOSE_PAR);
     }
 
-    private void listaArgumentosFormales() throws SyntacticException, LexicalException {
+    private void listaArgumentosFormales(int currentParamPosition) throws SyntacticException, LexicalException, SemanticException {
         // ⟨Argumento-Formal⟩ ⟨Argumento-Formal-O-Lambda⟩
-        argumentoFormal();
-        argumentoFormalOLambda();
+        argumentoFormal(currentParamPosition);
+        argumentoFormalOLambda(currentParamPosition);
     }
 
-    private void argumentoFormal() throws SyntacticException, LexicalException {
+    private void argumentoFormal(int position) throws SyntacticException, LexicalException, SemanticException {
         // ⟨Tipo⟩ idMetAt
-        tipo();
-        match(Type.ID);
+        AttributeType type = tipo();
+        Token paramToken =  match(Type.ID);
+        st.addMethodParam(paramToken, type, position);
     }
 
-    private void argumentoFormalOLambda() throws SyntacticException, LexicalException {
+    private void argumentoFormalOLambda(int currentParamPosition) throws SyntacticException, LexicalException, SemanticException {
         // , ⟨Lista-Argumentos-Formales⟩ | λ
         if (getTokenType() == Type.COMMA) {
             match(Type.COMMA);
-            listaArgumentosFormales();
+            listaArgumentosFormales(currentParamPosition +1);
         }
 
         // Si el token no es una coma, asumimos que es lambda
     }
 
 
-    private void tipoMetodo() throws SyntacticException, LexicalException {
+    private AttributeType tipoMetodo() throws SyntacticException, LexicalException {
         // El tipo de retorno de un método puede ser cualqueir tipo hallado en `tipo()`
         // O tambien puede ser void
         if (getTokenType() == Type.TYPE_VOID) {
             match(Type.TYPE_VOID);
-            return;
+            return null; // TODO: ok?
         }
 
-        tipo();
+        return tipo();
     }
 
     private AttributeType tipo() throws SyntacticException, LexicalException {

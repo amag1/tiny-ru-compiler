@@ -1,5 +1,6 @@
 package semantic;
 
 public interface Json {
-    String toJson();
+    String toJson(int identationIndex);
+
 }

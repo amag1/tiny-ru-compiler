@@ -1,8 +1,9 @@
 package semantic.symbolTable;
 
 import lexical.Token;
+import semantic.Json;
 
-public class AttributeType {
+public class AttributeType implements Json {
     private boolean isArray;
     private String type;
     private boolean isPrimitive;
@@ -13,6 +14,19 @@ public class AttributeType {
         this.type = token.getLexem();
         this.isPrimitive = isPrimitive;
         this.token = token;
+    }
+
+    @Override
+    public String toJson(int identationIndex) {
+        String json = "";
+
+        if (this.isArray) {
+            json += "Array ";
+        }
+
+        json += type;
+
+        return json;
     }
 
     public Token getToken() {

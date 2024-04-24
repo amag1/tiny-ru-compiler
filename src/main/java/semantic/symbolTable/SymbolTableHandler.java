@@ -15,15 +15,18 @@ public class SymbolTableHandler {
     }
 
     public String toJson() {
-        return this.st.toJson();
+        return this.st.toJson(0);
     }
 
     public void consolidate() throws SemanticException {
         // Chequear herencia valida
         consolidateInheritance();
-        // Pasar atributos heredados a las subclases
-        // TODO: este metodo tambien deberia manejar los metodos heredados
-        setInheritedAttributes();
+
+        // Pasar atributos  y metodos heredados a las subclases
+        setInheritance();
+
+        // Chequea que las clases tengan Struct e Impl
+        checkFoundImplAndStruct();
     }
 
     public void initNewClasses() {
@@ -75,6 +78,16 @@ public class SymbolTableHandler {
         return !type.isArray() && !type.isPrimitive();
     }
 
+    private void checkFoundImplAndStruct() throws SemanticException {
+        for (ClassEntry currentClass : this.st.getClasses()) {
+            if (!currentClass.isFoundStruct()) {
+                throw  new UndefinedStructException(currentClass);
+            }
+            if (!currentClass.isFoundImpl()) {
+                throw new UndefinedImplException(currentClass);
+            }
+        }
+    }
 
     /**
      * Chequea si el struct del implement ya existe o si no lo crea.
@@ -134,7 +147,9 @@ public class SymbolTableHandler {
         }
 
         // Agrega el constructor a la clase
-        MethodEntry constructor = new MethodEntry();
+        MethodEntry constructor = new MethodEntry(token, false);
+        constructor.setReturnType(new AttributeType(false, false, currentClass.getToken()));
+        st.setCurrentMethod(constructor);
         currentClass.setConstructor(constructor);
         currentClass.setHasConstructor(true);
     }
@@ -186,12 +201,12 @@ public class SymbolTableHandler {
         }
     }
 
-    private void setInheritedAttributes() {
+    private void setInheritance() {
         for (ClassEntry classEntry : this.st.getClasses()) {
             if (!classEntry.handledInheritance()) {
                 String inherits = classEntry.getInherits();
                 if (!inherits.equals("Object")) {
-                    setInheritedAttributesWrapped(classEntry);
+                    setInheritanceWrapped(classEntry);
                 }
                 else {
                     classEntry.setHandledInheritance(true);
@@ -200,12 +215,19 @@ public class SymbolTableHandler {
         }
     }
 
-    private void setInheritedAttributesWrapped(ClassEntry classEntry) {
+    private void setInheritanceWrapped(ClassEntry classEntry) {
         ClassEntry parent = this.st.getClassByName(classEntry.getInherits());
         if (!parent.getInherits().equals("Object")) {
-            setInheritedAttributesWrapped(parent);
+            setInheritanceWrapped(parent);
         }
 
+        setInheritedAttributes(classEntry, parent);
+        setInheritedMethods(classEntry, parent);
+
+        classEntry.setHandledInheritance(true);
+    }
+
+    public void setInheritedAttributes(ClassEntry classEntry, ClassEntry parent) {
         int position = 0;
         for (Map.Entry<String, AttributeEntry> entry : parent.getAttributes().entrySet()) {
             if (!entry.getValue().isPrivate()) {
@@ -228,7 +250,125 @@ public class SymbolTableHandler {
                 attribute.setPosition(position++);
             }
         }
+    }
 
-        classEntry.setHandledInheritance(true);
+    public void setInheritedMethods(ClassEntry currentClass, ClassEntry parent) {
+        int position = 0;
+        for (Map.Entry<String, MethodEntry> entry : parent.getMethods().entrySet()){
+            MethodEntry inheritedMethod = entry.getValue().copy();
+
+            // Chequeamos si el metodo es redefinido
+            MethodEntry existingMethod = currentClass.getMethod(inheritedMethod.getName());
+            if (existingMethod != null) {
+                // Metodo redefinido
+                existingMethod.setRedefined(true);
+                existingMethod.setInherited(true);
+                existingMethod.setPosition(position);
+            }
+            else {
+                // Metodo heredado
+                inheritedMethod.setInherited(true);
+                inheritedMethod.setPosition(position);
+                currentClass.addMethod(inheritedMethod);
+            }
+
+            position++;
+        }
+
+        // Setea la posicion para los metodos no heredados
+        for (Map.Entry<String, MethodEntry> entry : currentClass.getMethods().entrySet()) {
+            MethodEntry method = entry.getValue();
+            if (!method.isInherited() && !method.isRedefined()) {
+                method.setPosition(position++);
+            }
+        }
+
+    }
+
+    /**
+     * Agrega un nuevo metodo a la clase actual.
+     * Si hay otro metodo definido con el mismo nombre en la clase lanza error
+     * @param token
+     * @param isStatic
+     * @throws SemanticException
+     */
+    public void handleNewMethod(Token token, Boolean isStatic) throws SemanticException {
+        ClassEntry currentClass = st.getCurrentClass();
+
+        // Chequea si ya existe el metodo
+        MethodEntry existingMethod = currentClass.getMethod(token.getLexem());
+        if (existingMethod != null) {
+            throw new RedefinedMethodException(existingMethod, token.getLocation()) ;
+        }
+
+        // Agrega el nuevo metodo
+        MethodEntry newMethod = new MethodEntry(token, isStatic);
+        currentClass.addMethod(newMethod);
+
+        // Actualiza tabla de simbolos
+        st.setCurrentMethod(newMethod);
+    }
+
+    /**
+     * Agrega un nuevo parametro formal al metodo actual.
+     * Si hay otro parametro definido con el mismo nombre en el metodo lanza error
+     * @param paramToken
+     * @param type
+     * @throws SemanticException
+     */
+    public void addMethodParam(Token paramToken, AttributeType type, int position) throws SemanticException {
+        MethodEntry currentMethod = st.getCurrentMethod();
+
+        // Cheque si ya se ha definido un parametro con ese nombre
+        VariableEntry existingParam  = currentMethod.getFormalParam(paramToken.getLexem());
+        if (existingParam != null) {
+            throw new RedefinedVariableException(paramToken);
+        }
+
+        // Agrega el parametro formal a la lista
+        VariableEntry formalParam = new VariableEntry(type, paramToken, position);
+        currentMethod.addFormalParam(formalParam);
+    }
+
+    /**
+     * Setea el tipo de retorno al metodo actual
+     * @param type
+     */
+    public void setMethodReturn(AttributeType type)  {
+        st.getCurrentMethod().setReturnType(type);
+    }
+
+    /**
+     * Agrega una variable local al metodo
+     * Si ya eiste la variable entre los parametros o variables locales del metodo, lanza error
+     * @param variableToken
+     * @param type
+     * @throws SemanticException
+     */
+    public void handleLocalVar(Token variableToken, AttributeType type) throws SemanticException {
+        MethodEntry currentMethod = st.getCurrentMethod();
+
+        // Chequea si la variable está definida como parametro formal del método
+        VariableEntry existingVar = currentMethod.getFormalParam(variableToken.getLexem());
+        if (existingVar != null) {
+            throw new RedefinedVariableException(variableToken);
+        }
+
+        // Chequa si la variable está definida dentro del cuerpo del método
+        existingVar = currentMethod.getLocalVariable(variableToken.getLexem());
+        if (existingVar != null) {
+            throw new RedefinedVariableException(variableToken);
+        }
+
+        // Agrega la variable al metodo
+        VariableEntry localVar = new VariableEntry(type, variableToken);
+        currentMethod.addLocalVariable(localVar);
+    }
+
+    /**
+     * Setea el metodo actual como null
+     */
+    public void handleFinishMethod() {
+        st.setCurrentMethod(null);
     }
 }

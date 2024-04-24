@@ -32,18 +32,26 @@ public class ClassEntry implements Json {
         this.methods = new TreeMap<String, MethodEntry>();
     }
 
-    public String toJson() {
-        StringBuilder json = new StringBuilder("{\n");
-        json.append("\t\"name\": \"").append(this.name).append("\",\n");
-        json.append("\t\"inherits\": \"").append(this.inherits).append("\",\n");
-        json.append("\t\"foundStruct\": ").append(this.foundStruct).append(",\n");
-        json.append("\t\"foundImpl\": ").append(this.foundImpl).append(",\n");
-        json.append("\t\"hasConstructor\": ").append(this.hasConstructor).append(",\n");
-        json.append("\t\"attributes\": ").append(JsonHelper.json(attributes)).append(",\n");
-        json.append("\t\"methods\": ").append(JsonHelper.json(methods)).append("\n");
-        json.append("}");
+    public String toJson(int identationIndex) {
+        String constructorJson = "null";
+        if (this.constructor != null) {
+            constructorJson = this.constructor.toJson(identationIndex+1);
+        }
 
-        return json.toString();
+        identationIndex ++;
+
+        String json = "{"+
+            JsonHelper.json("name", this.name, identationIndex) + "," +
+            JsonHelper.json("inherits",this.inherits, identationIndex) + "," +
+            JsonHelper.json("foundStruct",this.foundStruct, identationIndex) + "," +
+            JsonHelper.json("foundImpl",this.foundImpl, identationIndex) + "," +
+            JsonHelper.json("hasConstructor",this.hasConstructor, identationIndex) + "," +
+            JsonHelper.json("attributes", attributes, identationIndex) + "," +
+            JsonHelper.json("methods",methods, identationIndex) + "," +
+            JsonHelper.json("constructor", constructorJson, identationIndex) +
+            "\n" + JsonHelper.getIdentationString(identationIndex-1) + "}";
+
+        return json;
     }
 
     public Token getToken() {
@@ -117,4 +125,10 @@ public class ClassEntry implements Json {
     public void setHandledInheritance(boolean handledInheritance) {
         this.handledInheritance = handledInheritance;
     }
+
+    public void addMethod(MethodEntry method) {methods.put(method.getName(), method);}
+
+    public MethodEntry getMethod(String name) {return methods.get(name);}
+
+    public TreeMap<String, MethodEntry> getMethods() { return new TreeMap<>(methods);}
 }
