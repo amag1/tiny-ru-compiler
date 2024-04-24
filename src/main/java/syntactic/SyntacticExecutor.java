@@ -8,6 +8,7 @@ import lexical.LexicalAnalyzer;
 import logger.ConsoleLogger;
 import logger.Logger;
 import reader.Reader;
+import semantic.symbolTable.TinyRuSymbolTableHandler;
 
 /**
  * Implementación concreta de executor para analizador sintáctico
@@ -19,7 +20,7 @@ public class SyntacticExecutor extends Executor {
 
     public SyntacticExecutor(Reader reader, Logger logger) {
         super(reader, logger);
-        this.syntacticAnalyzer = new SyntacticAnalyzer(new LexicalAnalyzer(reader));
+        this.syntacticAnalyzer = new SyntacticAnalyzer(new LexicalAnalyzer(reader), new TinyRuSymbolTableHandler());
     }
 
     public void execute() {

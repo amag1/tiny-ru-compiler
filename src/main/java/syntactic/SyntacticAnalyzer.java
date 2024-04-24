@@ -9,6 +9,8 @@ import lexical.Token;
 import lexical.Type;
 import semantic.symbolTable.AttributeType;
 import semantic.symbolTable.SymbolTableHandler;
+import semantic.symbolTable.TinyRuSymbolTableHandler;
+
 import java.util.*;
 
 /**
@@ -21,9 +23,9 @@ import java.util.*;
 public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Syntactic {
     private SymbolTableHandler st;
 
-    public SyntacticAnalyzer(Lexical lexicalAnalyzer) {
+    public SyntacticAnalyzer(Lexical lexicalAnalyzer, SymbolTableHandler st) {
         super(lexicalAnalyzer);
-        this.st = new SymbolTableHandler();
+        this.st = st;
     }
 
     /**
@@ -161,7 +163,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         miembroOpcional();
     }
 
-    private void herencia() throws SyntacticException, LexicalException, InvalidInheritanceException {
+    private void herencia() throws SyntacticException, LexicalException, SemanticException {
         // : ⟨Tipo⟩
         match(Type.COLON);
         AttributeType token = tipo();
@@ -301,7 +303,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
     private void argumentoFormal(int position) throws SyntacticException, LexicalException, SemanticException {
         // ⟨Tipo⟩ idMetAt
         AttributeType type = tipo();
-        Token paramToken =  match(Type.ID);
+        Token paramToken = match(Type.ID);
         st.addMethodParam(paramToken, type, position);
     }
 
@@ -309,7 +311,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         // , ⟨Lista-Argumentos-Formales⟩ | λ
         if (getTokenType() == Type.COMMA) {
             match(Type.COMMA);
-            listaArgumentosFormales(currentParamPosition +1);
+            listaArgumentosFormales(currentParamPosition + 1);
         }
 
         // Si el token no es una coma, asumimos que es lambda

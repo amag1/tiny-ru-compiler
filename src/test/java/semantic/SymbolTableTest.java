@@ -8,6 +8,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import reader.FileReader;
+import semantic.symbolTable.DummySymbolTableHandler;
 import syntactic.Syntactic;
 import syntactic.SyntacticAnalyzer;
 
@@ -46,7 +47,7 @@ public class SymbolTableTest {
     @MethodSource("providePassingSymbolTable")
     public void TestPassingSymbolTable(String input, String fileOutput) {
         try {
-            Syntactic syntactic = new SyntacticAnalyzer(new LexicalAnalyzer(new FileReader(input)));
+            Syntactic syntactic = new SyntacticAnalyzer(new LexicalAnalyzer(new FileReader(input)), new DummySymbolTableHandler());
             syntactic.analyze();
             String st = syntactic.getSymbolTableJson();
 
