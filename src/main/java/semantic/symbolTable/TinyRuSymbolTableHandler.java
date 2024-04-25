@@ -295,7 +295,7 @@ public class TinyRuSymbolTableHandler implements SymbolTableHandler {
         for (Map.Entry<String, AttributeEntry> entry : classEntry.getAttributes().entrySet()) {
             AttributeEntry attribute = entry.getValue();
             if (!attribute.isInherited()) {
-                attribute.setPosition(position++);
+                attribute.setPosition(++position);
             }
         }
     }

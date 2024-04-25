@@ -1,5 +1,7 @@
 package semantic;
 
+import semantic.symbolTable.MethodEntry;
+
 import java.util.Map;
 
 public class JsonHelper {
@@ -33,11 +35,20 @@ public class JsonHelper {
     }
 
     public static String json(String name, String value, int identationIndex) {
-        return "\n" + getIdentationString(identationIndex) + "\"" + name + "\": " + value;
+        return "\n" + getIdentationString(identationIndex) + "\"" + name + "\": " + "\"" + value + "\"";
     }
 
     public static String json(String name, boolean value, int identationIndex) {
         return "\n" + getIdentationString(identationIndex) + "\"" + name + "\": " + value;
+    }
+
+    public static String json(String name, MethodEntry method, int identationIndex) {
+        String identationStr = getIdentationString(identationIndex);
+        String json = "\n" + identationStr + "\"" + name + "\": ";
+        if (method == null) {
+            return json + "null";
+        }
+        return json + method.toJson(identationIndex);
     }
 
     public static String getIdentationString(int identationIndex) {

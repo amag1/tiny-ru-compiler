@@ -20,6 +20,8 @@ public abstract class Logger {
      */
     public abstract void LogLexicSuccess(List<Token> tokens);
 
+    public abstract void LogSymbolTable(String symbolTableJson);
+
     protected List<String> GetLexicSuccessMessage(List<Token> tokens) {
         List result = new ArrayList<String>();
         // Header
@@ -68,6 +70,5 @@ public abstract class Logger {
         result.add("| " + e.getLine() + " | " + e.getColumn() + " | " + e.getMessage() + " |");
         return result;
     }
-
 
 }

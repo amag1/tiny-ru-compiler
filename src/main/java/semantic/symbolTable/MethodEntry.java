@@ -74,6 +74,8 @@ public class MethodEntry implements Json {
     }
 
     public void addFormalParam(VariableEntry param) {
+        int position = this.formalParameters.size();
+        param.setPosition(position);
         this.formalParameters.put(param.getName(), param);
     }
 
@@ -82,6 +84,8 @@ public class MethodEntry implements Json {
     }
 
     public void addLocalVariable(VariableEntry variable) {
+        int position = this.localVariables.size();
+        variable.setPosition(position);
         this.localVariables.put(variable.getName(), variable);
     }
 

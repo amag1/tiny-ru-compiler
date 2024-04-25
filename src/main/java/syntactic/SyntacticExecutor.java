@@ -30,7 +30,7 @@ public class SyntacticExecutor extends Executor {
             syntacticAnalyzer.analyze();
             String symbolTableJson = syntacticAnalyzer.getSymbolTableJson();
             clogger.LogSyntacticSuccess();
-            clogger.LogSymbolTable(symbolTableJson);
+            logger.LogSymbolTable(symbolTableJson);
         } catch (LexicalException e) {
             clogger.LogLexicError(e);
         } catch (SyntacticException e) {

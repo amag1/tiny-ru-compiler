@@ -19,11 +19,11 @@ public class SymbolTable implements Json {
     }
 
     public String toJson(int identationIndex) {
-        identationIndex ++;
+        identationIndex++;
         return "{" +
-                JsonHelper.json("classes",classes, identationIndex) + "," +
-                JsonHelper.json("start", this.start.toJson(identationIndex), identationIndex) +
-                "\n" + JsonHelper.getIdentationString(identationIndex-1) + "}";
+                JsonHelper.json("classes", classes, identationIndex) + "," +
+                JsonHelper.json("start", start, identationIndex) +
+                "\n" + JsonHelper.getIdentationString(identationIndex - 1) + "}";
     }
 
     public List<ClassEntry> getClasses() {
@@ -46,10 +46,16 @@ public class SymbolTable implements Json {
         return currentClass;
     }
 
-    public MethodEntry getCurrentMethod() {return currentMethod;}
+    public MethodEntry getCurrentMethod() {
+        return currentMethod;
+    }
 
-    public void setCurrentMethod(MethodEntry method) {this.currentMethod = method;}
+    public void setCurrentMethod(MethodEntry method) {
+        this.currentMethod = method;
+    }
 
-    public MethodEntry getStart() {return  this.start;}
+    public MethodEntry getStart() {
+        return this.start;
+    }
 }
 

@@ -33,23 +33,17 @@ public class ClassEntry implements Json {
     }
 
     public String toJson(int identationIndex) {
-        String constructorJson = "null";
-        if (this.constructor != null) {
-            constructorJson = this.constructor.toJson(identationIndex+1);
-        }
-
-        identationIndex ++;
-
-        String json = "{"+
-            JsonHelper.json("name", this.name, identationIndex) + "," +
-            JsonHelper.json("inherits",this.inherits, identationIndex) + "," +
-            JsonHelper.json("foundStruct",this.foundStruct, identationIndex) + "," +
-            JsonHelper.json("foundImpl",this.foundImpl, identationIndex) + "," +
-            JsonHelper.json("hasConstructor",this.hasConstructor, identationIndex) + "," +
-            JsonHelper.json("attributes", attributes, identationIndex) + "," +
-            JsonHelper.json("methods",methods, identationIndex) + "," +
-            JsonHelper.json("constructor", constructorJson, identationIndex) +
-            "\n" + JsonHelper.getIdentationString(identationIndex-1) + "}";
+        identationIndex++;
+        String json = "{" +
+                JsonHelper.json("name", this.name, identationIndex) + "," +
+                JsonHelper.json("inherits", this.inherits, identationIndex) + "," +
+                JsonHelper.json("foundStruct", this.foundStruct, identationIndex) + "," +
+                JsonHelper.json("foundImpl", this.foundImpl, identationIndex) + "," +
+                JsonHelper.json("hasConstructor", this.hasConstructor, identationIndex) + "," +
+                JsonHelper.json("attributes", attributes, identationIndex) + "," +
+                JsonHelper.json("methods", methods, identationIndex) + "," +
+                JsonHelper.json("constructor", this.getConstructor(), identationIndex) +
+                "\n" + JsonHelper.getIdentationString(identationIndex - 1) + "}";
 
         return json;
     }
@@ -115,6 +109,8 @@ public class ClassEntry implements Json {
     }
 
     public void addAttribute(AttributeEntry attribute) {
+        int position = this.attributes.size();
+        attribute.setPosition(position);
         attributes.put(attribute.getName(), attribute);
     }
 
@@ -126,9 +122,17 @@ public class ClassEntry implements Json {
         this.handledInheritance = handledInheritance;
     }
 
-    public void addMethod(MethodEntry method) {methods.put(method.getName(), method);}
+    public void addMethod(MethodEntry method) {
+        int position = this.methods.size();
+        method.setPosition(position);
+        methods.put(method.getName(), method);
+    }
 
-    public MethodEntry getMethod(String name) {return methods.get(name);}
+    public MethodEntry getMethod(String name) {
+        return methods.get(name);
+    }
 
-    public TreeMap<String, MethodEntry> getMethods() { return new TreeMap<>(methods);}
+    public TreeMap<String, MethodEntry> getMethods() {
+        return new TreeMap<>(methods);
+    }
 }
