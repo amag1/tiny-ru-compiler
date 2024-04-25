@@ -239,6 +239,10 @@ public class TinyRuSymbolTableHandler implements SymbolTableHandler {
     }
 
     private void checkTypesInMethod(MethodEntry method) throws TypeNotFoundException {
+        if (method == null) {
+            return;
+        }
+        
         for (Map.Entry<String, VariableEntry> localVarEntry : method.getLocalVariables().entrySet()) {
             VariableEntry localVar = localVarEntry.getValue();
             AttributeType type = localVar.getType();
