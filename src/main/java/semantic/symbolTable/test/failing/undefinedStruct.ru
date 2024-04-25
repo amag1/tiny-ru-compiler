@@ -1,3 +1,4 @@
+/? UndefinedStructException
 impl A {
     .() {}
 }

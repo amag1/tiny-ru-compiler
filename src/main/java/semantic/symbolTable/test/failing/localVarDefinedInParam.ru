@@ -1,3 +1,4 @@
+/? RedefinedVariableException
 struct A {}
 impl A {
     .(){}

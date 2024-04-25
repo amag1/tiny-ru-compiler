@@ -1,3 +1,4 @@
+/? ClassNotFoundException
 struct A:B {
     pri Int a;
 }

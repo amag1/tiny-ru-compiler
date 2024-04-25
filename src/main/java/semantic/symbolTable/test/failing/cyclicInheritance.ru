@@ -1,3 +1,4 @@
+/? CyclicInheritanceException
 struct A:C {}
 struct B:A {}
 struct C:B {}

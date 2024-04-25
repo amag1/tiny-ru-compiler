@@ -1,1 +1,2 @@
+/? InvalidInheritanceException
 struct A:Int{}

@@ -1,6 +1,8 @@
 package semantic;
 
+import exceptions.lexical.LexicalException;
 import exceptions.semantic.SemanticException;
+import exceptions.syntactic.SyntacticException;
 import lexical.LexicalAnalyzer;
 import logger.ConsoleLogger;
 import org.junit.jupiter.api.Assertions;
@@ -14,10 +16,12 @@ import syntactic.Syntactic;
 import syntactic.SyntacticAnalyzer;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.stream.Stream;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
 public class SymbolTableTest {
@@ -71,6 +75,34 @@ public class SymbolTableTest {
 
     private static Stream<Arguments> providePassingSymbolTable() {
         String basepath = "src/main/java/semantic/symbolTable/test/passing";
+        return provider(basepath);
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideFailingSymbolTable")
+    public void TestFailingSymbolTable(String input) {
+        // Get the first line in the file
+        String errorName = "";
+        try {
+            // Open file and check first line for error name
+            String firstLine = Files.lines(Path.of(input)).findFirst().orElse("/?");
+            // Get string after /? to get error name
+            errorName = firstLine.substring(firstLine.indexOf("/?") + 2).trim();
+
+            Syntactic syntactic = new SyntacticAnalyzer(new LexicalAnalyzer(new FileReader(input)), new TinyRuSymbolTableHandler());
+            syntactic.analyze();
+
+            fail("El archivo no contiene errores");
+        } catch (SemanticException e) {
+            // Check that the class of the exception equals errorName
+            assertEquals(e.getClass().getSimpleName(), errorName, "Error en el archivo: " + input);
+        } catch (Exception e) {
+            fail("Unexpected exception in " + input + ": " + e.getMessage());
+        }
+    }
+
+    private static Stream<Arguments> provideFailingSymbolTable() {
+        String basepath = "src/main/java/semantic/symbolTable/test/failing";
         return provider(basepath);
     }
 }

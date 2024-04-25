@@ -1,3 +1,4 @@
+/? RedefinedConstructorException
 impl A {
     .() {}
     fn someFunction() -> void {}
