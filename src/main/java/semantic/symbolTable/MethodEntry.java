@@ -108,4 +108,12 @@ public class MethodEntry implements Json {
     public boolean isInherited() {
         return isInherited;
     }
+
+    public Map<String, VariableEntry> getFormalParameters() {
+        return formalParameters;
+    }
+
+    public Map<String, VariableEntry> getLocalVariables() {
+        return localVariables;
+    }
 }

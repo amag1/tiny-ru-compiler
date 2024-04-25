@@ -201,9 +201,12 @@ public class TinyRuSymbolTableHandler implements SymbolTableHandler {
         }
     }
 
-    private void setInheritance() {
+    private void setInheritance() throws SemanticException {
         for (ClassEntry classEntry : this.st.getClasses()) {
             if (!classEntry.handledInheritance()) {
+                // Chequear que todos los atributos tengan un tipo definido
+                // Los errores pueden llegar desordenados ya que los atributos se guardan en un map
+                checkAttributeTypes(classEntry);
                 String inherits = classEntry.getInherits();
                 if (!inherits.equals("Object")) {
                     setInheritanceWrapped(classEntry);
@@ -213,6 +216,54 @@ public class TinyRuSymbolTableHandler implements SymbolTableHandler {
                 }
             }
         }
+    }
+
+    private void checkAttributeTypes(ClassEntry classEntry) throws TypeNotFoundException {
+        // Chequear tipos para todos los atributos
+        for (Map.Entry<String, AttributeEntry> entry : classEntry.getAttributes().entrySet()) {
+            AttributeEntry attribute = entry.getValue();
+            AttributeType type = attribute.getType();
+            if (!checkTypeExists(type)) {
+                throw new TypeNotFoundException(attribute.getToken(), type.getType());
+            }
+        }
+
+        // Chequear tipos en variables locales de metodos
+        for (Map.Entry<String, MethodEntry> entry : classEntry.getMethods().entrySet()) {
+            MethodEntry method = entry.getValue();
+            checkTypesInMethod(method);
+        }
+
+        // Chequear tipos en el constructor
+        checkTypesInMethod(classEntry.getConstructor());
+    }
+
+    private void checkTypesInMethod(MethodEntry method) throws TypeNotFoundException {
+        for (Map.Entry<String, VariableEntry> localVarEntry : method.getLocalVariables().entrySet()) {
+            VariableEntry localVar = localVarEntry.getValue();
+            AttributeType type = localVar.getType();
+            if (!checkTypeExists(type)) {
+                throw new TypeNotFoundException(type.getToken(), localVar.getType().getType());
+            }
+        }
+
+        for (Map.Entry<String, VariableEntry> methodInputEntry : method.getFormalParameters().entrySet()) {
+            VariableEntry methodInput = methodInputEntry.getValue();
+            AttributeType type = methodInput.getType();
+            if (!checkTypeExists(type)) {
+                throw new TypeNotFoundException(type.getToken(), methodInput.getType().getType());
+            }
+        }
+    }
+
+    private boolean checkTypeExists(AttributeType type) {
+        // Si el tipo es un struct, chequear que exista
+        if (!type.isPrimitive() && !type.isArray()) {
+            ClassEntry typeClass = this.st.getClassByName(type.getType());
+            return typeClass != null;
+        }
+
+        return true;
     }
 
     private void setInheritanceWrapped(ClassEntry classEntry) {
@@ -230,15 +281,12 @@ public class TinyRuSymbolTableHandler implements SymbolTableHandler {
     public void setInheritedAttributes(ClassEntry classEntry, ClassEntry parent) {
         int position = 0;
         for (Map.Entry<String, AttributeEntry> entry : parent.getAttributes().entrySet()) {
-            if (!entry.getValue().isPrivate()) {
-                // Copy attribute
-                AttributeEntry attribute = entry.getValue();
-                AttributeEntry newAttribute = new AttributeEntry(attribute.getType(), attribute.getToken(), attribute.isPrivate());
-                newAttribute.setInherited(true);
-                newAttribute.setPosition(position);
-                // Add attribute to class
-                classEntry.addAttribute(newAttribute);
-            }
+            AttributeEntry attribute = entry.getValue();
+            AttributeEntry newAttribute = new AttributeEntry(attribute.getType(), attribute.getToken(), attribute.isPrivate());
+            newAttribute.setInherited(true);
+            newAttribute.setPosition(position);
+            // Add attribute to class
+            classEntry.addAttribute(newAttribute);
 
             position++;
         }
