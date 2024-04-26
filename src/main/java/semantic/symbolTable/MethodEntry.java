@@ -120,4 +120,12 @@ public class MethodEntry implements Json {
     public Map<String, VariableEntry> getLocalVariables() {
         return localVariables;
     }
+
+    public AttributeType getReturnType() {
+        return returnType;
+    }
+
+    public Token getToken() {
+        return token;
+    }
 }

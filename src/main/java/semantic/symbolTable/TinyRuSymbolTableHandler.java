@@ -242,7 +242,7 @@ public class TinyRuSymbolTableHandler implements SymbolTableHandler {
         if (method == null) {
             return;
         }
-        
+
         for (Map.Entry<String, VariableEntry> localVarEntry : method.getLocalVariables().entrySet()) {
             VariableEntry localVar = localVarEntry.getValue();
             AttributeType type = localVar.getType();
@@ -270,7 +270,7 @@ public class TinyRuSymbolTableHandler implements SymbolTableHandler {
         return true;
     }
 
-    private void setInheritanceWrapped(ClassEntry classEntry) {
+    private void setInheritanceWrapped(ClassEntry classEntry) throws SemanticException {
         ClassEntry parent = this.st.getClassByName(classEntry.getInherits());
         if (!parent.getInherits().equals("Object")) {
             setInheritanceWrapped(parent);
@@ -293,15 +293,28 @@ public class TinyRuSymbolTableHandler implements SymbolTableHandler {
         }
     }
 
-    public void setInheritedMethods(ClassEntry currentClass, ClassEntry parent) {
+    public void setInheritedMethods(ClassEntry currentClass, ClassEntry parent) throws OverridenMethodException {
         int position = 0;
         for (Map.Entry<String, MethodEntry> entry : parent.getMethods().entrySet()) {
-            MethodEntry inheritedMethod = entry.getValue().copy();
+            MethodEntry inheritedMethod = entry.getValue();
 
             // Chequeamos si el metodo es redefinido
             MethodEntry existingMethod = currentClass.getMethod(inheritedMethod.getName());
             if (existingMethod != null) {
-                // Metodo redefinido
+                // Chequear que se mantenga la firma del metodo
+                AttributeType existingReturnType = existingMethod.getReturnType();
+                AttributeType inheritedReturnType = inheritedMethod.getReturnType();
+
+                if (existingReturnType != null && inheritedReturnType != null && !existingReturnType.getType().equals(inheritedReturnType.getType())) {
+                    throw new OverridenMethodException(existingMethod.getToken(), inheritedMethod.getName());
+                }
+
+
+                // Chequear que los parametros sean iguales
+                if (!formalParametersMatch(existingMethod, inheritedMethod)) {
+                    throw new OverridenMethodException(existingMethod.getToken(), inheritedMethod.getName());
+                }
+
                 existingMethod.setRedefined(true);
                 existingMethod.setInherited(true);
                 existingMethod.setPosition(position);
@@ -324,6 +337,33 @@ public class TinyRuSymbolTableHandler implements SymbolTableHandler {
             }
         }
 
+    }
+
+    private boolean formalParametersMatch(MethodEntry existingMethod, MethodEntry inheritedMethod) {
+        Map<String, VariableEntry> existingParams = existingMethod.getFormalParameters();
+        Map<String, VariableEntry> inheritedParams = inheritedMethod.getFormalParameters();
+
+        if (existingParams.size() != inheritedParams.size()) {
+            return false;
+        }
+
+        for (Map.Entry<String, VariableEntry> entry : existingParams.entrySet()) {
+            String name = entry.getKey();
+            VariableEntry existingParam = entry.getValue();
+
+            // get the parameter in the same position in the inherited method
+            for (Map.Entry<String, VariableEntry> inheritedEntry : inheritedParams.entrySet()) {
+                VariableEntry inheritedParam = inheritedEntry.getValue();
+                if (inheritedParam.getPosition() == existingParam.getPosition()) {
+                    if (!existingParam.getType().getType().equals(inheritedParam.getType().getType())) {
+                        return false;
+                    }
+                }
+            }
+        }
+
+
+        return true;
     }
 
     /**

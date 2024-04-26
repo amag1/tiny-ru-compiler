@@ -26,7 +26,7 @@ public interface SymbolTableHandler {
 
     void setInheritedAttributes(ClassEntry classEntry, ClassEntry parent);
 
-    void setInheritedMethods(ClassEntry currentClass, ClassEntry parent);
+    void setInheritedMethods(ClassEntry currentClass, ClassEntry parent) throws SemanticException;
 
     void handleNewMethod(Token token, Boolean isStatic) throws SemanticException;
 
