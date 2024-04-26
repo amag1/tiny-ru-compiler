@@ -114,6 +114,19 @@ public class ClassEntry implements Json {
         attributes.put(attribute.getName(), attribute);
     }
 
+    public void addAttributeAtPosition(AttributeEntry attribute, int position) {
+        // Increase position for all attributes that come after the new one
+        for (AttributeEntry attr : attributes.values()) {
+            if (attr.getPosition() >= position) {
+                attr.setPosition(attr.getPosition() + 1);
+            }
+        }
+        
+        attribute.setPosition(position);
+        attributes.put(attribute.getName(), attribute);
+    }
+
+
     public boolean handledInheritance() {
         return handledInheritance;
     }

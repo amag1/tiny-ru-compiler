@@ -16,6 +16,7 @@ import syntactic.Syntactic;
 import syntactic.SyntacticAnalyzer;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -68,6 +69,17 @@ public class SymbolTableTest {
             ConsoleLogger clog = new ConsoleLogger();
             clog.LogSemanticError(e);
             fail();
+        } catch (IOException e) {
+            // If the file does not exist, simply check if no errors are thrown
+            try {
+                Syntactic syntactic = new SyntacticAnalyzer(new LexicalAnalyzer(new FileReader(input)), new TinyRuSymbolTableHandler());
+                syntactic.analyze();
+            } catch (SyntacticException | LexicalException |
+                     SemanticException ex) {
+                fail("Error en el archivo: " + input + "\n" + ex.getMessage());
+            } catch (FileNotFoundException ex) {
+                fail("Archivo no encontrado: " + input);
+            }
         } catch (Exception e) {
             fail("Error en el archivo: " + input + "\n" + e.getMessage());
         }

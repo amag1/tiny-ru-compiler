@@ -274,7 +274,8 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
             attributeTokens = listaDeclaracionVariables();
         }
 
-        attributeTokens.add(attributeToken);
+        // Agregar el atributo actual al comienzo de la lista
+        attributeTokens.add(0, attributeToken);
         return attributeTokens;
     }
 
