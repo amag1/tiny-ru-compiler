@@ -104,7 +104,7 @@ public class SymbolTableTest {
             Syntactic syntactic = new SyntacticAnalyzer(new LexicalAnalyzer(new FileReader(input)), new TinyRuSymbolTableHandler());
             syntactic.analyze();
 
-            fail("El archivo no contiene errores");
+            fail("El archivo " + input + " no contiene errores");
         } catch (SemanticException e) {
             // Check that the class of the exception equals errorName
             assertEquals(e.getClass().getSimpleName(), errorName, "Error en el archivo: " + input);
