@@ -8,6 +8,10 @@ import semantic.JsonHelper;
 import java.util.Map;
 import java.util.TreeMap;
 
+/**
+ * Representa una clase dentro de la tabla de simbolos
+ * Una clase tiene un conjunto de atributos y un conjunto de metodos, entre otros elementos
+ */
 public class ClassEntry implements Json {
     private String name;
     private Token token;
@@ -121,7 +125,7 @@ public class ClassEntry implements Json {
                 attr.setPosition(attr.getPosition() + 1);
             }
         }
-        
+
         attribute.setPosition(position);
         attributes.put(attribute.getName(), attribute);
     }

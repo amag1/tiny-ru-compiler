@@ -4,6 +4,9 @@ import lexical.Token;
 import semantic.Json;
 import semantic.JsonHelper;
 
+/**
+ * Representa un atributo de la tabla de simbolos
+ */
 public class AttributeEntry extends VariableEntry implements Json {
     private boolean isPrivate;
     private boolean isInherited;
@@ -14,15 +17,15 @@ public class AttributeEntry extends VariableEntry implements Json {
     }
 
     public String toJson(int identationIndex) {
-        identationIndex ++;
+        identationIndex++;
 
         return "{" +
-            JsonHelper.json("name", this.getName(), identationIndex) + "," +
-            JsonHelper.json("type",  this.getType().toJson(identationIndex), identationIndex) + "," +
-            JsonHelper.json("isPrivate", this.isPrivate, identationIndex)+ "," +
-            JsonHelper.json("isInherited", this.isInherited, identationIndex) + "," +
-            JsonHelper.json("position", this.getPosition(), identationIndex) +
-            "\n" + JsonHelper.getIdentationString(identationIndex-1) + "}";
+                JsonHelper.json("name", this.getName(), identationIndex) + "," +
+                JsonHelper.json("type", this.getType().toJson(identationIndex), identationIndex) + "," +
+                JsonHelper.json("isPrivate", this.isPrivate, identationIndex) + "," +
+                JsonHelper.json("isInherited", this.isInherited, identationIndex) + "," +
+                JsonHelper.json("position", this.getPosition(), identationIndex) +
+                "\n" + JsonHelper.getIdentationString(identationIndex - 1) + "}";
     }
 
     public boolean isPrivate() {

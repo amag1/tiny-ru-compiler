@@ -1,10 +1,12 @@
 package semantic.symbolTable;
 
-import exceptions.semantic.ClassNotFoundException;
-import exceptions.semantic.CyclicInheritanceException;
 import exceptions.semantic.SemanticException;
 import lexical.Token;
 
+/*
+ * Interfaz que define los metodos que deben ser implementados por la clase que maneja la tabla de simbolos
+ * Permite inyectar dependencias al analizador sintactico
+ */
 public interface SymbolTableHandler {
     String toJson();
 

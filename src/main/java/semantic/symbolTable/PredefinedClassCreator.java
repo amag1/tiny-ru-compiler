@@ -20,7 +20,7 @@ public class PredefinedClassCreator {
         classes.add(generateObjectClass(primitiveAttributeTypes));
         classes.add(generateStrClass(primitiveAttributeTypes));
         classes.add(generateArrayClass(primitiveAttributeTypes));
-
+        
         for (ClassEntry classEntry : classes) {
             setFieldInPredefinedStruct(classEntry);
         }
