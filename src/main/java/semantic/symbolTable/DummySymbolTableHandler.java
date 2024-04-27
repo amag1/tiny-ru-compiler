@@ -50,16 +50,6 @@ public class DummySymbolTableHandler implements SymbolTableHandler {
     }
 
     @Override
-    public void setInheritedAttributes(ClassEntry classEntry, ClassEntry parent) {
-
-    }
-
-    @Override
-    public void setInheritedMethods(ClassEntry currentClass, ClassEntry parent) {
-
-    }
-
-    @Override
     public void handleNewMethod(Token token, Boolean isStatic) throws SemanticException {
 
     }

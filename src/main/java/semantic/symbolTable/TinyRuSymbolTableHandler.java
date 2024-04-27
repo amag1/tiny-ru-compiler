@@ -282,12 +282,19 @@ public class TinyRuSymbolTableHandler implements SymbolTableHandler {
         classEntry.setHandledInheritance(true);
     }
 
-    public void setInheritedAttributes(ClassEntry classEntry, ClassEntry parent) {
+    public void setInheritedAttributes(ClassEntry classEntry, ClassEntry parent) throws SemanticException {
         for (Map.Entry<String, AttributeEntry> entry : parent.getAttributes().entrySet()) {
             AttributeEntry attribute = entry.getValue();
             AttributeEntry newAttribute = new AttributeEntry(attribute.getType(), attribute.getToken(), attribute.isPrivate());
             newAttribute.setInherited(true);
             newAttribute.setPosition(attribute.getPosition());
+
+            // Cheque que el atributo no sea redefinido en classEntry
+            AttributeEntry redefinedAttribute = classEntry.getAttribute(attribute.getName());
+            if (redefinedAttribute != null)  {
+                throw  new RedefinedInheritedAttributeException(redefinedAttribute.getToken());
+            }
+
             // Add attribute to class
             classEntry.addAttributeAtPosition(newAttribute, newAttribute.getPosition());
         }
