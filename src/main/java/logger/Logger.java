@@ -65,7 +65,7 @@ public abstract class Logger {
 
     protected List<String> GetSemanticErrorMessage(SemanticException e) {
         List result = new ArrayList<String>();
-        result.add("ERROR: SEMANTICO");
+        result.add("ERROR: SEMANTICO - DECLARACIONES");
         result.add("| NUMERO DE LINEA: | NUMERO DE COLUMNA: | DESCRIPCION: |");
         result.add("| " + e.getLine() + " | " + e.getColumn() + " | " + e.getMessage() + " |");
         return result;

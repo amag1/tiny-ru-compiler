@@ -26,16 +26,20 @@ public class Main {
         }
 
         // Get the output logger;
-        Logger outputLogger;
-        if (args.length > 1) {
-            // Save the tokens in output file
-            String outputFilePath = args[1];
-            outputLogger = new FileLogger(outputFilePath);
-        }
-        else {
-            // Logs the result in console
-            outputLogger = new ConsoleLogger();
-        }
+
+        // Generate path for output from input
+        String outputFilePath = filePath.substring(0, filePath.lastIndexOf('.')) + ".ts.json";
+        Logger outputLogger = new FileLogger(outputFilePath);
+
+//        if (args.length > 1) {
+//            // Save the tokens in output file
+//            String outputFilePath = args[1];
+//            outputLogger = new FileLogger(outputFilePath);
+//        }
+//        else {
+//            // Logs the result in console
+//            outputLogger = new ConsoleLogger();
+//        }
 
         // Execute
         Executor executor = new SyntacticExecutor(fileReader, outputLogger);
