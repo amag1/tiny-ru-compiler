@@ -367,7 +367,7 @@ public class TinyRuSymbolTableHandler implements SymbolTableHandler {
             }
 
             // Add attribute to class
-            classEntry.addAttributeAtPosition(newAttribute, newAttribute.getPosition());
+            classEntry.addInheritedAttributeAtPosition(newAttribute, newAttribute.getPosition());
         }
     }
 
