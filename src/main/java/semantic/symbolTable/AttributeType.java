@@ -3,6 +3,9 @@ package semantic.symbolTable;
 import lexical.Token;
 import semantic.Json;
 
+/**
+ * Representa un tipo de atributo de la tabla de simbolos
+ */
 public class AttributeType implements Json {
     private boolean isArray;
     private String type;

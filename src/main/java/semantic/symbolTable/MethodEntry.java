@@ -8,6 +8,10 @@ import semantic.JsonHelper;
 import java.util.Map;
 import java.util.TreeMap;
 
+/**
+ * Representa un metodo de la tabla de simbolos
+ * Un metodo puede ser un metodo de una clase o el metodo `start`
+ */
 public class MethodEntry implements Json {
     private String name;
     private Token token;

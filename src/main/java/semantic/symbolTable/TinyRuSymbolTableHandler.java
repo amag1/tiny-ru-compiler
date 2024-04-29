@@ -6,6 +6,11 @@ import lexical.Token;
 
 import java.util.*;
 
+/*
+ * Implementacion del manejador de la tabla de simbolos de TinyRu
+ * Contiene las acciones Semanticas que permiten llenar la tabla de simbolos
+ * y consolidar la herencia
+ */
 public class TinyRuSymbolTableHandler implements SymbolTableHandler {
     private SymbolTable st;
 
@@ -29,6 +34,9 @@ public class TinyRuSymbolTableHandler implements SymbolTableHandler {
         checkFoundImplAndStruct();
     }
 
+    /**
+     * Inicializa las clases predefinidas del lenguaje
+     */
     public void initNewClasses() {
         // Generate classes
         List<ClassEntry> prefedinedClasses = new PredefinedClassCreator().generatePredefinedClasses();
@@ -37,6 +45,12 @@ public class TinyRuSymbolTableHandler implements SymbolTableHandler {
         }
     }
 
+    /**
+     * Crea una nueva clase en la tabla de simbolos y la setea como clase actual
+     *
+     * @param token El token con el nombre y la ubicacion de la clase
+     * @throws SemanticException Si la clase con dicho nombre ya existia
+     */
     public void handleNewClass(Token token) throws SemanticException {
         ClassEntry existingClass = this.st.getClassByName(token.getLexem());
         if (existingClass != null) {
@@ -55,6 +69,14 @@ public class TinyRuSymbolTableHandler implements SymbolTableHandler {
         }
     }
 
+    /**
+     * Anade un atributo a la clase actual
+     *
+     * @param att       El token con el nombre y la ubicacion del atributo
+     * @param type      El tipo del atributo
+     * @param isPrivate Si el atributo es privado
+     * @throws RedefinedVariableException Si el atributo ya ha sido definido
+     */
     public void handleNewAttribute(Token att, AttributeType type, boolean isPrivate) throws RedefinedVariableException {
         ClassEntry currentClass = this.st.getCurrentClass();
         if (currentClass.getAttribute(att.getLexem()) != null) {
@@ -66,6 +88,12 @@ public class TinyRuSymbolTableHandler implements SymbolTableHandler {
         currentClass.addAttribute(newAtt);
     }
 
+    /**
+     * Setea la clase de la que hereda la clase actual
+     *
+     * @param type El tipo del que se desea heredar
+     * @throws InvalidInheritanceException Si se hereda de una clase invalida (clases predefinidas)
+     */
     public void handleInheritance(AttributeType type) throws InvalidInheritanceException {
         if (!isValidInheritance(type)) {
             throw new InvalidInheritanceException(type.getToken());
@@ -78,6 +106,11 @@ public class TinyRuSymbolTableHandler implements SymbolTableHandler {
         return !type.isArray() && !type.isPrimitive();
     }
 
+    /**
+     * Revisa que cada clase haya encontrado un struct e implement
+     *
+     * @throws SemanticException Si no se encuentra algun struct o implement
+     */
     private void checkFoundImplAndStruct() throws SemanticException {
         for (ClassEntry currentClass : this.st.getClasses()) {
             if (!currentClass.isFoundStruct()) {
@@ -118,7 +151,7 @@ public class TinyRuSymbolTableHandler implements SymbolTableHandler {
     /**
      * Chequea si el metodo constructor ha sido llamado y actualiza la tabla de símbolos
      *
-     * @throws SemanticException
+     * @throws SemanticException Si no se encuentra un constructor para la clase
      */
     public void handleFinishImpl() throws SemanticException {
 
@@ -136,8 +169,8 @@ public class TinyRuSymbolTableHandler implements SymbolTableHandler {
      * Chequea que el struct no posea ya un constructor definido.
      * Agrega el constructor al struct
      *
-     * @param token
-     * @throws SemanticException
+     * @param token El token del constructor
+     * @throws SemanticException Si ya existia un constructor para esa clase
      */
     public void handleConstructor(Token token) throws SemanticException {
         // Chequea si ya se ha declarado el constructor
@@ -154,6 +187,12 @@ public class TinyRuSymbolTableHandler implements SymbolTableHandler {
         currentClass.setHasConstructor(true);
     }
 
+    /**
+     * Consolida la herencia de las clases
+     *
+     * @throws ClassNotFoundException     Si la clase de la que hereda no existe
+     * @throws CyclicInheritanceException Si se detecta herencia cíclica
+     */
     private void consolidateInheritance() throws ClassNotFoundException, CyclicInheritanceException {
         // Recorre todas las clases
         // Para cada una, revisar que la clase de la que hereda existe
@@ -201,6 +240,11 @@ public class TinyRuSymbolTableHandler implements SymbolTableHandler {
         }
     }
 
+    /**
+     * Realiza las acciones necesarias para la consolidacion relacionadas con herencia
+     *
+     * @throws SemanticException
+     */
     private void setInheritance() throws SemanticException {
         for (ClassEntry classEntry : this.st.getClasses()) {
             if (!classEntry.handledInheritance()) {
@@ -218,6 +262,10 @@ public class TinyRuSymbolTableHandler implements SymbolTableHandler {
         }
     }
 
+    /**
+     * @param classEntry La clase a la que se le chequearán los tipos de los atributos
+     * @throws TypeNotFoundException Si el tipo de algun atributo no existe
+     */
     private void checkAttributeTypes(ClassEntry classEntry) throws TypeNotFoundException {
         // Chequear tipos para todos los atributos
         for (Map.Entry<String, AttributeEntry> entry : classEntry.getAttributes().entrySet()) {
@@ -238,6 +286,10 @@ public class TinyRuSymbolTableHandler implements SymbolTableHandler {
         checkTypesInMethod(classEntry.getConstructor());
     }
 
+    /**
+     * @param method El metodo a chequear
+     * @throws TypeNotFoundException Si el tipo en algun parametro formal o variable local no existe
+     */
     private void checkTypesInMethod(MethodEntry method) throws TypeNotFoundException {
         if (method == null) {
             return;
@@ -260,6 +312,10 @@ public class TinyRuSymbolTableHandler implements SymbolTableHandler {
         }
     }
 
+    /**
+     * @param type El tipo a chequear
+     * @return Un booleano que indica si el tipo existe o no
+     */
     private boolean checkTypeExists(AttributeType type) {
         // Si el tipo es un struct, chequear que exista
         if (!type.isPrimitive() && !type.isArray()) {
@@ -270,6 +326,13 @@ public class TinyRuSymbolTableHandler implements SymbolTableHandler {
         return true;
     }
 
+    /**
+     * Metodo recursivo para setear la herencia de una clase
+     * Si la clase hereda da alguna clase que no sea object, maneja la herencia de la superclase antes
+     *
+     * @param classEntry La clase cuya herencia quiere manejarse
+     * @throws SemanticException
+     */
     private void setInheritanceWrapped(ClassEntry classEntry) throws SemanticException {
         ClassEntry parent = this.st.getClassByName(classEntry.getInherits());
         if (!parent.getInherits().equals("Object")) {
@@ -282,6 +345,14 @@ public class TinyRuSymbolTableHandler implements SymbolTableHandler {
         classEntry.setHandledInheritance(true);
     }
 
+    /**
+     * Agrega los atributos heredados de la clase padre a la clase actual
+     * Tambien actualiza la posicion de todos los atributos
+     *
+     * @param classEntry La clase que quiere actualizarse
+     * @param parent     La clase padre, de la cual se heredan los atributos
+     * @throws SemanticException Si se redefine un atributo heredado
+     */
     public void setInheritedAttributes(ClassEntry classEntry, ClassEntry parent) throws SemanticException {
         for (Map.Entry<String, AttributeEntry> entry : parent.getAttributes().entrySet()) {
             AttributeEntry attribute = entry.getValue();
@@ -291,8 +362,8 @@ public class TinyRuSymbolTableHandler implements SymbolTableHandler {
 
             // Cheque que el atributo no sea redefinido en classEntry
             AttributeEntry redefinedAttribute = classEntry.getAttribute(attribute.getName());
-            if (redefinedAttribute != null)  {
-                throw  new RedefinedInheritedAttributeException(redefinedAttribute.getToken());
+            if (redefinedAttribute != null) {
+                throw new RedefinedInheritedAttributeException(redefinedAttribute.getToken());
             }
 
             // Add attribute to class
@@ -300,6 +371,13 @@ public class TinyRuSymbolTableHandler implements SymbolTableHandler {
         }
     }
 
+    /**
+     * Agrega los metodos heredados de la clase padre a la clase actual
+     *
+     * @param currentClass La clase actual
+     * @param parent       La clase padre
+     * @throws OverridenMethodException Si se cambia la firma de un metodo heredado
+     */
     public void setInheritedMethods(ClassEntry currentClass, ClassEntry parent) throws OverridenMethodException {
         int position = 0;
         for (Map.Entry<String, MethodEntry> entry : parent.getMethods().entrySet()) {
@@ -346,6 +424,13 @@ public class TinyRuSymbolTableHandler implements SymbolTableHandler {
 
     }
 
+    /**
+     * Dados dos metodos, revisa que sus paremetros formales coincidan
+     *
+     * @param existingMethod  El metodo actual
+     * @param inheritedMethod El metodo heredado con el que se quiere comparar
+     * @return Un booleano representando si los parametros formales coinciden
+     */
     private boolean formalParametersMatch(MethodEntry existingMethod, MethodEntry inheritedMethod) {
         Map<String, VariableEntry> existingParams = existingMethod.getFormalParameters();
         Map<String, VariableEntry> inheritedParams = inheritedMethod.getFormalParameters();
@@ -431,7 +516,7 @@ public class TinyRuSymbolTableHandler implements SymbolTableHandler {
 
     /**
      * Agrega una variable local al metodo
-     * Si ya eiste la variable entre los parametros o variables locales del metodo, lanza error
+     * Si ya existe la variable entre los parametros o variables locales del metodo, lanza error
      *
      * @param variableToken
      * @param type

@@ -5,6 +5,11 @@ import semantic.JsonHelper;
 
 import java.util.*;
 
+/**
+ * Clase que representa la tabla de simbolos
+ * Esta clase no implementa logica sobre la semantica del lenguaje
+ * Se limita a brindar una estructura para almacenar y modificar la informacion de las clases y metodos
+ */
 public class SymbolTable implements Json {
     private final Map<String, ClassEntry> classes;
     private ClassEntry currentClass;

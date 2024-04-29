@@ -4,6 +4,11 @@ import lexical.Token;
 import semantic.Json;
 import semantic.JsonHelper;
 
+/**
+ * Representa una variable de la tabla de simbolos
+ * Una variable puede ser una variable local o un parametro formal de metodos
+ * Esta clase solo tiene metodos getter y setter
+ */
 public class VariableEntry implements Json {
     private String name;
     private AttributeType type;
@@ -56,11 +61,11 @@ public class VariableEntry implements Json {
     }
 
     public String toJson(int identationIndex) {
-        identationIndex ++;
+        identationIndex++;
         return "{" +
-                JsonHelper.json("name",  this.getName(), identationIndex) + "," +
-                JsonHelper.json("type",  this.getType().toJson(0), identationIndex) + "," +
+                JsonHelper.json("name", this.getName(), identationIndex) + "," +
+                JsonHelper.json("type", this.getType().toJson(0), identationIndex) + "," +
                 JsonHelper.json("position", this.getPosition(), identationIndex) +
-                "\n" + JsonHelper.getIdentationString(identationIndex-1) + "}";
+                "\n" + JsonHelper.getIdentationString(identationIndex - 1) + "}";
     }
 }
