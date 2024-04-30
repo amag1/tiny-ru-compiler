@@ -6,7 +6,7 @@ import lexical.Token;
 
 import java.util.*;
 
-/*
+/**
  * Implementacion del manejador de la tabla de simbolos de TinyRu
  * Contiene las acciones Semanticas que permiten llenar la tabla de simbolos
  * y consolidar la herencia
@@ -413,7 +413,7 @@ public class TinyRuSymbolTableHandler implements SymbolTableHandler {
 
     }
 
-    public void checkSignatures(MethodEntry existingMethod, MethodEntry inheritedMethod) throws OverridenMethodException  {
+    public void checkSignatures(MethodEntry existingMethod, MethodEntry inheritedMethod) throws OverridenMethodException {
         // Chequear el tipo de retorno
         AttributeType existingReturnType = existingMethod.getReturnType();
         AttributeType inheritedReturnType = inheritedMethod.getReturnType();
@@ -423,8 +423,10 @@ public class TinyRuSymbolTableHandler implements SymbolTableHandler {
                 throw new OverridenMethodException(existingMethod.getToken(), inheritedMethod.getName());
             }
         }
-        else if (!existingReturnType.equals(inheritedReturnType)) {
-            throw new OverridenMethodException(existingMethod.getToken(), inheritedMethod.getName());
+        else {
+            if (!existingReturnType.equals(inheritedReturnType)) {
+                throw new OverridenMethodException(existingMethod.getToken(), inheritedMethod.getName());
+            }
         }
 
         // Chequar que si ambos o ninguno es estático

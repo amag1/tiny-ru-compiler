@@ -12,6 +12,9 @@ import semantic.symbolTable.TinyRuSymbolTableHandler;
 import syntactic.Syntactic;
 import syntactic.SyntacticAnalyzer;
 
+/**
+ * Implementación concreta de executor para analizador semántico
+ */
 public class SemanticExecutor extends Executor {
 
     private final Syntactic syntacticAnalyzer;

@@ -3,7 +3,7 @@ package semantic.symbolTable;
 import exceptions.semantic.SemanticException;
 import lexical.Token;
 
-/*
+/**
  * Clase que implementa la interfaz SymbolTableHandler
  * Los metodos no presentan ninguna funcionalidad
  * Su utilidad es permitir la inyeccion de dependencias al analizador sintactico

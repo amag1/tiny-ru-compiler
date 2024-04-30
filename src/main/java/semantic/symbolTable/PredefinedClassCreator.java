@@ -9,6 +9,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Clase que genera las clases predefinidas de la gramática: IO, Object, Str, Array
+ */
 public class PredefinedClassCreator {
     public PredefinedClassCreator() {
     }
@@ -20,7 +23,7 @@ public class PredefinedClassCreator {
         classes.add(generateObjectClass(primitiveAttributeTypes));
         classes.add(generateStrClass(primitiveAttributeTypes));
         classes.add(generateArrayClass(primitiveAttributeTypes));
-        
+
         for (ClassEntry classEntry : classes) {
             setFieldInPredefinedStruct(classEntry);
         }
