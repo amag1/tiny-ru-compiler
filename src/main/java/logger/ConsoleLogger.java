@@ -43,8 +43,8 @@ public class ConsoleLogger extends Logger {
         }
     }
 
-    public void LogSemanticSuccess() {
-        List<String> message = GetSemanticSuccessMessage();
+    public void LogSemanticSymbolTableSuccess() {
+        List<String> message = GetSemanticSymbolTableSuccessMessage();
         for (String line : message) {
             System.out.println(line);
         }

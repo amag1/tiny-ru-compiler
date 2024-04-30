@@ -57,7 +57,7 @@ public abstract class Logger {
         return result;
     }
 
-    protected List<String> GetSemanticSuccessMessage() {
+    protected List<String> GetSemanticSymbolTableSuccessMessage() {
         List result = new ArrayList<String>();
         result.add("CORRECTO: ANALISIS SEMANTICO - TABLA DE SIMBOLOS");
         return result;
