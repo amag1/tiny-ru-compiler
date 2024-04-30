@@ -1,3 +1,4 @@
+/? RedefinedInheritedAttributeException
 struct B : A {
 	Str a;
 }
