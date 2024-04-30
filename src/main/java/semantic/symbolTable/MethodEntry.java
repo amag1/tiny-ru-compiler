@@ -132,4 +132,8 @@ public class MethodEntry implements Json {
     public Token getToken() {
         return token;
     }
+
+    public boolean isStatic() {
+        return isStatic;
+    }
 }
