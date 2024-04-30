@@ -7,3 +7,7 @@ impl A {
     }
 }
 start{}
+
+/? ERROR: SEMANTICO - DECLARACIONES
+/? | NUMERO DE LINEA: | NUMERO DE COLUMNA: | DESCRIPCION: |
+/? | 6 | 13 | Variable redefinida: a |
