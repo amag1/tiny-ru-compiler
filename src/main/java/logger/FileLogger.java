@@ -13,8 +13,17 @@ import java.util.List;
 public class FileLogger extends Logger {
 
     File file;
+    String path;
 
     public FileLogger(String path) {
+        this.path = path;
+    }
+
+    private void initializeFile(String path) {
+        if (this.file != null) {
+            return;
+        }
+
         this.file = new File(path);
         try {
             this.file.createNewFile();
@@ -24,6 +33,7 @@ public class FileLogger extends Logger {
     }
 
     public void LogLexicSuccess(List<Token> tokens) {
+        initializeFile(this.path);
         List<String> message = GetLexicSuccessMessage(tokens);
 
         try {
@@ -42,6 +52,7 @@ public class FileLogger extends Logger {
     }
 
     public void LogSymbolTable(String symbolTableJson) {
+        initializeFile(this.path);
         try {
             FileWriter writer = new FileWriter(this.file);
             writer.write(symbolTableJson);

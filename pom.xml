@@ -29,7 +29,7 @@
 
     </dependencies>
     <build>
-        <finalName>etapa2</finalName>
+        <finalName>etapa3</finalName>
         <plugins>
             <!-- Maven Compiler Plugin -->
             <plugin>
