@@ -387,18 +387,7 @@ public class TinyRuSymbolTableHandler implements SymbolTableHandler {
             MethodEntry existingMethod = currentClass.getMethod(inheritedMethod.getName());
             if (existingMethod != null) {
                 // Chequear que se mantenga la firma del metodo
-                AttributeType existingReturnType = existingMethod.getReturnType();
-                AttributeType inheritedReturnType = inheritedMethod.getReturnType();
-
-                if (existingReturnType != null && inheritedReturnType != null && !existingReturnType.getType().equals(inheritedReturnType.getType())) {
-                    throw new OverridenMethodException(existingMethod.getToken(), inheritedMethod.getName());
-                }
-
-
-                // Chequear que los parametros sean iguales
-                if (!formalParametersMatch(existingMethod, inheritedMethod)) {
-                    throw new OverridenMethodException(existingMethod.getToken(), inheritedMethod.getName());
-                }
+                checkSignatures(existingMethod, inheritedMethod);
 
                 existingMethod.setRedefined(true);
                 existingMethod.setInherited(true);
@@ -422,6 +411,31 @@ public class TinyRuSymbolTableHandler implements SymbolTableHandler {
             }
         }
 
+    }
+
+    public void checkSignatures(MethodEntry existingMethod, MethodEntry inheritedMethod) throws OverridenMethodException  {
+        // Chequear el tipo de retorno
+        AttributeType existingReturnType = existingMethod.getReturnType();
+        AttributeType inheritedReturnType = inheritedMethod.getReturnType();
+
+        if (existingReturnType == null) {
+            if (inheritedReturnType != null) {
+                throw new OverridenMethodException(existingMethod.getToken(), inheritedMethod.getName());
+            }
+        }
+        else if (!existingReturnType.equals(inheritedReturnType)) {
+            throw new OverridenMethodException(existingMethod.getToken(), inheritedMethod.getName());
+        }
+
+        // Chequar que si ambos o ninguno es estático
+        if (existingMethod.isStatic() != inheritedMethod.isStatic()) {
+            throw new OverridenMethodException(existingMethod.getToken(), inheritedMethod.getName());
+        }
+
+        // Chequear que los parametros sean iguales
+        if (!formalParametersMatch(existingMethod, inheritedMethod)) {
+            throw new OverridenMethodException(existingMethod.getToken(), inheritedMethod.getName());
+        }
     }
 
     /**

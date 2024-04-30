@@ -47,4 +47,12 @@ public class AttributeType implements Json {
     public String getType() {
         return type;
     }
+
+    public boolean equals(AttributeType comparedAttributeType) {
+        if (comparedAttributeType == null) return  false;
+
+        return  this.isPrimitive == comparedAttributeType.isPrimitive &&
+                this.isArray == comparedAttributeType.isArray &&
+                this.type.equals(comparedAttributeType.type);
+    }
 }
