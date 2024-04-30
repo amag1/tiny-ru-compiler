@@ -1,0 +1,343 @@
+{
+	"classes": [
+		{
+			"name": "A",
+			"inherits": "Object",
+			"foundStruct": true,
+			"foundImpl": true,
+			"hasConstructor": true,
+			"attributes": [],
+			"methods": [
+				{
+					"name": "f",
+					"isStatic": false,
+					"isInherited": false,
+					"isRedefined": false,
+					"position": 0,
+					"return": "Int",
+					"formalParameters": [
+						{
+							"name": "a",
+							"type": "Int",
+							"position": 0
+						},
+						{
+							"name": "b",
+							"type": "Str",
+							"position": 1
+						}
+					],
+					"localVariables": []
+				}
+			],
+			"constructor": {
+				"name": ".",
+				"isStatic": false,
+				"isInherited": false,
+				"isRedefined": false,
+				"position": 0,
+				"return": "A",
+				"formalParameters": [],
+				"localVariables": []
+			}
+		},
+		{
+			"name": "Array",
+			"inherits": "Object",
+			"foundStruct": true,
+			"foundImpl": true,
+			"hasConstructor": true,
+			"attributes": [],
+			"methods": [
+				{
+					"name": "length",
+					"isStatic": false,
+					"isInherited": false,
+					"isRedefined": false,
+					"position": 0,
+					"return": "Int",
+					"formalParameters": [],
+					"localVariables": []
+				}
+			],
+			"constructor": null
+		},
+		{
+			"name": "B",
+			"inherits": "A",
+			"foundStruct": true,
+			"foundImpl": true,
+			"hasConstructor": true,
+			"attributes": [],
+			"methods": [
+				{
+					"name": "f",
+					"isStatic": false,
+					"isInherited": true,
+					"isRedefined": true,
+					"position": 0,
+					"return": "Int",
+					"formalParameters": [
+						{
+							"name": "c",
+							"type": "Int",
+							"position": 0
+						},
+						{
+							"name": "d",
+							"type": "Str",
+							"position": 1
+						}
+					],
+					"localVariables": []
+				}
+			],
+			"constructor": {
+				"name": ".",
+				"isStatic": false,
+				"isInherited": false,
+				"isRedefined": false,
+				"position": 0,
+				"return": "B",
+				"formalParameters": [],
+				"localVariables": []
+			}
+		},
+		{
+			"name": "IO",
+			"inherits": "Object",
+			"foundStruct": true,
+			"foundImpl": true,
+			"hasConstructor": true,
+			"attributes": [],
+			"methods": [
+				{
+					"name": "in_bool",
+					"isStatic": true,
+					"isInherited": false,
+					"isRedefined": false,
+					"position": 10,
+					"return": "Bool",
+					"formalParameters": [],
+					"localVariables": []
+				},
+				{
+					"name": "in_char",
+					"isStatic": true,
+					"isInherited": false,
+					"isRedefined": false,
+					"position": 11,
+					"return": "Char",
+					"formalParameters": [],
+					"localVariables": []
+				},
+				{
+					"name": "in_int",
+					"isStatic": true,
+					"isInherited": false,
+					"isRedefined": false,
+					"position": 9,
+					"return": "Int",
+					"formalParameters": [],
+					"localVariables": []
+				},
+				{
+					"name": "in_string",
+					"isStatic": true,
+					"isInherited": false,
+					"isRedefined": false,
+					"position": 8,
+					"return": "Str",
+					"formalParameters": [],
+					"localVariables": []
+				},
+				{
+					"name": "out_array_bool",
+					"isStatic": true,
+					"isInherited": false,
+					"isRedefined": false,
+					"position": 6,
+					"return": "void",
+					"formalParameters": [
+						{
+							"name": "x",
+							"type": "Array Bool",
+							"position": 0
+						}
+					],
+					"localVariables": []
+				},
+				{
+					"name": "out_array_char",
+					"isStatic": true,
+					"isInherited": false,
+					"isRedefined": false,
+					"position": 7,
+					"return": "void",
+					"formalParameters": [
+						{
+							"name": "x",
+							"type": "Array Char",
+							"position": 0
+						}
+					],
+					"localVariables": []
+				},
+				{
+					"name": "out_array_int",
+					"isStatic": true,
+					"isInherited": false,
+					"isRedefined": false,
+					"position": 4,
+					"return": "void",
+					"formalParameters": [
+						{
+							"name": "x",
+							"type": "Array Int",
+							"position": 0
+						}
+					],
+					"localVariables": []
+				},
+				{
+					"name": "out_array_str",
+					"isStatic": true,
+					"isInherited": false,
+					"isRedefined": false,
+					"position": 5,
+					"return": "void",
+					"formalParameters": [
+						{
+							"name": "x",
+							"type": "Array Str",
+							"position": 0
+						}
+					],
+					"localVariables": []
+				},
+				{
+					"name": "out_bool",
+					"isStatic": true,
+					"isInherited": false,
+					"isRedefined": false,
+					"position": 2,
+					"return": "void",
+					"formalParameters": [
+						{
+							"name": "x",
+							"type": "Bool",
+							"position": 0
+						}
+					],
+					"localVariables": []
+				},
+				{
+					"name": "out_char",
+					"isStatic": true,
+					"isInherited": false,
+					"isRedefined": false,
+					"position": 3,
+					"return": "void",
+					"formalParameters": [
+						{
+							"name": "x",
+							"type": "Char",
+							"position": 0
+						}
+					],
+					"localVariables": []
+				},
+				{
+					"name": "out_int",
+					"isStatic": true,
+					"isInherited": false,
+					"isRedefined": false,
+					"position": 1,
+					"return": "void",
+					"formalParameters": [
+						{
+							"name": "x",
+							"type": "Int",
+							"position": 0
+						}
+					],
+					"localVariables": []
+				},
+				{
+					"name": "out_string",
+					"isStatic": true,
+					"isInherited": false,
+					"isRedefined": false,
+					"position": 0,
+					"return": "void",
+					"formalParameters": [
+						{
+							"name": "x",
+							"type": "Str",
+							"position": 0
+						}
+					],
+					"localVariables": []
+				}
+			],
+			"constructor": null
+		},
+		{
+			"name": "Object",
+			"inherits": "Object",
+			"foundStruct": true,
+			"foundImpl": true,
+			"hasConstructor": true,
+			"attributes": [],
+			"methods": [],
+			"constructor": null
+		},
+		{
+			"name": "Str",
+			"inherits": "Object",
+			"foundStruct": true,
+			"foundImpl": true,
+			"hasConstructor": true,
+			"attributes": [],
+			"methods": [
+				{
+					"name": "concat",
+					"isStatic": false,
+					"isInherited": false,
+					"isRedefined": false,
+					"position": 1,
+					"return": "Str",
+					"formalParameters": [
+						{
+							"name": "s",
+							"type": "Str",
+							"position": 0
+						}
+					],
+					"localVariables": []
+				},
+				{
+					"name": "length",
+					"isStatic": false,
+					"isInherited": false,
+					"isRedefined": false,
+					"position": 0,
+					"return": "Int",
+					"formalParameters": [],
+					"localVariables": []
+				}
+			],
+			"constructor": null
+		}
+	],
+	"start": {
+		"name": "null",
+		"isStatic": false,
+		"isInherited": false,
+		"isRedefined": false,
+		"position": 0,
+		"return": "void",
+		"formalParameters": [],
+		"localVariables": []
+	}
+}

@@ -16,3 +16,8 @@ impl B {
 
 start{}
 
+
+
+/? ERROR: SEMANTICO - DECLARACIONES
+/? | NUMERO DE LINEA: | NUMERO DE COLUMNA: | DESCRIPCION: |
+/? | 14 | 8 | Sobrecarga invalida para el metodo f |
