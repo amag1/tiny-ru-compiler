@@ -94,7 +94,16 @@ public class MethodEntry implements Json {
     }
 
     public MethodEntry copy() {
-        return new MethodEntry(this.token, this.isStatic);
+        MethodEntry newMethod = new MethodEntry(this.token, this.isStatic);
+        newMethod.setReturnType(this.returnType);
+        newMethod.localVariables = this.getLocalVariables();
+        newMethod.formalParameters = this.getFormalParameters();
+
+        return newMethod;
+    }
+
+    public int getPosition() {
+        return position;
     }
 
     public void setInherited(boolean isInherited) {
