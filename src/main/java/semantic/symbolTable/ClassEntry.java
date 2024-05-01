@@ -146,6 +146,16 @@ public class ClassEntry implements Json {
         methods.put(method.getName(), method);
     }
 
+    public void addInheritedMethod(MethodEntry method) {
+        // Increase position for all methods that come after the new one
+        for (MethodEntry meth : methods.values()) {
+            if (!meth.isInherited()) {
+                meth.setPosition(meth.getPosition() + 1);
+            }
+        }
+        methods.put(method.getName(), method);
+    }
+
     public MethodEntry getMethod(String name) {
         return methods.get(name);
     }
