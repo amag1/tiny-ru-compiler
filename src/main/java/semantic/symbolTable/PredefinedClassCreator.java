@@ -67,7 +67,7 @@ public class PredefinedClassCreator {
     private ClassEntry generateIoClass(Map<String, AttributeType> types) {
         ClassEntry ioClass = new ClassEntry(new Token("IO", Type.ID_CLASS, new Location()));
 
-        MethodEntry out_str = new MethodEntry(new Token("out_string", Type.ID, new Location()), true);
+        MethodEntry out_str = new MethodEntry(new Token("out_str", Type.ID, new Location()), true);
         out_str.addFormalParam(new VariableEntry(types.get("Str"), new Token("x", Type.ID, new Location())));
         out_str.setPosition(0);
         ioClass.addMethod(out_str);
