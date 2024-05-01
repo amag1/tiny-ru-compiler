@@ -1,4 +1,4 @@
-/? MissingConstructorException
+/? RedefinedImplementException
 impl A {
     fn someFunction() -> void {}
     .(){}
