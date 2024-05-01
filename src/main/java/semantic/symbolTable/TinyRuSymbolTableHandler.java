@@ -32,6 +32,9 @@ public class TinyRuSymbolTableHandler implements SymbolTableHandler {
 
         // Chequea que las clases tengan Struct e Impl
         checkFoundImplAndStruct();
+
+        // Chequea que las variables locales de start esten correctas
+        checkTypesInMethod(st.getStart());
     }
 
     /**
