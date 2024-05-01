@@ -103,7 +103,13 @@ public class TinyRuSymbolTableHandler implements SymbolTableHandler {
     }
 
     private boolean isValidInheritance(AttributeType type) {
-        return !type.isArray() && !type.isPrimitive();
+        if (type.isArray() || type.isPrimitive()) {
+            return false;
+        }
+
+        // Check if its a predefined class
+        ClassEntry predefinedClass = this.st.getClassByName(type.getType());
+        return predefinedClass == null || !predefinedClass.isPredefined();
     }
 
     /**
