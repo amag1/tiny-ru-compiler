@@ -385,7 +385,7 @@ public class TinyRuSymbolTableHandler implements SymbolTableHandler {
      * @param parent       La clase padre
      * @throws OverridenMethodException Si se cambia la firma de un metodo heredado
      */
-    public void setInheritedMethods(ClassEntry currentClass, ClassEntry parent) throws OverridenMethodException {
+    public void setInheritedMethods(ClassEntry currentClass, ClassEntry parent) throws OverridenMethodException, StaticMethodOverridenException {
         int position = 0;
         for (Map.Entry<String, MethodEntry> entry : parent.getMethods().entrySet()) {
             MethodEntry parenMethod = entry.getValue();
@@ -395,7 +395,7 @@ public class TinyRuSymbolTableHandler implements SymbolTableHandler {
             if (currentClassMethod != null) {
                 // Chequea que el metodo heredado no sea estatico
                 if (parenMethod.isStatic()) {
-                    throw new OverridenMethodException(currentClassMethod.getToken(), parenMethod.getName());
+                    throw new StaticMethodOverridenException(currentClassMethod.getToken(), parenMethod.getName());
                 }
 
                 // Chequear que se mantenga la firma del metodo
