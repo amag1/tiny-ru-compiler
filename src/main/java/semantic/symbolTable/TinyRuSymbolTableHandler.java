@@ -388,23 +388,29 @@ public class TinyRuSymbolTableHandler implements SymbolTableHandler {
     public void setInheritedMethods(ClassEntry currentClass, ClassEntry parent) throws OverridenMethodException {
         int position = 0;
         for (Map.Entry<String, MethodEntry> entry : parent.getMethods().entrySet()) {
-            MethodEntry inheritedMethod = entry.getValue();
+            MethodEntry parenMethod = entry.getValue();
 
             // Chequeamos si el metodo es redefinido
-            MethodEntry existingMethod = currentClass.getMethod(inheritedMethod.getName());
-            if (existingMethod != null) {
-                // Chequear que se mantenga la firma del metodo
-                checkSignatures(existingMethod, inheritedMethod);
+            MethodEntry currentClassMethod = currentClass.getMethod(parenMethod.getName());
+            if (currentClassMethod != null) {
+                // Chequea que el metodo heredado no sea estatico
+                if (parenMethod.isStatic()) {
+                    throw new OverridenMethodException(currentClassMethod.getToken(), parenMethod.getName());
+                }
 
-                existingMethod.setRedefined(true);
-                existingMethod.setInherited(true);
-                existingMethod.setPosition(position);
+                // Chequear que se mantenga la firma del metodo
+                checkSignatures(currentClassMethod, parenMethod);
+
+                currentClassMethod.setRedefined(true);
+                currentClassMethod.setInherited(true);
+                currentClassMethod.setPosition(position);
             }
             else {
                 // Metodo heredado
-                inheritedMethod.setInherited(true);
-                inheritedMethod.setPosition(position);
-                currentClass.addMethod(inheritedMethod);
+                currentClassMethod = parenMethod.copy();
+                currentClassMethod.setInherited(true);
+                currentClassMethod.setPosition(position);
+                currentClass.addMethod(currentClassMethod);
             }
 
             position++;
