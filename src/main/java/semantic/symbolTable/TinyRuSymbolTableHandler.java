@@ -32,6 +32,9 @@ public class TinyRuSymbolTableHandler implements SymbolTableHandler {
 
         // Chequea que las clases tengan Struct e Impl
         checkFoundImplAndStruct();
+
+        // Chequea que las variables locales de start esten correctas
+        checkTypesInMethod(st.getStart());
     }
 
     /**
@@ -310,6 +313,10 @@ public class TinyRuSymbolTableHandler implements SymbolTableHandler {
                 throw new TypeNotFoundException(type.getToken(), methodInput.getType().getType());
             }
         }
+
+        if (method.getReturnType() != null && !checkTypeExists(method.getReturnType())) {
+            throw new TypeNotFoundException(method.getReturnType().getToken(), method.getReturnType().getType());
+        }
     }
 
     /**
@@ -335,7 +342,7 @@ public class TinyRuSymbolTableHandler implements SymbolTableHandler {
      */
     private void setInheritanceWrapped(ClassEntry classEntry) throws SemanticException {
         ClassEntry parent = this.st.getClassByName(classEntry.getInherits());
-        if (!parent.getInherits().equals("Object")) {
+        if (!parent.getInherits().equals("Object") && !parent.handledInheritance()) {
             setInheritanceWrapped(parent);
         }
 

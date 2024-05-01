@@ -148,5 +148,6 @@ public class PredefinedClassCreator {
         classEntry.setFoundImpl(true);
         classEntry.setHasConstructor(true);
         classEntry.setFoundStruct(true);
+        classEntry.setPredefined(true);
     }
 }

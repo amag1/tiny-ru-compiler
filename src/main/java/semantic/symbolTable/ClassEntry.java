@@ -23,6 +23,7 @@ public class ClassEntry implements Json {
     private boolean hasConstructor;
     private MethodEntry constructor;
     private boolean handledInheritance;
+    private boolean isPredefined;
 
 
     public ClassEntry(Token token) {
@@ -151,5 +152,13 @@ public class ClassEntry implements Json {
 
     public TreeMap<String, MethodEntry> getMethods() {
         return new TreeMap<>(methods);
+    }
+
+    public boolean isPredefined() {
+        return isPredefined;
+    }
+
+    public void setPredefined(boolean predefined) {
+        isPredefined = predefined;
     }
 }
