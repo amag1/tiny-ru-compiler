@@ -348,7 +348,7 @@ public class TinyRuSymbolTableHandler implements SymbolTableHandler {
      */
     private void setInheritanceWrapped(ClassEntry classEntry) throws SemanticException {
         ClassEntry parent = this.st.getClassByName(classEntry.getInherits());
-        if (!parent.getInherits().equals("Object")) {
+        if (!parent.getInherits().equals("Object") && !parent.handledInheritance()) {
             setInheritanceWrapped(parent);
         }
 
