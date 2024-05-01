@@ -107,7 +107,7 @@ public class PredefinedClassCreator {
         out_array_char.setPosition(7);
         ioClass.addMethod(out_array_char);
 
-        MethodEntry in_string = new MethodEntry(new Token("in_string", Type.ID, new Location()), true);
+        MethodEntry in_string = new MethodEntry(new Token("in_str", Type.ID, new Location()), true);
         in_string.setReturnType(types.get("Str"));
         in_string.setPosition(8);
         ioClass.addMethod(in_string);
