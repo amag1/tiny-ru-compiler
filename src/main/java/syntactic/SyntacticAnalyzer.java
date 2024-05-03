@@ -8,9 +8,7 @@ import lexical.Lexical;
 import lexical.Token;
 import lexical.Type;
 import semantic.abstractSintaxTree.AstHandler;
-import semantic.abstractSintaxTree.Expression.LiteralNode;
-import semantic.abstractSintaxTree.Expression.OperatingNode;
-import semantic.abstractSintaxTree.Expression.VariableAccessNode;
+import semantic.abstractSintaxTree.Expression.*;
 import semantic.symbolTable.AttributeType;
 import semantic.symbolTable.SymbolTableHandler;
 import semantic.symbolTable.TinyRuSymbolTableHandler;
@@ -689,7 +687,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         primario();
         primarios();
 
-        return new VariableAccessNode(); // TODO
+        return new VariableAccessNode( ""); // TODO
     }
 
     private void primarios() throws SyntacticException, LexicalException {
@@ -699,11 +697,11 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         }
     }
 
-    private void primario() throws SyntacticException, LexicalException {
+    private PrimaryNode primario() throws SyntacticException, LexicalException {
         // ⟨ExpresionParentizada⟩
         if (getTokenType() == Type.OPEN_PAR) {
             expresionParentizada();
-            return;
+            return null; // TODO
         }
 
         // ⟨AccesoSelf⟩
@@ -711,42 +709,43 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         if (getTokenType() == Type.KW_SELF) {
             match(Type.KW_SELF);
             encadenadoOLambda();
-            return;
+            return null; // TODO
         }
 
         // id ⟨AccesoVar-O-Llamada-Método⟩
         if (getTokenType() == Type.ID) {
-            match(Type.ID);
-            accesoVarOLLamadaMetodo();
-            return;
+            Token varToken = match(Type.ID);
+            return accesoVarOLLamadaMetodo(varToken);
         }
 
         //  ⟨Llamada-Método-Estático⟩
         if (getTokenType() == Type.ID_CLASS) {
             llamadaMetodoEstatico();
-            return;
+            return null; // TODO
         }
 
         // ⟨Llamada-Constructor⟩
         if (getTokenType() == Type.KW_NEW) {
             match(Type.KW_NEW);
             llamadaNew();
-            return;
+            return null; // TODO
         }
 
         // Devolver error en otro caso
         throwSyntacticException("Primario");
+
+        return  null; // TODO
     }
 
-    private void accesoVarOLLamadaMetodo() throws SyntacticException, LexicalException {
+    private PrimaryNode accesoVarOLLamadaMetodo(Token varToken) throws SyntacticException, LexicalException {
         // ⟨Llamada-Método⟩
         if (getTokenType() == Type.OPEN_PAR) {
             llamadaMetodo();
-            return;
+            return new MethodCallNode(); // TODO
         }
 
         // ⟨AccesoVar⟩
-        accesoVar();
+        return accesoVar(varToken);
 
     }
 
@@ -765,16 +764,23 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         }
     }
 
-    private void accesoVar() throws SyntacticException, LexicalException {
+    private PrimaryNode accesoVar(Token varToken) throws SyntacticException, LexicalException {
+        PrimaryNode primaryNode;
+
         // [ ⟨Expresión⟩ ] ⟨Encadenado-O-Lambda⟩
         if (getTokenType() == Type.OPEN_BRACKET) {
             match(Type.OPEN_BRACKET);
             expresion();
             match(Type.CLOSE_BRACKET);
+            primaryNode = new ArrayAccessNode(); // TODO
+        } else {
+            primaryNode = ast.createVariableAccess(varToken);
         }
 
         // ⟨Encadenado-O-Lambda⟩
         encadenadoOLambda();
+        // TODO add children
+        return primaryNode;
     }
 
     private void llamadaMetodo() throws SyntacticException, LexicalException {
@@ -844,13 +850,13 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         // ⟨Llamada-Método-Encadenado-O-AccesoVar⟩ ::= ⟨Llamada-Método-Encadenado⟩ | ⟨AccesoVar⟩
 
         match(Type.DOT);
-        match(Type.ID);
+        Token varToken = match(Type.ID);
 
         // ⟨AccesoVar⟩
         Type[] first = {Type.DOT, Type.OPEN_BRACKET};
 
         if (contains(first)) {
-            accesoVar();
+            accesoVar(varToken);
             return;
         }
 

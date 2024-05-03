@@ -3,6 +3,7 @@ package semantic.abstractSintaxTree;
 import exceptions.semantic.SemanticException;
 import lexical.Token;
 import semantic.abstractSintaxTree.Expression.LiteralNode;
+import semantic.abstractSintaxTree.Expression.VariableAccessNode;
 import semantic.abstractSintaxTree.Sentence.SentenceNode;
 import semantic.symbolTable.SymbolTable;
 
@@ -20,5 +21,10 @@ public class TinyRuAstHandler implements  AstHandler{
     public LiteralNode createLiteral(Token token) {
         return new LiteralNode(token);
     }
+
+    public VariableAccessNode createVariableAccess(Token token) {
+        return new VariableAccessNode(token.getLexem());
+    }
+
 
 }

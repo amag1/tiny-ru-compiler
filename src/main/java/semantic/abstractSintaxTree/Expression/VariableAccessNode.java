@@ -9,6 +9,11 @@ import semantic.symbolTable.AttributeType;
 public class VariableAccessNode extends PrimaryNode{
     private String variableName;
 
+    public VariableAccessNode(String variableName) {
+        this.variableName = variableName;
+    }
+
+
     @Override
     public AttributeType getAttributeType() throws SemanticException {
         // TODO
