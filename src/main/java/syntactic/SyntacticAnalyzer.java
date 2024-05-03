@@ -7,6 +7,10 @@ import exceptions.syntactic.SyntacticException;
 import lexical.Lexical;
 import lexical.Token;
 import lexical.Type;
+import semantic.abstractSintaxTree.AstHandler;
+import semantic.abstractSintaxTree.Expression.LiteralNode;
+import semantic.abstractSintaxTree.Expression.OperatingNode;
+import semantic.abstractSintaxTree.Expression.VariableAccessNode;
 import semantic.symbolTable.AttributeType;
 import semantic.symbolTable.SymbolTableHandler;
 import semantic.symbolTable.TinyRuSymbolTableHandler;
@@ -22,6 +26,7 @@ import java.util.*;
  */
 public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Syntactic {
     private SymbolTableHandler st;
+    private AstHandler ast;
 
     public SyntacticAnalyzer(Lexical lexicalAnalyzer, SymbolTableHandler st) {
         super(lexicalAnalyzer);
@@ -324,7 +329,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         // O tambien puede ser void
         if (getTokenType() == Type.TYPE_VOID) {
             match(Type.TYPE_VOID);
-            return null; // TODO: ok?
+            return null; // TODO: fix to avoid confuse with nil
         }
 
         return tipo();
@@ -665,7 +670,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         match(opMul);
     }
 
-    private void operando() throws SyntacticException, LexicalException {
+    private OperatingNode operando() throws SyntacticException, LexicalException {
         // nil | true | false | intLiteral | StrLiteral | charLiteral
         Type[] literals = {
                 Type.KW_NIL,
@@ -676,13 +681,15 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
                 Type.CHAR_LITERAL
         };
         if (contains(literals)) {
-            match(literals);
-            return;
+            Token literalToken = match(literals);
+            return  ast.createLiteral(literalToken);
         }
 
         // ⟨Primario⟩ ⟨Primarios⟩
         primario();
         primarios();
+
+        return new VariableAccessNode(); // TODO
     }
 
     private void primarios() throws SyntacticException, LexicalException {

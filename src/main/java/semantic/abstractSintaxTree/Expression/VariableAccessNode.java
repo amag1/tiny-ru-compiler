@@ -10,7 +10,7 @@ public class VariableAccessNode extends PrimaryNode{
     private String variableName;
 
     @Override
-    public AttributeType getType() throws SemanticException {
+    public AttributeType getAttributeType() throws SemanticException {
         // TODO
         return  new AttributeType(true, true, new Token("", Type.KW_IF, new Location()));
     }

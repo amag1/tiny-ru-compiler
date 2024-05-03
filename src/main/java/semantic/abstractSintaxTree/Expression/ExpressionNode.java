@@ -6,6 +6,6 @@ import semantic.symbolTable.AttributeType;
 
 public abstract class ExpressionNode extends AbstractSyntaxNode {
 
-    private AttributeType type;
-    public abstract AttributeType getType() throws SemanticException;
+    protected AttributeType attributeType;
+    public abstract AttributeType getAttributeType() throws SemanticException;
 }

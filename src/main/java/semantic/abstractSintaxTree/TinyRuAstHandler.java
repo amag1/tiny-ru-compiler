@@ -1,6 +1,8 @@
 package semantic.abstractSintaxTree;
 
 import exceptions.semantic.SemanticException;
+import lexical.Token;
+import semantic.abstractSintaxTree.Expression.LiteralNode;
 import semantic.abstractSintaxTree.Sentence.SentenceNode;
 import semantic.symbolTable.SymbolTable;
 
@@ -14,4 +16,9 @@ public class TinyRuAstHandler implements  AstHandler{
             currentClass.validateSentences();
         }
     }
+
+    public LiteralNode createLiteral(Token token) {
+        return new LiteralNode(token);
+    }
+
 }

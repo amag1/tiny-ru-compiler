@@ -11,7 +11,7 @@ public class ArrayAccessNode extends PrimaryNode {
     private int index;
 
     @Override
-    public AttributeType getType() throws SemanticException {
+    public AttributeType getAttributeType() throws SemanticException {
         // TODO
         return  new AttributeType(true, true, new Token("", Type.KW_IF, new Location()));
     }
