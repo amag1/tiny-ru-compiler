@@ -1,4 +1,4 @@
 package semantic.abstractSintaxTree;
 
-public abstract class SentenceNode {
+public abstract class SentenceNode extends  AbstractSyntaxNode {
 }
