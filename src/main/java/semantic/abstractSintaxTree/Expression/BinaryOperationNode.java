@@ -7,6 +7,9 @@ import location.Location;
 import semantic.symbolTable.AttributeType;
 
 public class BinaryOperationNode extends ExpressionNode{
+        private ExpressionNode leftOperating;
+        private ExpressionNode rightOperating;
+        private  Operator operator;
 
         @Override
         public AttributeType getType() throws SemanticException {

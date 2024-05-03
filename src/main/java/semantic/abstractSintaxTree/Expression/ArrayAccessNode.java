@@ -6,7 +6,9 @@ import lexical.Type;
 import location.Location;
 import semantic.symbolTable.AttributeType;
 
-public class ArrayAccessNode extends PrimaryNode{
+public class ArrayAccessNode extends PrimaryNode {
+    private String arrayName;
+    private int index;
 
     @Override
     public AttributeType getType() throws SemanticException {

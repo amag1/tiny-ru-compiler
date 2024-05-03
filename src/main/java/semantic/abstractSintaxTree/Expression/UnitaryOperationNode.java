@@ -8,6 +8,9 @@ import semantic.symbolTable.AttributeType;
 
 public class UnitaryOperationNode extends ExpressionNode{
 
+    private ExpressionNode operating;
+    private Operator operator;
+
     @Override
     public AttributeType getType() throws SemanticException {
         // TODO

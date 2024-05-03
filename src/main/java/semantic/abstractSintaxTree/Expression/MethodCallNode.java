@@ -7,7 +7,8 @@ import location.Location;
 import semantic.symbolTable.AttributeType;
 
 public class MethodCallNode extends PrimaryNode{
-
+    private String methodName;
+    private ExpressionNode[] parameters;
     @Override
     public AttributeType getType() throws SemanticException {
         // TODO

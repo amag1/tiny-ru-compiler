@@ -7,6 +7,7 @@ import location.Location;
 import semantic.symbolTable.AttributeType;
 
 public class VariableAccessNode extends PrimaryNode{
+    private String variableName;
 
     @Override
     public AttributeType getType() throws SemanticException {
