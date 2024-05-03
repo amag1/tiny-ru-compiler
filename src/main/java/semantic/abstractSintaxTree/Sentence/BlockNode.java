@@ -3,8 +3,7 @@ package semantic.abstractSintaxTree.Sentence;
 import exceptions.semantic.SemanticException;
 
 public class BlockNode extends SentenceNode{
-    // TODO
-
+    private  SentenceNode[] sentences;
 
     @Override
     public void validate() throws SemanticException {

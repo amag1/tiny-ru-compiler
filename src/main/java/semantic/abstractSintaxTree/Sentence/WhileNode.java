@@ -1,9 +1,11 @@
 package semantic.abstractSintaxTree.Sentence;
 
 import exceptions.semantic.SemanticException;
+import semantic.abstractSintaxTree.Expression.ExpressionNode;
 
 public class WhileNode extends SentenceNode{
-    // TODO
+    private ExpressionNode condition;
+    private SentenceNode loopBody;
 
 
     @Override

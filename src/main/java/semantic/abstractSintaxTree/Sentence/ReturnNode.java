@@ -1,9 +1,10 @@
 package semantic.abstractSintaxTree.Sentence;
 
 import exceptions.semantic.SemanticException;
+import semantic.abstractSintaxTree.Expression.ExpressionNode;
 
 public class ReturnNode extends SentenceNode{
-    // TODO
+    private ExpressionNode returnValue;
 
 
     @Override
