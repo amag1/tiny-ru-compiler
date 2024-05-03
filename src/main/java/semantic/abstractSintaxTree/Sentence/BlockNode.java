@@ -1,8 +1,8 @@
-package semantic.abstractSintaxTree;
+package semantic.abstractSintaxTree.Sentence;
 
 import exceptions.semantic.SemanticException;
 
-public class WhileNode extends SentenceNode{
+public class BlockNode extends SentenceNode{
     // TODO
 
 

@@ -1,4 +1,4 @@
-package semantic.abstractSintaxTree;
+package semantic.abstractSintaxTree.Sentence;
 
 import exceptions.semantic.SemanticException;
 

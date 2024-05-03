@@ -1,8 +1,8 @@
-package semantic.abstractSintaxTree;
+package semantic.abstractSintaxTree.Sentence;
 
 import exceptions.semantic.SemanticException;
 
-public class SimpleSentenceNode extends SentenceNode{
+public class IfElseNode extends SentenceNode{
     // TODO
 
 
