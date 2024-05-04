@@ -9,6 +9,7 @@ import lexical.Token;
 import lexical.Type;
 import semantic.abstractSintaxTree.AstHandler;
 import semantic.abstractSintaxTree.Expression.*;
+import semantic.abstractSintaxTree.TinyRuAstHandler;
 import semantic.symbolTable.AttributeType;
 import semantic.symbolTable.SymbolTableHandler;
 import semantic.symbolTable.TinyRuSymbolTableHandler;
@@ -29,6 +30,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
     public SyntacticAnalyzer(Lexical lexicalAnalyzer, SymbolTableHandler st) {
         super(lexicalAnalyzer);
         this.st = st;
+        this.ast = new TinyRuAstHandler(); // TODO
     }
 
     /**
@@ -462,7 +464,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
     private void asignacion() throws SyntacticException, LexicalException {
         // ⟨AccesoVar-Simple⟩ = ⟨Expresión⟩
         if (getTokenType() == Type.ID) {
-            accesoVarSimple();
+            PrimaryNode leftSide = accesoVarSimple();
             match(Type.ASSIGN);
             expresion();
             return;
@@ -479,33 +481,41 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         throwSyntacticException("asignación");
     }
 
-    private void accesoVarSimple() throws SyntacticException, LexicalException {
+    private PrimaryNode accesoVarSimple() throws SyntacticException, LexicalException {
         // id ⟨Encadenado-O-Bracket⟩
-        match(Type.ID);
-        encadenadoOBracket();
+        Token varToken = match(Type.ID);
+        return encadenadoOBracket(varToken);
     }
 
-    private void encadenadoOBracket() throws SyntacticException, LexicalException {
+    private PrimaryNode encadenadoOBracket(Token varToken) throws SyntacticException, LexicalException {
         // ⟨Encadenado-Simple⟩ | [ ⟨Expresión⟩ ]
+
+        PrimaryNode parentNode;
 
         // [ ⟨Expresión⟩ ]
         if (getTokenType() == Type.OPEN_BRACKET) {
             match(Type.OPEN_BRACKET);
             expresion();
             match(Type.CLOSE_BRACKET);
-            return;
+            parentNode =  new ArrayAccessNode(); // TODO
+        } else {
+            parentNode = ast.createVariableAccess(varToken);
         }
 
         // ⟨Encadenado-Simple⟩
-        encadenadosSimples();
+        PrimaryNode childrenNode = encadenadosSimples();
+        return ast.handlePossibleChain(parentNode, childrenNode);
     }
 
-    private void encadenadosSimples() throws SyntacticException, LexicalException {
+    private PrimaryNode encadenadosSimples() throws SyntacticException, LexicalException {
         // ⟨Encadenado-Simple⟩ ⟨Encadenados-Simples⟩ | λ
         if (getTokenType() == Type.DOT) {
             encadenadoSimple();
             encadenadosSimples();
+            return  null; // TODO
         }
+
+        return  null; // TODO
     }
 
     private void encadenadoSimple() throws SyntacticException, LexicalException {
@@ -640,7 +650,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         }
 
         // ⟨Operando⟩
-        operando();
+        OperatingNode operating = operando();
     }
 
     private void opIgual() throws SyntacticException, LexicalException {
@@ -684,17 +694,19 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         }
 
         // ⟨Primario⟩ ⟨Primarios⟩
-        primario();
-        primarios();
+        PrimaryNode parentNode = primario();
+        PrimaryNode childrenNode = primarios();
 
-        return new VariableAccessNode( ""); // TODO
+        return ast.handlePossibleChain(parentNode, childrenNode);
     }
 
-    private void primarios() throws SyntacticException, LexicalException {
+    private PrimaryNode primarios() throws SyntacticException, LexicalException {
         // ⟨Encadenado⟩ | λ
         if (getTokenType() == Type.DOT) {
-            encadenado();
+            return encadenado();
         }
+
+        return  null;
     }
 
     private PrimaryNode primario() throws SyntacticException, LexicalException {
@@ -757,29 +769,31 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         encadenadoOLambda();
     }
 
-    private void encadenadoOLambda() throws SyntacticException, LexicalException {
+    private PrimaryNode encadenadoOLambda() throws SyntacticException, LexicalException {
         // ⟨Encadenado⟩ | λ
         if (getTokenType() == Type.DOT) {
-            encadenado();
+            return  encadenado();
         }
+        return  null;
     }
 
     private PrimaryNode accesoVar(Token varToken) throws SyntacticException, LexicalException {
-        PrimaryNode primaryNode;
+        PrimaryNode parentNode;
 
         // [ ⟨Expresión⟩ ] ⟨Encadenado-O-Lambda⟩
         if (getTokenType() == Type.OPEN_BRACKET) {
             match(Type.OPEN_BRACKET);
             expresion();
             match(Type.CLOSE_BRACKET);
-            primaryNode = new ArrayAccessNode(); // TODO
+            parentNode = new ArrayAccessNode(); // TODO
         } else {
-            primaryNode = ast.createVariableAccess(varToken);
+            parentNode = ast.createVariableAccess(varToken);
         }
 
         // ⟨Encadenado-O-Lambda⟩
-        encadenadoOLambda();
-        // TODO add children
+        PrimaryNode childrenNode = encadenadoOLambda();
+
+        PrimaryNode primaryNode = ast.handlePossibleChain(parentNode, childrenNode);
         return primaryNode;
     }
 
@@ -845,7 +859,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         }
     }
 
-    private void encadenado() throws SyntacticException, LexicalException {
+    private PrimaryNode encadenado() throws SyntacticException, LexicalException {
         // . id ⟨Llamada-Método-Encadenado-O-AccesoVar⟩
         // ⟨Llamada-Método-Encadenado-O-AccesoVar⟩ ::= ⟨Llamada-Método-Encadenado⟩ | ⟨AccesoVar⟩
 
@@ -856,8 +870,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         Type[] first = {Type.DOT, Type.OPEN_BRACKET};
 
         if (contains(first)) {
-            accesoVar(varToken);
-            return;
+            return accesoVar(varToken);
         }
 
         // ⟨Llamada-Método-Encadenado⟩ ::= ⟨Argumentos-Actuales⟩ ⟨Encadenado-O-Lambda⟩
@@ -866,7 +879,12 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
 
             if (getTokenType() == Type.DOT) {
                 encadenado();
+                return  null; //TODO
             }
+
+            return  null; //TODO
         }
+
+        return  ast.createVariableAccess(varToken);
     }
 }

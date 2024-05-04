@@ -7,8 +7,6 @@ import location.Location;
 import semantic.symbolTable.AttributeType;
 
 public abstract class PrimaryNode extends OperatingNode{
-    PrimaryNode parent;
-    PrimaryNode children;
 
 
 }
