@@ -27,10 +27,10 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
     private SymbolTableHandler st;
     private AstHandler ast;
 
-    public SyntacticAnalyzer(Lexical lexicalAnalyzer, SymbolTableHandler st) {
+    public SyntacticAnalyzer(Lexical lexicalAnalyzer, SymbolTableHandler st, AstHandler ast) {
         super(lexicalAnalyzer);
         this.st = st;
-        this.ast = new TinyRuAstHandler(); // TODO
+        this.ast = ast; // TODO
     }
 
     /**
@@ -497,8 +497,9 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
             match(Type.OPEN_BRACKET);
             expresion();
             match(Type.CLOSE_BRACKET);
-            parentNode =  new ArrayAccessNode(); // TODO
-        } else {
+            parentNode = new ArrayAccessNode(varToken); // TODO
+        }
+        else {
             parentNode = ast.createVariableAccess(varToken);
         }
 
@@ -512,10 +513,10 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         if (getTokenType() == Type.DOT) {
             encadenadoSimple();
             encadenadosSimples();
-            return  null; // TODO
+            return null; // TODO
         }
 
-        return  null; // TODO
+        return null; // TODO
     }
 
     private void encadenadoSimple() throws SyntacticException, LexicalException {
@@ -690,7 +691,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         };
         if (contains(literals)) {
             Token literalToken = match(literals);
-            return  ast.createLiteral(literalToken);
+            return ast.createLiteral(literalToken);
         }
 
         // ⟨Primario⟩ ⟨Primarios⟩
@@ -706,7 +707,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
             return encadenado();
         }
 
-        return  null;
+        return null;
     }
 
     private PrimaryNode primario() throws SyntacticException, LexicalException {
@@ -746,7 +747,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         // Devolver error en otro caso
         throwSyntacticException("Primario");
 
-        return  null; // TODO
+        return null; // TODO
     }
 
     private PrimaryNode accesoVarOLLamadaMetodo(Token varToken) throws SyntacticException, LexicalException {
@@ -772,9 +773,9 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
     private PrimaryNode encadenadoOLambda() throws SyntacticException, LexicalException {
         // ⟨Encadenado⟩ | λ
         if (getTokenType() == Type.DOT) {
-            return  encadenado();
+            return encadenado();
         }
-        return  null;
+        return null;
     }
 
     private PrimaryNode accesoVar(Token varToken) throws SyntacticException, LexicalException {
@@ -785,8 +786,10 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
             match(Type.OPEN_BRACKET);
             expresion();
             match(Type.CLOSE_BRACKET);
-            parentNode = new ArrayAccessNode(); // TODO
-        } else {
+            // TODO: agregar la expresion con el indice al constructor y verificar que sea entera
+            parentNode = new ArrayAccessNode(varToken);
+        }
+        else {
             parentNode = ast.createVariableAccess(varToken);
         }
 
@@ -879,12 +882,12 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
 
             if (getTokenType() == Type.DOT) {
                 encadenado();
-                return  null; //TODO
+                return null; //TODO
             }
 
-            return  null; //TODO
+            return null; //TODO
         }
 
-        return  ast.createVariableAccess(varToken);
+        return ast.createVariableAccess(varToken);
     }
 }
