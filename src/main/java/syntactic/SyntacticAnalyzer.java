@@ -472,7 +472,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
 
         // ⟨AccesoSelf-Simple⟩ ⟨Encadenado-Simple⟩ = ⟨Expresión⟩
         if (getTokenType() == Type.KW_SELF) {
-            accesoSelfSimple();
+            PrimaryNode leftSide = accesoSelfSimple();
             match(Type.ASSIGN);
             expresion();
             return;
@@ -497,7 +497,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
             match(Type.OPEN_BRACKET);
             expresion();
             match(Type.CLOSE_BRACKET);
-            parentNode = new ArrayAccessNode(varToken); // TODO
+            parentNode = ast.createArrayAccess(varToken); // TODO
         }
         else {
             parentNode = ast.createVariableAccess(varToken);
@@ -524,9 +524,9 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         match(Type.ID);
     }
 
-    private void accesoSelfSimple() throws SyntacticException, LexicalException {
+    private PrimaryNode accesoSelfSimple() throws SyntacticException, LexicalException {
         match(Type.KW_SELF);
-        encadenadosSimples();
+        return encadenadosSimples();
     }
 
     private void sentenciaSimple() throws SyntacticException, LexicalException {
@@ -753,8 +753,10 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
     private PrimaryNode accesoVarOLLamadaMetodo(Token varToken) throws SyntacticException, LexicalException {
         // ⟨Llamada-Método⟩
         if (getTokenType() == Type.OPEN_PAR) {
-            llamadaMetodo();
-            return new MethodCallNode(); // TODO
+            MethodCallNode methodCall = new MethodCallNode(varToken);
+            llamadaMetodo(methodCall);
+
+            return methodCall;
         }
 
         // ⟨AccesoVar⟩
@@ -800,26 +802,34 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         return primaryNode;
     }
 
-    private void llamadaMetodo() throws SyntacticException, LexicalException {
+    private void llamadaMetodo(MethodCall methodCall) throws SyntacticException, LexicalException {
         //  ⟨Argumentos-Actuales⟩ ⟨Encadenado-O-Lambda⟩
-        argumentosActuales();
+        // Create a new MethodCallNode with the varToken
+        argumentosActuales(methodCall);
         encadenadoOLambda();
     }
 
-    private void llamadaMetodoEstatico() throws SyntacticException, LexicalException {
+    private StaticMethodCallNode llamadaMetodoEstatico() throws SyntacticException, LexicalException {
         // idStruct . id ⟨Llamada-Método⟩ ⟨Encadenado-O-Lambda⟩
-        match(Type.ID_CLASS);
+        Token varClass = match(Type.ID_CLASS);
         match(Type.DOT);
-        match(Type.ID);
-        llamadaMetodo();
+        // TODO: cambiar por metodo estatico
+        Token varToken = match(Type.ID);
+
+        StaticMethodCallNode staticMethodCallNode = new StaticMethodCallNode(varClass.getLexem(), varToken.getLexem());
+        llamadaMetodo(staticMethodCallNode);
         encadenadoOLambda();
+
+        return staticMethodCallNode;
     }
 
     private void llamadaNew() throws SyntacticException, LexicalException {
         // idStruct ⟨Argumentos-Actuales⟩ ⟨Encadenado-O-Lambda⟩
         if (getTokenType() == Type.ID_CLASS) {
-            match(Type.ID_CLASS);
-            argumentosActuales();
+            Token className = match(Type.ID_CLASS);
+            // TODO: cambiar por constructor
+            MethodCallNode constructor = new MethodCallNode(className);
+            argumentosActuales(constructor);
             encadenadoOLambda();
             return;
         }
@@ -837,7 +847,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         throwSyntacticException("Tipo primitivo o IdClass");
     }
 
-    private void argumentosActuales() throws SyntacticException, LexicalException {
+    private void argumentosActuales(MethodCall method) throws SyntacticException, LexicalException {
         // ( ⟨Lista-Expresiones⟩ ) | ( )
         match(Type.OPEN_PAR);
 
@@ -846,12 +856,13 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         }
 
         else {
-            listaExpresiones();
+            List<ExpressionNode> params = listaExpresiones();
+            method.setParameters(params);
             match(Type.CLOSE_PAR);
         }
     }
 
-    private void listaExpresiones() throws SyntacticException, LexicalException {
+    private List<ExpressionNode> listaExpresiones() throws SyntacticException, LexicalException {
         // ⟨Expresión⟩ ⟨Expresiones⟩
         expresion();
 
@@ -860,6 +871,8 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
             match(Type.COMMA);
             listaExpresiones();
         }
+
+        return null; // TODO
     }
 
     private PrimaryNode encadenado() throws SyntacticException, LexicalException {
@@ -878,14 +891,15 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
 
         // ⟨Llamada-Método-Encadenado⟩ ::= ⟨Argumentos-Actuales⟩ ⟨Encadenado-O-Lambda⟩
         if (getTokenType() == Type.OPEN_PAR) {
-            argumentosActuales();
+            MethodCallNode method = new MethodCallNode(varToken);
+            argumentosActuales(method);
 
             if (getTokenType() == Type.DOT) {
                 encadenado();
                 return null; //TODO
             }
 
-            return null; //TODO
+            return method; //TODO
         }
 
         return ast.createVariableAccess(varToken);
