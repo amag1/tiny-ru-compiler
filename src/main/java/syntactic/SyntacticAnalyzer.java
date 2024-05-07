@@ -30,7 +30,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
     public SyntacticAnalyzer(Lexical lexicalAnalyzer, SymbolTableHandler st, AstHandler ast) {
         super(lexicalAnalyzer);
         this.st = st;
-        this.ast = ast; // TODO
+        this.ast = ast;
     }
 
     /**
@@ -497,7 +497,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
             match(Type.OPEN_BRACKET);
             expresion();
             match(Type.CLOSE_BRACKET);
-            parentNode = ast.createArrayAccess(varToken); // TODO
+            parentNode = ast.createArrayAccess(varToken);
         }
         else {
             parentNode = ast.createVariableAccess(varToken);
@@ -511,17 +511,18 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
     private PrimaryNode encadenadosSimples() throws SyntacticException, LexicalException {
         // ⟨Encadenado-Simple⟩ ⟨Encadenados-Simples⟩ | λ
         if (getTokenType() == Type.DOT) {
-            encadenadoSimple();
-            encadenadosSimples();
-            return null; // TODO
+            PrimaryNode parentNode = encadenadoSimple();
+            PrimaryNode chidlrenNode = encadenadosSimples();
+            return ast.handlePossibleChain(parentNode, chidlrenNode);
         }
 
-        return null; // TODO
+        return null;
     }
 
-    private void encadenadoSimple() throws SyntacticException, LexicalException {
+    private VariableAccessNode encadenadoSimple() throws SyntacticException, LexicalException {
         match(Type.DOT);
-        match(Type.ID);
+        Token varToken = match(Type.ID);
+        return ast.createVariableAccess(varToken);
     }
 
     private PrimaryNode accesoSelfSimple() throws SyntacticException, LexicalException {
@@ -733,8 +734,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
 
         //  ⟨Llamada-Método-Estático⟩
         if (getTokenType() == Type.ID_CLASS) {
-            llamadaMetodoEstatico();
-            return null; // TODO
+            return  llamadaMetodoEstatico();
         }
 
         // ⟨Llamada-Constructor⟩
@@ -746,8 +746,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
 
         // Devolver error en otro caso
         throwSyntacticException("Primario");
-
-        return null; // TODO
+        return null; // Unreachable line
     }
 
     private PrimaryNode accesoVarOLLamadaMetodo(Token varToken) throws SyntacticException, LexicalException {
@@ -869,6 +868,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         if (getTokenType() == Type.COMMA) {
             match(Type.COMMA);
             listaExpresiones();
+            return null; // TODO
         }
 
         return null; // TODO
