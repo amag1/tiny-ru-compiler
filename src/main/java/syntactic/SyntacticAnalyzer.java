@@ -495,9 +495,9 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         // [ ⟨Expresión⟩ ]
         if (getTokenType() == Type.OPEN_BRACKET) {
             match(Type.OPEN_BRACKET);
-            expresion();
+            ExpressionNode indexExpression = expresion();
             match(Type.CLOSE_BRACKET);
-            parentNode = ast.createArrayAccess(varToken);
+            parentNode = ast.createArrayAccess(varToken, indexExpression);
         }
         else {
             parentNode = ast.createVariableAccess(varToken,false);
@@ -538,7 +538,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         match(Type.SEMICOLON);
     }
 
-    private void expresion() throws SyntacticException, LexicalException {
+    private ExpressionNode expresion() throws SyntacticException, LexicalException {
         // ⟨Expresión⟩ ::= ⟨ExpOr⟩
         // ⟨ExpOr⟩ ::= ⟨ExpAnd⟩ ⟨ExpOr`⟩
         try {
@@ -548,6 +548,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         } catch (SyntacticException e) {
             throwSyntacticException("expresión");
         }
+        return null; // TODO
     }
 
     private void expOrPrima() throws SyntacticException, LexicalException {
@@ -762,8 +763,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
     private PrimaryNode expresionParentizada() throws SyntacticException, LexicalException {
         // ( ⟨Expresion⟩ ) ⟨Encadenado-O-Lambda⟩
         match(Type.OPEN_PAR);
-        ExpressionNode expressionNode = null; // TODO
-        expresion();
+        ExpressionNode expressionNode = expresion();
         PrimaryNode parentNode = ast.createParentizedExpressionNode(expressionNode);
         match(Type.CLOSE_PAR);
         PrimaryNode childrenNode = encadenadoOLambda(false);
@@ -784,10 +784,9 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         // [ ⟨Expresión⟩ ] ⟨Encadenado-O-Lambda⟩
         if (getTokenType() == Type.OPEN_BRACKET) {
             match(Type.OPEN_BRACKET);
-            expresion();
+            ExpressionNode indexExpression = expresion();
             match(Type.CLOSE_BRACKET);
-            // TODO: agregar la expresion con el indice al constructor y verificar que sea entera
-            parentNode = new ArrayAccessNode(varToken);
+            parentNode = ast.createArrayAccess(varToken, indexExpression);
         }
         else {
             parentNode = ast.createVariableAccess(varToken, false);
@@ -833,8 +832,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         if (contains(primitive)) {
             Token elementsTypeToken = tipoPrimitivo();
             match(Type.OPEN_BRACKET);
-            expresion();
-            ExpressionNode expressionNode = null; // TODO
+            ExpressionNode expressionNode = expresion();
             match(Type.CLOSE_BRACKET);
             return ast.createNewArrayNode(elementsTypeToken, expressionNode);
         }
@@ -859,17 +857,20 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
     }
 
     private List<ExpressionNode> listaExpresiones() throws SyntacticException, LexicalException {
+        List<ExpressionNode> expressionNodeList = new ArrayList<>();
+
         // ⟨Expresión⟩ ⟨Expresiones⟩
-        expresion();
+        ExpressionNode expressionNode = expresion();
 
         // ⟨Expresiones⟩ ::= λ | , ⟨Lista-Expresiones⟩
         if (getTokenType() == Type.COMMA) {
             match(Type.COMMA);
-            listaExpresiones();
-            return null; // TODO
+            expressionNodeList = listaExpresiones();
         }
 
-        return null; // TODO
+        expressionNodeList.add(expressionNode);
+
+        return expressionNodeList;
     }
 
     private PrimaryNode encadenado(boolean isSelf) throws SyntacticException, LexicalException {

@@ -27,8 +27,8 @@ public class TinyRuAstHandler implements AstHandler {
     }
 
     @Override
-    public ArrayAccessNode createArrayAccess(Token token) {
-        return new ArrayAccessNode(token);
+    public ArrayAccessNode createArrayAccess(Token token, ExpressionNode indexExpression) {
+        return new ArrayAccessNode(token, indexExpression);
     }
 
     public PrimaryNode handlePossibleChain(PrimaryNode parentNode, PrimaryNode childrenNode) {

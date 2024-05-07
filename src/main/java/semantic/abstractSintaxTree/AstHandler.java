@@ -12,7 +12,7 @@ public interface AstHandler {
 
     VariableAccessNode createVariableAccess(Token token, boolean isSelf);
 
-    ArrayAccessNode createArrayAccess(Token token);
+    ArrayAccessNode createArrayAccess(Token token, ExpressionNode indexExpression);
 
     PrimaryNode handlePossibleChain(PrimaryNode parentNode, PrimaryNode childrenNode);
 

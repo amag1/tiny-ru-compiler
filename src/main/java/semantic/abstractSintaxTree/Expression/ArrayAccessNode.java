@@ -11,9 +11,10 @@ public class ArrayAccessNode extends PrimaryNode {
     private Token idToken;
     private ExpressionNode index;
 
-    public ArrayAccessNode(Token arrayName) {
+    public ArrayAccessNode(Token arrayName, ExpressionNode index) {
         this.arrayName = arrayName.getLexem();
         this.idToken = arrayName;
+        this.index = index;
     }
 
     @Override
