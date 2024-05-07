@@ -1,7 +1,6 @@
 package syntactic;
 
 import exceptions.lexical.LexicalException;
-import exceptions.semantic.InvalidInheritanceException;
 import exceptions.semantic.SemanticException;
 import exceptions.syntactic.SyntacticException;
 import lexical.Lexical;
@@ -9,10 +8,8 @@ import lexical.Token;
 import lexical.Type;
 import semantic.abstractSintaxTree.AstHandler;
 import semantic.abstractSintaxTree.Expression.*;
-import semantic.abstractSintaxTree.TinyRuAstHandler;
 import semantic.symbolTable.AttributeType;
 import semantic.symbolTable.SymbolTableHandler;
-import semantic.symbolTable.TinyRuSymbolTableHandler;
 
 import java.util.*;
 
@@ -735,7 +732,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
 
         //  ⟨Llamada-Método-Estático⟩
         if (getTokenType() == Type.ID_CLASS) {
-            return  llamadaMetodoEstatico();
+            return llamadaMetodoEstatico();
         }
 
         // ⟨Llamada-Constructor⟩
@@ -896,7 +893,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
 
             if (getTokenType() == Type.DOT) {
                 PrimaryNode childrenNode = encadenado();
-                return  ast.handlePossibleChain(method, childrenNode);
+                return ast.handlePossibleChain(method, childrenNode);
             }
 
             return method;

@@ -1,4 +1,4 @@
-package syntactic;
+package semantic.abstractSintaxTree.Expression;
 
 import exceptions.semantic.SemanticException;
 import lexical.Token;

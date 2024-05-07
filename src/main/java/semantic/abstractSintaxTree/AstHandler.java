@@ -3,7 +3,7 @@ package semantic.abstractSintaxTree;
 import exceptions.semantic.SemanticException;
 import lexical.Token;
 import semantic.abstractSintaxTree.Expression.*;
-import syntactic.ConstructorCallNode;
+import semantic.abstractSintaxTree.Expression.ConstructorCallNode;
 
 import java.util.List;
 
