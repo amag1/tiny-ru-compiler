@@ -8,11 +8,9 @@ import semantic.symbolTable.AttributeType;
 
 public class VariableAccessNode extends PrimaryNode {
     private String variableName;
-    private boolean isSelf;
 
-    public VariableAccessNode(String variableName, boolean isSelf) {
+    public VariableAccessNode(String variableName) {
         this.variableName = variableName;
-        this.isSelf = isSelf;
     }
 
 

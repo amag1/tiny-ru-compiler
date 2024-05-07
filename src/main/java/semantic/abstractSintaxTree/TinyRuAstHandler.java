@@ -5,6 +5,9 @@ import lexical.Token;
 import semantic.abstractSintaxTree.Expression.*;
 import semantic.abstractSintaxTree.Sentence.SentenceNode;
 import semantic.symbolTable.SymbolTable;
+import syntactic.ConstructorCallNode;
+
+import java.util.List;
 
 public class TinyRuAstHandler implements AstHandler {
 
@@ -22,12 +25,12 @@ public class TinyRuAstHandler implements AstHandler {
     }
 
     public VariableAccessNode createVariableAccess(Token token) {
-        return new VariableAccessNode(token.getLexem(), false);
+        return new VariableAccessNode(token.getLexem());
     }
 
     @Override
-    public ArrayAccessNode createArrayAccess(Token token) {
-        return new ArrayAccessNode(token);
+    public ArrayAccessNode createArrayAccess(Token token, ExpressionNode indexExpression) {
+        return new ArrayAccessNode(token, indexExpression);
     }
 
     public PrimaryNode handlePossibleChain(PrimaryNode parentNode, PrimaryNode childrenNode) {
@@ -39,4 +42,31 @@ public class TinyRuAstHandler implements AstHandler {
         }
     }
 
+    public  MethodCallNode createMethodCallNode(Token methodToken) {
+        return  new MethodCallNode(methodToken);
+    }
+
+    public ParentizedExpressionNode createParentizedExpressionNode(ExpressionNode expression) {
+        return  new ParentizedExpressionNode(expression);
+    }
+
+    public ConstructorCallNode createConstructorCallNode(Token classToken) {
+        return new ConstructorCallNode(classToken.getLexem());
+    }
+
+    public NewArrayNode createNewArrayNode(Token elementsTypeToken, ExpressionNode lengthExpression){
+        return  new NewArrayNode(elementsTypeToken, lengthExpression);
+    }
+
+    public StaticMethodCallNode createStaticMethodCallNode(Token classToken, Token methodToken) {
+        return  new StaticMethodCallNode(classToken.getLexem(), methodToken.getLexem());
+    }
+
+    public SelfAccess createSelfAccess(PrimaryNode node) {
+        return  new SelfAccess(node);
+    }
+
+    public  void SetMethodParameter(MethodCall method, List<ExpressionNode> parameters){
+        method.setParameters(parameters);
+    }
 }
