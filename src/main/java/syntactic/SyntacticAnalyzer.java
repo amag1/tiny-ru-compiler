@@ -541,104 +541,139 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         // ⟨ExpOr⟩ ::= ⟨ExpAnd⟩ ⟨ExpOr`⟩
         try {
             // ⟨ExpAnd⟩ ⟨ExpOr`⟩
-            expAnd();
-            expOrPrima();
+            ExpressionNode expression = expAnd();
+            ExpressionNode or = expOrPrima(expression);
+            return or;
         } catch (SyntacticException e) {
             throwSyntacticException("expresión");
         }
         return null; // TODO
     }
 
-    private void expOrPrima() throws SyntacticException, LexicalException {
+    private ExpressionNode expOrPrima(ExpressionNode previousExpression) throws SyntacticException, LexicalException {
         // or ⟨ExpAnd⟩ ⟨ExpOr`⟩ | λ
         if (getTokenType() == Type.OR) {
             Token or = match(Type.OR);
-            expAnd();
-            expOrPrima();
+            ExpressionNode expression = expAnd();
+            ExpressionNode recursiveExpression = expOrPrima(expression);
+
+            return ast.createBinaryOperationNode(or, expression, recursiveExpression);
+
         }
+
+        return previousExpression;
     }
 
-    private void expAnd() throws SyntacticException, LexicalException {
+    private ExpressionNode expAnd() throws SyntacticException, LexicalException {
         // ⟨ExpIgual⟩ ⟨ExpAnd`⟩
-        expIgual();
-        expAndPrima();
+        ExpressionNode expression = expIgual();
+        ExpressionNode and = expAndPrima(expression);
+
+        return and;
     }
 
-    private void expAndPrima() throws SyntacticException, LexicalException {
+    private ExpressionNode expAndPrima(ExpressionNode previousExpression) throws SyntacticException, LexicalException {
         // && ⟨ExpIgual⟩ ⟨ExpAnd`⟩ | λ
         if (getTokenType() == Type.AND) {
-            match(Type.AND);
-            expIgual();
-            expAdPrima();
+            Token and = match(Type.AND);
+            ExpressionNode expression = expIgual();
+            ExpressionNode recursiveExpression = expAdPrima(expression);
+
+            return ast.createBinaryOperationNode(and, expression, recursiveExpression);
         }
 
         // Otro caso, lambda
+        return previousExpression;
     }
 
-    private void expIgual() throws SyntacticException, LexicalException {
+    private ExpressionNode expIgual() throws SyntacticException, LexicalException {
         // ⟨ExpCompuesta⟩ ⟨ExpIgual`⟩
-        expCompuesta();
-        expIgualPrima();
+        ExpressionNode expression = expCompuesta();
+        ExpressionNode equal = expIgualPrima(expression);
+
+        return equal;
     }
 
-    private void expIgualPrima() throws SyntacticException, LexicalException {
+    private ExpressionNode expIgualPrima(ExpressionNode previousExpression) throws SyntacticException, LexicalException {
         // ⟨OpIgual⟩ ⟨ExpCompuesta⟩ ⟨ExpIgual`⟩ | λ
         Type[] opIgual = {Type.EQUAL, Type.NOT_EQUAL};
         if (contains(opIgual)) {
-            opIgual();
-            expCompuesta();
-            expIgualPrima();
+            Token operator = opIgual();
+            ExpressionNode expression = expCompuesta();
+            ExpressionNode recursiveExpression = expIgualPrima(expression);
+
+            return ast.createBinaryOperationNode(operator, previousExpression, recursiveExpression);
         }
 
-
+        return previousExpression;
         // Otro caso, lambda
     }
 
-    private void expCompuesta() throws SyntacticException, LexicalException {
+    private ExpressionNode expCompuesta() throws SyntacticException, LexicalException {
         // ⟨ExpAd⟩ ⟨ExpCompuesta`⟩
-        expAd();
-        expCompuestaPrima();
+        ExpressionNode previousExpression = expAd();
+        ExpressionNode compound = expCompuestaPrima(previousExpression);
+
+        return compound;
     }
 
-    private void expCompuestaPrima() throws SyntacticException, LexicalException {
+    private ExpressionNode expCompuestaPrima(ExpressionNode previousExpression) throws SyntacticException, LexicalException {
         // ⟨OpCompuesto⟩ ⟨ExpAd⟩ | λ
         Type[] opCompuesto = {Type.GREATER, Type.LESS, Type.GREATER_EQUAL, Type.LESS_EQUAL};
         if (contains(opCompuesto)) {
-            opCompuesto();
-            expAd();
+            Token operator = opCompuesto();
+            ExpressionNode expression = expAd();
+
+            return ast.createBinaryOperationNode(operator, previousExpression, expression);
         }
+
+        return previousExpression;
     }
 
-    private void expAd() throws SyntacticException, LexicalException {
+    private ExpressionNode expAd() throws SyntacticException, LexicalException {
         // ⟨ExpMul⟩ ⟨ExpAd`⟩
-        expMul();
-        expAdPrima();
+        ExpressionNode expression = expMul();
+        ExpressionNode add = expAdPrima(expression);
+
+        return add;
     }
 
-    private void expAdPrima() throws SyntacticException, LexicalException {
+    private ExpressionNode expAdPrima(ExpressionNode previousExpression) throws SyntacticException, LexicalException {
         // ⟨OpAd⟩ ⟨ExpMul⟩ ⟨ExpAd'⟩ | λ
         Type[] opAd = {Type.PLUS, Type.MINUS};
         if (contains(opAd)) {
-            opAd();
-            expMul();
-            expAdPrima();
+            Token operator = opAd();
+            ExpressionNode firstExpression = expMul();
+            ExpressionNode recursiveExpression = expAdPrima(firstExpression);
+
+            return ast.createBinaryOperationNode(operator, previousExpression, recursiveExpression);
         }
+
+        return previousExpression;
     }
 
-    private void expMul() throws SyntacticException, LexicalException {
+    private ExpressionNode expMul() throws SyntacticException, LexicalException {
         // ⟨ExpUn⟩ ⟨ExpMul`⟩
-        expUn();
-        expMulPrima();
+        ExpressionNode unaryExpression = expUn();
+        // Usa el nodo unario para construir un arbol de expresion binaria
+        ExpressionNode mult = expMulPrima(unaryExpression);
+
+        // Retorna solo el arbol, se asume que la expresion unaria esta dentro del mismo
+        return mult;
     }
 
-    private void expMulPrima() throws SyntacticException, LexicalException {
+    private ExpressionNode expMulPrima(ExpressionNode operating) throws SyntacticException, LexicalException {
         // ⟨OpMul⟩ ⟨ExpUn⟩ ⟨ExpMul`⟩ | λ
         Type[] opMul = {Type.MULT, Type.DIV, Type.MOD};
         if (contains(opMul)) {
-            opMul();
-            expUn();
-            expMulPrima();
+            Token operator = opMul();
+            ExpressionNode firstExpression = expUn();
+            ExpressionNode recursiveExpression = expMulPrima(firstExpression);
+
+            return ast.createBinaryOperationNode(operator, operating, recursiveExpression);
         }
+
+        return operating;
     }
 
     private ExpressionNode expUn() throws SyntacticException, LexicalException {
@@ -656,19 +691,19 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         return operating;
     }
 
-    private void opIgual() throws SyntacticException, LexicalException {
+    private Token opIgual() throws SyntacticException, LexicalException {
         Type[] opIgual = {Type.EQUAL, Type.NOT_EQUAL};
-        match(opIgual);
+        return match(opIgual);
     }
 
-    private void opCompuesto() throws SyntacticException, LexicalException {
+    private Token opCompuesto() throws SyntacticException, LexicalException {
         Type[] opCompuesto = {Type.GREATER, Type.LESS, Type.GREATER_EQUAL, Type.LESS_EQUAL};
-        match(opCompuesto);
+        return match(opCompuesto);
     }
 
-    private void opAd() throws SyntacticException, LexicalException {
+    private Token opAd() throws SyntacticException, LexicalException {
         Type[] opAd = {Type.PLUS, Type.MINUS};
-        match(opAd);
+        return match(opAd);
     }
 
     private Token opUnario() throws SyntacticException, LexicalException {
@@ -676,9 +711,9 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         return match(opUnario);
     }
 
-    private void opMul() throws SyntacticException, LexicalException {
+    private Token opMul() throws SyntacticException, LexicalException {
         Type[] opMul = {Type.MULT, Type.DIV, Type.MOD};
-        match(opMul);
+        return match(opMul);
     }
 
     private OperatingNode operando() throws SyntacticException, LexicalException {

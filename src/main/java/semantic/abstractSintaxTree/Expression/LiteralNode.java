@@ -6,7 +6,10 @@ import lexical.Type;
 import semantic.symbolTable.AttributeType;
 
 
-public class LiteralNode extends OperatingNode{
+public class LiteralNode extends OperatingNode {
+    private AttributeType attributeType;
+    private String value;
+
     public LiteralNode(Token token) {
         this.attributeType = switch (token.getType()) {
             case INT_LITERAL -> AttributeType.IntType;
@@ -15,14 +18,17 @@ public class LiteralNode extends OperatingNode{
             case KW_TRUE, KW_FALSE -> AttributeType.BoolType;
             default -> AttributeType.NilType;
         };
+
+        this.value = token.getLexem();
     }
+
     @Override
     public AttributeType getAttributeType() throws SemanticException {
-       return this.attributeType;
+        return this.attributeType;
     }
 
     public String toJson(int indentationIndex) {
         // TODO
-        return  "";
+        return "";
     }
 }
