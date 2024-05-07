@@ -853,7 +853,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
 
         else {
             List<ExpressionNode> params = listaExpresiones();
-            method.setParameters(params);
+            ast.SetMethodParameter(method, params);
             match(Type.CLOSE_PAR);
         }
     }

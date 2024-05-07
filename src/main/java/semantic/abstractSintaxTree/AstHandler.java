@@ -5,8 +5,10 @@ import lexical.Token;
 import semantic.abstractSintaxTree.Expression.*;
 import syntactic.ConstructorCallNode;
 
+import java.util.List;
+
 public interface AstHandler {
-    public void validateSenteces() throws SemanticException;
+    void validateSenteces() throws SemanticException;
 
     LiteralNode createLiteral(Token token);
 
@@ -27,4 +29,6 @@ public interface AstHandler {
     StaticMethodCallNode createStaticMethodCallNode(Token classToken, Token methodToken);
 
     SelfAccess createSelfAccess(PrimaryNode node);
+
+    void SetMethodParameter(MethodCall method, List<ExpressionNode> parameters);
 }

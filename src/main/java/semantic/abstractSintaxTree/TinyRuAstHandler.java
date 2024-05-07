@@ -7,6 +7,8 @@ import semantic.abstractSintaxTree.Sentence.SentenceNode;
 import semantic.symbolTable.SymbolTable;
 import syntactic.ConstructorCallNode;
 
+import java.util.List;
+
 public class TinyRuAstHandler implements AstHandler {
 
     private AbstractSyntaxTree ast;
@@ -64,4 +66,7 @@ public class TinyRuAstHandler implements AstHandler {
         return  new SelfAccess(node);
     }
 
+    public  void SetMethodParameter(MethodCall method, List<ExpressionNode> parameters){
+        method.setParameters(parameters);
+    }
 }
