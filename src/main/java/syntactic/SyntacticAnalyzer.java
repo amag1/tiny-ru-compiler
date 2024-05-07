@@ -762,7 +762,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
     private PrimaryNode expresionParentizada() throws SyntacticException, LexicalException {
         // ( ⟨Expresion⟩ ) ⟨Encadenado-O-Lambda⟩
         match(Type.OPEN_PAR);
-        ExpressionNode expressionNode = new LiteralNode(new Token()); // TODO
+        ExpressionNode expressionNode = null; // TODO
         expresion();
         PrimaryNode parentNode = ast.createParentizedExpressionNode(expressionNode);
         match(Type.CLOSE_PAR);
@@ -810,9 +810,8 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         // idStruct . id ⟨Llamada-Método⟩ ⟨Encadenado-O-Lambda⟩
         Token varClass = match(Type.ID_CLASS);
         match(Type.DOT);
-        // TODO: cambiar por metodo estatico
         Token varToken = match(Type.ID);
-
+        // TODO handle
         StaticMethodCallNode staticMethodCallNode = new StaticMethodCallNode(varClass.getLexem(), varToken.getLexem());
         llamadaMetodo(staticMethodCallNode);
         encadenadoOLambda(false);
@@ -820,7 +819,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         return staticMethodCallNode;
     }
 
-    private ConstructorCallNode llamadaNew() throws SyntacticException, LexicalException {
+    private PrimaryNode llamadaNew() throws SyntacticException, LexicalException {
         // idStruct ⟨Argumentos-Actuales⟩ ⟨Encadenado-O-Lambda⟩
         if (getTokenType() == Type.ID_CLASS) {
             Token classToken = match(Type.ID_CLASS);
@@ -833,11 +832,12 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         // ⟨Tipo-Primitivo⟩ [ ⟨Expresion⟩ ]
         Type[] primitive = {Type.TYPE_INT, Type.TYPE_CHAR, Type.TYPE_STRING, Type.TYPE_BOOL};
         if (contains(primitive)) {
-            tipoPrimitivo();
+            Token elementsTypeToken = tipoPrimitivo();
             match(Type.OPEN_BRACKET);
             expresion();
+            ExpressionNode expressionNode = null; // TODO
             match(Type.CLOSE_BRACKET);
-            return null; // TODo
+            return ast.createNewArrayNode(elementsTypeToken, expressionNode);
         }
 
         throwSyntacticException("Tipo primitivo o IdClass");

@@ -52,4 +52,8 @@ public class TinyRuAstHandler implements AstHandler {
         return new ConstructorCallNode(classToken.getLexem());
     }
 
+    public NewArrayNode createNewArrayNode(Token elementsTypeToken, ExpressionNode lengthExpression){
+        return  new NewArrayNode(elementsTypeToken, lengthExpression);
+    }
+
 }

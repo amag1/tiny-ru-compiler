@@ -22,4 +22,6 @@ public interface AstHandler {
 
     ConstructorCallNode createConstructorCallNode(Token classToken);
 
+    NewArrayNode createNewArrayNode(Token elementsTypeToken, ExpressionNode lengthExpression);
+
 }
