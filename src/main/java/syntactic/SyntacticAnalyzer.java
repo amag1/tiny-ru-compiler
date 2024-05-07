@@ -738,8 +738,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         // ⟨Llamada-Constructor⟩
         if (getTokenType() == Type.KW_NEW) {
             match(Type.KW_NEW);
-            llamadaNew();
-            return null; // TODO
+            return llamadaNew();
         }
 
         // Devolver error en otro caso
@@ -821,15 +820,14 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         return staticMethodCallNode;
     }
 
-    private void llamadaNew() throws SyntacticException, LexicalException {
+    private ConstructorCallNode llamadaNew() throws SyntacticException, LexicalException {
         // idStruct ⟨Argumentos-Actuales⟩ ⟨Encadenado-O-Lambda⟩
         if (getTokenType() == Type.ID_CLASS) {
-            Token className = match(Type.ID_CLASS);
-            // TODO: cambiar por constructor
-            MethodCallNode constructor = new MethodCallNode(className);
+            Token classToken = match(Type.ID_CLASS);
+            ConstructorCallNode constructor = ast.createConstructorCallNode(classToken);
             argumentosActuales(constructor);
             encadenadoOLambda(false);
-            return;
+            return constructor;
         }
 
         // ⟨Tipo-Primitivo⟩ [ ⟨Expresion⟩ ]
@@ -839,10 +837,11 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
             match(Type.OPEN_BRACKET);
             expresion();
             match(Type.CLOSE_BRACKET);
-            return;
+            return null; // TODo
         }
 
         throwSyntacticException("Tipo primitivo o IdClass");
+        return null; // Unreachable line
     }
 
     private void argumentosActuales(MethodCall method) throws SyntacticException, LexicalException {

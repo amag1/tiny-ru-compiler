@@ -5,6 +5,7 @@ import lexical.Token;
 import semantic.abstractSintaxTree.Expression.*;
 import semantic.abstractSintaxTree.Sentence.SentenceNode;
 import semantic.symbolTable.SymbolTable;
+import syntactic.ConstructorCallNode;
 
 public class TinyRuAstHandler implements AstHandler {
 
@@ -45,6 +46,10 @@ public class TinyRuAstHandler implements AstHandler {
 
     public ParentizedExpressionNode createParentizedExpressionNode(ExpressionNode expression) {
         return  new ParentizedExpressionNode(expression);
+    }
+
+    public ConstructorCallNode createConstructorCallNode(Token classToken) {
+        return new ConstructorCallNode(classToken.getLexem());
     }
 
 }

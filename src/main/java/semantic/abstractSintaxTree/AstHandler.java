@@ -3,6 +3,7 @@ package semantic.abstractSintaxTree;
 import exceptions.semantic.SemanticException;
 import lexical.Token;
 import semantic.abstractSintaxTree.Expression.*;
+import syntactic.ConstructorCallNode;
 
 public interface AstHandler {
     public void validateSenteces() throws SemanticException;
@@ -18,5 +19,7 @@ public interface AstHandler {
     MethodCallNode createMethodCallNode(Token methodToken);
 
     ParentizedExpressionNode createParentizedExpressionNode(ExpressionNode expression);
+
+    ConstructorCallNode createConstructorCallNode(Token classToken);
 
 }
