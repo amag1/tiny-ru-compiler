@@ -22,8 +22,8 @@ public class TinyRuAstHandler implements AstHandler {
         return new LiteralNode(token);
     }
 
-    public VariableAccessNode createVariableAccess(Token token, boolean isSelf) {
-        return new VariableAccessNode(token.getLexem(), isSelf);
+    public VariableAccessNode createVariableAccess(Token token) {
+        return new VariableAccessNode(token.getLexem());
     }
 
     @Override
@@ -60,5 +60,8 @@ public class TinyRuAstHandler implements AstHandler {
         return  new StaticMethodCallNode(classToken.getLexem(), methodToken.getLexem());
     }
 
+    public SelfAccess createSelfAccess(PrimaryNode node) {
+        return  new SelfAccess(node);
+    }
 
 }

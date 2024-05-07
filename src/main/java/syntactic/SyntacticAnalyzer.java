@@ -500,34 +500,35 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
             parentNode = ast.createArrayAccess(varToken, indexExpression);
         }
         else {
-            parentNode = ast.createVariableAccess(varToken,false);
+            parentNode = ast.createVariableAccess(varToken);
         }
 
         // ⟨Encadenado-Simple⟩
-        PrimaryNode childrenNode = encadenadosSimples(false);
+        PrimaryNode childrenNode = encadenadosSimples();
         return ast.handlePossibleChain(parentNode, childrenNode);
     }
 
-    private PrimaryNode encadenadosSimples(boolean isSelf) throws SyntacticException, LexicalException {
+    private PrimaryNode encadenadosSimples() throws SyntacticException, LexicalException {
         // ⟨Encadenado-Simple⟩ ⟨Encadenados-Simples⟩ | λ
         if (getTokenType() == Type.DOT) {
-            PrimaryNode parentNode = encadenadoSimple(isSelf);
-            PrimaryNode chidlrenNode = encadenadosSimples(false);
+            PrimaryNode parentNode = encadenadoSimple();
+            PrimaryNode chidlrenNode = encadenadosSimples();
             return ast.handlePossibleChain(parentNode, chidlrenNode);
         }
 
         return null;
     }
 
-    private VariableAccessNode encadenadoSimple(boolean isSelf) throws SyntacticException, LexicalException {
+    private VariableAccessNode encadenadoSimple() throws SyntacticException, LexicalException {
         match(Type.DOT);
         Token varToken = match(Type.ID);
-        return ast.createVariableAccess(varToken, isSelf);
+        return ast.createVariableAccess(varToken);
     }
 
     private PrimaryNode accesoSelfSimple() throws SyntacticException, LexicalException {
         match(Type.KW_SELF);
-        return encadenadosSimples(true);
+        PrimaryNode node = encadenadosSimples();
+        return ast.createSelfAccess(node);
     }
 
     private void sentenciaSimple() throws SyntacticException, LexicalException {
@@ -706,7 +707,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
     private PrimaryNode primarios() throws SyntacticException, LexicalException {
         // ⟨Encadenado⟩ | λ
         if (getTokenType() == Type.DOT) {
-            return encadenado(false);
+            return encadenado();
         }
 
         return null;
@@ -722,7 +723,8 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         // ⟨AccesoSelf⟩ ::= self ⟨Encadenado-O-Lambda⟩
         if (getTokenType() == Type.KW_SELF) {
             match(Type.KW_SELF);
-            return encadenadoOLambda(true);
+            PrimaryNode node = encadenadoOLambda();
+            return ast.createSelfAccess(node);
         }
 
         // id ⟨AccesoVar-O-Llamada-Método⟩
@@ -766,14 +768,14 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         ExpressionNode expressionNode = expresion();
         PrimaryNode parentNode = ast.createParentizedExpressionNode(expressionNode);
         match(Type.CLOSE_PAR);
-        PrimaryNode childrenNode = encadenadoOLambda(false);
+        PrimaryNode childrenNode = encadenadoOLambda();
         return ast.handlePossibleChain(parentNode, childrenNode);
     }
 
-    private PrimaryNode encadenadoOLambda(boolean isSelf) throws SyntacticException, LexicalException {
+    private PrimaryNode encadenadoOLambda() throws SyntacticException, LexicalException {
         // ⟨Encadenado⟩ | λ
         if (getTokenType() == Type.DOT) {
-            return encadenado(isSelf);
+            return encadenado();
         }
         return null;
     }
@@ -789,11 +791,11 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
             parentNode = ast.createArrayAccess(varToken, indexExpression);
         }
         else {
-            parentNode = ast.createVariableAccess(varToken, false);
+            parentNode = ast.createVariableAccess(varToken);
         }
 
         // ⟨Encadenado-O-Lambda⟩
-        PrimaryNode childrenNode = encadenadoOLambda(false);
+        PrimaryNode childrenNode = encadenadoOLambda();
 
         return ast.handlePossibleChain(parentNode, childrenNode);
     }
@@ -802,7 +804,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         //  ⟨Argumentos-Actuales⟩ ⟨Encadenado-O-Lambda⟩
         // Create a new MethodCallNode with the varToken
         argumentosActuales(methodCall);
-        encadenadoOLambda(false);
+        encadenadoOLambda();
     }
 
     private StaticMethodCallNode llamadaMetodoEstatico() throws SyntacticException, LexicalException {
@@ -812,7 +814,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         Token varToken = match(Type.ID);
         StaticMethodCallNode staticMethodCallNode = ast.createStaticMethodCallNode(varClass, varToken);
         llamadaMetodo(staticMethodCallNode);
-        encadenadoOLambda(false);
+        encadenadoOLambda();
 
         return staticMethodCallNode;
     }
@@ -823,7 +825,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
             Token classToken = match(Type.ID_CLASS);
             ConstructorCallNode constructor = ast.createConstructorCallNode(classToken);
             argumentosActuales(constructor);
-            encadenadoOLambda(false);
+            encadenadoOLambda();
             return constructor;
         }
 
@@ -873,7 +875,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         return expressionNodeList;
     }
 
-    private PrimaryNode encadenado(boolean isSelf) throws SyntacticException, LexicalException {
+    private PrimaryNode encadenado() throws SyntacticException, LexicalException {
         // . id ⟨Llamada-Método-Encadenado-O-AccesoVar⟩
         // ⟨Llamada-Método-Encadenado-O-AccesoVar⟩ ::= ⟨Llamada-Método-Encadenado⟩ | ⟨AccesoVar⟩
 
@@ -893,13 +895,13 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
             argumentosActuales(method);
 
             if (getTokenType() == Type.DOT) {
-                PrimaryNode childrenNode = encadenado(false);
+                PrimaryNode childrenNode = encadenado();
                 return  ast.handlePossibleChain(method, childrenNode);
             }
 
             return method;
         }
 
-        return ast.createVariableAccess(varToken, isSelf);
+        return ast.createVariableAccess(varToken);
     }
 }

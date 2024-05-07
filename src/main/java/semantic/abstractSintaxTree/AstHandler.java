@@ -10,7 +10,7 @@ public interface AstHandler {
 
     LiteralNode createLiteral(Token token);
 
-    VariableAccessNode createVariableAccess(Token token, boolean isSelf);
+    VariableAccessNode createVariableAccess(Token token);
 
     ArrayAccessNode createArrayAccess(Token token, ExpressionNode indexExpression);
 
@@ -25,4 +25,6 @@ public interface AstHandler {
     NewArrayNode createNewArrayNode(Token elementsTypeToken, ExpressionNode lengthExpression);
 
     StaticMethodCallNode createStaticMethodCallNode(Token classToken, Token methodToken);
+
+    SelfAccess createSelfAccess(PrimaryNode node);
 }
