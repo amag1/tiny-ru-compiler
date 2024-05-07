@@ -753,7 +753,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
     private PrimaryNode accesoVarOLLamadaMetodo(Token varToken) throws SyntacticException, LexicalException {
         // ⟨Llamada-Método⟩
         if (getTokenType() == Type.OPEN_PAR) {
-            MethodCallNode methodCall = new MethodCallNode(varToken);
+            MethodCallNode methodCall = ast.createMethodCallNode(varToken);
             llamadaMetodo(methodCall);
 
             return methodCall;
@@ -761,7 +761,6 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
 
         // ⟨AccesoVar⟩
         return accesoVar(varToken);
-
     }
 
     private void expresionParentizada() throws SyntacticException, LexicalException {

@@ -2,10 +2,7 @@ package semantic.abstractSintaxTree;
 
 import exceptions.semantic.SemanticException;
 import lexical.Token;
-import semantic.abstractSintaxTree.Expression.ArrayAccessNode;
-import semantic.abstractSintaxTree.Expression.LiteralNode;
-import semantic.abstractSintaxTree.Expression.PrimaryNode;
-import semantic.abstractSintaxTree.Expression.VariableAccessNode;
+import semantic.abstractSintaxTree.Expression.*;
 
 public interface AstHandler {
     public void validateSenteces() throws SemanticException;
@@ -17,4 +14,8 @@ public interface AstHandler {
     ArrayAccessNode createArrayAccess(Token token);
 
     PrimaryNode handlePossibleChain(PrimaryNode parentNode, PrimaryNode childrenNode);
+
+    MethodCallNode createMethodCallNode(Token methodToken);
+
+
 }
