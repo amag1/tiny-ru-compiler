@@ -894,11 +894,11 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
             argumentosActuales(method);
 
             if (getTokenType() == Type.DOT) {
-                encadenado();
-                return null; //TODO
+                PrimaryNode childrenNode = encadenado();
+                return  ast.handlePossibleChain(method, childrenNode);
             }
 
-            return method; //TODO
+            return method;
         }
 
         return ast.createVariableAccess(varToken);
