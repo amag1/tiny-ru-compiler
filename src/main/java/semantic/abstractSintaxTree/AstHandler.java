@@ -9,7 +9,7 @@ public interface AstHandler {
 
     LiteralNode createLiteral(Token token);
 
-    VariableAccessNode createVariableAccess(Token token);
+    VariableAccessNode createVariableAccess(Token token, boolean isSelf);
 
     ArrayAccessNode createArrayAccess(Token token);
 

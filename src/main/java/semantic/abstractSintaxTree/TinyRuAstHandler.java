@@ -21,8 +21,8 @@ public class TinyRuAstHandler implements AstHandler {
         return new LiteralNode(token);
     }
 
-    public VariableAccessNode createVariableAccess(Token token) {
-        return new VariableAccessNode(token.getLexem(), false);
+    public VariableAccessNode createVariableAccess(Token token, boolean isSelf) {
+        return new VariableAccessNode(token.getLexem(), isSelf);
     }
 
     @Override
