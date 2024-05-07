@@ -42,4 +42,9 @@ public class TinyRuAstHandler implements AstHandler {
     public  MethodCallNode createMethodCallNode(Token methodToken) {
         return  new MethodCallNode(methodToken);
     }
+
+    public ParentizedExpressionNode createParentizedExpressionNode(ExpressionNode expression) {
+        return  new ParentizedExpressionNode(expression);
+    }
+
 }

@@ -17,5 +17,6 @@ public interface AstHandler {
 
     MethodCallNode createMethodCallNode(Token methodToken);
 
+    ParentizedExpressionNode createParentizedExpressionNode(ExpressionNode expression);
 
 }

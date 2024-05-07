@@ -714,8 +714,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
     private PrimaryNode primario() throws SyntacticException, LexicalException {
         // ⟨ExpresionParentizada⟩
         if (getTokenType() == Type.OPEN_PAR) {
-            expresionParentizada();
-            return null; // TODO
+            return expresionParentizada();
         }
 
         // ⟨AccesoSelf⟩
@@ -762,12 +761,14 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         return accesoVar(varToken);
     }
 
-    private void expresionParentizada() throws SyntacticException, LexicalException {
+    private ParentizedExpressionNode expresionParentizada() throws SyntacticException, LexicalException {
         // ( ⟨Expresion⟩ ) ⟨Encadenado-O-Lambda⟩
         match(Type.OPEN_PAR);
+        ExpressionNode expressionNode = new LiteralNode(new Token()); // TODO
         expresion();
         match(Type.CLOSE_PAR);
         encadenadoOLambda();
+        return  ast.createParentizedExpressionNode(expressionNode);
     }
 
     private PrimaryNode encadenadoOLambda() throws SyntacticException, LexicalException {
