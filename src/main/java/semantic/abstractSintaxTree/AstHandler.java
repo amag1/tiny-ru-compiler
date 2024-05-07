@@ -30,5 +30,7 @@ public interface AstHandler {
 
     SelfAccess createSelfAccess(PrimaryNode node);
 
+    ExpressionNode createUnaryExpressionNode(Token operator, ExpressionNode expression);
+
     void SetMethodParameter(MethodCall method, List<ExpressionNode> parameters);
 }

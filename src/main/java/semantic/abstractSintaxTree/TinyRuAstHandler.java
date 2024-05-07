@@ -65,6 +65,11 @@ public class TinyRuAstHandler implements AstHandler {
         return new SelfAccess(node);
     }
 
+    public ExpressionNode createUnaryExpressionNode(Token operator, ExpressionNode expression) {
+        // TODO: verificar que matchee el tipo del operador y la expresion
+        return new UnaryOperationNode(expression, operator);
+    }
+
     public void SetMethodParameter(MethodCall method, List<ExpressionNode> parameters) {
         method.setParameters(parameters);
     }

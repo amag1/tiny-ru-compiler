@@ -463,7 +463,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         if (getTokenType() == Type.ID) {
             PrimaryNode leftSide = accesoVarSimple();
             match(Type.ASSIGN);
-            expresion();
+            ExpressionNode rightSide = expresion();
             return;
         }
 
@@ -552,7 +552,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
     private void expOrPrima() throws SyntacticException, LexicalException {
         // or ⟨ExpAnd⟩ ⟨ExpOr`⟩ | λ
         if (getTokenType() == Type.OR) {
-            match(Type.OR);
+            Token or = match(Type.OR);
             expAnd();
             expOrPrima();
         }
@@ -641,17 +641,19 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         }
     }
 
-    private void expUn() throws SyntacticException, LexicalException {
+    private ExpressionNode expUn() throws SyntacticException, LexicalException {
         // ⟨OpUnario⟩ ⟨ExpUn⟩ | ⟨Operando⟩
         Type[] opUnario = {Type.PLUS, Type.MINUS, Type.NEG, Type.DPLUS, Type.DMINUS};
         if (contains(opUnario)) {
-            opUnario();
-            expUn();
-            return;
+            Token operator = opUnario();
+            ExpressionNode expression = expUn();
+            return ast.createUnaryExpressionNode(operator, expression);
         }
 
         // ⟨Operando⟩
         OperatingNode operating = operando();
+
+        return operating;
     }
 
     private void opIgual() throws SyntacticException, LexicalException {
@@ -669,9 +671,9 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         match(opAd);
     }
 
-    private void opUnario() throws SyntacticException, LexicalException {
+    private Token opUnario() throws SyntacticException, LexicalException {
         Type[] opUnario = {Type.PLUS, Type.MINUS, Type.NEG, Type.DPLUS, Type.DMINUS};
-        match(opUnario);
+        return match(opUnario);
     }
 
     private void opMul() throws SyntacticException, LexicalException {
