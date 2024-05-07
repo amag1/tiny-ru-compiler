@@ -811,8 +811,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         Token varClass = match(Type.ID_CLASS);
         match(Type.DOT);
         Token varToken = match(Type.ID);
-        // TODO handle
-        StaticMethodCallNode staticMethodCallNode = new StaticMethodCallNode(varClass.getLexem(), varToken.getLexem());
+        StaticMethodCallNode staticMethodCallNode = ast.createStaticMethodCallNode(varClass, varToken);
         llamadaMetodo(staticMethodCallNode);
         encadenadoOLambda(false);
 

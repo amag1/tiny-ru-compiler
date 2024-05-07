@@ -24,4 +24,5 @@ public interface AstHandler {
 
     NewArrayNode createNewArrayNode(Token elementsTypeToken, ExpressionNode lengthExpression);
 
+    StaticMethodCallNode createStaticMethodCallNode(Token classToken, Token methodToken);
 }

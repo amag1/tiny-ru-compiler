@@ -56,4 +56,9 @@ public class TinyRuAstHandler implements AstHandler {
         return  new NewArrayNode(elementsTypeToken, lengthExpression);
     }
 
+    public StaticMethodCallNode createStaticMethodCallNode(Token classToken, Token methodToken) {
+        return  new StaticMethodCallNode(classToken.getLexem(), methodToken.getLexem());
+    }
+
+
 }
