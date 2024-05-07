@@ -6,17 +6,30 @@ import lexical.Type;
 import location.Location;
 import semantic.symbolTable.AttributeType;
 
-public class StaticMethodCallNode extends PrimaryNode{
+import java.util.List;
+
+public class StaticMethodCallNode extends PrimaryNode implements MethodCall {
     private String methodName;
-    private ExpressionNode[] parameters;
+    private String className;
+    private List<ExpressionNode> parameters;
+
+    public StaticMethodCallNode(String className, String methodName) {
+        this.methodName = methodName;
+        this.className = className;
+    }
+
     @Override
     public AttributeType getAttributeType() throws SemanticException {
         // TODO
-        return  new AttributeType(true, true, new Token("", Type.KW_IF, new Location()));
+        return new AttributeType(true, true, new Token("", Type.KW_IF, new Location()));
     }
 
     public String toJson(int indentationIndex) {
         // TODO
-        return  "";
+        return "";
+    }
+
+    public void setParameters(List<ExpressionNode> parameters) {
+        this.parameters = parameters;
     }
 }
