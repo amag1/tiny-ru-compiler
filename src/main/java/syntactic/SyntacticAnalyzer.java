@@ -8,6 +8,10 @@ import lexical.Token;
 import lexical.Type;
 import semantic.abstractSintaxTree.AstHandler;
 import semantic.abstractSintaxTree.Expression.*;
+import semantic.abstractSintaxTree.Sentence.AssignationNode;
+import semantic.abstractSintaxTree.Sentence.BlockNode;
+import semantic.abstractSintaxTree.Sentence.ReturnNode;
+import semantic.abstractSintaxTree.Sentence.SentenceNode;
 import semantic.symbolTable.AttributeType;
 import semantic.symbolTable.SymbolTableHandler;
 
@@ -248,7 +252,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
             return;
         }
 
-        sentencia();
+        SentenceNode sentence = sentencia();
         sentenciaMetodo();
     }
 
@@ -326,7 +330,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         // O tambien puede ser void
         if (getTokenType() == Type.TYPE_VOID) {
             match(Type.TYPE_VOID);
-            return null; // TODO: fix to avoid confuse with nil
+            return new AttributeType("void");
         }
 
         return tipo();
@@ -363,119 +367,130 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         return match(first);
     }
 
-    private void sentencia() throws SyntacticException, LexicalException {
+    private SentenceNode sentencia() throws SyntacticException, LexicalException {
         // ;
         if (getTokenType() == Type.SEMICOLON) {
             match(Type.SEMICOLON);
-            return;
+            return ast.createEmptySentenceNode();
         }
 
         // ret ⟨Expresion-O-Semicolon⟩
         if (getTokenType() == Type.KW_RET) {
             match(Type.KW_RET);
-            expresionOSemicolon();
-            return;
+            return expresionOSemicolon();
         }
 
         // if ( ⟨Expresión⟩ ) ⟨Sentencia⟩ ⟨Else-O-Lambda⟩
         if (getTokenType() == Type.KW_IF) {
             match(Type.KW_IF);
             match(Type.OPEN_PAR);
-            expresion();
+            ExpressionNode condition = expresion();
             match(Type.CLOSE_PAR);
-            sentencia();
+            SentenceNode ifSentence = sentencia();
 
             // else ⟨Sentencia⟩ | λ
+            SentenceNode elseSentence = null;
             if (getTokenType() == Type.KW_ELSE) {
                 match(Type.KW_ELSE);
-                sentencia();
+                elseSentence = sentencia();
             }
 
-            return;
+            return ast.createIfElseNode(condition, ifSentence, elseSentence);
         }
 
         // while ( ⟨Expresión⟩ ) ⟨Sentencia⟩
         if (getTokenType() == Type.KW_WHILE) {
             match(Type.KW_WHILE);
             match(Type.OPEN_PAR);
-            expresion();
+            ExpressionNode condition = expresion();
             match(Type.CLOSE_PAR);
-            sentencia();
-            return;
+            SentenceNode body = sentencia();
+            return ast.createWhileNode(condition, body);
         }
 
         // ⟨Asignación⟩ ;
         Type[] first = {Type.ID, Type.KW_SELF};
         if (contains(first)) {
-            asignacion();
+            AssignationNode assignation = asignacion();
             match(Type.SEMICOLON);
-            return;
+            return assignation;
         }
 
 
         // ⟨Sentencia-Simple⟩
         if (getTokenType() == Type.OPEN_PAR) {
-            sentenciaSimple();
-            return;
+            return sentenciaSimple();
         }
 
         // ⟨Bloque⟩
         if (getTokenType() == Type.OPEN_CURLY) {
-            bloque();
-            return;
+            return bloque();
         }
 
         // Devolver error en caso de no matchear ninguno de los anteriores
         throwSyntacticException("Sentencia");
+        return null;
     }
 
-    private void expresionOSemicolon() throws SyntacticException, LexicalException {
+    private ReturnNode expresionOSemicolon() throws SyntacticException, LexicalException {
         // ⟨Expresión⟩ ; | ;
         if (getTokenType() == Type.SEMICOLON) {
             match(Type.SEMICOLON);
-            return;
+            return ast.createEmptyReturnNode();
         }
 
-        expresion();
+        ExpressionNode ret = expresion();
         match(Type.SEMICOLON);
+
+        return ast.createReturnNode(ret);
     }
 
-    private void bloque() throws SyntacticException, LexicalException {
+    private BlockNode bloque() throws SyntacticException, LexicalException {
         // { ⟨Sentencia-Bloque⟩ }
         match(Type.OPEN_CURLY);
-        sentenciaBloque();
+        List<SentenceNode> sentences = sentenciaBloque();
         match(Type.CLOSE_CURLY);
+
+        return ast.createBlockNode(sentences);
     }
 
-    private void sentenciaBloque() throws SyntacticException, LexicalException {
+    private List<SentenceNode> sentenciaBloque() throws SyntacticException, LexicalException {
         // ⟨Sentencia⟩ ⟨Sentencia-Bloque⟩ | λ
         Type[] first = {Type.SEMICOLON, Type.KW_RET, Type.KW_IF, Type.KW_WHILE, Type.KW_SELF, Type.OPEN_PAR, Type.OPEN_CURLY, Type.ID};
         if (contains(first)) {
-            sentencia();
-            sentenciaBloque();
+            List<SentenceNode> sentences = new ArrayList<>();
+            SentenceNode sentence = sentencia();
+            sentences.add(sentence);
+
+            List<SentenceNode> recursiveSentences = sentenciaBloque();
+
+            sentences.addAll(recursiveSentences);
+            return sentences;
         }
 
+        return new ArrayList<>();
         // Otro caso, lambda
     }
 
-    private void asignacion() throws SyntacticException, LexicalException {
+    private AssignationNode asignacion() throws SyntacticException, LexicalException {
         // ⟨AccesoVar-Simple⟩ = ⟨Expresión⟩
         if (getTokenType() == Type.ID) {
             PrimaryNode leftSide = accesoVarSimple();
             match(Type.ASSIGN);
             ExpressionNode rightSide = expresion();
-            return;
+            return ast.createAssignationNode(leftSide, rightSide);
         }
 
         // ⟨AccesoSelf-Simple⟩ ⟨Encadenado-Simple⟩ = ⟨Expresión⟩
         if (getTokenType() == Type.KW_SELF) {
             PrimaryNode leftSide = accesoSelfSimple();
             match(Type.ASSIGN);
-            expresion();
-            return;
+            ExpressionNode rightSide = expresion();
+            return ast.createAssignationNode(leftSide, rightSide);
         }
 
         throwSyntacticException("asignación");
+        return null;
     }
 
     private PrimaryNode accesoVarSimple() throws SyntacticException, LexicalException {
@@ -528,12 +543,14 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         return ast.createSelfAccess(node);
     }
 
-    private void sentenciaSimple() throws SyntacticException, LexicalException {
+    private SentenceNode sentenciaSimple() throws SyntacticException, LexicalException {
         // ( ⟨Expresión⟩ ) ;
         match(Type.OPEN_PAR);
-        expresion();
+        ExpressionNode expression = expresion();
         match(Type.CLOSE_PAR);
         match(Type.SEMICOLON);
+
+        return ast.createSimpleSentenceNode(expression);
     }
 
     private ExpressionNode expresion() throws SyntacticException, LexicalException {

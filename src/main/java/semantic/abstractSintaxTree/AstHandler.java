@@ -4,6 +4,7 @@ import exceptions.semantic.SemanticException;
 import lexical.Token;
 import semantic.abstractSintaxTree.Expression.*;
 import semantic.abstractSintaxTree.Expression.ConstructorCallNode;
+import semantic.abstractSintaxTree.Sentence.*;
 
 import java.util.List;
 
@@ -33,6 +34,22 @@ public interface AstHandler {
     ExpressionNode createUnaryExpressionNode(Token operator, ExpressionNode expression);
 
     BinaryOperationNode createBinaryOperationNode(Token operator, ExpressionNode left, ExpressionNode right);
+
+    SimpleSentenceNode createSimpleSentenceNode(ExpressionNode expression);
+
+    ReturnNode createEmptyReturnNode();
+
+    ReturnNode createReturnNode(ExpressionNode exp);
+
+    EmptySentenceNode createEmptySentenceNode();
+
+    IfElseNode createIfElseNode(ExpressionNode condition, SentenceNode ifSentence, SentenceNode elseSentence);
+
+    WhileNode createWhileNode(ExpressionNode condition, SentenceNode sentence);
+
+    AssignationNode createAssignationNode(PrimaryNode leftSide, ExpressionNode rightNode);
+
+    BlockNode createBlockNode(List<SentenceNode> sentences);
 
     void SetMethodParameter(MethodCall method, List<ExpressionNode> parameters);
 }

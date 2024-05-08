@@ -2,8 +2,14 @@ package semantic.abstractSintaxTree.Sentence;
 
 import exceptions.semantic.SemanticException;
 
-public class BlockNode extends SentenceNode{
-    private  SentenceNode[] sentences;
+import java.util.List;
+
+public class BlockNode extends SentenceNode {
+    private List<SentenceNode> sentences;
+
+    public BlockNode(List<SentenceNode> sentences) {
+        this.sentences = sentences;
+    }
 
     @Override
     public void validate() throws SemanticException {
@@ -12,6 +18,6 @@ public class BlockNode extends SentenceNode{
 
     public String toJson(int indentationIndex) {
         // TODO
-        return  "";
+        return "";
     }
 }

@@ -3,6 +3,7 @@ package semantic.abstractSintaxTree;
 import exceptions.semantic.SemanticException;
 import lexical.Token;
 import semantic.abstractSintaxTree.Expression.*;
+import semantic.abstractSintaxTree.Sentence.*;
 import semantic.symbolTable.SymbolTable;
 import semantic.abstractSintaxTree.Expression.ConstructorCallNode;
 
@@ -76,5 +77,37 @@ public class TinyRuAstHandler implements AstHandler {
 
     public void SetMethodParameter(MethodCall method, List<ExpressionNode> parameters) {
         method.setParameters(parameters);
+    }
+
+    public SimpleSentenceNode createSimpleSentenceNode(ExpressionNode expression) {
+        return new SimpleSentenceNode(expression);
+    }
+
+    public ReturnNode createEmptyReturnNode() {
+        return new ReturnNode();
+    }
+
+    public ReturnNode createReturnNode(ExpressionNode exp) {
+        return new ReturnNode(exp);
+    }
+
+    public EmptySentenceNode createEmptySentenceNode() {
+        return new EmptySentenceNode();
+    }
+
+    public IfElseNode createIfElseNode(ExpressionNode condition, SentenceNode ifSentence, SentenceNode elseSentence) {
+        return new IfElseNode(condition, ifSentence, elseSentence);
+    }
+
+    public WhileNode createWhileNode(ExpressionNode condition, SentenceNode sentence) {
+        return new WhileNode(condition, sentence);
+    }
+
+    public AssignationNode createAssignationNode(PrimaryNode leftSide, ExpressionNode rightNode) {
+        return new AssignationNode(leftSide, rightNode);
+    }
+
+    public BlockNode createBlockNode(List<SentenceNode> sentences) {
+        return new BlockNode(sentences);
     }
 }

@@ -3,9 +3,12 @@ package semantic.abstractSintaxTree.Sentence;
 import exceptions.semantic.SemanticException;
 import semantic.abstractSintaxTree.Expression.ExpressionNode;
 
-public class SimpleSentenceNode extends SentenceNode{
+public class SimpleSentenceNode extends SentenceNode {
     private ExpressionNode expression;
 
+    public SimpleSentenceNode(ExpressionNode expression) {
+        this.expression = expression;
+    }
 
     @Override
     public void validate() throws SemanticException {
@@ -14,6 +17,6 @@ public class SimpleSentenceNode extends SentenceNode{
 
     public String toJson(int indentationIndex) {
         // TODO
-        return  "";
+        return "";
     }
 }
