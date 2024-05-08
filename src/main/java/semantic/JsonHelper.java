@@ -1,7 +1,9 @@
 package semantic;
 
+import semantic.abstractSintaxTree.Sentence.SentenceNode;
 import semantic.symbolTable.MethodEntry;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -85,6 +87,30 @@ public class JsonHelper {
             return json + "null";
         }
         return json + method.toJson(indentationIndex);
+    }
+
+    public static String json(String name, List< ? extends Json> list, int indentationIndex) {
+        String identationStr = getIdentationString(indentationIndex);
+
+        String json = "\n" + identationStr + "\"" + name + "\": ";
+        if (list == null || list.isEmpty()) {
+            return json + "[]";
+        }
+
+        indentationIndex++;
+        identationStr = getIdentationString(indentationIndex);
+
+        json += "[";
+
+        for (Json element : list) {
+            json += "\n" + identationStr + element.toJson(indentationIndex) + ",";
+        }
+
+        // Remove last comma
+        json = json.substring(0, json.length() - 1);
+
+        json += "\n" + JsonHelper.getIdentationString(indentationIndex - 1) + "]";
+        return json;
     }
 
     /**

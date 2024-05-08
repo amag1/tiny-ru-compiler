@@ -1,6 +1,7 @@
 package semantic.abstractSintaxTree.Sentence;
 
 import exceptions.semantic.SemanticException;
+import semantic.JsonHelper;
 
 import java.util.List;
 
@@ -8,6 +9,7 @@ public class BlockNode extends SentenceNode {
     private List<SentenceNode> sentences;
 
     public BlockNode(List<SentenceNode> sentences) {
+        this.nodeType = "block";
         this.sentences = sentences;
     }
 
@@ -17,7 +19,11 @@ public class BlockNode extends SentenceNode {
     }
 
     public String toJson(int indentationIndex) {
-        // TODO
-        return "";
+        indentationIndex++;
+
+        return "{" +
+                JsonHelper.json("nodeType", this.nodeType, indentationIndex) + "," +
+                JsonHelper.json("sentences", this.sentences, indentationIndex) + "," +
+                "\n" + JsonHelper.getIdentationString(indentationIndex - 1) + "}";
     }
 }
