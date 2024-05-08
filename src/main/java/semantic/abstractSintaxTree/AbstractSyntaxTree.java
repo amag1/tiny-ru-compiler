@@ -3,11 +3,11 @@ package semantic.abstractSintaxTree;
 import java.util.Map;
 
 public class AbstractSyntaxTree {
-    private AstClassEntry[] classes;
+    private Map<String, AstClassEntry> classes;
 
     private AstMethodEntry start;
 
-    public AstClassEntry[] getClasses() {
+    public Map<String, AstClassEntry> getClasses() {
         return classes;
     }
 }

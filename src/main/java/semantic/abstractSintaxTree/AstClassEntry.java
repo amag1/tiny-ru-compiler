@@ -6,14 +6,15 @@ import semantic.symbolTable.MethodEntry;
 import java.util.Map;
 
 public class AstClassEntry {
-    private AstMethodEntry[] methods;
+    private Map<String, AstMethodEntry> methods;
 
-    public AstMethodEntry[] getMethods() {
+    public Map<String, AstMethodEntry> getMethods() {
         return methods;
     }
 
     public  void validateSentences() throws SemanticException {
-        for (AstMethodEntry currentMethod: methods) {
+        for (Map.Entry<String,AstMethodEntry> entry: methods.entrySet()) {
+            AstMethodEntry currentMethod = entry.getValue();
             currentMethod.validateSentences();
         }
     }

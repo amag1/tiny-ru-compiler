@@ -8,6 +8,7 @@ import semantic.symbolTable.SymbolTable;
 import semantic.abstractSintaxTree.Expression.ConstructorCallNode;
 
 import java.util.List;
+import java.util.Map;
 
 public class TinyRuAstHandler implements AstHandler {
 
@@ -15,7 +16,8 @@ public class TinyRuAstHandler implements AstHandler {
     private SymbolTable st;
 
     public void validateSenteces() throws SemanticException {
-        for (AstClassEntry currentClass : ast.getClasses()) {
+        for (Map.Entry<String,AstClassEntry> entry : ast.getClasses().entrySet()) {
+            AstClassEntry currentClass = entry.getValue();
             currentClass.validateSentences();
         }
     }
