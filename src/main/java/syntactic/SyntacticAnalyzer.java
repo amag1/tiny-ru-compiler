@@ -897,14 +897,14 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
 
         // ⟨Expresión⟩ ⟨Expresiones⟩
         ExpressionNode expressionNode = expresion();
+        expressionNodeList.add(expressionNode);
 
         // ⟨Expresiones⟩ ::= λ | , ⟨Lista-Expresiones⟩
         if (getTokenType() == Type.COMMA) {
             match(Type.COMMA);
-            expressionNodeList = listaExpresiones();
+            expressionNodeList.addAll(listaExpresiones());
         }
 
-        expressionNodeList.add(expressionNode);
 
         return expressionNodeList;
     }
