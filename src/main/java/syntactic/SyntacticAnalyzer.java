@@ -253,6 +253,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         }
 
         SentenceNode sentence = sentencia();
+        ast.addSentence(sentence);
         sentenciaMetodo();
     }
 

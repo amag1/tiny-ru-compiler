@@ -84,4 +84,8 @@ public class DummySymbolTableHandler implements SymbolTableHandler {
     public void handleStart() {
 
     }
+
+    public ClassEntry getCurrentClass() {return new ClassEntry(new Token());}
+
+    public MethodEntry getCurrentMethod() {return new MethodEntry();}
 }

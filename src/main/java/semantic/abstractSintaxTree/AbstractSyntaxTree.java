@@ -1,5 +1,6 @@
 package semantic.abstractSintaxTree;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class AbstractSyntaxTree {
@@ -7,7 +8,15 @@ public class AbstractSyntaxTree {
 
     private AstMethodEntry start;
 
+    public  AbstractSyntaxTree() {
+        this.classes = new HashMap<>();
+    }
+
     public Map<String, AstClassEntry> getClasses() {
         return classes;
     }
+
+    public AstClassEntry getClass(String name) {return classes.get(name);}
+
+    public void addClass(AstClassEntry newClass) {classes.put(newClass.getName(), newClass);}
 }
