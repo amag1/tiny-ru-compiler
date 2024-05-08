@@ -122,30 +122,31 @@ public class TinyRuAstHandler implements AstHandler {
     }
 
     public void addSentence(SentenceNode sentence) {
-        // Obtener o crear una nueva clase en base a la tabla de simbolos
+        // Obtener la clase actual de la tabla de símbolos
         ClassEntry currentClass = stHandler.getCurrentClass();
-        AstClassEntry currentAstClass;
-        if (currentClass == null) {
-            // Crea clase start
-            currentAstClass = new AstClassEntry("start");
-            ast.addClass(currentAstClass);
-        }
-        else {
+        if (currentClass != null) {
+            // Obtener o crear la clase en el ast
+            AstClassEntry currentAstClass;
             currentAstClass = ast.getClass(currentClass.getName());
             if (currentAstClass == null) {
                 currentAstClass = new AstClassEntry(currentClass.getName());
                 ast.addClass(currentAstClass);
             }
-        }
 
-        // Obtener o crear un nuevo método en base a la tabla de simbolos
-        MethodEntry currentMethod = stHandler.getCurrentMethod();
-        AstMethodEntry currentAstMethod = currentAstClass.getMethod(currentMethod.getName());
-        if (currentAstMethod == null) {
-            currentAstMethod = new AstMethodEntry(currentMethod.getName());
-            currentAstClass.addMethod(currentAstMethod);
-        }
+            // Obtener o crear un nuevo método
+            MethodEntry currentMethod = stHandler.getCurrentMethod();
+            AstMethodEntry currentAstMethod = currentAstClass.getMethod(currentMethod.getName());
+            if (currentAstMethod == null) {
+                currentAstMethod = new AstMethodEntry(currentMethod.getName());
+                currentAstClass.addMethod(currentAstMethod);
+            }
 
-        currentAstMethod.addSentence(sentence);
+            currentAstMethod.addSentence(sentence);
+        }
+        else {
+            // Agregar al método start
+            AstMethodEntry startMethod = ast.getStart();
+            startMethod.addSentence(sentence);
+        }
     }
 }

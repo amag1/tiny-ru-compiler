@@ -10,6 +10,7 @@ public class AbstractSyntaxTree {
 
     public  AbstractSyntaxTree() {
         this.classes = new HashMap<>();
+        this.start = new AstMethodEntry("start");
     }
 
     public Map<String, AstClassEntry> getClasses() {
@@ -19,4 +20,8 @@ public class AbstractSyntaxTree {
     public AstClassEntry getClass(String name) {return classes.get(name);}
 
     public void addClass(AstClassEntry newClass) {classes.put(newClass.getName(), newClass);}
+
+    public AstMethodEntry getStart() {
+        return start;
+    }
 }
