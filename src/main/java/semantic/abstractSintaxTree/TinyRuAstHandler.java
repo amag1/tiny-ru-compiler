@@ -6,6 +6,7 @@ import semantic.abstractSintaxTree.Expression.*;
 import semantic.abstractSintaxTree.Sentence.*;
 import semantic.symbolTable.SymbolTable;
 import semantic.abstractSintaxTree.Expression.ConstructorCallNode;
+import semantic.symbolTable.SymbolTableHandler;
 
 import java.util.List;
 import java.util.Map;
@@ -13,7 +14,12 @@ import java.util.Map;
 public class TinyRuAstHandler implements AstHandler {
 
     private AbstractSyntaxTree ast;
-    private SymbolTable st;
+    private SymbolTableHandler stHandler;
+
+    public TinyRuAstHandler(SymbolTableHandler stHandler) {
+        this.ast = new AbstractSyntaxTree();
+        this.stHandler = stHandler;
+    }
 
     public void validateSenteces() throws SemanticException {
         for (Map.Entry<String,AstClassEntry> entry : ast.getClasses().entrySet()) {
@@ -111,5 +117,8 @@ public class TinyRuAstHandler implements AstHandler {
 
     public BlockNode createBlockNode(List<SentenceNode> sentences) {
         return new BlockNode(sentences);
+    }
+
+    public void addSentence(SentenceNode sentence) {
     }
 }

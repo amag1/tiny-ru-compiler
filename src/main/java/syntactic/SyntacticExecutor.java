@@ -10,6 +10,7 @@ import logger.Logger;
 import reader.Reader;
 import semantic.abstractSintaxTree.TinyRuAstHandler;
 import semantic.symbolTable.DummySymbolTableHandler;
+import semantic.symbolTable.SymbolTableHandler;
 import semantic.symbolTable.TinyRuSymbolTableHandler;
 
 /**
@@ -22,7 +23,8 @@ public class SyntacticExecutor extends Executor {
 
     public SyntacticExecutor(Reader reader, Logger logger) {
         super(reader, logger);
-        this.syntacticAnalyzer = new SyntacticAnalyzer(new LexicalAnalyzer(reader), new DummySymbolTableHandler(), new TinyRuAstHandler());
+        SymbolTableHandler stHandler = new DummySymbolTableHandler();
+        this.syntacticAnalyzer = new SyntacticAnalyzer(new LexicalAnalyzer(reader), stHandler, new TinyRuAstHandler(stHandler));
     }
 
     public void execute() {
