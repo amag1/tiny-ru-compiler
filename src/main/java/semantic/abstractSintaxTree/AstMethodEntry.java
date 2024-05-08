@@ -5,6 +5,7 @@ import semantic.abstractSintaxTree.Sentence.SentenceNode;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class AstMethodEntry {
 
@@ -28,5 +29,13 @@ public class AstMethodEntry {
 
     public void addSentence(SentenceNode sentence) {
         this.sentences.add(sentence);
+    }
+
+    public String toJson() {
+        String json = "";
+        for (SentenceNode sentenceNode : this.sentences) {
+            json += sentenceNode.toJson(1);
+        }
+        return json;
     }
 }

@@ -149,4 +149,8 @@ public class TinyRuAstHandler implements AstHandler {
             startMethod.addSentence(sentence);
         }
     }
+
+    public String toJson() {
+        return ast.toJson();
+    }
 }

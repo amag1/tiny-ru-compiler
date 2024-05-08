@@ -34,4 +34,13 @@ public class AstClassEntry {
     public  AstMethodEntry getMethod(String name) {return  methods.get(name);}
 
     public void addMethod(AstMethodEntry method) {methods.put(method.getName(), method);}
+
+    public String toJson() {
+        String json = "";
+        for (Map.Entry<String,AstMethodEntry> entry: methods.entrySet()) {
+            AstMethodEntry currentMethod = entry.getValue();
+            json += currentMethod.toJson();
+        }
+        return json;
+    }
 }

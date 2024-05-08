@@ -54,4 +54,6 @@ public interface AstHandler {
     void SetMethodParameter(MethodCall method, List<ExpressionNode> parameters);
 
     void addSentence(SentenceNode sentence);
+
+    public String toJson();
 }

@@ -33,8 +33,11 @@ public class SyntacticExecutor extends Executor {
         try {
             syntacticAnalyzer.analyze();
             String symbolTableJson = syntacticAnalyzer.getSymbolTableJson();
+            String astJson = syntacticAnalyzer.getAbstractSybolTreeJson();
             clogger.LogSyntacticSuccess();
-            logger.LogSymbolTable(symbolTableJson);
+            // TODO
+            System.out.println(astJson);
+            // logger.LogSymbolTable(symbolTableJson);
         } catch (LexicalException e) {
             clogger.LogLexicError(e);
         } catch (SyntacticException e) {

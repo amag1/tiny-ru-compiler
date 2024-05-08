@@ -24,4 +24,13 @@ public class AbstractSyntaxTree {
     public AstMethodEntry getStart() {
         return start;
     }
+
+    public String toJson() {
+        String json = "";
+        for (Map.Entry<String,AstClassEntry> entry : this.getClasses().entrySet()) {
+            AstClassEntry currentClass = entry.getValue();
+            json += currentClass.toJson();
+        }
+        return json;
+    }
 }

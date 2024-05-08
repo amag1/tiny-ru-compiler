@@ -52,6 +52,10 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         return st.toJson();
     }
 
+    public String getAbstractSybolTreeJson() {
+        return ast.toJson();
+    }
+
     /**
      * A partir de acá, cada método está asociado a un no terminal de la gramática
      * En la carpeta /grammar está la gramática final en formato BNF
