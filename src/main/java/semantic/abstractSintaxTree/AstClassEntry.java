@@ -1,6 +1,6 @@
 package semantic.abstractSintaxTree;
 
-import exceptions.semantic.symbolTable.SymbolTableException;
+import exceptions.semantic.syntaxTree.AstException;
 import semantic.Json;
 import semantic.JsonHelper;
 
@@ -21,8 +21,8 @@ public class AstClassEntry implements Json {
         return methods;
     }
 
-    public  void validateSentences() throws SymbolTableException {
-        for (Map.Entry<String,AstMethodEntry> entry: methods.entrySet()) {
+    public void validateSentences() throws AstException {
+        for (Map.Entry<String, AstMethodEntry> entry : methods.entrySet()) {
             AstMethodEntry currentMethod = entry.getValue();
             currentMethod.validateSentences();
         }
@@ -32,9 +32,13 @@ public class AstClassEntry implements Json {
         return name;
     }
 
-    public  AstMethodEntry getMethod(String name) {return  methods.get(name);}
+    public AstMethodEntry getMethod(String name) {
+        return methods.get(name);
+    }
 
-    public void addMethod(AstMethodEntry method) {methods.put(method.getName(), method);}
+    public void addMethod(AstMethodEntry method) {
+        methods.put(method.getName(), method);
+    }
 
     public String toJson(int indentationIndex) {
         indentationIndex++;
