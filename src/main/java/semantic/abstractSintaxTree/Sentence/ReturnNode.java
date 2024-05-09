@@ -26,14 +26,9 @@ public class ReturnNode extends SentenceNode {
     public String toJson(int indentationIndex) {
         indentationIndex++;
 
-        String returnJson = "void";
-        if (returnValue != null) {
-            returnJson = JsonHelper.json("returnValue", returnValue.toJson(indentationIndex), indentationIndex);
-        }
-
         return "{" +
                 JsonHelper.json("nodeType", this.nodeType, indentationIndex) + "," +
-                JsonHelper.json("returnValue", returnJson, indentationIndex) + "," +
+                JsonHelper.json("returnValue", returnValue, indentationIndex) +
                 "\n" + JsonHelper.getIdentationString(indentationIndex - 1) + "}";
     }
 }

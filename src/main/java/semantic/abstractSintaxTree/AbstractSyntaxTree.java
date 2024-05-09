@@ -1,5 +1,7 @@
 package semantic.abstractSintaxTree;
 
+import semantic.JsonHelper;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,11 +28,11 @@ public class AbstractSyntaxTree {
     }
 
     public String toJson() {
-        String json = "";
-        for (Map.Entry<String,AstClassEntry> entry : this.getClasses().entrySet()) {
-            AstClassEntry currentClass = entry.getValue();
-            json += currentClass.toJson();
-        }
-        return json;
+        int indentationIndex = 1;
+
+        return "{" +
+                JsonHelper.json("classes", this.classes, indentationIndex) +
+                JsonHelper.json("start", this.start, indentationIndex) +
+                "\n" + JsonHelper.getIdentationString(indentationIndex - 1) + "}";
     }
 }

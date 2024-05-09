@@ -74,20 +74,6 @@ public class JsonHelper {
         return "\n" + getIdentationString(indentationIndex) + "\"" + name + "\": " + value;
     }
 
-    /**
-     * @param name             Nombre del atributo
-     * @param method           Metodo de la tabla de simbolos
-     * @param indentationIndex Indentacion del JSON
-     * @return Un string con el JSON del metodo
-     */
-    public static String json(String name, MethodEntry method, int indentationIndex) {
-        String identationStr = getIdentationString(indentationIndex);
-        String json = "\n" + identationStr + "\"" + name + "\": ";
-        if (method == null) {
-            return json + "null";
-        }
-        return json + method.toJson(indentationIndex);
-    }
 
     public static String json(String name, List< ? extends Json> list, int indentationIndex) {
         String identationStr = getIdentationString(indentationIndex);
@@ -111,6 +97,15 @@ public class JsonHelper {
 
         json += "\n" + JsonHelper.getIdentationString(indentationIndex - 1) + "]";
         return json;
+    }
+
+    public static String json(String name,  Json element, int indentationIndex) {
+        String identationStr = getIdentationString(indentationIndex);
+        String json = "\n" + identationStr + "\"" + name + "\": ";
+        if (element == null) {
+            return json + "null";
+        }
+        return json + element.toJson(indentationIndex);
     }
 
     /**

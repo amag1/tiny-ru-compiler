@@ -23,7 +23,7 @@ public class BlockNode extends SentenceNode {
 
         return "{" +
                 JsonHelper.json("nodeType", this.nodeType, indentationIndex) + "," +
-                JsonHelper.json("sentences", this.sentences, indentationIndex) + "," +
+                JsonHelper.json("sentences", this.sentences, indentationIndex) +
                 "\n" + JsonHelper.getIdentationString(indentationIndex - 1) + "}";
     }
 }

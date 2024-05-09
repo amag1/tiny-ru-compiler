@@ -1,12 +1,14 @@
 package semantic.abstractSintaxTree;
 
 import exceptions.semantic.SemanticException;
+import semantic.Json;
+import semantic.JsonHelper;
 import semantic.symbolTable.MethodEntry;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class AstClassEntry {
+public class AstClassEntry implements Json {
 
     private String name;
     private Map<String, AstMethodEntry> methods;
@@ -35,12 +37,12 @@ public class AstClassEntry {
 
     public void addMethod(AstMethodEntry method) {methods.put(method.getName(), method);}
 
-    public String toJson() {
-        String json = "";
-        for (Map.Entry<String,AstMethodEntry> entry: methods.entrySet()) {
-            AstMethodEntry currentMethod = entry.getValue();
-            json += currentMethod.toJson();
-        }
-        return json;
+    public String toJson(int indentationIndex) {
+        indentationIndex++;
+
+        return "{" +
+                JsonHelper.json("name", this.name, indentationIndex) + "," +
+                JsonHelper.json("methods", this.methods, indentationIndex) +
+                "\n" + JsonHelper.getIdentationString(indentationIndex - 1) + "}";
     }
 }

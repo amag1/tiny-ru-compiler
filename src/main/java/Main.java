@@ -43,7 +43,7 @@ public class Main {
 //        }
 
         // Execute
-        Executor executor = new SyntacticExecutor(fileReader, outputLogger);
+        Executor executor = new SemanticExecutor(fileReader, outputLogger);
         executor.execute();
     }
 }

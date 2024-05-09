@@ -25,8 +25,8 @@ public class AssignationNode extends SentenceNode {
 
         return "{" +
                 JsonHelper.json("nodeType", this.nodeType, indentationIndex) + "," +
-                JsonHelper.json("leftSide", this.leftSide.toJson(indentationIndex), indentationIndex) + "," +
-                JsonHelper.json("rightSide", this.rightSide.toJson(indentationIndex), indentationIndex) + "," +
+                JsonHelper.json("leftSide", this.leftSide, indentationIndex) + "," +
+                JsonHelper.json("rightSide", this.rightSide, indentationIndex) +
                 "\n" + JsonHelper.getIdentationString(indentationIndex - 1) + "}";
     }
 }

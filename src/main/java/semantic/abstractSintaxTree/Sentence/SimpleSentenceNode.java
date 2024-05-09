@@ -22,7 +22,7 @@ public class SimpleSentenceNode extends SentenceNode {
 
         return "{" +
                 JsonHelper.json("nodeType", this.nodeType, indentationIndex) + "," +
-                JsonHelper.json("expression", expression.toJson(indentationIndex), indentationIndex) + "," +
+                JsonHelper.json("expression", expression, indentationIndex) +
                 "\n" + JsonHelper.getIdentationString(indentationIndex - 1) + "}";
     }
 }

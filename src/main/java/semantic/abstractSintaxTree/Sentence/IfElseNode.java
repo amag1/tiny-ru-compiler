@@ -22,18 +22,13 @@ public class IfElseNode extends SentenceNode {
     }
 
     public String toJson(int indentationIndex) {
-        String elseJson = "";
-        if (elseBody != null) {
-            elseJson = JsonHelper.json("elseBody", this.elseBody.toJson(indentationIndex), indentationIndex) + ",";
-        }
-
         indentationIndex++;
 
         return "{" +
                 JsonHelper.json("nodeType", this.nodeType, indentationIndex) + "," +
-                JsonHelper.json("condition", this.condition.toJson(indentationIndex), indentationIndex) + "," +
-                JsonHelper.json("thenBody", this.thenBody.toJson(indentationIndex), indentationIndex) + "," +
-                elseJson +
+                JsonHelper.json("condition", this.condition, indentationIndex) + "," +
+                JsonHelper.json("thenBody", this.thenBody, indentationIndex) + "," +
+                JsonHelper.json("elseBody", this.elseBody, indentationIndex) +
                 "\n" + JsonHelper.getIdentationString(indentationIndex - 1) + "}";
     }
 }

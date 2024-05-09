@@ -24,8 +24,8 @@ public class WhileNode extends SentenceNode {
 
         return "{" +
                 JsonHelper.json("nodeType", this.nodeType, indentationIndex) + "," +
-                JsonHelper.json("condition", condition.toJson(indentationIndex), indentationIndex) + "," +
-                JsonHelper.json("loopBody", loopBody.toJson(indentationIndex), indentationIndex) + "," +
+                JsonHelper.json("condition", condition, indentationIndex) + "," +
+                JsonHelper.json("loopBody", loopBody, indentationIndex) +
                 "\n" + JsonHelper.getIdentationString(indentationIndex - 1) + "}";
     }
 }

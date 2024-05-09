@@ -34,7 +34,10 @@ public class SemanticExecutor extends Executor {
             syntacticAnalyzer.analyze();
             String symbolTableJson = syntacticAnalyzer.getSymbolTableJson();
             clogger.LogSemanticSymbolTableSuccess();
-            logger.LogSymbolTable(symbolTableJson);
+            // logger.LogSymbolTable(symbolTableJson);
+            String astJson = syntacticAnalyzer.getAbstractSybolTreeJson();
+            // TODO
+            System.out.println(astJson);
         } catch (LexicalException e) {
             clogger.LogLexicError(e);
         } catch (SyntacticException e) {
