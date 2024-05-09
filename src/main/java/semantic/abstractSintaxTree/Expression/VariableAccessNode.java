@@ -4,12 +4,14 @@ import exceptions.semantic.SemanticException;
 import lexical.Token;
 import lexical.Type;
 import location.Location;
+import semantic.JsonHelper;
 import semantic.symbolTable.AttributeType;
 
 public class VariableAccessNode extends PrimaryNode {
     private String variableName;
 
     public VariableAccessNode(String variableName) {
+        this.nodeType = "varAccess";
         this.variableName = variableName;
     }
 
@@ -21,7 +23,11 @@ public class VariableAccessNode extends PrimaryNode {
     }
 
     public String toJson(int indentationIndex) {
-        // TODO
-        return "";
+        indentationIndex++;
+
+        return "{" +
+                JsonHelper.json("nodeType", this.nodeType, indentationIndex) + "," +
+                JsonHelper.json("name", this.variableName, indentationIndex) +
+                "\n" + JsonHelper.getIdentationString(indentationIndex - 1) + "}";
     }
 }

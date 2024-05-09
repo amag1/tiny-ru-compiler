@@ -4,6 +4,7 @@ import exceptions.semantic.SemanticException;
 import lexical.Token;
 import lexical.Type;
 import location.Location;
+import semantic.JsonHelper;
 import semantic.symbolTable.AttributeType;
 
 import java.util.List;
@@ -14,6 +15,7 @@ public class StaticMethodCallNode extends PrimaryNode implements MethodCall {
     private List<ExpressionNode> parameters;
 
     public StaticMethodCallNode(String className, String methodName) {
+        this.nodeType = "staticMethodCall";
         this.methodName = methodName;
         this.className = className;
     }
@@ -25,8 +27,14 @@ public class StaticMethodCallNode extends PrimaryNode implements MethodCall {
     }
 
     public String toJson(int indentationIndex) {
-        // TODO
-        return "";
+        indentationIndex++;
+
+        return "{" +
+                JsonHelper.json("nodeType", this.nodeType, indentationIndex) + "," +
+                JsonHelper.json("className", this.className, indentationIndex) + "," +
+                JsonHelper.json("methodName", this.methodName, indentationIndex) + "," +
+                JsonHelper.json("parameters", this.parameters, indentationIndex) +
+                "\n" + JsonHelper.getIdentationString(indentationIndex - 1) + "}";
     }
 
     public void setParameters(List<ExpressionNode> parameters) {

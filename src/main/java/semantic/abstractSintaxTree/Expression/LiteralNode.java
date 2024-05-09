@@ -3,6 +3,7 @@ package semantic.abstractSintaxTree.Expression;
 import exceptions.semantic.SemanticException;
 import lexical.Token;
 import lexical.Type;
+import semantic.JsonHelper;
 import semantic.symbolTable.AttributeType;
 
 
@@ -19,16 +20,23 @@ public class LiteralNode extends OperatingNode {
             default -> AttributeType.NilType;
         };
 
+        this.nodeType = "literal";
         this.value = token.getLexem();
     }
 
     @Override
     public AttributeType getAttributeType() throws SemanticException {
+        this.nodeType = "literal";
         return this.attributeType;
     }
 
     public String toJson(int indentationIndex) {
-        // TODO
-        return "";
+        indentationIndex++;
+
+        return "{" +
+                JsonHelper.json("nodeType", this.nodeType, indentationIndex) + "," +
+                JsonHelper.json("attributeType", this.attributeType, indentationIndex) + "," +
+                JsonHelper.json("value", this.value, indentationIndex) +
+                "\n" + JsonHelper.getIdentationString(indentationIndex - 1) + "}";
     }
 }

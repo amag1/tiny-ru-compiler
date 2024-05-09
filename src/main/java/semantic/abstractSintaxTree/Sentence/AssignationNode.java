@@ -10,7 +10,7 @@ public class AssignationNode extends SentenceNode {
     private ExpressionNode rightSide;
 
     public AssignationNode(PrimaryNode leftSide, ExpressionNode rightSide) {
-        this.nodeType = "asignación";
+        this.nodeType = "assignation";
         this.leftSide = leftSide;
         this.rightSide = rightSide;
     }

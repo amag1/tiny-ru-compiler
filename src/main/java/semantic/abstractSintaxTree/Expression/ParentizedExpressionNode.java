@@ -4,6 +4,7 @@ import exceptions.semantic.SemanticException;
 import lexical.Token;
 import lexical.Type;
 import location.Location;
+import semantic.JsonHelper;
 import semantic.symbolTable.AttributeType;
 
 public class ParentizedExpressionNode extends PrimaryNode {
@@ -11,12 +12,17 @@ public class ParentizedExpressionNode extends PrimaryNode {
     private ExpressionNode expression;
 
     public ParentizedExpressionNode(ExpressionNode expression) {
+        this.nodeType = "parentizedExpression";
         this.expression = expression;
     }
 
     public String toJson(int indentationIndex) {
-        // TODO
-        return "";
+        indentationIndex++;
+
+        return "{" +
+                JsonHelper.json("nodeType", this.nodeType, indentationIndex) + "," +
+                JsonHelper.json("expression", this.expression, indentationIndex) +
+                "\n" + JsonHelper.getIdentationString(indentationIndex - 1) + "}";
     }
 
     @Override
