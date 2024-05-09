@@ -1,6 +1,6 @@
 package semantic.abstractSintaxTree.Expression;
 
-import exceptions.semantic.symbolTable.SymbolTableException;
+import exceptions.semantic.syntaxTree.AstException;
 import lexical.Token;
 import lexical.Type;
 import location.Location;
@@ -26,7 +26,7 @@ public class ParentizedExpressionNode extends PrimaryNode {
     }
 
     @Override
-    public AttributeType getAttributeType() throws SymbolTableException {
+    public AttributeType getAttributeType() throws AstException {
         // TODO
         return new AttributeType(true, true, new Token("", Type.KW_IF, new Location()));
     }

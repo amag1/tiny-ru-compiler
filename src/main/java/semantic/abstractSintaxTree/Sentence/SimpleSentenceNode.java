@@ -1,6 +1,6 @@
 package semantic.abstractSintaxTree.Sentence;
 
-import exceptions.semantic.symbolTable.SymbolTableException;
+import exceptions.semantic.syntaxTree.AstException;
 import semantic.JsonHelper;
 import semantic.abstractSintaxTree.Expression.ExpressionNode;
 
@@ -13,7 +13,7 @@ public class SimpleSentenceNode extends SentenceNode {
     }
 
     @Override
-    public void validate() throws SymbolTableException {
+    public void validate() throws AstException {
         // TODO
     }
 
