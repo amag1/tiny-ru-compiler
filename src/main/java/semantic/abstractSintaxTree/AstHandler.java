@@ -1,6 +1,6 @@
 package semantic.abstractSintaxTree;
 
-import exceptions.semantic.symbolTable.SymbolTableException;
+import exceptions.semantic.syntaxTree.AstException;
 import lexical.Token;
 import semantic.abstractSintaxTree.Expression.*;
 import semantic.abstractSintaxTree.Expression.ConstructorCallNode;
@@ -9,7 +9,7 @@ import semantic.abstractSintaxTree.Sentence.*;
 import java.util.List;
 
 public interface AstHandler {
-    void validateSenteces() throws SymbolTableException;
+    void validateSenteces() throws AstException;
 
     LiteralNode createLiteral(Token token);
 

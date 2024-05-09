@@ -1,6 +1,6 @@
 package semantic.abstractSintaxTree;
 
-import exceptions.semantic.symbolTable.SymbolTableException;
+import exceptions.semantic.syntaxTree.AstException;
 import lexical.Token;
 import semantic.abstractSintaxTree.Expression.*;
 import semantic.abstractSintaxTree.Sentence.*;
@@ -22,7 +22,7 @@ public class TinyRuAstHandler implements AstHandler {
         this.stHandler = stHandler;
     }
 
-    public void validateSenteces() throws SymbolTableException {
+    public void validateSenteces() throws AstException {
         for (Map.Entry<String, AstClassEntry> entry : ast.getClasses().entrySet()) {
             AstClassEntry currentClass = entry.getValue();
             currentClass.validateSentences();

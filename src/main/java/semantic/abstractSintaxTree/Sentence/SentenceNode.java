@@ -1,8 +1,8 @@
 package semantic.abstractSintaxTree.Sentence;
 
-import exceptions.semantic.symbolTable.SymbolTableException;
+import exceptions.semantic.syntaxTree.AstException;
 import semantic.abstractSintaxTree.AbstractSyntaxNode;
 
 public abstract class SentenceNode extends AbstractSyntaxNode {
-    public abstract void validate() throws SymbolTableException;
+    public abstract void validate() throws AstException;
 }
