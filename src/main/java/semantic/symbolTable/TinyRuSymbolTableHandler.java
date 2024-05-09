@@ -1,7 +1,7 @@
 package semantic.symbolTable;
 
-import exceptions.semantic.symbolTable.*;
 import exceptions.semantic.symbolTable.ClassNotFoundException;
+import exceptions.semantic.symbolTable.*;
 import lexical.Token;
 
 import java.util.*;
@@ -588,5 +588,9 @@ public class TinyRuSymbolTableHandler implements SymbolTableHandler {
 
     public MethodEntry getCurrentMethod() {
         return st.getCurrentMethod();
+    }
+
+    public SymbolTableLookup getSymbolTableLookup() {
+        return st;
     }
 }

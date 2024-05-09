@@ -6,8 +6,7 @@ import semantic.abstractSintaxTree.Expression.*;
 import semantic.abstractSintaxTree.Sentence.*;
 import semantic.symbolTable.ClassEntry;
 import semantic.symbolTable.MethodEntry;
-import semantic.abstractSintaxTree.Expression.ConstructorCallNode;
-import semantic.symbolTable.SymbolTableHandler;
+import semantic.symbolTable.SymbolTableLookup;
 
 import java.util.List;
 import java.util.Map;
@@ -15,9 +14,9 @@ import java.util.Map;
 public class TinyRuAstHandler implements AstHandler {
 
     private AbstractSyntaxTree ast;
-    private SymbolTableHandler stHandler;
+    private SymbolTableLookup stHandler;
 
-    public TinyRuAstHandler(SymbolTableHandler stHandler) {
+    public TinyRuAstHandler(SymbolTableLookup stHandler) {
         this.ast = new AbstractSyntaxTree();
         this.stHandler = stHandler;
     }
@@ -25,8 +24,11 @@ public class TinyRuAstHandler implements AstHandler {
     public void validateSenteces() throws AstException {
         for (Map.Entry<String, AstClassEntry> entry : ast.getClasses().entrySet()) {
             AstClassEntry currentClass = entry.getValue();
-            currentClass.validateSentences();
+            currentClass.validateSentences(stHandler);
         }
+
+        // Validar sentencias del start también
+        ast.getStart().validateSentences(stHandler);
     }
 
     public LiteralNode createLiteral(Token token) {

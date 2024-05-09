@@ -85,6 +85,11 @@ public class DummySymbolTableHandler implements SymbolTableHandler {
 
     }
 
+    @Override
+    public SymbolTableLookup getSymbolTableLookup() {
+        return null;
+    }
+
     public ClassEntry getCurrentClass() {
         return new ClassEntry(new Token());
     }

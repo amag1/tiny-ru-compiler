@@ -2,6 +2,7 @@ package syntactic;
 
 import exceptions.lexical.LexicalException;
 import exceptions.semantic.symbolTable.SymbolTableException;
+import exceptions.semantic.syntaxTree.AstException;
 import exceptions.syntactic.SyntacticException;
 import executor.Executor;
 import lexical.LexicalAnalyzer;
@@ -23,7 +24,7 @@ public class SyntacticExecutor extends Executor {
     public SyntacticExecutor(Reader reader, Logger logger) {
         super(reader, logger);
         SymbolTableHandler stHandler = new DummySymbolTableHandler();
-        this.syntacticAnalyzer = new SyntacticAnalyzer(new LexicalAnalyzer(reader), stHandler, new TinyRuAstHandler(stHandler));
+        this.syntacticAnalyzer = new SyntacticAnalyzer(new LexicalAnalyzer(reader), stHandler, new TinyRuAstHandler(stHandler.getSymbolTableLookup()));
     }
 
     public void execute() {
@@ -40,6 +41,9 @@ public class SyntacticExecutor extends Executor {
             clogger.LogSyntacticError(e);
         } catch (SymbolTableException e) {
             clogger.LogSemanticError(e);
+        } catch (AstException e) {
+            // TODO
+            System.out.println(e.getMessage());
         }
     }
 }

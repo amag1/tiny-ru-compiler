@@ -2,6 +2,7 @@ package syntactic;
 
 import exceptions.lexical.LexicalException;
 import exceptions.semantic.symbolTable.SymbolTableException;
+import exceptions.semantic.syntaxTree.AstException;
 import exceptions.syntactic.SyntacticException;
 import lexical.Lexical;
 import lexical.Token;
@@ -41,10 +42,11 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
      * @throws LexicalException   si ocurre un error lexico
      */
     @Override
-    public void analyze() throws SyntacticException, LexicalException, SymbolTableException {
+    public void analyze() throws SyntacticException, LexicalException, SymbolTableException, AstException {
         nextToken();
         program();
         st.consolidate();
+        ast.validateSenteces();
     }
 
     @Override

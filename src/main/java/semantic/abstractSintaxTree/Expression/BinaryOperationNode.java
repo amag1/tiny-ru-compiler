@@ -1,11 +1,13 @@
 package semantic.abstractSintaxTree.Expression;
 
 import exceptions.semantic.syntaxTree.AstException;
+import exceptions.semantic.syntaxTree.BinaryTypeMismatchException;
 import lexical.Token;
 import lexical.Type;
 import location.Location;
 import semantic.JsonHelper;
 import semantic.symbolTable.AttributeType;
+import semantic.symbolTable.SymbolTableLookup;
 
 public class BinaryOperationNode extends ExpressionNode {
     private ExpressionNode leftOperating;
@@ -20,9 +22,20 @@ public class BinaryOperationNode extends ExpressionNode {
     }
 
     @Override
-    public AttributeType getAttributeType() throws AstException {
-        // TODO
-        return new AttributeType(true, true, new Token("", Type.KW_IF, new Location()));
+    public AttributeType getAttributeType(SymbolTableLookup st) throws AstException {
+        String leftType = leftOperating.getAttributeType(st).getType();
+        String rightType = rightOperating.getAttributeType(st).getType();
+        String operatorType = this.operator.getAttributeType().getType();
+
+        if (!leftType.equals(operatorType)) {
+            throw new BinaryTypeMismatchException(operator.getToken(), operatorType, leftType);
+        }
+
+        if (!rightType.equals(operatorType)) {
+            throw new BinaryTypeMismatchException(operator.getToken(), operatorType, rightType);
+        }
+
+        return operator.getAttributeType();
     }
 
     public String toJson(int indentationIndex) {

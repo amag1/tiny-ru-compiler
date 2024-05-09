@@ -6,6 +6,7 @@ import lexical.Type;
 import location.Location;
 import semantic.JsonHelper;
 import semantic.symbolTable.AttributeType;
+import semantic.symbolTable.SymbolTableLookup;
 
 import java.util.List;
 
@@ -21,7 +22,7 @@ public class StaticMethodCallNode extends PrimaryNode implements MethodCall {
     }
 
     @Override
-    public AttributeType getAttributeType() throws AstException {
+    public AttributeType getAttributeType(SymbolTableLookup st) throws AstException {
         // TODO
         return new AttributeType(true, true, new Token("", Type.KW_IF, new Location()));
     }
