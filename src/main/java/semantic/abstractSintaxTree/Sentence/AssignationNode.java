@@ -1,6 +1,7 @@
 package semantic.abstractSintaxTree.Sentence;
 
 import exceptions.semantic.SemanticException;
+import semantic.JsonHelper;
 import semantic.abstractSintaxTree.Expression.ExpressionNode;
 import semantic.abstractSintaxTree.Expression.PrimaryNode;
 
@@ -9,6 +10,7 @@ public class AssignationNode extends SentenceNode {
     private ExpressionNode rightSide;
 
     public AssignationNode(PrimaryNode leftSide, ExpressionNode rightSide) {
+        this.nodeType = "assignation";
         this.leftSide = leftSide;
         this.rightSide = rightSide;
     }
@@ -19,7 +21,12 @@ public class AssignationNode extends SentenceNode {
     }
 
     public String toJson(int indentationIndex) {
-        // TODO
-        return "";
+        indentationIndex++;
+
+        return "{" +
+                JsonHelper.json("nodeType", this.nodeType, indentationIndex) + "," +
+                JsonHelper.json("leftSide", this.leftSide, indentationIndex) + "," +
+                JsonHelper.json("rightSide", this.rightSide, indentationIndex) +
+                "\n" + JsonHelper.getIdentationString(indentationIndex - 1) + "}";
     }
 }

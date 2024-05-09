@@ -52,4 +52,8 @@ public interface AstHandler {
     BlockNode createBlockNode(List<SentenceNode> sentences);
 
     void SetMethodParameter(MethodCall method, List<ExpressionNode> parameters);
+
+    void addSentence(SentenceNode sentence);
+
+    public String toJson();
 }

@@ -1,7 +1,9 @@
 package semantic;
 
+import semantic.abstractSintaxTree.Sentence.SentenceNode;
 import semantic.symbolTable.MethodEntry;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -72,19 +74,38 @@ public class JsonHelper {
         return "\n" + getIdentationString(indentationIndex) + "\"" + name + "\": " + value;
     }
 
-    /**
-     * @param name             Nombre del atributo
-     * @param method           Metodo de la tabla de simbolos
-     * @param indentationIndex Indentacion del JSON
-     * @return Un string con el JSON del metodo
-     */
-    public static String json(String name, MethodEntry method, int indentationIndex) {
+
+    public static String json(String name, List< ? extends Json> list, int indentationIndex) {
+        String identationStr = getIdentationString(indentationIndex);
+
+        String json = "\n" + identationStr + "\"" + name + "\": ";
+        if (list == null || list.isEmpty()) {
+            return json + "[]";
+        }
+
+        indentationIndex++;
+        identationStr = getIdentationString(indentationIndex);
+
+        json += "[";
+
+        for (Json element : list) {
+            json += "\n" + identationStr + element.toJson(indentationIndex) + ",";
+        }
+
+        // Remove last comma
+        json = json.substring(0, json.length() - 1);
+
+        json += "\n" + JsonHelper.getIdentationString(indentationIndex - 1) + "]";
+        return json;
+    }
+
+    public static String json(String name,  Json element, int indentationIndex) {
         String identationStr = getIdentationString(indentationIndex);
         String json = "\n" + identationStr + "\"" + name + "\": ";
-        if (method == null) {
+        if (element == null) {
             return json + "null";
         }
-        return json + method.toJson(indentationIndex);
+        return json + element.toJson(indentationIndex);
     }
 
     /**

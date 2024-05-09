@@ -4,6 +4,7 @@ import exceptions.semantic.SemanticException;
 import lexical.Token;
 import lexical.Type;
 import location.Location;
+import semantic.JsonHelper;
 import semantic.abstractSintaxTree.Expression.ExpressionNode;
 import semantic.abstractSintaxTree.Expression.MethodCall;
 import semantic.abstractSintaxTree.Expression.PrimaryNode;
@@ -16,6 +17,7 @@ public class ConstructorCallNode extends PrimaryNode implements MethodCall {
     private List<ExpressionNode> parameters;
 
     public ConstructorCallNode(String className) {
+        this.nodeType = "constructorCall";
         this.className = className;
     }
 
@@ -26,8 +28,13 @@ public class ConstructorCallNode extends PrimaryNode implements MethodCall {
     }
 
     public String toJson(int indentationIndex) {
-        // TODO
-        return "";
+        indentationIndex++;
+
+        return "{" +
+                JsonHelper.json("nodeType", this.nodeType, indentationIndex) + "," +
+                JsonHelper.json("className", this.className, indentationIndex) + "," +
+                JsonHelper.json("parameters", this.parameters, indentationIndex) +
+                "\n" + JsonHelper.getIdentationString(indentationIndex - 1) + "}";
     }
 
     public void setParameters(List<ExpressionNode> parameters) {

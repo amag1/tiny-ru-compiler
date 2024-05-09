@@ -1,6 +1,7 @@
 package semantic.abstractSintaxTree.Sentence;
 
 import exceptions.semantic.SemanticException;
+import semantic.JsonHelper;
 import semantic.abstractSintaxTree.Expression.ExpressionNode;
 
 public class IfElseNode extends SentenceNode {
@@ -9,6 +10,7 @@ public class IfElseNode extends SentenceNode {
     private SentenceNode elseBody;
 
     public IfElseNode(ExpressionNode condition, SentenceNode thenBody, SentenceNode elseBody) {
+        this.nodeType = "ifSentence";
         this.condition = condition;
         this.thenBody = thenBody;
         this.elseBody = elseBody;
@@ -20,7 +22,13 @@ public class IfElseNode extends SentenceNode {
     }
 
     public String toJson(int indentationIndex) {
-        // TODO
-        return "";
+        indentationIndex++;
+
+        return "{" +
+                JsonHelper.json("nodeType", this.nodeType, indentationIndex) + "," +
+                JsonHelper.json("condition", this.condition, indentationIndex) + "," +
+                JsonHelper.json("thenBody", this.thenBody, indentationIndex) + "," +
+                JsonHelper.json("elseBody", this.elseBody, indentationIndex) +
+                "\n" + JsonHelper.getIdentationString(indentationIndex - 1) + "}";
     }
 }

@@ -41,13 +41,15 @@ public class AttributeType implements Json {
 
     @Override
     public String toJson(int identationIndex) {
-        String json = "";
+        String json =  "\"";
 
         if (this.isArray) {
             json += "Array ";
         }
 
         json += type;
+
+        json +=  "\"";
 
         return json;
     }

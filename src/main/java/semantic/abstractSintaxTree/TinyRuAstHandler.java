@@ -4,18 +4,28 @@ import exceptions.semantic.SemanticException;
 import lexical.Token;
 import semantic.abstractSintaxTree.Expression.*;
 import semantic.abstractSintaxTree.Sentence.*;
+import semantic.symbolTable.ClassEntry;
+import semantic.symbolTable.MethodEntry;
 import semantic.symbolTable.SymbolTable;
 import semantic.abstractSintaxTree.Expression.ConstructorCallNode;
+import semantic.symbolTable.SymbolTableHandler;
 
 import java.util.List;
+import java.util.Map;
 
 public class TinyRuAstHandler implements AstHandler {
 
     private AbstractSyntaxTree ast;
-    private SymbolTable st;
+    private SymbolTableHandler stHandler;
+
+    public TinyRuAstHandler(SymbolTableHandler stHandler) {
+        this.ast = new AbstractSyntaxTree();
+        this.stHandler = stHandler;
+    }
 
     public void validateSenteces() throws SemanticException {
-        for (AstClassEntry currentClass : ast.getClasses()) {
+        for (Map.Entry<String,AstClassEntry> entry : ast.getClasses().entrySet()) {
+            AstClassEntry currentClass = entry.getValue();
             currentClass.validateSentences();
         }
     }
@@ -109,5 +119,38 @@ public class TinyRuAstHandler implements AstHandler {
 
     public BlockNode createBlockNode(List<SentenceNode> sentences) {
         return new BlockNode(sentences);
+    }
+
+    public void addSentence(SentenceNode sentence) {
+        // Obtener la clase actual de la tabla de símbolos
+        ClassEntry currentClass = stHandler.getCurrentClass();
+        if (currentClass != null) {
+            // Obtener o crear la clase en el ast
+            AstClassEntry currentAstClass;
+            currentAstClass = ast.getClass(currentClass.getName());
+            if (currentAstClass == null) {
+                currentAstClass = new AstClassEntry(currentClass.getName());
+                ast.addClass(currentAstClass);
+            }
+
+            // Obtener o crear un nuevo método
+            MethodEntry currentMethod = stHandler.getCurrentMethod();
+            AstMethodEntry currentAstMethod = currentAstClass.getMethod(currentMethod.getName());
+            if (currentAstMethod == null) {
+                currentAstMethod = new AstMethodEntry(currentMethod.getName());
+                currentAstClass.addMethod(currentAstMethod);
+            }
+
+            currentAstMethod.addSentence(sentence);
+        }
+        else {
+            // Agregar al método start
+            AstMethodEntry startMethod = ast.getStart();
+            startMethod.addSentence(sentence);
+        }
+    }
+
+    public String toJson() {
+        return ast.toJson();
     }
 }

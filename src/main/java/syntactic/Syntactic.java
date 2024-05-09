@@ -11,4 +11,6 @@ public interface Syntactic {
     void analyze() throws LexicalException, SyntacticException, SemanticException;
 
     String getSymbolTableJson();
+
+    String getAbstractSybolTreeJson();
 }

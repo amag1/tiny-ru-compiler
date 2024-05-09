@@ -581,4 +581,10 @@ public class TinyRuSymbolTableHandler implements SymbolTableHandler {
     public void handleStart() {
         st.setCurrentMethod(st.getStart());
     }
+
+    public ClassEntry getCurrentClass() {return st.getCurrentClass();}
+
+    public MethodEntry getCurrentMethod() {
+        return  st.getCurrentMethod();
+    }
 }

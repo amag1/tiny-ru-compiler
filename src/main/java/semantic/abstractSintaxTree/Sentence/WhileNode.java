@@ -1,6 +1,7 @@
 package semantic.abstractSintaxTree.Sentence;
 
 import exceptions.semantic.SemanticException;
+import semantic.JsonHelper;
 import semantic.abstractSintaxTree.Expression.ExpressionNode;
 
 public class WhileNode extends SentenceNode {
@@ -8,6 +9,7 @@ public class WhileNode extends SentenceNode {
     private SentenceNode loopBody;
 
     public WhileNode(ExpressionNode condition, SentenceNode loopBody) {
+        this.nodeType = "whileSentence";
         this.condition = condition;
         this.loopBody = loopBody;
     }
@@ -18,7 +20,12 @@ public class WhileNode extends SentenceNode {
     }
 
     public String toJson(int indentationIndex) {
-        // TODO
-        return "";
+        indentationIndex++;
+
+        return "{" +
+                JsonHelper.json("nodeType", this.nodeType, indentationIndex) + "," +
+                JsonHelper.json("condition", condition, indentationIndex) + "," +
+                JsonHelper.json("loopBody", loopBody, indentationIndex) +
+                "\n" + JsonHelper.getIdentationString(indentationIndex - 1) + "}";
     }
 }

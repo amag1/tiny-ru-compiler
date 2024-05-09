@@ -37,4 +37,8 @@ public interface SymbolTableHandler {
     void handleFinishMethod();
 
     void handleStart();
+
+    ClassEntry getCurrentClass();
+
+    MethodEntry getCurrentMethod();
 }

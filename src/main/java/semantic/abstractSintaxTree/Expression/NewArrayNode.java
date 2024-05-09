@@ -4,6 +4,7 @@ import exceptions.semantic.SemanticException;
 import lexical.Token;
 import lexical.Type;
 import location.Location;
+import semantic.JsonHelper;
 import semantic.symbolTable.AttributeType;
 
 import java.util.List;
@@ -13,6 +14,7 @@ public class NewArrayNode extends PrimaryNode  {
     private ExpressionNode lengthExpression;
 
     public NewArrayNode(Token elementsTypeToken, ExpressionNode lengthExpression) {
+        this.nodeType = "newArray";
         this.lengthExpression = lengthExpression;
         this.elementsType = switch (elementsTypeToken.getType()) {
             case TYPE_INT -> AttributeType.IntType;
@@ -30,7 +32,12 @@ public class NewArrayNode extends PrimaryNode  {
     }
 
     public String toJson(int indentationIndex) {
-        // TODO
-        return "";
+        indentationIndex++;
+
+        return "{" +
+                JsonHelper.json("nodeType", this.nodeType, indentationIndex) + "," +
+                JsonHelper.json("elementsType", this.elementsType, indentationIndex) + "," +
+                JsonHelper.json("lengthExpression", this.lengthExpression, indentationIndex) +
+                "\n" + JsonHelper.getIdentationString(indentationIndex - 1) + "}";
     }
 }

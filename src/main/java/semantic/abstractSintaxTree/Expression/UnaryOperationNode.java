@@ -4,6 +4,7 @@ import exceptions.semantic.SemanticException;
 import lexical.Token;
 import lexical.Type;
 import location.Location;
+import semantic.JsonHelper;
 import semantic.symbolTable.AttributeType;
 
 public class UnaryOperationNode extends ExpressionNode {
@@ -12,6 +13,7 @@ public class UnaryOperationNode extends ExpressionNode {
     private Operator operator;
 
     public UnaryOperationNode(ExpressionNode operating, Token operator) {
+        this.nodeType = "unaryOperation";
         this.operating = operating;
         this.operator = new Operator(operator);
     }
@@ -23,7 +25,12 @@ public class UnaryOperationNode extends ExpressionNode {
     }
 
     public String toJson(int indentationIndex) {
-        // TODO
-        return "";
+        indentationIndex++;
+
+        return "{" +
+                JsonHelper.json("nodeType", this.nodeType, indentationIndex) + "," +
+                JsonHelper.json("operating", this.operating, indentationIndex) + "," +
+                JsonHelper.json("operator", this.operator, indentationIndex) +
+                "\n" + JsonHelper.getIdentationString(indentationIndex - 1) + "}";
     }
 }
