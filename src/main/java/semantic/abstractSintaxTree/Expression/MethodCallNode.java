@@ -10,11 +10,12 @@ import semantic.symbolTable.SymbolTableLookup;
 
 import java.util.List;
 
-public class MethodCallNode extends PrimaryNode implements MethodCall {
+public class MethodCallNode extends CallableNode {
     private String methodName;
     private List<ExpressionNode> parameters;
 
     public MethodCallNode(Token methodName) {
+        super(methodName);
         this.nodeType = "methodCall";
         this.methodName = methodName.getLexem();
     }

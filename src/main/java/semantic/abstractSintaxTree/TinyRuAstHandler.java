@@ -62,7 +62,7 @@ public class TinyRuAstHandler implements AstHandler {
     }
 
     public ConstructorCallNode createConstructorCallNode(Token classToken) {
-        return new ConstructorCallNode(classToken.getLexem());
+        return new ConstructorCallNode(classToken);
     }
 
     public NewArrayNode createNewArrayNode(Token elementsTypeToken, ExpressionNode lengthExpression) {
@@ -70,7 +70,7 @@ public class TinyRuAstHandler implements AstHandler {
     }
 
     public StaticMethodCallNode createStaticMethodCallNode(Token classToken, Token methodToken) {
-        return new StaticMethodCallNode(classToken.getLexem(), methodToken.getLexem());
+        return new StaticMethodCallNode(classToken, methodToken);
     }
 
     public SelfAccess createSelfAccess(PrimaryNode node) {
@@ -86,7 +86,7 @@ public class TinyRuAstHandler implements AstHandler {
         return new BinaryOperationNode(operator, left, right);
     }
 
-    public void SetMethodParameter(MethodCall method, List<ExpressionNode> parameters) {
+    public void SetMethodParameter(CallableNode method, List<ExpressionNode> parameters) {
         method.setParameters(parameters);
     }
 

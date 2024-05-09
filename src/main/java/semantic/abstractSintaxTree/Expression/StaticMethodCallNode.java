@@ -10,12 +10,13 @@ import semantic.symbolTable.SymbolTableLookup;
 
 import java.util.List;
 
-public class StaticMethodCallNode extends PrimaryNode implements MethodCall {
-    private String methodName;
-    private String className;
+public class StaticMethodCallNode extends CallableNode {
+    private Token methodName;
+    private Token className;
     private List<ExpressionNode> parameters;
 
-    public StaticMethodCallNode(String className, String methodName) {
+    public StaticMethodCallNode(Token className, Token methodName) {
+        super(methodName);
         this.nodeType = "staticMethodCall";
         this.methodName = methodName;
         this.className = className;
@@ -32,8 +33,8 @@ public class StaticMethodCallNode extends PrimaryNode implements MethodCall {
 
         return "{" +
                 JsonHelper.json("nodeType", this.nodeType, indentationIndex) + "," +
-                JsonHelper.json("className", this.className, indentationIndex) + "," +
-                JsonHelper.json("methodName", this.methodName, indentationIndex) + "," +
+                JsonHelper.json("className", this.className.getLexem(), indentationIndex) + "," +
+                JsonHelper.json("methodName", this.methodName.getLexem(), indentationIndex) + "," +
                 JsonHelper.json("parameters", this.parameters, indentationIndex) +
                 "\n" + JsonHelper.getIdentationString(indentationIndex - 1) + "}";
     }
