@@ -1,7 +1,7 @@
 package semantic;
 
 import exceptions.lexical.LexicalException;
-import exceptions.semantic.SemanticException;
+import exceptions.semantic.symbolTable.SymbolTableException;
 import exceptions.syntactic.SyntacticException;
 import executor.Executor;
 import lexical.LexicalAnalyzer;
@@ -42,7 +42,7 @@ public class SemanticExecutor extends Executor {
             clogger.LogLexicError(e);
         } catch (SyntacticException e) {
             clogger.LogSyntacticError(e);
-        } catch (SemanticException e) {
+        } catch (SymbolTableException e) {
             clogger.LogSemanticError(e);
         }
     }

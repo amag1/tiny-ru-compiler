@@ -1,13 +1,11 @@
 package semantic.abstractSintaxTree;
 
-import exceptions.semantic.SemanticException;
+import exceptions.semantic.symbolTable.SymbolTableException;
 import semantic.Json;
 import semantic.JsonHelper;
 import semantic.abstractSintaxTree.Sentence.SentenceNode;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class AstMethodEntry implements Json {
 
@@ -19,8 +17,8 @@ public class AstMethodEntry implements Json {
         this.sentences = new ArrayList<>();
     }
 
-    public void validateSentences() throws SemanticException {
-        for (SentenceNode sentence: sentences) {
+    public void validateSentences() throws SymbolTableException {
+        for (SentenceNode sentence : sentences) {
             sentence.validate();
         }
     }

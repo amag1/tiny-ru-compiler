@@ -1,13 +1,10 @@
 package semantic.abstractSintaxTree.Expression;
 
-import exceptions.semantic.SemanticException;
+import exceptions.semantic.symbolTable.SymbolTableException;
 import lexical.Token;
 import lexical.Type;
 import location.Location;
 import semantic.JsonHelper;
-import semantic.abstractSintaxTree.Expression.ExpressionNode;
-import semantic.abstractSintaxTree.Expression.MethodCall;
-import semantic.abstractSintaxTree.Expression.PrimaryNode;
 import semantic.symbolTable.AttributeType;
 
 import java.util.List;
@@ -22,7 +19,7 @@ public class ConstructorCallNode extends PrimaryNode implements MethodCall {
     }
 
     @Override
-    public AttributeType getAttributeType() throws SemanticException {
+    public AttributeType getAttributeType() throws SymbolTableException {
         // TODO
         return new AttributeType(true, true, new Token("", Type.KW_IF, new Location()));
     }

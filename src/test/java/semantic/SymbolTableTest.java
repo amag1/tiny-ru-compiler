@@ -1,7 +1,7 @@
 package semantic;
 
 import exceptions.lexical.LexicalException;
-import exceptions.semantic.SemanticException;
+import exceptions.semantic.symbolTable.SymbolTableException;
 import exceptions.syntactic.SyntacticException;
 import lexical.LexicalAnalyzer;
 import logger.ConsoleLogger;
@@ -10,7 +10,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import reader.FileReader;
-import semantic.symbolTable.DummySymbolTableHandler;
 import semantic.symbolTable.TinyRuSymbolTableHandler;
 import syntactic.Syntactic;
 import syntactic.SyntacticAnalyzer;
@@ -65,7 +64,7 @@ public class SymbolTableTest {
             if (!JsonComparer.compare(content, st)) {
                 fail("El archivo: " + input + " no coincide con el archivo de salida");
             }
-        } catch (SemanticException e) {
+        } catch (SymbolTableException e) {
             ConsoleLogger clog = new ConsoleLogger();
             clog.LogSemanticError(e);
             fail();
@@ -75,7 +74,7 @@ public class SymbolTableTest {
                 Syntactic syntactic = new SyntacticAnalyzer(new LexicalAnalyzer(new FileReader(input)), new TinyRuSymbolTableHandler());
                 syntactic.analyze();
             } catch (SyntacticException | LexicalException |
-                     SemanticException ex) {
+                     SymbolTableException ex) {
                 fail("Error en el archivo: " + input + "\n" + ex.getMessage());
             } catch (FileNotFoundException ex) {
                 fail("Archivo no encontrado: " + input);
@@ -105,7 +104,7 @@ public class SymbolTableTest {
             syntactic.analyze();
 
             fail("El archivo " + input + " no contiene errores");
-        } catch (SemanticException e) {
+        } catch (SymbolTableException e) {
             // Check that the class of the exception equals errorName
             assertEquals(e.getClass().getSimpleName(), errorName, "Error en el archivo: " + input);
         } catch (Exception e) {

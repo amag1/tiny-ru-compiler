@@ -1,9 +1,8 @@
 package semantic.abstractSintaxTree.Sentence;
 
-import exceptions.semantic.SemanticException;
+import exceptions.semantic.symbolTable.SymbolTableException;
 import semantic.JsonHelper;
 import semantic.abstractSintaxTree.Expression.ExpressionNode;
-import semantic.abstractSintaxTree.Expression.LiteralNode;
 
 public class ReturnNode extends SentenceNode {
     private ExpressionNode returnValue;
@@ -19,7 +18,7 @@ public class ReturnNode extends SentenceNode {
     }
 
     @Override
-    public void validate() throws SemanticException {
+    public void validate() throws SymbolTableException {
         // TODO
     }
 

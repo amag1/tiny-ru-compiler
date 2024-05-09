@@ -1,6 +1,6 @@
 package semantic.abstractSintaxTree.Sentence;
 
-import exceptions.semantic.SemanticException;
+import exceptions.semantic.symbolTable.SymbolTableException;
 import semantic.JsonHelper;
 import semantic.abstractSintaxTree.Expression.ExpressionNode;
 
@@ -17,7 +17,7 @@ public class IfElseNode extends SentenceNode {
     }
 
     @Override
-    public void validate() throws SemanticException {
+    public void validate() throws SymbolTableException {
         // TODO
     }
 

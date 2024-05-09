@@ -1,8 +1,7 @@
 package semantic.abstractSintaxTree.Expression;
 
-import exceptions.semantic.SemanticException;
+import exceptions.semantic.symbolTable.SymbolTableException;
 import lexical.Token;
-import lexical.Type;
 import semantic.JsonHelper;
 import semantic.symbolTable.AttributeType;
 
@@ -25,8 +24,7 @@ public class LiteralNode extends OperatingNode {
     }
 
     @Override
-    public AttributeType getAttributeType() throws SemanticException {
-        this.nodeType = "literal";
+    public AttributeType getAttributeType() throws SymbolTableException {
         return this.attributeType;
     }
 

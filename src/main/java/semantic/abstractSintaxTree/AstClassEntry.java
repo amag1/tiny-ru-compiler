@@ -1,9 +1,8 @@
 package semantic.abstractSintaxTree;
 
-import exceptions.semantic.SemanticException;
+import exceptions.semantic.symbolTable.SymbolTableException;
 import semantic.Json;
 import semantic.JsonHelper;
-import semantic.symbolTable.MethodEntry;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,7 +21,7 @@ public class AstClassEntry implements Json {
         return methods;
     }
 
-    public  void validateSentences() throws SemanticException {
+    public  void validateSentences() throws SymbolTableException {
         for (Map.Entry<String,AstMethodEntry> entry: methods.entrySet()) {
             AstMethodEntry currentMethod = entry.getValue();
             currentMethod.validateSentences();

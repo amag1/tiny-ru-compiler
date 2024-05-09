@@ -1,7 +1,7 @@
 package syntactic;
 
 import exceptions.lexical.LexicalException;
-import exceptions.semantic.SemanticException;
+import exceptions.semantic.symbolTable.SymbolTableException;
 import exceptions.syntactic.SyntacticException;
 import lexical.Lexical;
 import lexical.Token;
@@ -41,7 +41,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
      * @throws LexicalException   si ocurre un error lexico
      */
     @Override
-    public void analyze() throws SyntacticException, LexicalException, SemanticException {
+    public void analyze() throws SyntacticException, LexicalException, SymbolTableException {
         nextToken();
         program();
         st.consolidate();
@@ -60,21 +60,21 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
      * A partir de acá, cada método está asociado a un no terminal de la gramática
      * En la carpeta /grammar está la gramática final en formato BNF
      */
-    private void program() throws SyntacticException, LexicalException, SemanticException {
+    private void program() throws SyntacticException, LexicalException, SymbolTableException {
         // ⟨Lista-Definiciones⟩ ⟨Start⟩
         listaDefiniciones();
         start();
         match(Type.EOF);
     }
 
-    private void start() throws SyntacticException, LexicalException, SemanticException {
+    private void start() throws SyntacticException, LexicalException, SymbolTableException {
         // start ⟨Bloque-Método⟩
         match(Type.KW_START);
         st.handleStart();
         bloqueMetodo();
     }
 
-    private void listaDefiniciones() throws SyntacticException, LexicalException, SemanticException {
+    private void listaDefiniciones() throws SyntacticException, LexicalException, SymbolTableException {
         Type[] follow = {Type.KW_START};
         // Cuando un no terminal deriva lambda, se chequea si el token actual es uno de los siguientes
         if (contains(follow)) {
@@ -95,7 +95,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         }
     }
 
-    private void struct() throws SyntacticException, LexicalException, SemanticException {
+    private void struct() throws SyntacticException, LexicalException, SymbolTableException {
         // struct idStruct ⟨Struct-O-Herencia⟩
         match(Type.KW_STRUCT);
         Token idClass = match(Type.ID_CLASS);
@@ -103,7 +103,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         structOHerencia();
     }
 
-    private void structOHerencia() throws SyntacticException, LexicalException, SemanticException {
+    private void structOHerencia() throws SyntacticException, LexicalException, SymbolTableException {
         // ⟨Herencia⟩ { ⟨Struct-Atributo⟩ } | { ⟨Struct-Atributo⟩ }
 
         // No terminal Herencia es opcional. No hay un metodo encargado de matchearlo
@@ -116,7 +116,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         match(Type.CLOSE_CURLY);
     }
 
-    private void structAtributo() throws SyntacticException, LexicalException, SemanticException {
+    private void structAtributo() throws SyntacticException, LexicalException, SymbolTableException {
         // ⟨Atributo⟩ ⟨Struct-Atributo⟩ | λ
 
         // Cuando un no terminal deriva lambda, se chequea si el token actual es uno de los siguientes
@@ -129,7 +129,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         structAtributo();
     }
 
-    private void atributo() throws SyntacticException, LexicalException, SemanticException {
+    private void atributo() throws SyntacticException, LexicalException, SymbolTableException {
         // ⟨Visibilidad⟩ ⟨Tipo⟩ ⟨Lista-Declaración-Variables⟩ ; | ⟨Tipo⟩ ⟨Lista-Declaración-Variables⟩ ;
 
         // Visibilidad es opcional
@@ -149,7 +149,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         match(Type.SEMICOLON);
     }
 
-    private void impl() throws SyntacticException, LexicalException, SemanticException {
+    private void impl() throws SyntacticException, LexicalException, SymbolTableException {
         // impl idStruct { ⟨Miembro⟩ ⟨Miembro-Opcional⟩ }
         match(Type.KW_IMPL);
         Token structToken = match(Type.ID_CLASS);
@@ -161,7 +161,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         st.handleFinishImpl();
     }
 
-    private void miembroOpcional() throws SyntacticException, LexicalException, SemanticException {
+    private void miembroOpcional() throws SyntacticException, LexicalException, SymbolTableException {
         // ⟨Miembro⟩ ⟨Miembro-Opcional⟩ | λ
 
         // Siguientes de miembro opcional. Indica que el no terminal deriva lambda
@@ -173,14 +173,14 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         miembroOpcional();
     }
 
-    private void herencia() throws SyntacticException, LexicalException, SemanticException {
+    private void herencia() throws SyntacticException, LexicalException, SymbolTableException {
         // : ⟨Tipo⟩
         match(Type.COLON);
         AttributeType token = tipo();
         st.handleInheritance(token);
     }
 
-    private void miembro() throws SyntacticException, LexicalException, SemanticException {
+    private void miembro() throws SyntacticException, LexicalException, SymbolTableException {
         // ⟨Método⟩ | ⟨Constructor⟩
         if (getTokenType() == Type.DOT) {
             constructor();
@@ -190,7 +190,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         metodo();
     }
 
-    private void constructor() throws SyntacticException, LexicalException, SemanticException {
+    private void constructor() throws SyntacticException, LexicalException, SymbolTableException {
         // . ⟨Argumentos-Formales⟩ ⟨Bloque-Método⟩
         Token dotToken = match(Type.DOT);
         st.handleConstructor(dotToken);
@@ -199,7 +199,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         st.handleFinishMethod();
     }
 
-    private void metodo() throws SyntacticException, LexicalException, SemanticException {
+    private void metodo() throws SyntacticException, LexicalException, SymbolTableException {
         // st fn idMetAt ⟨Argumentos-Formales⟩ -⟩ ⟨Tipo-Método⟩ ⟨Bloque-Método⟩
         // | fn idMetAt ⟨Argumentos-Formales⟩ -⟩ ⟨Tipo-Método⟩ ⟨Bloque-Método⟩
 
@@ -227,7 +227,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         st.handleFinishMethod();
     }
 
-    private void bloqueMetodo() throws SyntacticException, LexicalException, SemanticException {
+    private void bloqueMetodo() throws SyntacticException, LexicalException, SymbolTableException {
         // { ⟨Decl-Var-Locales-Metodo⟩ ⟨Sentencia-Metodo⟩ }
         match(Type.OPEN_CURLY);
         declVariableLocalesMetodo();
@@ -235,7 +235,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         match(Type.CLOSE_CURLY);
     }
 
-    private void declVariableLocalesMetodo() throws SyntacticException, LexicalException, SemanticException {
+    private void declVariableLocalesMetodo() throws SyntacticException, LexicalException, SymbolTableException {
         // ⟨Decl-Var-Locales⟩ ⟨Decl-Var-Locales-Metodo⟩ | λ
         Type[] first = {Type.ID_CLASS, Type.ARRAY, Type.TYPE_INT, Type.TYPE_CHAR, Type.TYPE_STRING, Type.TYPE_BOOL};
         if (contains(first)) {
@@ -261,7 +261,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         sentenciaMetodo();
     }
 
-    private void declaracionVariablesLocales() throws SyntacticException, LexicalException, SemanticException {
+    private void declaracionVariablesLocales() throws SyntacticException, LexicalException, SymbolTableException {
         // ⟨Tipo⟩ ⟨Lista-Declaración-Variables⟩ ;
         AttributeType type = tipo();
         List<Token> attributeTokens = listaDeclaracionVariables();
@@ -273,7 +273,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         match(Type.SEMICOLON);
     }
 
-    private List<Token> listaDeclaracionVariables() throws SyntacticException, LexicalException, SemanticException {
+    private List<Token> listaDeclaracionVariables() throws SyntacticException, LexicalException, SymbolTableException {
         // idMetAt ⟨Lambda-O-Variables⟩
         Token attributeToken = match(Type.ID);
 
@@ -290,7 +290,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         return attributeTokens;
     }
 
-    private void argumentosFormales() throws SyntacticException, LexicalException, SemanticException {
+    private void argumentosFormales() throws SyntacticException, LexicalException, SymbolTableException {
         // ( ) | ( ⟨Lista-Argumentos-Formales⟩ )
 
         match(Type.OPEN_PAR);
@@ -306,20 +306,20 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         match(Type.CLOSE_PAR);
     }
 
-    private void listaArgumentosFormales(int currentParamPosition) throws SyntacticException, LexicalException, SemanticException {
+    private void listaArgumentosFormales(int currentParamPosition) throws SyntacticException, LexicalException, SymbolTableException {
         // ⟨Argumento-Formal⟩ ⟨Argumento-Formal-O-Lambda⟩
         argumentoFormal(currentParamPosition);
         argumentoFormalOLambda(currentParamPosition);
     }
 
-    private void argumentoFormal(int position) throws SyntacticException, LexicalException, SemanticException {
+    private void argumentoFormal(int position) throws SyntacticException, LexicalException, SymbolTableException {
         // ⟨Tipo⟩ idMetAt
         AttributeType type = tipo();
         Token paramToken = match(Type.ID);
         st.addMethodParam(paramToken, type, position);
     }
 
-    private void argumentoFormalOLambda(int currentParamPosition) throws SyntacticException, LexicalException, SemanticException {
+    private void argumentoFormalOLambda(int currentParamPosition) throws SyntacticException, LexicalException, SymbolTableException {
         // , ⟨Lista-Argumentos-Formales⟩ | λ
         if (getTokenType() == Type.COMMA) {
             match(Type.COMMA);

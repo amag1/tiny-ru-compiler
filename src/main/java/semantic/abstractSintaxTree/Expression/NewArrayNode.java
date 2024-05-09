@@ -1,15 +1,13 @@
 package semantic.abstractSintaxTree.Expression;
 
-import exceptions.semantic.SemanticException;
+import exceptions.semantic.symbolTable.SymbolTableException;
 import lexical.Token;
 import lexical.Type;
 import location.Location;
 import semantic.JsonHelper;
 import semantic.symbolTable.AttributeType;
 
-import java.util.List;
-
-public class NewArrayNode extends PrimaryNode  {
+public class NewArrayNode extends PrimaryNode {
     private AttributeType elementsType;
     private ExpressionNode lengthExpression;
 
@@ -26,7 +24,7 @@ public class NewArrayNode extends PrimaryNode  {
     }
 
     @Override
-    public AttributeType getAttributeType() throws SemanticException {
+    public AttributeType getAttributeType() throws SymbolTableException {
         // TODO
         return new AttributeType(true, true, new Token("", Type.KW_IF, new Location()));
     }

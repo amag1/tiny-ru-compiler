@@ -1,7 +1,7 @@
 package logger;
 
 import exceptions.lexical.LexicalException;
-import exceptions.semantic.SemanticException;
+import exceptions.semantic.symbolTable.SymbolTableException;
 import exceptions.syntactic.SyntacticException;
 import lexical.Token;
 
@@ -50,7 +50,7 @@ public class ConsoleLogger extends Logger {
         }
     }
 
-    public void LogSemanticError(SemanticException e) {
+    public void LogSemanticError(SymbolTableException e) {
         List<String> message = GetSemanticErrorMessage(e);
         for (String line : message) {
             System.out.println(line);

@@ -1,7 +1,7 @@
 package syntactic;
 
 import exceptions.lexical.LexicalException;
-import exceptions.semantic.SemanticException;
+import exceptions.semantic.symbolTable.SymbolTableException;
 import exceptions.syntactic.SyntacticException;
 import executor.Executor;
 import lexical.LexicalAnalyzer;
@@ -11,7 +11,6 @@ import reader.Reader;
 import semantic.abstractSintaxTree.TinyRuAstHandler;
 import semantic.symbolTable.DummySymbolTableHandler;
 import semantic.symbolTable.SymbolTableHandler;
-import semantic.symbolTable.TinyRuSymbolTableHandler;
 
 /**
  * Implementación concreta de executor para analizador sintáctico
@@ -39,7 +38,7 @@ public class SyntacticExecutor extends Executor {
             clogger.LogLexicError(e);
         } catch (SyntacticException e) {
             clogger.LogSyntacticError(e);
-        } catch (SemanticException e) {
+        } catch (SymbolTableException e) {
             clogger.LogSemanticError(e);
         }
     }

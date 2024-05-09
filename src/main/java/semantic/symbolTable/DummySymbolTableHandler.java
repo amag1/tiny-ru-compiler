@@ -1,6 +1,6 @@
 package semantic.symbolTable;
 
-import exceptions.semantic.SemanticException;
+import exceptions.semantic.symbolTable.SymbolTableException;
 import lexical.Token;
 
 /**
@@ -16,7 +16,7 @@ public class DummySymbolTableHandler implements SymbolTableHandler {
     }
 
     @Override
-    public void consolidate() throws SemanticException {
+    public void consolidate() throws SymbolTableException {
 
     }
 
@@ -26,42 +26,42 @@ public class DummySymbolTableHandler implements SymbolTableHandler {
     }
 
     @Override
-    public void handleNewClass(Token token) throws SemanticException {
+    public void handleNewClass(Token token) throws SymbolTableException {
 
     }
 
     @Override
-    public void handleNewAttribute(Token att, AttributeType type, boolean isPrivate) throws SemanticException {
+    public void handleNewAttribute(Token att, AttributeType type, boolean isPrivate) throws SymbolTableException {
 
     }
 
     @Override
-    public void handleInheritance(AttributeType type) throws SemanticException {
+    public void handleInheritance(AttributeType type) throws SymbolTableException {
 
     }
 
     @Override
-    public void handleNewImpl(Token token) throws SemanticException {
+    public void handleNewImpl(Token token) throws SymbolTableException {
 
     }
 
     @Override
-    public void handleFinishImpl() throws SemanticException {
+    public void handleFinishImpl() throws SymbolTableException {
 
     }
 
     @Override
-    public void handleConstructor(Token token) throws SemanticException {
+    public void handleConstructor(Token token) throws SymbolTableException {
 
     }
 
     @Override
-    public void handleNewMethod(Token token, Boolean isStatic) throws SemanticException {
+    public void handleNewMethod(Token token, Boolean isStatic) throws SymbolTableException {
 
     }
 
     @Override
-    public void addMethodParam(Token paramToken, AttributeType type, int position) throws SemanticException {
+    public void addMethodParam(Token paramToken, AttributeType type, int position) throws SymbolTableException {
 
     }
 
@@ -71,7 +71,7 @@ public class DummySymbolTableHandler implements SymbolTableHandler {
     }
 
     @Override
-    public void handleLocalVar(Token variableToken, AttributeType type) throws SemanticException {
+    public void handleLocalVar(Token variableToken, AttributeType type) throws SymbolTableException {
 
     }
 
@@ -85,7 +85,11 @@ public class DummySymbolTableHandler implements SymbolTableHandler {
 
     }
 
-    public ClassEntry getCurrentClass() {return new ClassEntry(new Token());}
+    public ClassEntry getCurrentClass() {
+        return new ClassEntry(new Token());
+    }
 
-    public MethodEntry getCurrentMethod() {return new MethodEntry();}
+    public MethodEntry getCurrentMethod() {
+        return new MethodEntry();
+    }
 }

@@ -2,7 +2,7 @@ package logger;
 
 import exceptions.lexical.LexicalException;
 import exceptions.syntactic.SyntacticException;
-import exceptions.semantic.SemanticException;
+import exceptions.semantic.symbolTable.SymbolTableException;
 import lexical.Token;
 
 import java.util.ArrayList;
@@ -63,7 +63,7 @@ public abstract class Logger {
         return result;
     }
 
-    protected List<String> GetSemanticErrorMessage(SemanticException e) {
+    protected List<String> GetSemanticErrorMessage(SymbolTableException e) {
         List result = new ArrayList<String>();
         result.add("ERROR: SEMANTICO - DECLARACIONES");
         result.add("| NUMERO DE LINEA: | NUMERO DE COLUMNA: | DESCRIPCION: |");

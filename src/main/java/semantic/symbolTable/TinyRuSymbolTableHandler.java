@@ -1,7 +1,7 @@
 package semantic.symbolTable;
 
-import exceptions.semantic.*;
-import exceptions.semantic.ClassNotFoundException;
+import exceptions.semantic.symbolTable.*;
+import exceptions.semantic.symbolTable.ClassNotFoundException;
 import lexical.Token;
 
 import java.util.*;
@@ -23,7 +23,7 @@ public class TinyRuSymbolTableHandler implements SymbolTableHandler {
         return this.st.toJson(0);
     }
 
-    public void consolidate() throws SemanticException {
+    public void consolidate() throws SymbolTableException {
         // Chequear herencia valida
         consolidateInheritance();
 
@@ -52,9 +52,9 @@ public class TinyRuSymbolTableHandler implements SymbolTableHandler {
      * Crea una nueva clase en la tabla de simbolos y la setea como clase actual
      *
      * @param token El token con el nombre y la ubicacion de la clase
-     * @throws SemanticException Si la clase con dicho nombre ya existia
+     * @throws SymbolTableException Si la clase con dicho nombre ya existia
      */
-    public void handleNewClass(Token token) throws SemanticException {
+    public void handleNewClass(Token token) throws SymbolTableException {
         ClassEntry existingClass = this.st.getClassByName(token.getLexem());
         if (existingClass != null) {
             // Si la struct ya ha sido definida, lanzar un error
@@ -112,9 +112,9 @@ public class TinyRuSymbolTableHandler implements SymbolTableHandler {
     /**
      * Revisa que cada clase haya encontrado un struct e implement
      *
-     * @throws SemanticException Si no se encuentra algun struct o implement
+     * @throws SymbolTableException Si no se encuentra algun struct o implement
      */
-    private void checkFoundImplAndStruct() throws SemanticException {
+    private void checkFoundImplAndStruct() throws SymbolTableException {
         for (ClassEntry currentClass : this.st.getClasses()) {
             if (!currentClass.isFoundStruct()) {
                 throw new UndefinedStructException(currentClass);
@@ -130,9 +130,9 @@ public class TinyRuSymbolTableHandler implements SymbolTableHandler {
      * En caso de existir, chequea también si ya se ha encontrado un implement para ese struct
      *
      * @param token
-     * @throws SemanticException
+     * @throws SymbolTableException
      */
-    public void handleNewImpl(Token token) throws SemanticException {
+    public void handleNewImpl(Token token) throws SymbolTableException {
         ClassEntry currentClass = this.st.getClassByName(token.getLexem());
         if (currentClass != null) {
             // Si ya se ha encontrado un implement para el struct, lanzar un error
@@ -154,9 +154,9 @@ public class TinyRuSymbolTableHandler implements SymbolTableHandler {
     /**
      * Chequea si el metodo constructor ha sido llamado y actualiza la tabla de símbolos
      *
-     * @throws SemanticException Si no se encuentra un constructor para la clase
+     * @throws SymbolTableException Si no se encuentra un constructor para la clase
      */
-    public void handleFinishImpl() throws SemanticException {
+    public void handleFinishImpl() throws SymbolTableException {
 
         // Chequea si se ha declarado el constructor
         ClassEntry currentClass = st.getCurrentClass();
@@ -173,9 +173,9 @@ public class TinyRuSymbolTableHandler implements SymbolTableHandler {
      * Agrega el constructor al struct
      *
      * @param token El token del constructor
-     * @throws SemanticException Si ya existia un constructor para esa clase
+     * @throws SymbolTableException Si ya existia un constructor para esa clase
      */
-    public void handleConstructor(Token token) throws SemanticException {
+    public void handleConstructor(Token token) throws SymbolTableException {
         // Chequea si ya se ha declarado el constructor
         ClassEntry currentClass = st.getCurrentClass();
         if (currentClass.isHasConstructor()) {
@@ -246,9 +246,9 @@ public class TinyRuSymbolTableHandler implements SymbolTableHandler {
     /**
      * Realiza las acciones necesarias para la consolidacion relacionadas con herencia
      *
-     * @throws SemanticException
+     * @throws SymbolTableException
      */
-    private void setInheritance() throws SemanticException {
+    private void setInheritance() throws SymbolTableException {
         for (ClassEntry classEntry : this.st.getClasses()) {
             if (!classEntry.handledInheritance()) {
                 // Chequear que todos los atributos tengan un tipo definido
@@ -338,9 +338,9 @@ public class TinyRuSymbolTableHandler implements SymbolTableHandler {
      * Si la clase hereda da alguna clase que no sea object, maneja la herencia de la superclase antes
      *
      * @param classEntry La clase cuya herencia quiere manejarse
-     * @throws SemanticException
+     * @throws SymbolTableException
      */
-    private void setInheritanceWrapped(ClassEntry classEntry) throws SemanticException {
+    private void setInheritanceWrapped(ClassEntry classEntry) throws SymbolTableException {
         ClassEntry parent = this.st.getClassByName(classEntry.getInherits());
         if (!parent.getInherits().equals("Object") && !parent.handledInheritance()) {
             setInheritanceWrapped(parent);
@@ -358,9 +358,9 @@ public class TinyRuSymbolTableHandler implements SymbolTableHandler {
      *
      * @param classEntry La clase que quiere actualizarse
      * @param parent     La clase padre, de la cual se heredan los atributos
-     * @throws SemanticException Si se redefine un atributo heredado
+     * @throws SymbolTableException Si se redefine un atributo heredado
      */
-    public void setInheritedAttributes(ClassEntry classEntry, ClassEntry parent) throws SemanticException {
+    public void setInheritedAttributes(ClassEntry classEntry, ClassEntry parent) throws SymbolTableException {
         for (Map.Entry<String, AttributeEntry> entry : parent.getAttributes().entrySet()) {
             AttributeEntry attribute = entry.getValue();
             AttributeEntry newAttribute = new AttributeEntry(attribute.getType(), attribute.getToken(), attribute.isPrivate());
@@ -493,9 +493,9 @@ public class TinyRuSymbolTableHandler implements SymbolTableHandler {
      *
      * @param token
      * @param isStatic
-     * @throws SemanticException
+     * @throws SymbolTableException
      */
-    public void handleNewMethod(Token token, Boolean isStatic) throws SemanticException {
+    public void handleNewMethod(Token token, Boolean isStatic) throws SymbolTableException {
         ClassEntry currentClass = st.getCurrentClass();
 
         // Chequea si ya existe el metodo
@@ -518,9 +518,9 @@ public class TinyRuSymbolTableHandler implements SymbolTableHandler {
      *
      * @param paramToken
      * @param type
-     * @throws SemanticException
+     * @throws SymbolTableException
      */
-    public void addMethodParam(Token paramToken, AttributeType type, int position) throws SemanticException {
+    public void addMethodParam(Token paramToken, AttributeType type, int position) throws SymbolTableException {
         MethodEntry currentMethod = st.getCurrentMethod();
 
         // Cheque si ya se ha definido un parametro con ese nombre
@@ -549,9 +549,9 @@ public class TinyRuSymbolTableHandler implements SymbolTableHandler {
      *
      * @param variableToken
      * @param type
-     * @throws SemanticException
+     * @throws SymbolTableException
      */
-    public void handleLocalVar(Token variableToken, AttributeType type) throws SemanticException {
+    public void handleLocalVar(Token variableToken, AttributeType type) throws SymbolTableException {
         MethodEntry currentMethod = st.getCurrentMethod();
 
         // Chequea si la variable está definida como parametro formal del método
@@ -582,9 +582,11 @@ public class TinyRuSymbolTableHandler implements SymbolTableHandler {
         st.setCurrentMethod(st.getStart());
     }
 
-    public ClassEntry getCurrentClass() {return st.getCurrentClass();}
+    public ClassEntry getCurrentClass() {
+        return st.getCurrentClass();
+    }
 
     public MethodEntry getCurrentMethod() {
-        return  st.getCurrentMethod();
+        return st.getCurrentMethod();
     }
 }
