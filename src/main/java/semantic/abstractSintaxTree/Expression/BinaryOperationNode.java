@@ -30,7 +30,6 @@ public class BinaryOperationNode extends ExpressionNode {
 
         return "{" +
                 JsonHelper.json("nodeType", this.nodeType, indentationIndex) + "," +
-                JsonHelper.json("nodeType", this.nodeType, indentationIndex) + "," +
                 JsonHelper.json("leftSide", this.leftOperating, indentationIndex) + "," +
                 JsonHelper.json("operator", this.operator, indentationIndex) + "," +
                 JsonHelper.json("rightSide", this.rightOperating, indentationIndex) +
