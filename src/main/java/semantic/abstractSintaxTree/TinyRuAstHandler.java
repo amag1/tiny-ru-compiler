@@ -125,20 +125,10 @@ public class TinyRuAstHandler implements AstHandler {
         ClassEntry currentClass = stHandler.getCurrentClass();
         if (currentClass != null) {
             // Obtener o crear la clase en el ast
-            AstClassEntry currentAstClass;
-            currentAstClass = ast.getClass(currentClass.getName());
-            if (currentAstClass == null) {
-                currentAstClass = new AstClassEntry(currentClass.getName());
-                ast.addClass(currentAstClass);
-            }
+            AstClassEntry currentAstClass = getOrCreateAstClassEntry(currentClass);
 
             // Obtener o crear un nuevo método
-            MethodEntry currentMethod = stHandler.getCurrentMethod();
-            AstMethodEntry currentAstMethod = currentAstClass.getMethod(currentMethod.getName());
-            if (currentAstMethod == null) {
-                currentAstMethod = new AstMethodEntry(currentMethod.getName());
-                currentAstClass.addMethod(currentAstMethod);
-            }
+            AstMethodEntry currentAstMethod = getOrCreateMethodEntry(currentAstClass);
 
             currentAstMethod.addSentence(sentence);
         }
@@ -147,6 +137,35 @@ public class TinyRuAstHandler implements AstHandler {
             AstMethodEntry startMethod = ast.getStart();
             startMethod.addSentence(sentence);
         }
+    }
+
+    private AstMethodEntry getOrCreateMethodEntry(AstClassEntry currentAstClass) {
+        // El metodo existe en la tabla de simbolos porque ya leimos su firma
+        MethodEntry currentMethod = stHandler.getCurrentMethod();
+
+        // Si aun no existe en el AST, crearlo
+        AstMethodEntry currentAstMethod = currentAstClass.getMethod(currentMethod.getName());
+        if (currentAstMethod == null) {
+            currentAstMethod = new AstMethodEntry(currentMethod.getName());
+
+            // Si el metodo es el constructor, asignarlo a la clase
+            if (currentAstMethod.name.equals(".")) {
+                currentAstClass.setConstructor(currentAstMethod);
+            }
+            else {
+                currentAstClass.addMethod(currentAstMethod);
+            }
+        }
+        return currentAstMethod;
+    }
+
+    private AstClassEntry getOrCreateAstClassEntry(ClassEntry currentClass) {
+        AstClassEntry currentAstClass = ast.getClass(currentClass.getName());
+        if (currentAstClass == null) {
+            currentAstClass = new AstClassEntry(currentClass.getName());
+            ast.addClass(currentAstClass);
+        }
+        return currentAstClass;
     }
 
     public String toJson() {
