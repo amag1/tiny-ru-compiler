@@ -28,7 +28,6 @@ public class ParentizedExpressionNode extends PrimaryNode {
 
     @Override
     public AttributeType getAttributeType(SymbolTableLookup st) throws AstException {
-        // TODO
-        return new AttributeType(true, true, new Token("", Type.KW_IF, new Location()));
+        return expression.getAttributeType(st);
     }
 }
