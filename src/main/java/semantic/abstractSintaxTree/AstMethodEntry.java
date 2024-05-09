@@ -1,6 +1,6 @@
 package semantic.abstractSintaxTree;
 
-import exceptions.semantic.symbolTable.SymbolTableException;
+import exceptions.semantic.syntaxTree.AstException;
 import semantic.Json;
 import semantic.JsonHelper;
 import semantic.abstractSintaxTree.Sentence.SentenceNode;
@@ -17,7 +17,7 @@ public class AstMethodEntry implements Json {
         this.sentences = new ArrayList<>();
     }
 
-    public void validateSentences() throws SymbolTableException {
+    public void validateSentences() throws AstException {
         for (SentenceNode sentence : sentences) {
             sentence.validate();
         }
