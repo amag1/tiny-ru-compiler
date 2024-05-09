@@ -3,6 +3,7 @@ package semantic.abstractSintaxTree;
 import exceptions.semantic.syntaxTree.AstException;
 import semantic.Json;
 import semantic.JsonHelper;
+import semantic.symbolTable.MethodEntry;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,6 +12,8 @@ public class AstClassEntry implements Json {
 
     private String name;
     private Map<String, AstMethodEntry> methods;
+
+    private AstMethodEntry constructor;
 
     public AstClassEntry(String name) {
         this.name = name;
@@ -40,11 +43,16 @@ public class AstClassEntry implements Json {
         methods.put(method.getName(), method);
     }
 
+    public void setConstructor(AstMethodEntry constructor) {
+        this.constructor = constructor;
+    }
+
     public String toJson(int indentationIndex) {
         indentationIndex++;
 
         return "{" +
                 JsonHelper.json("name", this.name, indentationIndex) + "," +
+                JsonHelper.json("constructor", this.constructor, indentationIndex) + "," +
                 JsonHelper.json("methods", this.methods, indentationIndex) +
                 "\n" + JsonHelper.getIdentationString(indentationIndex - 1) + "}";
     }
