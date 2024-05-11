@@ -8,4 +8,6 @@ public interface SymbolTableLookup {
     VariableEntry getAttribute(String attributeName);
 
     ClassEntry getClassByName(String className);
+
+    MethodEntry getStart();
 }
