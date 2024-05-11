@@ -67,6 +67,16 @@ public class Context {
         return  currentClass.getConstructor();
     }
 
+    public boolean checkTypes(AttributeType expectedType, AttributeType foundType) {
+        if (foundType.getType().equals(expectedType.getType())) {
+            return  true;
+        }
+
+        // TODO chequar polimorfismo
+
+        return false;
+    }
+
     public Context clone(String currentClassName, String currentMethodName) {
         return  new Context(this.st, currentClassName, currentMethodName);
     }

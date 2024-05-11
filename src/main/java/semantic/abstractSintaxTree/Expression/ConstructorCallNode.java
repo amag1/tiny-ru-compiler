@@ -36,7 +36,7 @@ public class ConstructorCallNode extends CallableNode {
             parameters.add(parameter.getPosition(), parameter);
         }
 
-        checkParametersMatch(context, parameters); // TODO
+        checkParametersMatch(context, parameters);
 
         return constructor.getReturnType();
     }

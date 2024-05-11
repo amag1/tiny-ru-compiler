@@ -44,12 +44,10 @@ public abstract class CallableNode extends PrimaryNode {
             AttributeType hasType = this.parameters.get(i).getAttributeType(context);
             AttributeType expectedType = parameters.get(i).getType();
 
-            if (!hasType.getType().equals(expectedType.getType())) {
+            if (context.checkTypes(expectedType, hasType)) {
                 throw new ParameterTypeMismatchException(this.name, expectedType.getType(), hasType.getType(), this.token);
             }
         }
-
-
     }
 
     protected List<ExpressionNode> getParameters() {
