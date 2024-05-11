@@ -53,8 +53,8 @@ public class Context {
         return  currentClass.getMethod(methodName);
     }
 
-    public MethodEntry getConstructor() {
-        ClassEntry currentClass = st.getClassByName(currentClassName);
+    public MethodEntry getConstructorByClass(String className) {
+        ClassEntry currentClass = st.getClassByName(className);
         return  currentClass.getConstructor();
     }
 }

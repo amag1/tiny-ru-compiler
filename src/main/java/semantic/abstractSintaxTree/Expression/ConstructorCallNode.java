@@ -22,8 +22,7 @@ public class ConstructorCallNode extends CallableNode {
     @Override
     public AttributeType getAttributeType(Context context) throws AstException {
         // Check that parameters match
-        Context constructorContext = new Context(); // TODO
-        MethodEntry constructor = constructorContext.getConstructor();
+        MethodEntry constructor = context.getConstructorByClass(this.className.getLexem());
 
         // Convertir parametros del construcor en una lista
         List<VariableEntry> parameters = new ArrayList<>();
