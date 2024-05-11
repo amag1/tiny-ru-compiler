@@ -7,6 +7,12 @@ public class Context {
     private String currentClassName;
     private String currentMethodName;
 
+    public Context(SymbolTableLookup st, String currentClassName, String currentMethodName) {
+        this.st = st;
+        this.currentClassName = currentClassName;
+        this.currentMethodName = currentMethodName;
+    }
+
     public VariableEntry getAttribute(String attributeName) {
         // El contexto es el método start
         if (this.currentClassName == null) {
@@ -55,6 +61,13 @@ public class Context {
 
     public MethodEntry getConstructorByClass(String className) {
         ClassEntry currentClass = st.getClassByName(className);
+        if (currentClass == null) {
+            return null;
+        }
         return  currentClass.getConstructor();
+    }
+
+    public Context clone(String currentClassName, String currentMethodName) {
+        return  new Context(this.st, currentClassName, currentMethodName);
     }
 }

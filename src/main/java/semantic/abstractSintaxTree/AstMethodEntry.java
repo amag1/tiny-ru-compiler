@@ -18,9 +18,9 @@ public class AstMethodEntry implements Json {
         this.sentences = new ArrayList<>();
     }
 
-    public void validateSentences(SymbolTableLookup st) throws AstException {
+    public void validateSentences(Context context) throws AstException {
         for (SentenceNode sentence : sentences) {
-            sentence.validate(st);
+            sentence.validate(context);
         }
     }
 

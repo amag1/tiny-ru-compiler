@@ -2,8 +2,8 @@ package semantic.abstractSintaxTree.Sentence;
 
 import exceptions.semantic.syntaxTree.AstException;
 import semantic.JsonHelper;
+import semantic.abstractSintaxTree.Context;
 import semantic.abstractSintaxTree.Expression.ExpressionNode;
-import semantic.symbolTable.SymbolTableLookup;
 
 public class ReturnNode extends SentenceNode {
     private ExpressionNode returnValue;
@@ -19,7 +19,7 @@ public class ReturnNode extends SentenceNode {
     }
 
     @Override
-    public void validate(SymbolTableLookup st) throws AstException {
+    public void validate(Context context) throws AstException {
         // TODO
     }
 

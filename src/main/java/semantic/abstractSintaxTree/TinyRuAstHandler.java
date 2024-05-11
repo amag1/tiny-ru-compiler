@@ -28,7 +28,8 @@ public class TinyRuAstHandler implements AstHandler {
         }
 
         // Validar sentencias del start también
-        ast.getStart().validateSentences(stHandler);
+        Context startContext = new Context(stHandler, null, null);
+        ast.getStart().validateSentences(startContext);
     }
 
     public LiteralNode createLiteral(Token token) {
@@ -36,7 +37,7 @@ public class TinyRuAstHandler implements AstHandler {
     }
 
     public VariableAccessNode createVariableAccess(Token token) {
-        return new VariableAccessNode(token.getLexem());
+        return new VariableAccessNode(token);
     }
 
     @Override

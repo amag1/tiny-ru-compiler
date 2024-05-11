@@ -2,8 +2,8 @@ package semantic.abstractSintaxTree.Sentence;
 
 import exceptions.semantic.syntaxTree.AstException;
 import semantic.JsonHelper;
+import semantic.abstractSintaxTree.Context;
 import semantic.abstractSintaxTree.Expression.ExpressionNode;
-import semantic.symbolTable.SymbolTableLookup;
 
 public class IfElseNode extends SentenceNode {
     private ExpressionNode condition;
@@ -18,7 +18,7 @@ public class IfElseNode extends SentenceNode {
     }
 
     @Override
-    public void validate(SymbolTableLookup st) throws AstException {
+    public void validate(Context context) throws AstException {
         // TODO
     }
 

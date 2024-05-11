@@ -1,7 +1,7 @@
 package semantic.abstractSintaxTree.Sentence;
 
 import semantic.JsonHelper;
-import semantic.symbolTable.SymbolTableLookup;
+import semantic.abstractSintaxTree.Context;
 
 public class EmptySentenceNode extends SentenceNode {
 
@@ -10,7 +10,7 @@ public class EmptySentenceNode extends SentenceNode {
     }
 
     @Override
-    public void validate(SymbolTableLookup st) {
+    public void validate(Context context) {
         // TODO
     }
 

@@ -1,7 +1,9 @@
 package semantic.abstractSintaxTree.Expression;
 
 import exceptions.semantic.syntaxTree.AstException;
+import exceptions.semantic.syntaxTree.ClassNotFoundException;
 import lexical.Token;
+import location.Location;
 import semantic.JsonHelper;
 import semantic.abstractSintaxTree.Context;
 import semantic.symbolTable.*;
@@ -23,6 +25,9 @@ public class ConstructorCallNode extends CallableNode {
     public AttributeType getAttributeType(Context context) throws AstException {
         // Check that parameters match
         MethodEntry constructor = context.getConstructorByClass(this.className.getLexem());
+        if (constructor == null) {
+            throw new ClassNotFoundException(className);
+        }
 
         // Convertir parametros del construcor en una lista
         List<VariableEntry> parameters = new ArrayList<>();
@@ -31,7 +36,7 @@ public class ConstructorCallNode extends CallableNode {
             parameters.add(parameter.getPosition(), parameter);
         }
 
-        checkParametersMatch(context, parameters);
+        checkParametersMatch(context, parameters); // TODO
 
         return constructor.getReturnType();
     }
