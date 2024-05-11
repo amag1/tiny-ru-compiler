@@ -6,8 +6,8 @@ import exceptions.semantic.syntaxTree.UndeclaredVariableAccessException;
 import exceptions.semantic.syntaxTree.VariableIsNotArrayException;
 import lexical.Token;
 import semantic.JsonHelper;
+import semantic.abstractSintaxTree.Context;
 import semantic.symbolTable.AttributeType;
-import semantic.symbolTable.SymbolTableLookup;
 import semantic.symbolTable.VariableEntry;
 
 public class ArrayAccessNode extends PrimaryNode {
@@ -23,9 +23,9 @@ public class ArrayAccessNode extends PrimaryNode {
     }
 
     @Override
-    public AttributeType getAttributeType(SymbolTableLookup st) throws AstException {
+    public AttributeType getAttributeType(Context context) throws AstException {
         // Check que el array exista
-        VariableEntry arr = st.getAttribute(this.arrayName);
+        VariableEntry arr = context.getAttribute(this.arrayName);
         if (arr == null) {
             throw new UndeclaredVariableAccessException(this.idToken);
         }
@@ -36,7 +36,8 @@ public class ArrayAccessNode extends PrimaryNode {
         }
 
         // Check que el indice sea de tipo entero
-        if (!index.getAttributeType(st).getType().equals("Int")) {
+        AttributeType indexType = index.getAttributeType(context);
+        if (!indexType.equals(AttributeType.IntType)) {
             throw new NonIntArrayIndexException(this.idToken);
         }
 

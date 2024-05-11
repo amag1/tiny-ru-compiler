@@ -3,8 +3,8 @@ package semantic.abstractSintaxTree.Expression;
 import exceptions.semantic.syntaxTree.AstException;
 import lexical.Token;
 import semantic.JsonHelper;
+import semantic.abstractSintaxTree.Context;
 import semantic.symbolTable.AttributeType;
-import semantic.symbolTable.SymbolTableLookup;
 
 
 public class LiteralNode extends OperatingNode {
@@ -28,7 +28,7 @@ public class LiteralNode extends OperatingNode {
     }
 
     @Override
-    public AttributeType getAttributeType(SymbolTableLookup st) throws AstException {
+    public AttributeType getAttributeType(Context context) throws AstException {
         return this.attributeType;
     }
     

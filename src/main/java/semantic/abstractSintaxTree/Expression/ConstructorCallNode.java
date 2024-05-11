@@ -3,6 +3,7 @@ package semantic.abstractSintaxTree.Expression;
 import exceptions.semantic.syntaxTree.AstException;
 import lexical.Token;
 import semantic.JsonHelper;
+import semantic.abstractSintaxTree.Context;
 import semantic.symbolTable.*;
 
 import java.util.ArrayList;
@@ -19,10 +20,10 @@ public class ConstructorCallNode extends CallableNode {
     }
 
     @Override
-    public AttributeType getAttributeType(SymbolTableLookup st) throws AstException {
+    public AttributeType getAttributeType(Context context) throws AstException {
         // Check that parameters match
-        ClassEntry classEntry = st.getClassByName(this.className.getLexem());
-        MethodEntry constructor = classEntry.getConstructor();
+        Context constructorContext = new Context(); // TODO
+        MethodEntry constructor = constructorContext.getConstructor();
 
         // Convertir parametros del construcor en una lista
         List<VariableEntry> parameters = new ArrayList<>();
@@ -31,7 +32,7 @@ public class ConstructorCallNode extends CallableNode {
             parameters.add(parameter.getPosition(), parameter);
         }
 
-        checkParametersMatch(st, parameters);
+        checkParametersMatch(context, parameters);
 
         return constructor.getReturnType();
     }
