@@ -3,7 +3,6 @@ package semantic.abstractSintaxTree;
 import exceptions.semantic.syntaxTree.AstException;
 import lexical.Token;
 import semantic.abstractSintaxTree.Expression.*;
-import semantic.abstractSintaxTree.Expression.ConstructorCallNode;
 import semantic.abstractSintaxTree.Sentence.*;
 
 import java.util.List;
@@ -51,7 +50,7 @@ public interface AstHandler {
 
     BlockNode createBlockNode(List<SentenceNode> sentences);
 
-    void SetMethodParameter(MethodCall method, List<ExpressionNode> parameters);
+    void SetMethodParameter(CallableNode method, List<ExpressionNode> parameters);
 
     void addSentence(SentenceNode sentence);
 

@@ -1,11 +1,11 @@
 package semantic.abstractSintaxTree.Expression;
 
 import exceptions.semantic.syntaxTree.AstException;
+import exceptions.semantic.syntaxTree.UnaryTypeMismatchException;
 import lexical.Token;
-import lexical.Type;
-import location.Location;
 import semantic.JsonHelper;
 import semantic.symbolTable.AttributeType;
+import semantic.symbolTable.SymbolTableLookup;
 
 public class UnaryOperationNode extends ExpressionNode {
 
@@ -19,9 +19,17 @@ public class UnaryOperationNode extends ExpressionNode {
     }
 
     @Override
-    public AttributeType getAttributeType() throws AstException {
-        // TODO
-        return new AttributeType(true, true, new Token("", Type.KW_IF, new Location()));
+    public AttributeType getAttributeType(SymbolTableLookup st) throws AstException {
+        AttributeType operatingType = operating.getAttributeType(st);
+
+        AttributeType operatorType = this.operator.getAttributeType();
+        if (operatorType.getType().equals(operatingType.getType())) {
+            return operator.getAttributeType();
+        }
+        else {
+            throw new UnaryTypeMismatchException(operator.getToken(), operatorType.getType(), operatingType.getType());
+        }
+
     }
 
     public String toJson(int indentationIndex) {

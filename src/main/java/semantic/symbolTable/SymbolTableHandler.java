@@ -38,6 +38,8 @@ public interface SymbolTableHandler {
 
     void handleStart();
 
+    SymbolTableLookup getSymbolTableLookup();
+
     ClassEntry getCurrentClass();
 
     MethodEntry getCurrentMethod();

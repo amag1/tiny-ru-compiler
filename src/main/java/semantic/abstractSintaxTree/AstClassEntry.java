@@ -3,7 +3,7 @@ package semantic.abstractSintaxTree;
 import exceptions.semantic.syntaxTree.AstException;
 import semantic.Json;
 import semantic.JsonHelper;
-import semantic.symbolTable.MethodEntry;
+import semantic.symbolTable.SymbolTableLookup;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,10 +24,10 @@ public class AstClassEntry implements Json {
         return methods;
     }
 
-    public void validateSentences() throws AstException {
+    public void validateSentences(SymbolTableLookup st) throws AstException {
         for (Map.Entry<String, AstMethodEntry> entry : methods.entrySet()) {
             AstMethodEntry currentMethod = entry.getValue();
-            currentMethod.validateSentences();
+            currentMethod.validateSentences(st);
         }
     }
 

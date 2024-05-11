@@ -2,6 +2,7 @@ package syntactic;
 
 import exceptions.lexical.LexicalException;
 import exceptions.semantic.symbolTable.SymbolTableException;
+import exceptions.semantic.syntaxTree.AstException;
 import exceptions.syntactic.SyntacticException;
 import lexical.Lexical;
 import lexical.Token;
@@ -41,10 +42,11 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
      * @throws LexicalException   si ocurre un error lexico
      */
     @Override
-    public void analyze() throws SyntacticException, LexicalException, SymbolTableException {
+    public void analyze() throws SyntacticException, LexicalException, SymbolTableException, AstException {
         nextToken();
         program();
         st.consolidate();
+        ast.validateSenteces();
     }
 
     @Override
@@ -856,7 +858,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         return ast.handlePossibleChain(parentNode, childrenNode);
     }
 
-    private void llamadaMetodo(MethodCall methodCall) throws SyntacticException, LexicalException {
+    private void llamadaMetodo(CallableNode methodCall) throws SyntacticException, LexicalException {
         //  ⟨Argumentos-Actuales⟩ ⟨Encadenado-O-Lambda⟩
         // Create a new MethodCallNode with the varToken
         argumentosActuales(methodCall);
@@ -899,7 +901,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         return null; // Unreachable line
     }
 
-    private void argumentosActuales(MethodCall method) throws SyntacticException, LexicalException {
+    private void argumentosActuales(CallableNode method) throws SyntacticException, LexicalException {
         // ( ⟨Lista-Expresiones⟩ ) | ( )
         match(Type.OPEN_PAR);
 

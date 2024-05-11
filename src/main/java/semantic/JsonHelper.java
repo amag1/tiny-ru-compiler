@@ -1,8 +1,5 @@
 package semantic;
 
-import semantic.abstractSintaxTree.Sentence.SentenceNode;
-import semantic.symbolTable.MethodEntry;
-
 import java.util.List;
 import java.util.Map;
 
@@ -75,7 +72,7 @@ public class JsonHelper {
     }
 
 
-    public static String json(String name, List< ? extends Json> list, int indentationIndex) {
+    public static String json(String name, List<? extends Json> list, int indentationIndex) {
         String identationStr = getIdentationString(indentationIndex);
 
         String json = "\n" + identationStr + "\"" + name + "\": ";
@@ -99,7 +96,7 @@ public class JsonHelper {
         return json;
     }
 
-    public static String json(String name,  Json element, int indentationIndex) {
+    public static String json(String name, Json element, int indentationIndex) {
         String identationStr = getIdentationString(indentationIndex);
         String json = "\n" + identationStr + "\"" + name + "\": ";
         if (element == null) {
