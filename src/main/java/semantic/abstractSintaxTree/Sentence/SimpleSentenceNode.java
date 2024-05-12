@@ -18,7 +18,10 @@ public class SimpleSentenceNode extends SentenceNode {
     public void validate(Context context) throws AstException {
         // TODO: sacarlo. Por ahora lo deje para ver que lo otro funciona
         AttributeType type = expression.getAttributeType(context);
-        type.getType();
+        if (type != null) {
+            // TODO: ahora devuelve null en algunos metodos que retornan void
+            type.getType();
+        }
     }
 
     public String toJson(int indentationIndex) {

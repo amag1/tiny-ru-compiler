@@ -7,6 +7,8 @@ public class Context {
     private String currentClassName;
     private String currentMethodName;
 
+    private boolean isSelf;
+
     public Context(SymbolTableLookup st, String currentClassName, String currentMethodName) {
         this.st = st;
         this.currentClassName = currentClassName;
@@ -14,6 +16,11 @@ public class Context {
     }
 
     public VariableEntry getAttribute(String attributeName) {
+        // Si el contexto esta restringido a self, buscar en la clase actual
+        if (this.isSelf) {
+            return getAttributeInClass(attributeName, this.currentClassName);
+        }
+
         // El contexto es el método start
         if (this.currentClassName == null) {
             return getAttributeInStart(attributeName);
@@ -25,12 +32,12 @@ public class Context {
         }
 
         // El contexto es una funcion
-        return  getAttributeInMethod(attributeName, this.currentMethodName, this.currentClassName);
+        return getAttributeInMethod(attributeName, this.currentMethodName, this.currentClassName);
     }
 
     private VariableEntry getAttributeInStart(String attName) {
         MethodEntry start = st.getStart();
-        return  start.getLocalVariable(attName);
+        return start.getLocalVariable(attName);
     }
 
     private AttributeEntry getAttributeInClass(String attName, String className) {
@@ -56,7 +63,7 @@ public class Context {
 
     public MethodEntry getMethod(String methodName) {
         ClassEntry currentClass = st.getClassByName(currentClassName);
-        return  currentClass.getMethod(methodName);
+        return currentClass.getMethod(methodName);
     }
 
     public MethodEntry getConstructorByClass(String className) {
@@ -64,12 +71,12 @@ public class Context {
         if (currentClass == null) {
             return null;
         }
-        return  currentClass.getConstructor();
+        return currentClass.getConstructor();
     }
 
     public boolean checkTypes(AttributeType expectedType, AttributeType foundType) {
         if (foundType.getType().equals(expectedType.getType())) {
-            return  true;
+            return true;
         }
 
         // TODO chequar polimorfismo
@@ -78,6 +85,16 @@ public class Context {
     }
 
     public Context clone(String currentClassName, String currentMethodName) {
-        return  new Context(this.st, currentClassName, currentMethodName);
+        return new Context(this.st, currentClassName, currentMethodName);
+    }
+
+    public Context cloneSelfContext() {
+        Context newContext = new Context(this.st, this.currentClassName, this.currentMethodName);
+        newContext.isSelf = true;
+        return newContext;
+    }
+
+    public ClassEntry getClass(String className) {
+        return st.getClassByName(className);
     }
 }

@@ -23,7 +23,12 @@ public class VariableAccessNode extends PrimaryNode {
     public AttributeType getAttributeType(Context context) throws AstException {
         VariableEntry var = context.getAttribute(this.variableName);
         if (var == null) {
-            throw  new UndeclaredVariableAccessException(token);
+            throw new UndeclaredVariableAccessException(token);
+        }
+
+        // Si el atributo es heredado y privado, es inaccesible
+        if (var.isInherited() && var.isPrivate()) {
+            throw new UndeclaredVariableAccessException(token);
         }
 
         return var.getType();

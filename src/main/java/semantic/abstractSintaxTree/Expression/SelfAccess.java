@@ -29,8 +29,9 @@ public class SelfAccess extends PrimaryNode {
 
     @Override
     public AttributeType getAttributeType(Context context) throws AstException {
-        // TODO
-        return new AttributeType(true, true, new Token("", Type.KW_IF, new Location()));
+        // Obtener atributo de la clase actual
+        return node.getAttributeType(context.cloneSelfContext());
+
     }
 }
 

@@ -5,8 +5,7 @@ import location.Location;
 import semantic.Json;
 import semantic.JsonHelper;
 
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * Representa un metodo de la tabla de simbolos
@@ -128,6 +127,10 @@ public class MethodEntry implements Json {
 
     public Map<String, VariableEntry> getFormalParameters() {
         return formalParameters;
+    }
+
+    public List<VariableEntry> getFormalParametersList() {
+        return new ArrayList<>(formalParameters.values());
     }
 
     public Map<String, VariableEntry> getLocalVariables() {
