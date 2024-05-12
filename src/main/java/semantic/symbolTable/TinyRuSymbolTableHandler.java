@@ -87,7 +87,7 @@ public class TinyRuSymbolTableHandler implements SymbolTableHandler {
         }
 
         // Create new attribute
-        AttributeEntry newAtt = new AttributeEntry(type, att, isPrivate);
+        VariableEntry newAtt = new VariableEntry(type, att, isPrivate);
         currentClass.addAttribute(newAtt);
     }
 
@@ -271,8 +271,8 @@ public class TinyRuSymbolTableHandler implements SymbolTableHandler {
      */
     private void checkAttributeTypes(ClassEntry classEntry) throws TypeNotFoundException {
         // Chequear tipos para todos los atributos
-        for (Map.Entry<String, AttributeEntry> entry : classEntry.getAttributes().entrySet()) {
-            AttributeEntry attribute = entry.getValue();
+        for (Map.Entry<String, VariableEntry> entry : classEntry.getAttributes().entrySet()) {
+            VariableEntry attribute = entry.getValue();
             AttributeType type = attribute.getType();
             if (!checkTypeExists(type)) {
                 throw new TypeNotFoundException(attribute.getToken(), type.getType());
@@ -361,14 +361,14 @@ public class TinyRuSymbolTableHandler implements SymbolTableHandler {
      * @throws SymbolTableException Si se redefine un atributo heredado
      */
     public void setInheritedAttributes(ClassEntry classEntry, ClassEntry parent) throws SymbolTableException {
-        for (Map.Entry<String, AttributeEntry> entry : parent.getAttributes().entrySet()) {
-            AttributeEntry attribute = entry.getValue();
-            AttributeEntry newAttribute = new AttributeEntry(attribute.getType(), attribute.getToken(), attribute.isPrivate());
+        for (Map.Entry<String, VariableEntry> entry : parent.getAttributes().entrySet()) {
+            VariableEntry attribute = entry.getValue();
+            VariableEntry newAttribute = new VariableEntry(attribute.getType(), attribute.getToken(), attribute.isPrivate());
             newAttribute.setInherited(true);
             newAttribute.setPosition(attribute.getPosition());
 
             // Cheque que el atributo no sea redefinido en classEntry
-            AttributeEntry redefinedAttribute = classEntry.getAttribute(attribute.getName());
+            VariableEntry redefinedAttribute = classEntry.getAttribute(attribute.getName());
             if (redefinedAttribute != null) {
                 throw new RedefinedInheritedAttributeException(redefinedAttribute.getToken());
             }

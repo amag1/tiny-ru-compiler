@@ -40,7 +40,7 @@ public class Context {
         return start.getLocalVariable(attName);
     }
 
-    private AttributeEntry getAttributeInClass(String attName, String className) {
+    private VariableEntry getAttributeInClass(String attName, String className) {
         ClassEntry classEntry = st.getClassByName(className);
         return classEntry.getAttribute(attName);
     }
