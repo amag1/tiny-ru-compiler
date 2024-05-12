@@ -7,6 +7,7 @@ import exceptions.semantic.syntaxTree.AstException;
 import exceptions.semantic.syntaxTree.ParameterCountMismatchException;
 import exceptions.semantic.syntaxTree.ParameterTypeMismatchException;
 import lexical.Token;
+import semantic.abstractSintaxTree.Context;
 import semantic.symbolTable.AttributeType;
 import semantic.symbolTable.SymbolTableLookup;
 import semantic.symbolTable.VariableEntry;
@@ -34,21 +35,19 @@ public abstract class CallableNode extends PrimaryNode {
         this.parameters = parameters;
     }
 
-    protected void checkParametersMatch(SymbolTableLookup st, List<VariableEntry> parameters) throws AstException {
+    protected void checkParametersMatch(Context context, List<VariableEntry> parameters) throws AstException {
         if (parameters.size() != this.parameters.size()) {
             throw new ParameterCountMismatchException(this.name, this.parameters.size(), parameters.size(), this.token);
         }
 
         for (int i = 0; i < parameters.size(); i++) {
-            AttributeType hasType = this.parameters.get(i).getAttributeType(st);
+            AttributeType hasType = this.parameters.get(i).getAttributeType(context);
             AttributeType expectedType = parameters.get(i).getType();
 
-            if (!hasType.getType().equals(expectedType.getType())) {
+            if (context.checkTypes(expectedType, hasType)) {
                 throw new ParameterTypeMismatchException(this.name, expectedType.getType(), hasType.getType(), this.token);
             }
         }
-
-
     }
 
     protected List<ExpressionNode> getParameters() {

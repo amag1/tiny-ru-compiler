@@ -2,7 +2,7 @@ package semantic.abstractSintaxTree.Sentence;
 
 import exceptions.semantic.syntaxTree.AstException;
 import semantic.JsonHelper;
-import semantic.symbolTable.SymbolTableLookup;
+import semantic.abstractSintaxTree.Context;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ public class BlockNode extends SentenceNode {
     }
 
     @Override
-    public void validate(SymbolTableLookup st) throws AstException {
+    public void validate(Context context) throws AstException {
         // TODO
     }
 

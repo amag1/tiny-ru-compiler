@@ -27,7 +27,8 @@ public class AstClassEntry implements Json {
     public void validateSentences(SymbolTableLookup st) throws AstException {
         for (Map.Entry<String, AstMethodEntry> entry : methods.entrySet()) {
             AstMethodEntry currentMethod = entry.getValue();
-            currentMethod.validateSentences(st);
+            Context context = new Context(st, this.name, currentMethod.getName());
+            currentMethod.validateSentences(context);
         }
     }
 

@@ -3,11 +3,9 @@ package semantic.abstractSintaxTree.Expression;
 import exceptions.semantic.syntaxTree.AstException;
 import exceptions.semantic.syntaxTree.BinaryTypeMismatchException;
 import lexical.Token;
-import lexical.Type;
-import location.Location;
 import semantic.JsonHelper;
+import semantic.abstractSintaxTree.Context;
 import semantic.symbolTable.AttributeType;
-import semantic.symbolTable.SymbolTableLookup;
 
 public class BinaryOperationNode extends ExpressionNode {
     private ExpressionNode leftOperating;
@@ -22,9 +20,9 @@ public class BinaryOperationNode extends ExpressionNode {
     }
 
     @Override
-    public AttributeType getAttributeType(SymbolTableLookup st) throws AstException {
-        String leftType = leftOperating.getAttributeType(st).getType();
-        String rightType = rightOperating.getAttributeType(st).getType();
+    public AttributeType getAttributeType(Context context) throws AstException {
+        String leftType = leftOperating.getAttributeType(context).getType();
+        String rightType = rightOperating.getAttributeType(context).getType();
         String operatorType = this.operator.getAttributeType().getType();
 
         if (!leftType.equals(operatorType)) {

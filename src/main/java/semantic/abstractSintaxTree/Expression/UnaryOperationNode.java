@@ -4,8 +4,8 @@ import exceptions.semantic.syntaxTree.AstException;
 import exceptions.semantic.syntaxTree.UnaryTypeMismatchException;
 import lexical.Token;
 import semantic.JsonHelper;
+import semantic.abstractSintaxTree.Context;
 import semantic.symbolTable.AttributeType;
-import semantic.symbolTable.SymbolTableLookup;
 
 public class UnaryOperationNode extends ExpressionNode {
 
@@ -19,8 +19,8 @@ public class UnaryOperationNode extends ExpressionNode {
     }
 
     @Override
-    public AttributeType getAttributeType(SymbolTableLookup st) throws AstException {
-        AttributeType operatingType = operating.getAttributeType(st);
+    public AttributeType getAttributeType(Context context) throws AstException {
+        AttributeType operatingType = operating.getAttributeType(context);
 
         AttributeType operatorType = this.operator.getAttributeType();
         if (operatorType.getType().equals(operatingType.getType())) {
