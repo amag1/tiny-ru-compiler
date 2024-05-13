@@ -4,12 +4,23 @@ import semantic.symbolTable.*;
 
 public class Context {
     private SymbolTableLookup st;
+
+    private String callingClassName;
     private String currentClassName;
     private String currentMethodName;
 
     private boolean isSelf;
 
-    public Context(SymbolTableLookup st, String currentClassName, String currentMethodName) {
+    public Context(SymbolTableLookup st) {
+        this.st = st;
+    }
+
+    public Context(SymbolTableLookup st, String callingClassName) {
+        this.st = st;
+        this.callingClassName = callingClassName;
+    }
+
+    private Context(SymbolTableLookup st, String currentClassName, String currentMethodName) {
         this.st = st;
         this.currentClassName = currentClassName;
         this.currentMethodName = currentMethodName;
