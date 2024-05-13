@@ -121,4 +121,8 @@ public class Context {
     public boolean isCallingClassScope() {
         return this.callingClassName.equals(this.currentClassName);
     }
+
+    public MethodEntry getCurrentMethod() {
+        return  this.getMethod(this.currentMethodName);
+    }
 }

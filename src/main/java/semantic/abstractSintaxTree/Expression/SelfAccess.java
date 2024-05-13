@@ -16,7 +16,9 @@ public class SelfAccess extends PrimaryNode {
     public SelfAccess(PrimaryNode node) {
         this.nodeType = "selfAccess";
         this.node = node;
-        this.token = node.getToken();
+        if (node != null) {
+            this.token = node.getToken();
+        }
     }
 
     public String toJson(int indentationIndex) {

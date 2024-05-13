@@ -33,12 +33,12 @@ public class ArrayAccessNode extends PrimaryNode {
         if (arr.isPrivate()) {
             // Si el atributo es heredado y privado, es inaccesible
             if (arr.isPrivate()) {
-                throw new UnaccesibleVariableException(this.idToken);
+                throw new UnaccesibleVariableException(this.token);
             }
 
             // Si el atributo es llamado desde otro scope, es inaccesible
             if (!context.isCallingClassScope()) {
-                throw new UnaccesibleVariableException(this.idToken);
+                throw new UnaccesibleVariableException(this.token);
             }
         }
 

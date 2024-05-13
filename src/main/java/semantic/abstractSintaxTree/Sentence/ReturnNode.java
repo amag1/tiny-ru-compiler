@@ -1,9 +1,12 @@
 package semantic.abstractSintaxTree.Sentence;
 
 import exceptions.semantic.syntaxTree.AstException;
+import location.Location;
 import semantic.JsonHelper;
 import semantic.abstractSintaxTree.Context;
 import semantic.abstractSintaxTree.Expression.ExpressionNode;
+import semantic.symbolTable.AttributeType;
+import semantic.symbolTable.MethodEntry;
 
 public class ReturnNode extends SentenceNode {
     private ExpressionNode returnValue;
@@ -20,9 +23,21 @@ public class ReturnNode extends SentenceNode {
 
     @Override
     public void validate(Context context) throws AstException {
-        if (returnValue != null) {
-            returnValue.getAttributeType(context);
+        MethodEntry method = context.getCurrentMethod();
+        if (method.getReturnType() != null) {
+            // Chequear que el tipo de retorno coincida
+            AttributeType currentReturnType = returnValue.getAttributeType(context);
+            if (!context.checkTypes(method.getReturnType(), currentReturnType)) {
+                throw new AstException("s", new Location()); // TODO
+            }
         }
+        else {
+            // Metodo void, chequear que el return sea vacío
+            if (returnValue != null) {
+                throw new AstException("s", new Location()); // TODO
+            }
+        }
+
         setReturn(true);
     }
 

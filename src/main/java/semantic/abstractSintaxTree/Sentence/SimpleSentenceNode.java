@@ -17,7 +17,7 @@ public class SimpleSentenceNode extends SentenceNode {
     @Override
     public void validate(Context context) throws AstException {
         // TODO: sacarlo. Por ahora lo deje para ver que lo otro funciona
-        AttributeType type = expression.getAttributeType(context);
+        expression.getAttributeType(context);
     }
 
     public String toJson(int indentationIndex) {

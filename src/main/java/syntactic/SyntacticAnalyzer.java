@@ -337,7 +337,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         // O tambien puede ser void
         if (getTokenType() == Type.TYPE_VOID) {
             match(Type.TYPE_VOID);
-            return new AttributeType("void");
+            return null; // Void
         }
 
         return tipo();
@@ -571,7 +571,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         } catch (SyntacticException e) {
             throwSyntacticException("expresión");
         }
-        return null; // TODO
+        return null; // Unreachable line
     }
 
     private ExpressionNode expOrPrima(ExpressionNode previousExpression) throws SyntacticException, LexicalException {
