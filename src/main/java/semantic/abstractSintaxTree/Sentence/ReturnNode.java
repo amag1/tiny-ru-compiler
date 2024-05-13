@@ -2,6 +2,7 @@ package semantic.abstractSintaxTree.Sentence;
 
 import exceptions.semantic.syntaxTree.AstException;
 import exceptions.semantic.syntaxTree.InvalidMethodReturn;
+import exceptions.semantic.syntaxTree.InvalidVoidMethodReturn;
 import lexical.Token;
 import location.Location;
 import semantic.JsonHelper;
@@ -40,7 +41,7 @@ public class ReturnNode extends SentenceNode {
         else {
             // Metodo void, chequear que el return sea vacío
             if (returnValue != null) {
-                throw new AstException("s", new Location()); // TODO
+                throw new InvalidVoidMethodReturn(token);
             }
         }
 
