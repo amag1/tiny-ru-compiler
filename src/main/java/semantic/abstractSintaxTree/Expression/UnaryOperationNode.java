@@ -16,6 +16,7 @@ public class UnaryOperationNode extends ExpressionNode {
         this.nodeType = "unaryOperation";
         this.operating = operating;
         this.operator = new Operator(operator);
+        this.token = operator;
     }
 
     @Override

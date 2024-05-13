@@ -20,7 +20,10 @@ public class ReturnNode extends SentenceNode {
 
     @Override
     public void validate(Context context) throws AstException {
-        // TODO
+        if (returnValue != null) {
+            returnValue.getAttributeType(context);
+        }
+        setReturn(true);
     }
 
     public String toJson(int indentationIndex) {

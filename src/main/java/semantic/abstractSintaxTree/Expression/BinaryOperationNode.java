@@ -17,6 +17,7 @@ public class BinaryOperationNode extends ExpressionNode {
         this.leftOperating = leftOperating;
         this.rightOperating = rightOperating;
         this.operator = new Operator(operator);
+        this.token = leftOperating.getToken();
     }
 
     @Override

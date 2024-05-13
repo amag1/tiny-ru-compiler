@@ -17,8 +17,6 @@ public abstract class CallableNode extends PrimaryNode {
 
     private String name;
 
-    private Token token;
-
     public CallableNode(Token token) {
         this.name = token.getLexem();
         this.token = token;
@@ -45,7 +43,7 @@ public abstract class CallableNode extends PrimaryNode {
             AttributeType expectedType = parameters.get(i).getType();
 
             if (!context.checkTypes(expectedType, hasType)) {
-                throw new ParameterTypeMismatchException(this.name, expectedType.getType(), hasType.getType(), this.token);
+                throw new ParameterTypeMismatchException(expectedType.getType(), hasType.getType(), this.token);
             }
         }
     }
