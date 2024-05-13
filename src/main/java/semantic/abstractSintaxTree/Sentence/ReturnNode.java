@@ -1,6 +1,8 @@
 package semantic.abstractSintaxTree.Sentence;
 
 import exceptions.semantic.syntaxTree.AstException;
+import exceptions.semantic.syntaxTree.InvalidMethodReturn;
+import lexical.Token;
 import location.Location;
 import semantic.JsonHelper;
 import semantic.abstractSintaxTree.Context;
@@ -11,14 +13,18 @@ import semantic.symbolTable.MethodEntry;
 public class ReturnNode extends SentenceNode {
     private ExpressionNode returnValue;
 
-    public ReturnNode(ExpressionNode returnValue) {
+    private Token token;
+
+    public ReturnNode(ExpressionNode returnValue, Token token) {
         this.nodeType = "returnSentence";
         this.returnValue = returnValue;
+        this.token = token;
     }
 
-    public ReturnNode() {
+    public ReturnNode(Token token) {
+        this.token = token;
         this.nodeType = "returnSentence";
-        this.returnValue = null; // TODO: deberia devolver un tipo void
+        this.returnValue = null;
     }
 
     @Override
@@ -28,7 +34,7 @@ public class ReturnNode extends SentenceNode {
             // Chequear que el tipo de retorno coincida
             AttributeType currentReturnType = returnValue.getAttributeType(context);
             if (!context.checkTypes(method.getReturnType(), currentReturnType)) {
-                throw new AstException("s", new Location()); // TODO
+                throw new InvalidMethodReturn(method.getReturnType().getType(), currentReturnType.getType(), this.token);
             }
         }
         else {

@@ -96,12 +96,12 @@ public class TinyRuAstHandler implements AstHandler {
         return new SimpleSentenceNode(expression);
     }
 
-    public ReturnNode createEmptyReturnNode() {
-        return new ReturnNode();
+    public ReturnNode createEmptyReturnNode(Token token) {
+        return new ReturnNode(token);
     }
 
-    public ReturnNode createReturnNode(ExpressionNode exp) {
-        return new ReturnNode(exp);
+    public ReturnNode createReturnNode(ExpressionNode exp, Token token) {
+        return new ReturnNode(exp, token);
     }
 
     public EmptySentenceNode createEmptySentenceNode() {
