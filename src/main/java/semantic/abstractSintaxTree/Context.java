@@ -97,4 +97,8 @@ public class Context {
     public ClassEntry getClass(String className) {
         return st.getClassByName(className);
     }
+
+    public void setSelf(boolean self) {
+        isSelf = self;
+    }
 }
