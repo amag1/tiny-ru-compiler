@@ -1,30 +1,11 @@
-struct A : B {
-}
-struct B{
- pri Int a;
-}
-
-impl A {
- .(){}
-
- fn retB() -> B {
-    Int b;
-    (IO.out_int(self.a));
- }
-}
-
-impl B {
-    .(){}
-
-    fn print(Str a) -> void {
-        (IO.out_str(a));
-    }
-}
-
-start{
-    A a;
-    (a.retB().print("Hola"));
-}
+/? CyclicInheritanceException
+struct A:C {}
+struct B:A {}
+struct C:B {}
+impl A {.(){}}
+impl B{.(){}}
+impl C {.(){}}
+start{}
 
 /? ERROR: SEMANTICO - DECLARACIONES
 /? | NUMERO DE LINEA: | NUMERO DE COLUMNA: | DESCRIPCION: |
