@@ -16,7 +16,6 @@ public class SimpleSentenceNode extends SentenceNode {
 
     @Override
     public void validate(Context context) throws AstException {
-        // TODO: sacarlo. Por ahora lo deje para ver que lo otro funciona
         expression.getAttributeType(context);
     }
 
