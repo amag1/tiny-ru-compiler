@@ -16,9 +16,19 @@ public class Operator implements Json {
         return switch (operator.getLexem()) {
             case "+", "-", "*", "/", "%", "++", "--" ->
                     new AttributeType("Int");
-            case ">", "<", ">=", "<=", "==", "!=", "&&", "||", "!" ->
-                    new AttributeType("Bool");
-            default -> throw new RuntimeException("Operator not supported");
+            // case ">", "<", ">=", "<=", "==", "!=", "&&", "||", "!" ->
+            // new AttributeType("Bool");
+            default -> new AttributeType("Bool");
+        };
+    }
+
+    public AttributeType getInputType() {
+        return switch (operator.getLexem()) {
+            case "+", "-", "*", "/", "%", "++", "--", ">", "<", ">=", "<=" ->
+                    new AttributeType("Int");
+            case "==", "!=" -> new AttributeType("Any");
+            // case "&&", "||", "!" -> new AttributeType("Bool");
+            default -> new AttributeType("Bool");
         };
     }
 

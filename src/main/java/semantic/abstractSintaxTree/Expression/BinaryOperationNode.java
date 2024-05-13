@@ -7,6 +7,8 @@ import semantic.JsonHelper;
 import semantic.abstractSintaxTree.Context;
 import semantic.symbolTable.AttributeType;
 
+import javax.management.Attribute;
+
 public class BinaryOperationNode extends ExpressionNode {
     private ExpressionNode leftOperating;
     private ExpressionNode rightOperating;
@@ -22,19 +24,31 @@ public class BinaryOperationNode extends ExpressionNode {
 
     @Override
     public AttributeType getAttributeType(Context context) throws AstException {
-        String leftType = leftOperating.getAttributeType(context).getType();
-        String rightType = rightOperating.getAttributeType(context).getType();
-        String operatorType = this.operator.getAttributeType().getType();
+        AttributeType leftType = leftOperating.getAttributeType(context);
+        AttributeType rightType = rightOperating.getAttributeType(context);
 
-        if (!leftType.equals(operatorType)) {
-            throw new BinaryTypeMismatchException(operator.getToken(), operatorType, leftType);
+        AttributeType returnType = this.operator.getAttributeType();
+        AttributeType inputType = this.operator.getInputType();
+
+        if (inputType.getType().equals("Any")) {
+            // Si los tipos son primitivos, chequear que sean iguales
+            // Si no lo son, la llamada es valida
+            if (leftType.isPrimitive() && !leftType.getType().equals(rightType.getType())) {
+                throw new BinaryTypeMismatchException(operator.getToken(), leftType.getType(), rightType.getType());
+            }
+
+            return returnType;
         }
 
-        if (!rightType.equals(operatorType)) {
-            throw new BinaryTypeMismatchException(operator.getToken(), operatorType, rightType);
+        if (!leftType.getType().equals(inputType.getType())) {
+            throw new BinaryTypeMismatchException(operator.getToken(), inputType.getType(), leftType.getType());
         }
 
-        return operator.getAttributeType();
+        if (!rightType.getType().equals(inputType.getType())) {
+            throw new BinaryTypeMismatchException(operator.getToken(), inputType.getType(), rightType.getType());
+        }
+
+        return returnType;
     }
 
     public String toJson(int indentationIndex) {
