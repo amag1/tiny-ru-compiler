@@ -117,4 +117,8 @@ public class Context {
     public ClassEntry getCallingClass() {
         return st.getClassByName(this.callingClassName);
     }
+
+    public boolean isCallingClassScope() {
+        return this.callingClassName.equals(this.currentClassName);
+    }
 }

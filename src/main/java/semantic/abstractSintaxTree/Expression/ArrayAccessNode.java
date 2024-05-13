@@ -1,9 +1,6 @@
 package semantic.abstractSintaxTree.Expression;
 
-import exceptions.semantic.syntaxTree.AstException;
-import exceptions.semantic.syntaxTree.NonIntArrayIndexException;
-import exceptions.semantic.syntaxTree.UndeclaredVariableAccessException;
-import exceptions.semantic.syntaxTree.VariableIsNotArrayException;
+import exceptions.semantic.syntaxTree.*;
 import lexical.Token;
 import semantic.JsonHelper;
 import semantic.abstractSintaxTree.Context;
@@ -29,6 +26,23 @@ public class ArrayAccessNode extends PrimaryNode {
         if (arr == null) {
             throw new UndeclaredVariableAccessException(this.idToken);
         }
+
+        // Setear el acceso self en falso
+        context.setSelf(false);
+
+        // Chequar si se puede acceder al atributo
+        if (arr.isPrivate()) {
+            // Si el atributo es heredado y privado, es inaccesible
+            if (arr.isPrivate()) {
+                throw new UnaccesibleVariableException(this.idToken);
+            }
+
+            // Si el atributo es llamado desde otro scope, es inaccesible
+            if (!context.isCallingClassScope()) {
+                throw new UnaccesibleVariableException(this.idToken);
+            }
+        }
+
 
         // Check que el array sea un array
         if (!arr.getType().isArray()) {
