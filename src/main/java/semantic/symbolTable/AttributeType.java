@@ -8,16 +8,16 @@ import semantic.Json;
  */
 public class AttributeType implements Json {
     public static AttributeType BoolType = new AttributeType("Bool");
-    public static  AttributeType StrType = new AttributeType("Str");
-    public static  AttributeType IntType = new AttributeType("Int");
+    public static AttributeType StrType = new AttributeType("Str");
+    public static AttributeType IntType = new AttributeType("Int");
     public static AttributeType CharType = new AttributeType("Char");
     public static AttributeType NilType = new AttributeType();
 
     private boolean isArray;
     private String type;
     private boolean isPrimitive;
-
     private boolean isNil;
+    private boolean isPredefined;
 
 
     private Token token;
@@ -41,7 +41,7 @@ public class AttributeType implements Json {
 
     @Override
     public String toJson(int identationIndex) {
-        String json =  "\"";
+        String json = "\"";
 
         if (this.isArray) {
             json += "Array ";
@@ -49,7 +49,7 @@ public class AttributeType implements Json {
 
         json += type;
 
-        json +=  "\"";
+        json += "\"";
 
         return json;
     }
@@ -71,9 +71,11 @@ public class AttributeType implements Json {
     }
 
     public boolean equals(AttributeType comparedAttributeType) {
-        if (comparedAttributeType == null) return  false;
+        if (comparedAttributeType == null) {
+            return false;
+        }
 
-        return  this.isPrimitive == comparedAttributeType.isPrimitive &&
+        return this.isPrimitive == comparedAttributeType.isPrimitive &&
                 this.isArray == comparedAttributeType.isArray &&
                 this.type.equals(comparedAttributeType.type);
     }
@@ -86,4 +88,11 @@ public class AttributeType implements Json {
         isNil = nil;
     }
 
+    public boolean isPredefined() {
+        return isPredefined;
+    }
+
+    public void setPredefined(boolean predefined) {
+        isPredefined = predefined;
+    }
 }
