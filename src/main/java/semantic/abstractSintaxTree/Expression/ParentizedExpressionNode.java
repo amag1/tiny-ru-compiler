@@ -12,6 +12,7 @@ public class ParentizedExpressionNode extends PrimaryNode {
     public ParentizedExpressionNode(ExpressionNode expression) {
         this.nodeType = "parentizedExpression";
         this.expression = expression;
+        this.token = expression.getToken();
     }
 
     public String toJson(int indentationIndex) {

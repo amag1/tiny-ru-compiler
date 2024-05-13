@@ -9,14 +9,13 @@ import semantic.symbolTable.VariableEntry;
 
 public class ArrayAccessNode extends PrimaryNode {
     private String arrayName;
-    private Token idToken;
     private ExpressionNode index;
 
     public ArrayAccessNode(Token arrayName, ExpressionNode index) {
         this.nodeType = "arrayAccess";
         this.arrayName = arrayName.getLexem();
-        this.idToken = arrayName;
         this.index = index;
+        this.token = arrayName;
     }
 
     @Override
@@ -24,7 +23,7 @@ public class ArrayAccessNode extends PrimaryNode {
         // Check que el array exista
         VariableEntry arr = context.getAttribute(this.arrayName);
         if (arr == null) {
-            throw new UndeclaredVariableAccessException(this.idToken);
+            throw new UndeclaredVariableAccessException(this.getToken());
         }
 
         // Setear el acceso self en falso
@@ -46,13 +45,13 @@ public class ArrayAccessNode extends PrimaryNode {
 
         // Check que el array sea un array
         if (!arr.getType().isArray()) {
-            throw new VariableIsNotArrayException(this.idToken);
+            throw new VariableIsNotArrayException(this.getToken());
         }
 
         // Check que el indice sea de tipo entero
         AttributeType indexType = index.getAttributeType(context);
         if (!indexType.equals(AttributeType.IntType)) {
-            throw new NonIntArrayIndexException(this.idToken);
+            throw new NonIntArrayIndexException(this.getToken());
         }
 
         // TODO: hacer esto un poco mas bonito

@@ -11,7 +11,7 @@ public class EmptySentenceNode extends SentenceNode {
 
     @Override
     public void validate(Context context) {
-        // TODO
+        // No hace nada
     }
 
     public String toJson(int indentationIndex) {

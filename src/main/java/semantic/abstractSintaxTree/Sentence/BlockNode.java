@@ -16,7 +16,12 @@ public class BlockNode extends SentenceNode {
 
     @Override
     public void validate(Context context) throws AstException {
-        // TODO
+        for (SentenceNode sentence : sentences) {
+            sentence.validate(context);
+            if (sentence.hasReturn()) {
+                setReturn(true);
+            }
+        }
     }
 
     public String toJson(int indentationIndex) {

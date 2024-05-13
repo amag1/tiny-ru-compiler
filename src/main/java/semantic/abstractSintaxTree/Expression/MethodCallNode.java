@@ -15,8 +15,6 @@ import java.util.List;
 public class MethodCallNode extends CallableNode {
     private String methodName;
 
-    private Token token;
-
     public MethodCallNode(Token methodName) {
         super(methodName);
         this.nodeType = "methodCall";

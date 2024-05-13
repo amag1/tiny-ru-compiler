@@ -11,8 +11,6 @@ public class LiteralNode extends OperatingNode {
     private AttributeType attributeType;
     private String value;
 
-    private Token token;
-
     public LiteralNode(Token token) {
         this.token = token;
         this.attributeType = switch (token.getType()) {
@@ -31,7 +29,7 @@ public class LiteralNode extends OperatingNode {
     public AttributeType getAttributeType(Context context) throws AstException {
         return this.attributeType;
     }
-    
+
     public String toJson(int indentationIndex) {
         indentationIndex++;
 

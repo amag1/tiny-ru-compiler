@@ -11,7 +11,6 @@ import semantic.symbolTable.VariableEntry;
 
 public class VariableAccessNode extends PrimaryNode {
     private String variableName;
-    private Token token;
 
     public VariableAccessNode(Token token) {
         this.nodeType = "varAccess";

@@ -25,6 +25,7 @@ public class StaticMethodCallNode extends CallableNode {
         this.nodeType = "staticMethodCall";
         this.methodName = methodName;
         this.className = className;
+        this.token = className;
     }
 
     @Override

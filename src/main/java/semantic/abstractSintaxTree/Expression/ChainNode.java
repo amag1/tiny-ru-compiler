@@ -16,6 +16,7 @@ public class ChainNode extends PrimaryNode {
         this.nodeType = "chain";
         this.parentNode = parentNode;
         this.childrenNode = childrenNode;
+        this.token = parentNode.getToken();
     }
 
     public AttributeType getAttributeType(Context context) throws AstException {
@@ -24,7 +25,7 @@ public class ChainNode extends PrimaryNode {
 
         // Obtener el tipo del nodo hijo en base al contexto del padre
         Context childrendContext = context.clone(parentType.getType(), null);
-        return  childrenNode.getAttributeType(childrendContext);
+        return childrenNode.getAttributeType(childrendContext);
     }
 
     public String toJson(int indentationIndex) {
