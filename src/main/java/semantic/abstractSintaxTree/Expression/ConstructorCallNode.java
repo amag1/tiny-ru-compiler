@@ -13,20 +13,19 @@ import java.util.List;
 import java.util.Map;
 
 public class ConstructorCallNode extends CallableNode {
-    private Token className;
 
     public ConstructorCallNode(Token className) {
         super(className, className.getLexem());
         this.nodeType = "constructorCall";
-        this.className = className;
+        this.token = className;
     }
 
     @Override
     public AttributeType getAttributeType(Context context) throws AstException {
         // Check that parameters match
-        MethodEntry constructor = context.getConstructorByClass(this.className.getLexem());
+        MethodEntry constructor = context.getConstructorByClass(this.token.getLexem());
         if (constructor == null) {
-            throw new ClassNotFoundException(className);
+            throw new ClassNotFoundException(token);
         }
 
         // Convertir parametros del construcor en una lista
@@ -46,7 +45,7 @@ public class ConstructorCallNode extends CallableNode {
 
         return "{" +
                 JsonHelper.json("nodeType", this.nodeType, indentationIndex) + "," +
-                JsonHelper.json("className", this.className.getLexem(), indentationIndex) + "," +
+                JsonHelper.json("className", this.token.getLexem(), indentationIndex) + "," +
                 JsonHelper.json("parameters", super.getParameters(), indentationIndex) +
                 "\n" + JsonHelper.getIdentationString(indentationIndex - 1) + "}";
     }

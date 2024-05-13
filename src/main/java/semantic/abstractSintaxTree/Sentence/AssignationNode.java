@@ -1,10 +1,12 @@
 package semantic.abstractSintaxTree.Sentence;
 
 import exceptions.semantic.syntaxTree.AstException;
+import exceptions.semantic.syntaxTree.ParameterTypeMismatchException;
 import semantic.JsonHelper;
 import semantic.abstractSintaxTree.Context;
 import semantic.abstractSintaxTree.Expression.ExpressionNode;
 import semantic.abstractSintaxTree.Expression.PrimaryNode;
+import semantic.symbolTable.AttributeType;
 
 public class AssignationNode extends SentenceNode {
     private PrimaryNode leftSide;
@@ -18,7 +20,13 @@ public class AssignationNode extends SentenceNode {
 
     @Override
     public void validate(Context context) throws AstException {
-        // TODO
+        // Validar ambos lados y chequear que sean compatibles
+        AttributeType leftType = leftSide.getAttributeType(context);
+        AttributeType rightType = rightSide.getAttributeType(context);
+
+        if (!context.checkTypes(leftType, rightType)) {
+            throw new ParameterTypeMismatchException(leftType.getType(), rightType.getType(), rightSide.getToken());
+        }
     }
 
     public String toJson(int indentationIndex) {

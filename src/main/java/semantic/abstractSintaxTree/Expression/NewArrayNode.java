@@ -14,6 +14,7 @@ public class NewArrayNode extends PrimaryNode {
 
     public NewArrayNode(Token elementsTypeToken, ExpressionNode lengthExpression) {
         this.nodeType = "newArray";
+        this.token = elementsTypeToken;
         this.lengthExpression = lengthExpression;
         this.elementsType = switch (elementsTypeToken.getType()) {
             case TYPE_INT -> AttributeType.IntType;
