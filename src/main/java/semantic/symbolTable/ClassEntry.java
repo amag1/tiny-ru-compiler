@@ -15,7 +15,7 @@ import java.util.TreeMap;
 public class ClassEntry implements Json {
     private String name;
     private Token token;
-    private Map<String, AttributeEntry> attributes;
+    private Map<String, VariableEntry> attributes;
     private Map<String, MethodEntry> methods;
     private boolean foundStruct;
     private boolean foundImpl;
@@ -33,7 +33,7 @@ public class ClassEntry implements Json {
         this.foundStruct = false;
         this.foundImpl = false;
         this.hasConstructor = false;
-        this.attributes = new TreeMap<String, AttributeEntry>();
+        this.attributes = new TreeMap<String, VariableEntry>();
         this.methods = new TreeMap<String, MethodEntry>();
     }
 
@@ -105,23 +105,23 @@ public class ClassEntry implements Json {
         return this.getToken().getLocation();
     }
 
-    public AttributeEntry getAttribute(String name) {
+    public VariableEntry getAttribute(String name) {
         return attributes.get(name);
     }
 
-    public TreeMap<String, AttributeEntry> getAttributes() {
+    public TreeMap<String, VariableEntry> getAttributes() {
         return new TreeMap<>(attributes);
     }
 
-    public void addAttribute(AttributeEntry attribute) {
+    public void addAttribute(VariableEntry attribute) {
         int position = this.attributes.size();
         attribute.setPosition(position);
         attributes.put(attribute.getName(), attribute);
     }
 
-    public void addInheritedAttributeAtPosition(AttributeEntry attribute, int position) {
+    public void addInheritedAttributeAtPosition(VariableEntry attribute, int position) {
         // Increase position for all attributes that come after the new one
-        for (AttributeEntry attr : attributes.values()) {
+        for (VariableEntry attr : attributes.values()) {
             if (!attr.isInherited()) {
                 attr.setPosition(attr.getPosition() + 1);
             }

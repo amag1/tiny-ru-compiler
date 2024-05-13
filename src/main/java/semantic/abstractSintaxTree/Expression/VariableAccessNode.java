@@ -1,6 +1,7 @@
 package semantic.abstractSintaxTree.Expression;
 
 import exceptions.semantic.syntaxTree.AstException;
+import exceptions.semantic.syntaxTree.UnaccesibleVariableException;
 import exceptions.semantic.syntaxTree.UndeclaredVariableAccessException;
 import lexical.Token;
 import semantic.JsonHelper;
@@ -23,7 +24,12 @@ public class VariableAccessNode extends PrimaryNode {
     public AttributeType getAttributeType(Context context) throws AstException {
         VariableEntry var = context.getAttribute(this.variableName);
         if (var == null) {
-            throw  new UndeclaredVariableAccessException(token);
+            throw new UndeclaredVariableAccessException(token);
+        }
+
+        // Si el atributo es heredado y privado, es inaccesible
+        if (var.isInherited() && var.isPrivate()) {
+            throw new UnaccesibleVariableException(token);
         }
 
         return var.getType();
