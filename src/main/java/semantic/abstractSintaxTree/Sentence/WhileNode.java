@@ -15,6 +15,8 @@ public class WhileNode extends SentenceNode {
         this.nodeType = "whileSentence";
         this.condition = condition;
         this.loopBody = loopBody;
+
+        setToken(condition.getToken());
     }
 
     @Override

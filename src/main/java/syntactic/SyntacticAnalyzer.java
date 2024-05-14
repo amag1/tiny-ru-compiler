@@ -336,8 +336,8 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         // El tipo de retorno de un método puede ser cualqueir tipo hallado en `tipo()`
         // O tambien puede ser void
         if (getTokenType() == Type.TYPE_VOID) {
-            match(Type.TYPE_VOID);
-            return null; // Void
+            Token voidToken = match(Type.TYPE_VOID);
+            return new AttributeType(false,false, voidToken); // Void
         }
 
         return tipo();

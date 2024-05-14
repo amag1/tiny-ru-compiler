@@ -12,6 +12,10 @@ public class BlockNode extends SentenceNode {
     public BlockNode(List<SentenceNode> sentences) {
         this.nodeType = "block";
         this.sentences = sentences;
+
+        if (!sentences.isEmpty()) {
+            setToken(sentences.get(0).getToken());
+        }
     }
 
     @Override
@@ -20,6 +24,7 @@ public class BlockNode extends SentenceNode {
             sentence.validate(context);
             if (sentence.hasReturn()) {
                 setReturn(true);
+                addToReturnType(sentence.getReturnType());
             }
         }
     }

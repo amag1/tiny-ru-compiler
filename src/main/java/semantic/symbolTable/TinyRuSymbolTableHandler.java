@@ -320,7 +320,7 @@ public class TinyRuSymbolTableHandler implements SymbolTableHandler {
             }
         }
 
-        if (method.getReturnType() != null && !checkTypeExists(method.getReturnType())) {
+        if (method.getReturnType() != null && !method.getReturnType().getType().equals("void") && !checkTypeExists(method.getReturnType())) {
             throw new TypeNotFoundException(method.getReturnType().getToken(), method.getReturnType().getType());
         }
     }

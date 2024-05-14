@@ -74,6 +74,10 @@ public class Context {
     }
 
     public MethodEntry getMethod(String methodName) {
+        if (methodName == "start") {
+            return st.getStart();
+        }
+
         ClassEntry currentClass = st.getClassByName(currentClassName);
         return currentClass.getMethod(methodName);
     }

@@ -17,6 +17,12 @@ public class IfElseNode extends SentenceNode {
         this.condition = condition;
         this.thenBody = thenBody;
         this.elseBody = elseBody;
+
+        if (thenBody != null) {
+            setToken(thenBody.getToken());
+        } else if (elseBody != null) {
+            setToken(elseBody.getToken());
+        }
     }
 
     @Override
@@ -41,6 +47,8 @@ public class IfElseNode extends SentenceNode {
 
         if (emptyBranches > 0 && thenBody.hasReturn() && elseBody.hasReturn()) {
             setReturn(true);
+            addToReturnType(thenBody.getReturnType());
+            addToReturnType(elseBody.getReturnType());
         }
     }
 
