@@ -36,9 +36,9 @@ public interface AstHandler {
 
     SimpleSentenceNode createSimpleSentenceNode(ExpressionNode expression);
 
-    ReturnNode createEmptyReturnNode();
+    ReturnNode createEmptyReturnNode(Token token);
 
-    ReturnNode createReturnNode(ExpressionNode exp);
+    ReturnNode createReturnNode(ExpressionNode exp, Token token);
 
     EmptySentenceNode createEmptySentenceNode();
 

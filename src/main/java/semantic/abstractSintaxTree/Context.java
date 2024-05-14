@@ -4,13 +4,25 @@ import semantic.symbolTable.*;
 
 public class Context {
     private SymbolTableLookup st;
+
+    private String callingClassName;
     private String currentClassName;
     private String currentMethodName;
 
     private boolean isSelf;
 
-    public Context(SymbolTableLookup st, String currentClassName, String currentMethodName) {
+    public Context(SymbolTableLookup st) {
         this.st = st;
+    }
+
+    public Context(SymbolTableLookup st, String callingClassName) {
+        this.st = st;
+        this.callingClassName = callingClassName;
+    }
+
+    private Context(SymbolTableLookup st, String callingClassName, String currentClassName, String currentMethodName) {
+        this.st = st;
+        this.callingClassName = callingClassName;
         this.currentClassName = currentClassName;
         this.currentMethodName = currentMethodName;
     }
@@ -85,16 +97,32 @@ public class Context {
     }
 
     public Context clone(String currentClassName, String currentMethodName) {
-        return new Context(this.st, currentClassName, currentMethodName);
+        return new Context(this.st, this.callingClassName, currentClassName, currentMethodName);
     }
 
     public Context cloneSelfContext() {
-        Context newContext = new Context(this.st, this.currentClassName, this.currentMethodName);
+        Context newContext = new Context(this.st, this.callingClassName, this.currentClassName, this.currentMethodName);
         newContext.isSelf = true;
         return newContext;
     }
 
     public ClassEntry getClass(String className) {
         return st.getClassByName(className);
+    }
+
+    public void setSelf(boolean self) {
+        isSelf = self;
+    }
+
+    public ClassEntry getCallingClass() {
+        return st.getClassByName(this.callingClassName);
+    }
+
+    public boolean isCallingClassScope() {
+        return this.callingClassName.equals(this.currentClassName);
+    }
+
+    public MethodEntry getCurrentMethod() {
+        return  this.getMethod(this.currentMethodName);
     }
 }

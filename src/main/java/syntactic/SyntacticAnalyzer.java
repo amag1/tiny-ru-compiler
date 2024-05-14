@@ -337,7 +337,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         // O tambien puede ser void
         if (getTokenType() == Type.TYPE_VOID) {
             match(Type.TYPE_VOID);
-            return new AttributeType("void");
+            return null; // Void
         }
 
         return tipo();
@@ -383,8 +383,8 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
 
         // ret ⟨Expresion-O-Semicolon⟩
         if (getTokenType() == Type.KW_RET) {
-            match(Type.KW_RET);
-            return expresionOSemicolon();
+            Token returnToken = match(Type.KW_RET);
+            return expresionOSemicolon(returnToken);
         }
 
         // if ( ⟨Expresión⟩ ) ⟨Sentencia⟩ ⟨Else-O-Lambda⟩
@@ -439,17 +439,17 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         return null;
     }
 
-    private ReturnNode expresionOSemicolon() throws SyntacticException, LexicalException {
+    private ReturnNode expresionOSemicolon(Token returnToken) throws SyntacticException, LexicalException {
         // ⟨Expresión⟩ ; | ;
         if (getTokenType() == Type.SEMICOLON) {
             match(Type.SEMICOLON);
-            return ast.createEmptyReturnNode();
+            return ast.createEmptyReturnNode(returnToken);
         }
 
         ExpressionNode ret = expresion();
         match(Type.SEMICOLON);
 
-        return ast.createReturnNode(ret);
+        return ast.createReturnNode(ret, returnToken);
     }
 
     private BlockNode bloque() throws SyntacticException, LexicalException {
@@ -571,7 +571,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         } catch (SyntacticException e) {
             throwSyntacticException("expresión");
         }
-        return null; // TODO
+        return null; // Unreachable line
     }
 
     private ExpressionNode expOrPrima(ExpressionNode previousExpression) throws SyntacticException, LexicalException {

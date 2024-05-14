@@ -7,6 +7,7 @@ import location.Location;
 import semantic.JsonHelper;
 import semantic.abstractSintaxTree.Context;
 import semantic.symbolTable.AttributeType;
+import semantic.symbolTable.ClassEntry;
 
 public class SelfAccess extends PrimaryNode {
 
@@ -15,7 +16,9 @@ public class SelfAccess extends PrimaryNode {
     public SelfAccess(PrimaryNode node) {
         this.nodeType = "selfAccess";
         this.node = node;
-        this.token = node.getToken();
+        if (node != null) {
+            this.token = node.getToken();
+        }
     }
 
     public String toJson(int indentationIndex) {
@@ -30,6 +33,12 @@ public class SelfAccess extends PrimaryNode {
 
     @Override
     public AttributeType getAttributeType(Context context) throws AstException {
+        // Si la expresion es nula, el tipo es el de la clase
+        if (this.node == null) {
+            ClassEntry callingClass = context.getCallingClass();
+            return new AttributeType(false, false, callingClass.getToken());
+        }
+
         // Obtener atributo de la clase actual
         return node.getAttributeType(context.cloneSelfContext());
 

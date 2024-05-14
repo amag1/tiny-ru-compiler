@@ -24,11 +24,12 @@ public class TinyRuAstHandler implements AstHandler {
     public void validateSenteces() throws AstException {
         for (Map.Entry<String, AstClassEntry> entry : ast.getClasses().entrySet()) {
             AstClassEntry currentClass = entry.getValue();
-            currentClass.validateSentences(stHandler);
+            Context classContext = new Context(stHandler, currentClass.getName());
+            currentClass.validateSentences(classContext);
         }
 
         // Validar sentencias del start también
-        Context startContext = new Context(stHandler, null, null);
+        Context startContext = new Context(stHandler);
         ast.getStart().validateSentences(startContext);
     }
 
@@ -95,12 +96,12 @@ public class TinyRuAstHandler implements AstHandler {
         return new SimpleSentenceNode(expression);
     }
 
-    public ReturnNode createEmptyReturnNode() {
-        return new ReturnNode();
+    public ReturnNode createEmptyReturnNode(Token token) {
+        return new ReturnNode(token);
     }
 
-    public ReturnNode createReturnNode(ExpressionNode exp) {
-        return new ReturnNode(exp);
+    public ReturnNode createReturnNode(ExpressionNode exp, Token token) {
+        return new ReturnNode(exp, token);
     }
 
     public EmptySentenceNode createEmptySentenceNode() {

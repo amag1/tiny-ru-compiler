@@ -24,11 +24,11 @@ public class AstClassEntry implements Json {
         return methods;
     }
 
-    public void validateSentences(SymbolTableLookup st) throws AstException {
+    public void validateSentences(Context classContext) throws AstException {
         for (Map.Entry<String, AstMethodEntry> entry : methods.entrySet()) {
             AstMethodEntry currentMethod = entry.getValue();
-            Context context = new Context(st, this.name, currentMethod.getName());
-            currentMethod.validateSentences(context);
+            Context methodContext = classContext.clone(this.name, currentMethod.getName());
+            currentMethod.validateSentences(methodContext);
         }
     }
 

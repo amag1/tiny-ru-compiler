@@ -26,9 +26,17 @@ public class VariableAccessNode extends PrimaryNode {
             throw new UndeclaredVariableAccessException(token);
         }
 
-        // Si el atributo es heredado y privado, es inaccesible
-        if (var.isInherited() && var.isPrivate()) {
-            throw new UnaccesibleVariableException(token);
+        // Chequar si se puede acceder al atributo
+        if (var.isPrivate()) {
+            // Si el atributo es heredado y privado, es inaccesible
+            if (var.isPrivate()) {
+                throw new UnaccesibleVariableException(this.token);
+            }
+
+            // Si el atributo es llamado desde otro scope, es inaccesible
+            if (!context.isCallingClassScope()) {
+                throw new UnaccesibleVariableException(this.token);
+            }
         }
 
         return var.getType();
