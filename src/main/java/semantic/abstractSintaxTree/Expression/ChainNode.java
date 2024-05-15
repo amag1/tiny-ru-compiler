@@ -24,7 +24,7 @@ public class ChainNode extends PrimaryNode {
         AttributeType parentType = this.parentNode.getAttributeType(context);
 
         // Obtener el tipo del nodo hijo en base al contexto del padre
-        Context childrendContext = context.clone(parentType.getType(), null);
+        Context childrendContext = context.clone(parentType.getType());
         return childrenNode.getAttributeType(childrendContext);
     }
 

@@ -46,7 +46,7 @@ public class ArrayAccessNode extends PrimaryNode {
         }
 
         // Check que el indice sea de tipo entero
-        AttributeType indexType = index.getAttributeType(context);
+        AttributeType indexType = index.getAttributeType(context.clone());
         if (!indexType.equals(AttributeType.IntType)) {
             throw new NonIntArrayIndexException(this.getToken());
         }

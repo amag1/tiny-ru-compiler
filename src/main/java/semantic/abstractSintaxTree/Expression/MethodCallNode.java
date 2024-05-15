@@ -31,7 +31,7 @@ public class MethodCallNode extends CallableNode {
 
         List<VariableEntry> parameters = method.getFormalParametersList();
 
-        checkParametersMatch(context, parameters);
+        checkParametersMatch(context.clone(), parameters);
 
         return method.getReturnType();
     }

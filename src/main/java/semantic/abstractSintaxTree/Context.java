@@ -5,8 +5,10 @@ import semantic.symbolTable.*;
 public class Context {
     private SymbolTableLookup st;
     private String callingClassName;
+    private String callingMethodName;
     private String currentClassName;
-    private String currentMethodName;
+    private boolean isSelf;
+
 
     public Context(SymbolTableLookup st) {
         this.st = st;
@@ -17,11 +19,12 @@ public class Context {
         this.callingClassName = callingClassName;
     }
 
-    private Context(SymbolTableLookup st, String callingClassName, String currentClassName, String currentMethodName) {
+    private Context(SymbolTableLookup st, String callingClassName,  String callingMethodName, String currentClassName, boolean isSelf) {
         this.st = st;
         this.callingClassName = callingClassName;
+        this.callingMethodName = callingMethodName;
         this.currentClassName = currentClassName;
-        this.currentMethodName = currentMethodName;
+        this.isSelf = isSelf;
     }
 
     public VariableEntry getAttribute(String attributeName) {
@@ -30,13 +33,13 @@ public class Context {
             return getAttributeInStart(attributeName);
         }
 
-        // El contexto es una clase
-        if (this.currentMethodName == null) {
+        // El contexto es la clase actual
+        if (this.isSelf) {
             return getAttributeInClass(attributeName, this.currentClassName);
         }
 
-        // El contexto es una funcion
-        return getAttributeInMethod(attributeName, this.currentMethodName, this.currentClassName);
+        // El contexto es la funcion desde la que fue llamada
+        return getAttributeInMethod(attributeName, this.callingMethodName, this.callingClassName);
     }
 
     private VariableEntry getAttributeInStart(String attName) {
@@ -88,16 +91,16 @@ public class Context {
         return false;
     }
 
-    public Context clone(String className, String methodName) {
-        if (methodName == null) {
-            methodName = this.currentMethodName;
-        }
+    public Context clone(String className) {
+        return new Context(this.st, this.callingClassName, this.callingMethodName, className, true);
+    }
 
-        if (className == null) {
-            className = this.currentClassName;
-        }
+    public Context clone(String className, String callingMethodName) {
+        return new Context(this.st, className, callingMethodName, className, false);
+    }
 
-        return new Context(this.st, this.callingClassName, className, methodName);
+    public  Context clone() {
+        return new Context(this.st, this.callingClassName, this.callingMethodName, this.currentClassName, false);
     }
 
     public ClassEntry getClass(String className) {
@@ -112,7 +115,7 @@ public class Context {
         return this.callingClassName.equals(this.currentClassName);
     }
 
-    public MethodEntry getCurrentMethod() {
-        return  this.getMethod(this.currentMethodName);
+    public MethodEntry getCallingMethod() {
+        return  this.getMethod(this.callingMethodName);
     }
 }
