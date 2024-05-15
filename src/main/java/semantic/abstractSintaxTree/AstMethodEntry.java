@@ -27,11 +27,11 @@ public class AstMethodEntry implements Json {
     }
 
     public void validateSentences(Context context) throws AstException {
-        if (!name.equals(".")) {
-            validateMethod(context);
+        if (name.equals(".")) {
+            validateConstructor(context);
         }
         else {
-            validateConstructor(context);
+            validateMethod(context);
         }
     }
 
