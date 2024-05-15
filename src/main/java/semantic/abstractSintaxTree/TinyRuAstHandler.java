@@ -75,8 +75,8 @@ public class TinyRuAstHandler implements AstHandler {
         return new StaticMethodCallNode(classToken, methodToken);
     }
 
-    public SelfAccess createSelfAccess(PrimaryNode node) {
-        return new SelfAccess(node);
+    public SelfAccess createSelfAccess() {
+        return new SelfAccess();
     }
 
     public UnaryOperationNode createUnaryExpressionNode(Token operator, ExpressionNode expression) {

@@ -11,37 +11,23 @@ import semantic.symbolTable.ClassEntry;
 
 public class SelfAccess extends PrimaryNode {
 
-    private PrimaryNode node;
-
-    public SelfAccess(PrimaryNode node) {
+    public SelfAccess() {
         this.nodeType = "selfAccess";
-        this.node = node;
-        if (node != null) {
-            this.token = node.getToken();
-        }
     }
 
     public String toJson(int indentationIndex) {
         indentationIndex++;
 
         return "{" +
-                JsonHelper.json("nodeType", this.nodeType, indentationIndex) + "," +
-                JsonHelper.json("expression", this.node, indentationIndex) +
+                JsonHelper.json("nodeType", this.nodeType, indentationIndex) +
                 "\n" + JsonHelper.getIdentationString(indentationIndex - 1) + "}";
     }
 
-
     @Override
     public AttributeType getAttributeType(Context context) throws AstException {
-        // Si la expresion es nula, el tipo es el de la clase
-        if (this.node == null) {
-            ClassEntry callingClass = context.getCallingClass();
-            return new AttributeType(false, false, callingClass.getToken());
-        }
-
-        // Obtener atributo de la clase actual
-        return node.getAttributeType(context.cloneSelfContext());
-
+        // Retornar el tipo es el de la clase a la que se hacer referencia
+        ClassEntry callingClass = context.getCallingClass();
+        return new AttributeType(false, false, callingClass.getToken());
     }
 }
 

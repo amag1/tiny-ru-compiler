@@ -28,7 +28,7 @@ public interface AstHandler {
 
     StaticMethodCallNode createStaticMethodCallNode(Token classToken, Token methodToken);
 
-    SelfAccess createSelfAccess(PrimaryNode node);
+    SelfAccess createSelfAccess();
 
     ExpressionNode createUnaryExpressionNode(Token operator, ExpressionNode expression);
 
