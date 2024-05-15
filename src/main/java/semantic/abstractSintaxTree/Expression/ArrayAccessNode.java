@@ -26,9 +26,6 @@ public class ArrayAccessNode extends PrimaryNode {
             throw new UndeclaredVariableAccessException(this.getToken());
         }
 
-        // Setear el acceso self en falso
-        context.setSelf(false);
-
         // Chequar si se puede acceder al atributo
         if (arr.isPrivate()) {
             // Si el atributo es heredado y privado, es inaccesible

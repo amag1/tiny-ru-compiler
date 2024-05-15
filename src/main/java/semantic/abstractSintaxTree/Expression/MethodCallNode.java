@@ -25,10 +25,6 @@ public class MethodCallNode extends CallableNode {
     @Override
     public AttributeType getAttributeType(Context context) throws AstException {
         MethodEntry method = context.getMethod(this.methodName);
-
-        // Setear el acceso self en falso
-        context.setSelf(false);
-
         if (method == null) {
             throw new MethodNotFoundException(token);
         }

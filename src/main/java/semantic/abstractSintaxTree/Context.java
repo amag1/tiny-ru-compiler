@@ -4,12 +4,9 @@ import semantic.symbolTable.*;
 
 public class Context {
     private SymbolTableLookup st;
-
     private String callingClassName;
     private String currentClassName;
     private String currentMethodName;
-
-    private boolean isSelf;
 
     public Context(SymbolTableLookup st) {
         this.st = st;
@@ -28,11 +25,6 @@ public class Context {
     }
 
     public VariableEntry getAttribute(String attributeName) {
-        // Si el contexto esta restringido a self, buscar en la clase actual
-        if (this.isSelf) {
-            return getAttributeInClass(attributeName, this.currentClassName);
-        }
-
         // El contexto es el método start
         if (this.currentClassName == null) {
             return getAttributeInStart(attributeName);
@@ -96,22 +88,20 @@ public class Context {
         return false;
     }
 
-    public Context clone(String currentClassName, String currentMethodName) {
-        return new Context(this.st, this.callingClassName, currentClassName, currentMethodName);
-    }
+    public Context clone(String className, String methodName) {
+        if (methodName == null) {
+            methodName = this.currentMethodName;
+        }
 
-    public Context cloneSelfContext() {
-        Context newContext = new Context(this.st, this.callingClassName, this.currentClassName, this.currentMethodName);
-        newContext.isSelf = true;
-        return newContext;
+        if (className == null) {
+            className = this.currentClassName;
+        }
+
+        return new Context(this.st, this.callingClassName, className, methodName);
     }
 
     public ClassEntry getClass(String className) {
         return st.getClassByName(className);
-    }
-
-    public void setSelf(boolean self) {
-        isSelf = self;
     }
 
     public ClassEntry getCallingClass() {
