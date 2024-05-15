@@ -1,27 +1,69 @@
 package semantic.abstractSintaxTree;
 
 import exceptions.semantic.syntaxTree.AstException;
+import exceptions.semantic.syntaxTree.MissingReturnException;
+import exceptions.semantic.syntaxTree.ReturnInConstructorException;
+import lexical.Token;
 import semantic.Json;
 import semantic.JsonHelper;
 import semantic.abstractSintaxTree.Sentence.SentenceNode;
+import semantic.symbolTable.AttributeType;
 import semantic.symbolTable.SymbolTableLookup;
 
+import javax.management.Attribute;
 import java.util.ArrayList;
 
 public class AstMethodEntry implements Json {
 
     String name;
+
+    private final Token token;
     public ArrayList<SentenceNode> sentences;
 
-    public AstMethodEntry(String name) {
-        this.name = name;
+    public AstMethodEntry(Token token) {
+        this.name = token.getLexem();
+        this.token = token;
         this.sentences = new ArrayList<>();
     }
 
     public void validateSentences(Context context) throws AstException {
+        if (!name.equals(".")) {
+            validateMethod(context);
+        }
+        else {
+            validateConstructor(context);
+        }
+    }
+
+    private void validateConstructor(Context context) throws AstException {
+        boolean hasReturn = checkSentencesAndReturn(context);
+
+        if (hasReturn) {
+            throw new ReturnInConstructorException(token);
+        }
+    }
+
+    private void validateMethod(Context context) throws AstException {
+        boolean hasReturn = checkSentencesAndReturn(context);
+
+        // Si el metodo no es void y no tiene return, entonces hay un error
+        if (context.getCurrentMethod() != null) {
+            AttributeType returnType = context.getCurrentMethod().getReturnType();
+            if (returnType != null && !returnType.getType().equals("void") && !hasReturn) {
+                throw new MissingReturnException(context.getCurrentMethod().getName(), token);
+            }
+        }
+    }
+
+    private boolean checkSentencesAndReturn(Context context) throws AstException {
+        boolean hasReturn = false;
         for (SentenceNode sentence : sentences) {
             sentence.validate(context);
+            if (sentence.hasReturn()) {
+                hasReturn = true;
+            }
         }
+        return hasReturn;
     }
 
     public String getName() {

@@ -143,6 +143,28 @@ public class TinyRuAstHandler implements AstHandler {
         }
     }
 
+    public void createMethodIfNotExists(Token methodName) {
+        // Obtener la clase actual de la tabla de símbolos
+        ClassEntry currentClass = stHandler.getCurrentClass();
+        if (currentClass != null) {
+            // Obtener o crear la clase en el ast
+            AstClassEntry currentAstClass = getOrCreateAstClassEntry(currentClass);
+
+            // Obtener o crear un nuevo método
+            AstMethodEntry currentAstMethod = currentAstClass.getMethod(methodName.getLexem());
+            if (currentAstMethod == null) {
+                currentAstMethod = new AstMethodEntry(methodName);
+                currentAstClass.addMethod(currentAstMethod);
+            }
+        }
+        else {
+            // Crear el método start
+            if (ast.getStart() == null) {
+                ast.setStart(new AstMethodEntry(methodName));
+            }
+        }
+    }
+
     private AstMethodEntry getOrCreateMethodEntry(AstClassEntry currentAstClass) {
         // El metodo existe en la tabla de simbolos porque ya leimos su firma
         MethodEntry currentMethod = stHandler.getCurrentMethod();
@@ -150,7 +172,7 @@ public class TinyRuAstHandler implements AstHandler {
         // Si aun no existe en el AST, crearlo
         AstMethodEntry currentAstMethod = currentAstClass.getMethod(currentMethod.getName());
         if (currentAstMethod == null) {
-            currentAstMethod = new AstMethodEntry(currentMethod.getName());
+            currentAstMethod = new AstMethodEntry(currentMethod.getToken());
 
             // Si el metodo es el constructor, asignarlo a la clase
             if (currentAstMethod.name.equals(".")) {

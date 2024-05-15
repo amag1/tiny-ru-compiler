@@ -54,5 +54,7 @@ public interface AstHandler {
 
     void addSentence(SentenceNode sentence);
 
+    void createMethodIfNotExists(Token methodName);
+
     public String toJson();
 }

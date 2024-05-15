@@ -66,7 +66,7 @@ public class SymbolTableTest {
             }
         } catch (SymbolTableException e) {
             ConsoleLogger clog = new ConsoleLogger();
-            clog.LogSemanticError(e);
+            clog.LogSymbolTableError(e);
             fail();
         } catch (IOException e) {
             // If the file does not exist, simply check if no errors are thrown

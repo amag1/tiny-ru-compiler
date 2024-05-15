@@ -71,8 +71,9 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
 
     private void start() throws SyntacticException, LexicalException, SymbolTableException {
         // start ⟨Bloque-Método⟩
-        match(Type.KW_START);
+        Token start = match(Type.KW_START);
         st.handleStart();
+        ast.createMethodIfNotExists(start);
         bloqueMetodo();
     }
 
@@ -217,6 +218,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         Token methodToken = match(Type.ID);
 
         st.handleNewMethod(methodToken, isStatic);
+        ast.createMethodIfNotExists(methodToken);
 
         argumentosFormales();
         match(Type.ARROW);

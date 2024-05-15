@@ -44,10 +44,9 @@ public class SemanticExecutor extends Executor {
         } catch (SyntacticException e) {
             clogger.LogSyntacticError(e);
         } catch (SymbolTableException e) {
-            clogger.LogSemanticError(e);
+            clogger.LogSymbolTableError(e);
         } catch (AstException e) {
-            // TODO
-            System.out.println(e.getMessage());
+            clogger.LogAstError(e);
         }
     }
 }

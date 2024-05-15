@@ -30,6 +30,8 @@ public class AstClassEntry implements Json {
             Context methodContext = classContext.clone(this.name, currentMethod.getName());
             currentMethod.validateSentences(methodContext);
         }
+
+        constructor.validateSentences(classContext);
     }
 
     public String getName() {
