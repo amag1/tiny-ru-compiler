@@ -52,7 +52,9 @@ public class ReturnNode extends SentenceNode {
 
         // Si el metodo actual no existe, estamos en el contructor
         else {
-            if (method == null) {
+            // Chequea que no haya return en el constructor
+            // Verifica que la clase no sea null (en ese caso estamos en start)
+            if (method == null && context.getCallingClass() != null) {
                 throw new ReturnInConstructorException(token);
             }
             // Metodo void, chequear que el return sea vacío

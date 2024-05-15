@@ -29,7 +29,7 @@ public class TinyRuAstHandler implements AstHandler {
         }
 
         // Validar sentencias del start también
-        Context startContext = new Context(stHandler);
+        Context startContext = new Context(stHandler, "");
         ast.getStart().validateSentences(startContext);
     }
 
