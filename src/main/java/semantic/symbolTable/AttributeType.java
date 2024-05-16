@@ -11,7 +11,7 @@ public class AttributeType implements Json {
     public static AttributeType StrType = new AttributeType("Str");
     public static AttributeType IntType = new AttributeType("Int");
     public static AttributeType CharType = new AttributeType("Char");
-    public static AttributeType NilType = new AttributeType();
+    public static AttributeType NilType = new AttributeType("nil");
 
     private boolean isArray;
     private String type;

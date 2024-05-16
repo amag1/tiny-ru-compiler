@@ -16,6 +16,8 @@ public class AssignationNode extends SentenceNode {
         this.nodeType = "assignation";
         this.leftSide = leftSide;
         this.rightSide = rightSide;
+
+        setToken(leftSide.getToken());
     }
 
     @Override

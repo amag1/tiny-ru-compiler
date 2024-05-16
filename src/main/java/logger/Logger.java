@@ -1,6 +1,7 @@
 package logger;
 
 import exceptions.lexical.LexicalException;
+import exceptions.semantic.syntaxTree.AstException;
 import exceptions.syntactic.SyntacticException;
 import exceptions.semantic.symbolTable.SymbolTableException;
 import lexical.Token;
@@ -63,9 +64,23 @@ public abstract class Logger {
         return result;
     }
 
-    protected List<String> GetSemanticErrorMessage(SymbolTableException e) {
+    protected List<String> GetSemanticSymbolTableErrorMessage(SymbolTableException e) {
         List result = new ArrayList<String>();
         result.add("ERROR: SEMANTICO - DECLARACIONES");
+        result.add("| NUMERO DE LINEA: | NUMERO DE COLUMNA: | DESCRIPCION: |");
+        result.add("| " + e.getLine() + " | " + e.getColumn() + " | " + e.getMessage() + " |");
+        return result;
+    }
+
+    protected List<String> GetAstSuccessMessage() {
+        List result = new ArrayList<String>();
+        result.add("CORRECTO: ANALISIS SEMANTICO - AST");
+        return result;
+    }
+
+    protected List<String> GetAstErrorMessage(AstException e) {
+        List result = new ArrayList<String>();
+        result.add("ERROR: SEMANTICO - Sentencias");
         result.add("| NUMERO DE LINEA: | NUMERO DE COLUMNA: | DESCRIPCION: |");
         result.add("| " + e.getLine() + " | " + e.getColumn() + " | " + e.getMessage() + " |");
         return result;

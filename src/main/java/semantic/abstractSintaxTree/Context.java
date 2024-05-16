@@ -75,6 +75,10 @@ public class Context {
 
     public MethodEntry getMethod(String methodName) {
         ClassEntry currentClass = st.getClassByName(currentClassName);
+        if (currentClass == null) {
+            return null;
+        }
+
         return currentClass.getMethod(methodName);
     }
 
@@ -123,6 +127,10 @@ public class Context {
     }
 
     public MethodEntry getCurrentMethod() {
-        return  this.getMethod(this.currentMethodName);
+        if (this.currentMethodName == null) {
+            return null;
+        }
+
+        return this.getMethod(this.currentMethodName);
     }
 }

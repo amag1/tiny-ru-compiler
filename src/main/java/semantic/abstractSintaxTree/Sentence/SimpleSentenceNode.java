@@ -12,6 +12,10 @@ public class SimpleSentenceNode extends SentenceNode {
     public SimpleSentenceNode(ExpressionNode expression) {
         this.nodeType = "simpleSentence";
         this.expression = expression;
+
+        if (expression != null) {
+            setToken(expression.getToken());
+        }
     }
 
     @Override

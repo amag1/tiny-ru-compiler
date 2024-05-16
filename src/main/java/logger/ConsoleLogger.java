@@ -2,6 +2,7 @@ package logger;
 
 import exceptions.lexical.LexicalException;
 import exceptions.semantic.symbolTable.SymbolTableException;
+import exceptions.semantic.syntaxTree.AstException;
 import exceptions.syntactic.SyntacticException;
 import lexical.Token;
 
@@ -50,8 +51,8 @@ public class ConsoleLogger extends Logger {
         }
     }
 
-    public void LogSemanticError(SymbolTableException e) {
-        List<String> message = GetSemanticErrorMessage(e);
+    public void LogSymbolTableError(SymbolTableException e) {
+        List<String> message = GetSemanticSymbolTableErrorMessage(e);
         for (String line : message) {
             System.out.println(line);
         }
@@ -59,5 +60,12 @@ public class ConsoleLogger extends Logger {
 
     public void LogSymbolTable(String symbolTableJson) {
         System.out.println(symbolTableJson);
+    }
+
+    public void LogAstError(AstException e) {
+        List<String> message = GetAstErrorMessage(e);
+        for (String line : message) {
+            System.out.println(line);
+        }
     }
 }

@@ -304,6 +304,10 @@ public class TinyRuSymbolTableHandler implements SymbolTableHandler {
             return;
         }
 
+        if (method.getReturnType() == null) {
+            method.setReturnType(new AttributeType("void"));
+        }
+
         for (Map.Entry<String, VariableEntry> localVarEntry : method.getLocalVariables().entrySet()) {
             VariableEntry localVar = localVarEntry.getValue();
             AttributeType type = localVar.getType();
