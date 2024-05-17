@@ -28,7 +28,7 @@ public class UnaryOperationNode extends ExpressionNode {
             return operator.getAttributeType();
         }
         else {
-            throw new UnaryTypeMismatchException(operator.getToken(), operatorType.getType(), operatingType.getType());
+            throw new UnaryTypeMismatchException(operator.getToken(), operatorType.toString(), operatingType.toString());
         }
 
     }

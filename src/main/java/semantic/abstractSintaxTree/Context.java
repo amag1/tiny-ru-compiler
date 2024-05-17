@@ -104,7 +104,7 @@ public class Context {
     }
 
     public boolean checkTypes(AttributeType expectedType, AttributeType foundType) {
-        if (foundType.getType().equals(expectedType.getType())) {
+        if (foundType.equals(expectedType)) {
             return true;
         }
 

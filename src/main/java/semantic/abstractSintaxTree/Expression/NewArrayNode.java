@@ -34,7 +34,7 @@ public class NewArrayNode extends PrimaryNode {
             throw new NonIntArrayIndexException(this.token);
         }
 
-        return this.elementsType;
+        return new AttributeType(true, false, this.token);
     }
 
     public String toJson(int indentationIndex) {
