@@ -1,5 +1,7 @@
 package semantic.abstractSintaxTree;
 
+import exceptions.semantic.syntaxTree.AstException;
+import location.Location;
 import semantic.symbolTable.*;
 
 public class Context {
@@ -30,10 +32,10 @@ public class Context {
     public VariableEntry getAttribute(String attributeName) {
         // Si el contexto esta restringido a self, buscar en la clase actual
         if (this.isSelfAccess) {
-            return getAttributeInClass(attributeName, this.callingClassName);
+              return getAttributeInClass(attributeName, this.callingClassName);
         }
 
-        // El contexto es una clase
+        // El contexto es un encadenado
         if (this.currentClassName != null) {
             return getAttributeInClass(attributeName, this.currentClassName);
         }
@@ -41,6 +43,11 @@ public class Context {
         // El contexto es el método start
         if (this.callingClassName == null) {
             return getAttributeInStart(attributeName);
+        }
+
+        // El contexto es la clase
+        if (this.callingMethodName == null) {
+            return getAttributeInClass(attributeName, this.callingClassName);
         }
 
         // El contexto es una funcion
