@@ -92,12 +92,17 @@ public class Context {
 
     public boolean checkTypes(AttributeType expectedType, AttributeType foundType) {
         if (foundType.getType().equals(expectedType.getType())) {
-            return true;
+            // Evita un error cuando se compara un tipo primitivo con un array de ese tipo
+            return (foundType.isArray() == expectedType.isArray());
         }
 
-        // TODO chequar polimorfismo
+        // Si el tipo no es un tipo primitivo, verificar si es una subclase
+        if (expectedType.isPrimitive()) {
+            return false;
+        }
 
-        return false;
+        // De otro modo, estamos comparando dos clases
+        return isSubclass(foundType, expectedType);
     }
 
     public Context clone(String currentClassName, String currentMethodName) {
@@ -132,5 +137,29 @@ public class Context {
         }
 
         return this.getMethod(this.currentMethodName);
+    }
+
+    private boolean isSubclass(AttributeType foundType, AttributeType expectedType) {
+        // Nil siempre es un subtipo valido
+        if (foundType.getType().equals(AttributeType.NilType.getType())) {
+            return true;
+        }
+
+        ClassEntry foundClass = st.getClassByName(foundType.getType());
+        ClassEntry expectedClass = st.getClassByName(expectedType.getType());
+
+        // Buscar la clase actual en la jerarquia de herencia
+        if (foundClass == null || expectedClass == null) {
+            return false;
+        }
+
+        while (foundClass != null) {
+            if (foundClass.getName().equals(expectedClass.getName())) {
+                return true;
+            }
+            foundClass = st.getClassByName(foundClass.getInherits());
+        }
+
+        return false;
     }
 }
