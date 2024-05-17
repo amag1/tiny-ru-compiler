@@ -157,6 +157,10 @@ public class Context {
             if (foundClass.getName().equals(expectedClass.getName())) {
                 return true;
             }
+            if (foundClass.getName().equals("Object")) {
+                return false;
+            }
+
             foundClass = st.getClassByName(foundClass.getInherits());
         }
 
