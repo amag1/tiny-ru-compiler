@@ -2,6 +2,7 @@ package semantic.abstractSintaxTree.Expression;
 
 import exceptions.semantic.syntaxTree.AstException;
 import exceptions.semantic.syntaxTree.NonIntArrayIndexException;
+import exceptions.semantic.syntaxTree.NonIntArrayLengthException;
 import lexical.Token;
 import lexical.Type;
 import location.Location;
@@ -31,7 +32,7 @@ public class NewArrayNode extends PrimaryNode {
         // Validar que la expresion de la longitud se un entero
         AttributeType lengthExpressionType = this.lengthExpression.getAttributeType(context.reset());
         if (!context.checkTypes(AttributeType.IntType, lengthExpressionType)) {
-            throw new NonIntArrayIndexException(this.token);
+            throw new NonIntArrayLengthException(this.token);
         }
 
         return new AttributeType(true, false, this.token);
