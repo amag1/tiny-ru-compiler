@@ -50,7 +50,7 @@ public class StaticMethodCallNode extends CallableNode {
         // Chequear que los parametros coincidan
         List<VariableEntry> parameters = method.getFormalParametersList();
 
-        checkParametersMatch(context, parameters);
+        checkParametersMatch(context.reset(), parameters);
 
         return method.getReturnType();
     }

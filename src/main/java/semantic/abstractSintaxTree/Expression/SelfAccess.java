@@ -41,7 +41,6 @@ public class SelfAccess extends PrimaryNode {
 
         // Obtener atributo de la clase actual
         return node.getAttributeType(context.cloneSelfContext());
-
     }
 }
 

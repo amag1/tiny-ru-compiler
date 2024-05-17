@@ -8,7 +8,6 @@ import semantic.symbolTable.AttributeType;
 
 
 public class LiteralNode extends OperatingNode {
-    private AttributeType attributeType;
     private String value;
 
     public LiteralNode(Token token) {

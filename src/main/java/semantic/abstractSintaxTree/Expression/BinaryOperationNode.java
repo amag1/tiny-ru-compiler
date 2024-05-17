@@ -24,8 +24,8 @@ public class BinaryOperationNode extends ExpressionNode {
 
     @Override
     public AttributeType getAttributeType(Context context) throws AstException {
-        AttributeType leftType = leftOperating.getAttributeType(context);
-        AttributeType rightType = rightOperating.getAttributeType(context);
+        AttributeType leftType = leftOperating.getAttributeType(context.reset());
+        AttributeType rightType = rightOperating.getAttributeType(context.reset());
 
         AttributeType returnType = this.operator.getAttributeType();
         AttributeType inputType = this.operator.getInputType();
