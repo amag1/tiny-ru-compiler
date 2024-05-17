@@ -43,7 +43,7 @@ public abstract class CallableNode extends PrimaryNode {
             AttributeType expectedType = parameters.get(i).getType();
 
             if (!context.checkTypes(expectedType, hasType)) {
-                throw new ParameterTypeMismatchException(expectedType.getType(), hasType.getType(), this.token);
+                throw new ParameterTypeMismatchException(expectedType.toString(), hasType.toString(), this.token);
             }
         }
     }

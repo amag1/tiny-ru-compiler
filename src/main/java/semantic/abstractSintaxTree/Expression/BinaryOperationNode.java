@@ -24,8 +24,8 @@ public class BinaryOperationNode extends ExpressionNode {
 
     @Override
     public AttributeType getAttributeType(Context context) throws AstException {
-        AttributeType leftType = leftOperating.getAttributeType(context);
-        AttributeType rightType = rightOperating.getAttributeType(context);
+        AttributeType leftType = leftOperating.getAttributeType(context.reset());
+        AttributeType rightType = rightOperating.getAttributeType(context.reset());
 
         AttributeType returnType = this.operator.getAttributeType();
         AttributeType inputType = this.operator.getInputType();
@@ -34,18 +34,18 @@ public class BinaryOperationNode extends ExpressionNode {
             // Si los tipos son primitivos, chequear que sean iguales
             // Si no lo son, la llamada es valida
             if (leftType.isPrimitive() && !leftType.getType().equals(rightType.getType())) {
-                throw new BinaryTypeMismatchException(operator.getToken(), leftType.getType(), rightType.getType());
+                throw new BinaryTypeMismatchException(operator.getToken(), leftType.toString(), rightType.toString());
             }
 
             return returnType;
         }
 
         if (!leftType.getType().equals(inputType.getType())) {
-            throw new BinaryTypeMismatchException(operator.getToken(), inputType.getType(), leftType.getType());
+            throw new BinaryTypeMismatchException(operator.getToken(), inputType.toString(), leftType.toString());
         }
 
         if (!rightType.getType().equals(inputType.getType())) {
-            throw new BinaryTypeMismatchException(operator.getToken(), inputType.getType(), rightType.getType());
+            throw new BinaryTypeMismatchException(operator.getToken(), inputType.toString(), rightType.toString());
         }
 
         return returnType;

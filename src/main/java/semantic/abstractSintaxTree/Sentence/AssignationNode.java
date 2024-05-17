@@ -27,7 +27,7 @@ public class AssignationNode extends SentenceNode {
         AttributeType rightType = rightSide.getAttributeType(context);
 
         if (!context.checkTypes(leftType, rightType)) {
-            throw new ParameterTypeMismatchException(leftType.getType(), rightType.getType(), rightSide.getToken());
+            throw new ParameterTypeMismatchException(leftType.toString(), rightType.toString(), rightSide.getToken());
         }
     }
 

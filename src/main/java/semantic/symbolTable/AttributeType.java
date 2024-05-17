@@ -95,4 +95,16 @@ public class AttributeType implements Json {
     public void setPredefined(boolean predefined) {
         isPredefined = predefined;
     }
+
+    public String toString() {
+        String str = "";
+
+        if (this.isArray) {
+            str += "Array ";
+        }
+
+        str += type;
+
+        return str;
+    }
 }

@@ -34,7 +34,7 @@ public class VariableAccessNode extends PrimaryNode {
             }
 
             // Si el atributo es llamado desde otro scope, es inaccesible
-            if (!context.isCallingClassScope()) {
+            if (!context.isSelfContext()) {
                 throw new UnaccesibleVariableException(this.token);
             }
         }
