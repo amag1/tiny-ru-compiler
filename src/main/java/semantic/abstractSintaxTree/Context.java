@@ -74,9 +74,15 @@ public class Context {
     }
 
     public MethodEntry getMethod(String methodName) {
-        ClassEntry currentClass = st.getClassByName(currentClassName);
+        ClassEntry currentClass = st.getClassByName(callingClassName);
+
+
+        if (currentClassName != null) {
+            currentClass = st.getClassByName(currentClassName);
+        }
+
         if (currentClass == null) {
-            return null;
+            return  null;
         }
 
         return currentClass.getMethod(methodName);
@@ -105,15 +111,15 @@ public class Context {
     }
 
     public Context cloneSelfContext() {
-        return new Context(this.st, this.callingClassName, this.currentClassName, null, true);
+        return new Context(this.st, this.callingClassName, this.callingMethodName, null, true);
     }
 
     public Context cloneChainContext(String currentClassName) {
-        return new Context(this.st, this.callingClassName, this.currentClassName, currentClassName, false);
+        return new Context(this.st, this.callingClassName, this.callingMethodName, currentClassName, false);
     }
 
     public Context reset() {
-        return new  Context(this.st, this.callingClassName, this.currentClassName, null, false);
+        return new  Context(this.st, this.callingClassName, this.callingMethodName, null, false);
     }
 
     public ClassEntry getClass(String className) {

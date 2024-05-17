@@ -47,10 +47,10 @@ public class AstMethodEntry implements Json {
         boolean hasReturn = checkSentencesAndReturn(context);
 
         // Si el metodo no es void y no tiene return, entonces hay un error
-        if (context.getCurrentMethod() != null) {
-            AttributeType returnType = context.getCurrentMethod().getReturnType();
+        if (context.getCallingMethod() != null) {
+            AttributeType returnType = context.getCallingMethod().getReturnType();
             if (returnType != null && !returnType.getType().equals("void") && !hasReturn) {
-                throw new MissingReturnException(context.getCurrentMethod().getName(), token);
+                throw new MissingReturnException(context.getCallingMethod().getName(), token);
             }
         }
     }

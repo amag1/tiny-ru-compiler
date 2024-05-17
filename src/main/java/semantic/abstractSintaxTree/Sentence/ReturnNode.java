@@ -31,7 +31,7 @@ public class ReturnNode extends SentenceNode {
 
     @Override
     public void validate(Context context) throws AstException {
-        MethodEntry method = context.getCurrentMethod();
+        MethodEntry method = context.getCallingMethod();
 
         AttributeType currentReturnType;
         if (returnValue != null) {
