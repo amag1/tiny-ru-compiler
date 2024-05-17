@@ -54,7 +54,7 @@ public class IfElseNode extends SentenceNode {
 
 
         if (emptyBranches == 0) {
-            setReturn(true);
+            setReturn(thenBody.hasReturn() && elseBody.hasReturn());
         }
     }
 
