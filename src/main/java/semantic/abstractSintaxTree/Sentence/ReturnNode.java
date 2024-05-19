@@ -46,7 +46,10 @@ public class ReturnNode extends SentenceNode {
         if (method != null && method.getReturnType() != null) {
             // Chequear que el tipo de retorno coincida
             if (!context.checkTypes(method.getReturnType(), currentReturnType)) {
-                throw new InvalidMethodReturn(method.getReturnType().getType(), currentReturnType.getType(), this.token);
+                // Formatear los tipos en caso de que sean arrays
+                String foundType = currentReturnType.isArray() ? "Array " + currentReturnType.getType() : currentReturnType.getType();
+                String expectedType = method.getReturnType().isArray() ? "Array " + method.getReturnType().getType() : method.getReturnType().getType();
+                throw new InvalidMethodReturn(expectedType,foundType, this.token);
             }
         }
 

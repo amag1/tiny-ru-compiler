@@ -32,7 +32,7 @@ public class Context {
     public VariableEntry getAttribute(String attributeName) {
         // Si el contexto esta restringido a self, buscar en la clase actual
         if (this.isSelfAccess) {
-              return getAttributeInClass(attributeName, this.callingClassName);
+            return getAttributeInClass(attributeName, this.callingClassName);
         }
 
         // El contexto es un encadenado
@@ -89,7 +89,7 @@ public class Context {
         }
 
         if (currentClass == null) {
-            return  null;
+            return null;
         }
 
         return currentClass.getMethod(methodName);
@@ -104,13 +104,17 @@ public class Context {
     }
 
     public boolean checkTypes(AttributeType expectedType, AttributeType foundType) {
-        if (foundType.equals(expectedType)) {
-            return true;
+        if (foundType.getType().equals(expectedType.getType())) {
+            // Evita un error cuando se compara un tipo primitivo con un array de ese tipo
+            return (foundType.isArray() == expectedType.isArray());
         }
 
-        // TODO chequar polimorfismo
+        // Si el tipo no es un tipo primitivo, verificar si es una subclase
+        if (expectedType.isPrimitive()) {
+            return false;
+        }
 
-        return false;
+        return isSubclass(foundType, expectedType);
     }
 
     public Context clone(String callingClassName, String callingMethodName) {
@@ -126,7 +130,7 @@ public class Context {
     }
 
     public Context reset() {
-        return new  Context(this.st, this.callingClassName, this.callingMethodName, null, false);
+        return new Context(this.st, this.callingClassName, this.callingMethodName, null, false);
     }
 
     public ClassEntry getClass(String className) {
@@ -147,5 +151,33 @@ public class Context {
         }
 
         return this.getMethod(this.callingMethodName);
+    }
+
+    private boolean isSubclass(AttributeType foundType, AttributeType expectedType) {
+        // Nil siempre es un subtipo valido
+        if (foundType.getType().equals(AttributeType.NilType.getType())) {
+            return true;
+        }
+
+        ClassEntry foundClass = st.getClassByName(foundType.getType());
+        ClassEntry expectedClass = st.getClassByName(expectedType.getType());
+
+        // Buscar la clase actual en la jerarquia de herencia
+        if (foundClass == null || expectedClass == null) {
+            return false;
+        }
+
+        while (foundClass != null) {
+            if (foundClass.getName().equals(expectedClass.getName())) {
+                return true;
+            }
+            if (foundClass.getName().equals("Object")) {
+                return false;
+            }
+
+            foundClass = st.getClassByName(foundClass.getInherits());
+        }
+
+        return false;
     }
 }
