@@ -31,7 +31,9 @@ public class AstClassEntry implements Json {
             currentMethod.validateSentences(methodContext);
         }
 
-        constructor.validateSentences(classContext);
+        if (constructor != null) {
+            constructor.validateSentences(classContext);
+        }
     }
 
     public String getName() {

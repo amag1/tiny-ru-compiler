@@ -9,6 +9,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.io.File;
 
 import reader.*;
+import semantic.abstractSintaxTree.DummyAstHandler;
 import semantic.symbolTable.DummySymbolTableHandler;
 
 import java.util.stream.Stream;
@@ -39,7 +40,7 @@ public class SyntacticTest {
     @MethodSource("providePassingSyntactic")
     public void TestPassingSyntactic(String input) {
         try {
-            Syntactic syntactic = new SyntacticAnalyzer(new LexicalAnalyzer(new FileReader(input)), new DummySymbolTableHandler());
+            Syntactic syntactic = new SyntacticAnalyzer(new LexicalAnalyzer(new FileReader(input)), new DummySymbolTableHandler(), new DummyAstHandler());
             syntactic.analyze();
         } catch (Exception e) {
             fail("Error en el archivo: " + input + "\n" + e.getMessage());
@@ -55,7 +56,7 @@ public class SyntacticTest {
     @MethodSource("provideFailingSyntactic")
     public void TestFailingSyntactic(String input) {
         try {
-            Syntactic syntactic = new SyntacticAnalyzer(new LexicalAnalyzer(new FileReader(input)), new DummySymbolTableHandler());
+            Syntactic syntactic = new SyntacticAnalyzer(new LexicalAnalyzer(new FileReader(input)), new DummySymbolTableHandler(), new DummyAstHandler());
             try {
                 syntactic.analyze();
                 fail("Se esperaba una excepción en el archivo: " + input);

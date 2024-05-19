@@ -21,14 +21,14 @@ public class UnaryOperationNode extends ExpressionNode {
 
     @Override
     public AttributeType getAttributeType(Context context) throws AstException {
-        AttributeType operatingType = operating.getAttributeType(context);
+        AttributeType operatingType = operating.getAttributeType(context.reset());
 
         AttributeType operatorType = this.operator.getAttributeType();
         if (operatorType.getType().equals(operatingType.getType())) {
             return operator.getAttributeType();
         }
         else {
-            throw new UnaryTypeMismatchException(operator.getToken(), operatorType.getType(), operatingType.getType());
+            throw new UnaryTypeMismatchException(operator.getToken(), operatorType.toString(), operatingType.toString());
         }
 
     }

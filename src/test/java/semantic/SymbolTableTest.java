@@ -2,6 +2,7 @@ package semantic;
 
 import exceptions.lexical.LexicalException;
 import exceptions.semantic.symbolTable.SymbolTableException;
+import exceptions.semantic.syntaxTree.AstException;
 import exceptions.syntactic.SyntacticException;
 import lexical.LexicalAnalyzer;
 import logger.ConsoleLogger;
@@ -10,6 +11,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import reader.FileReader;
+import semantic.abstractSintaxTree.DummyAstHandler;
 import semantic.symbolTable.TinyRuSymbolTableHandler;
 import syntactic.Syntactic;
 import syntactic.SyntacticAnalyzer;
@@ -52,7 +54,7 @@ public class SymbolTableTest {
     @MethodSource("providePassingSymbolTable")
     public void TestPassingSymbolTable(String input, String fileOutput) {
         try {
-            Syntactic syntactic = new SyntacticAnalyzer(new LexicalAnalyzer(new FileReader(input)), new TinyRuSymbolTableHandler());
+            Syntactic syntactic = new SyntacticAnalyzer(new LexicalAnalyzer(new FileReader(input)), new TinyRuSymbolTableHandler(), new DummyAstHandler());
             syntactic.analyze();
             String st = syntactic.getSymbolTableJson();
 
@@ -71,9 +73,9 @@ public class SymbolTableTest {
         } catch (IOException e) {
             // If the file does not exist, simply check if no errors are thrown
             try {
-                Syntactic syntactic = new SyntacticAnalyzer(new LexicalAnalyzer(new FileReader(input)), new TinyRuSymbolTableHandler());
+                Syntactic syntactic = new SyntacticAnalyzer(new LexicalAnalyzer(new FileReader(input)), new TinyRuSymbolTableHandler() ,new DummyAstHandler());
                 syntactic.analyze();
-            } catch (SyntacticException | LexicalException |
+            } catch (SyntacticException | LexicalException | AstException |
                      SymbolTableException ex) {
                 fail("Error en el archivo: " + input + "\n" + ex.getMessage());
             } catch (FileNotFoundException ex) {
@@ -100,7 +102,7 @@ public class SymbolTableTest {
             // Get string after /? to get error name
             errorName = firstLine.substring(firstLine.indexOf("/?") + 2).trim();
 
-            Syntactic syntactic = new SyntacticAnalyzer(new LexicalAnalyzer(new FileReader(input)), new TinyRuSymbolTableHandler());
+            Syntactic syntactic = new SyntacticAnalyzer(new LexicalAnalyzer(new FileReader(input)), new TinyRuSymbolTableHandler(), new DummyAstHandler());
             syntactic.analyze();
 
             fail("El archivo " + input + " no contiene errores");

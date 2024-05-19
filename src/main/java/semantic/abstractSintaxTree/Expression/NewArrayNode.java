@@ -1,6 +1,8 @@
 package semantic.abstractSintaxTree.Expression;
 
 import exceptions.semantic.syntaxTree.AstException;
+import exceptions.semantic.syntaxTree.NonIntArrayIndexException;
+import exceptions.semantic.syntaxTree.NonIntArrayLengthException;
 import lexical.Token;
 import lexical.Type;
 import location.Location;
@@ -27,8 +29,13 @@ public class NewArrayNode extends PrimaryNode {
 
     @Override
     public AttributeType getAttributeType(Context context) throws AstException {
-        // TODO
-        return new AttributeType(true, true, new Token("", Type.KW_IF, new Location()));
+        // Validar que la expresion de la longitud se un entero
+        AttributeType lengthExpressionType = this.lengthExpression.getAttributeType(context.reset());
+        if (!context.checkTypes(AttributeType.IntType, lengthExpressionType)) {
+            throw new NonIntArrayLengthException(this.token);
+        }
+
+        return new AttributeType(true, false, this.token);
     }
 
     public String toJson(int indentationIndex) {

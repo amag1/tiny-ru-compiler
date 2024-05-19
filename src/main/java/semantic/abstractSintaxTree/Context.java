@@ -1,15 +1,16 @@
 package semantic.abstractSintaxTree;
 
+import exceptions.semantic.syntaxTree.AstException;
+import location.Location;
 import semantic.symbolTable.*;
 
 public class Context {
     private SymbolTableLookup st;
 
     private String callingClassName;
+    private String callingMethodName;
     private String currentClassName;
-    private String currentMethodName;
-
-    private boolean isSelf;
+    private boolean isSelfAccess;
 
     public Context(SymbolTableLookup st) {
         this.st = st;
@@ -20,31 +21,37 @@ public class Context {
         this.callingClassName = callingClassName;
     }
 
-    private Context(SymbolTableLookup st, String callingClassName, String currentClassName, String currentMethodName) {
+    public Context(SymbolTableLookup st, String callingClassName, String callingMethodName, String currentClassName, boolean isSelfAccess) {
         this.st = st;
         this.callingClassName = callingClassName;
+        this.callingMethodName = callingMethodName;
         this.currentClassName = currentClassName;
-        this.currentMethodName = currentMethodName;
+        this.isSelfAccess = isSelfAccess;
     }
 
     public VariableEntry getAttribute(String attributeName) {
         // Si el contexto esta restringido a self, buscar en la clase actual
-        if (this.isSelf) {
+        if (this.isSelfAccess) {
+            return getAttributeInClass(attributeName, this.callingClassName);
+        }
+
+        // El contexto es un encadenado
+        if (this.currentClassName != null) {
             return getAttributeInClass(attributeName, this.currentClassName);
         }
 
         // El contexto es el método start
-        if (this.currentClassName == null) {
+        if (this.callingClassName == null) {
             return getAttributeInStart(attributeName);
         }
 
-        // El contexto es una clase
-        if (this.currentMethodName == null) {
-            return getAttributeInClass(attributeName, this.currentClassName);
+        // El contexto es la clase
+        if (this.callingMethodName == null) {
+            return getAttributeInClass(attributeName, this.callingClassName);
         }
 
         // El contexto es una funcion
-        return getAttributeInMethod(attributeName, this.currentMethodName, this.currentClassName);
+        return getAttributeInMethod(attributeName, this.callingMethodName, this.callingClassName);
     }
 
     private VariableEntry getAttributeInStart(String attName) {
@@ -74,7 +81,13 @@ public class Context {
     }
 
     public MethodEntry getMethod(String methodName) {
-        ClassEntry currentClass = st.getClassByName(currentClassName);
+        ClassEntry currentClass = st.getClassByName(callingClassName);
+
+
+        if (currentClassName != null) {
+            currentClass = st.getClassByName(currentClassName);
+        }
+
         if (currentClass == null) {
             return null;
         }
@@ -101,42 +114,43 @@ public class Context {
             return false;
         }
 
-        // De otro modo, estamos comparando dos clases
         return isSubclass(foundType, expectedType);
     }
 
-    public Context clone(String currentClassName, String currentMethodName) {
-        return new Context(this.st, this.callingClassName, currentClassName, currentMethodName);
+    public Context clone(String callingClassName, String callingMethodName) {
+        return new Context(this.st, callingClassName, callingMethodName, null, false);
     }
 
     public Context cloneSelfContext() {
-        Context newContext = new Context(this.st, this.callingClassName, this.currentClassName, this.currentMethodName);
-        newContext.isSelf = true;
-        return newContext;
+        return new Context(this.st, this.callingClassName, this.callingMethodName, null, true);
+    }
+
+    public Context cloneChainContext(String currentClassName) {
+        return new Context(this.st, this.callingClassName, this.callingMethodName, currentClassName, false);
+    }
+
+    public Context reset() {
+        return new Context(this.st, this.callingClassName, this.callingMethodName, null, false);
     }
 
     public ClassEntry getClass(String className) {
         return st.getClassByName(className);
     }
 
-    public void setSelf(boolean self) {
-        isSelf = self;
-    }
-
     public ClassEntry getCallingClass() {
         return st.getClassByName(this.callingClassName);
     }
 
-    public boolean isCallingClassScope() {
-        return this.callingClassName.equals(this.currentClassName);
+    public boolean isSelfContext() {
+        return this.currentClassName == null || this.isSelfAccess;
     }
 
-    public MethodEntry getCurrentMethod() {
-        if (this.currentMethodName == null) {
+    public MethodEntry getCallingMethod() {
+        if (this.callingMethodName == null) {
             return null;
         }
 
-        return this.getMethod(this.currentMethodName);
+        return this.getMethod(this.callingMethodName);
     }
 
     private boolean isSubclass(AttributeType foundType, AttributeType expectedType) {

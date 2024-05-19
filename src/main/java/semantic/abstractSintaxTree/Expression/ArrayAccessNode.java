@@ -26,9 +26,6 @@ public class ArrayAccessNode extends PrimaryNode {
             throw new UndeclaredVariableAccessException(this.getToken());
         }
 
-        // Setear el acceso self en falso
-        context.setSelf(false);
-
         // Chequar si se puede acceder al atributo
         if (arr.isPrivate()) {
             // Si el atributo es heredado y privado, es inaccesible
@@ -37,7 +34,7 @@ public class ArrayAccessNode extends PrimaryNode {
             }
 
             // Si el atributo es llamado desde otro scope, es inaccesible
-            if (!context.isCallingClassScope()) {
+            if (!context.isSelfContext()) {
                 throw new UnaccesibleVariableException(this.token);
             }
         }
@@ -49,7 +46,7 @@ public class ArrayAccessNode extends PrimaryNode {
         }
 
         // Check que el indice sea de tipo entero
-        AttributeType indexType = index.getAttributeType(context);
+        AttributeType indexType = index.getAttributeType(context.reset());
         if (!indexType.equals(AttributeType.IntType)) {
             throw new NonIntArrayIndexException(this.getToken());
         }

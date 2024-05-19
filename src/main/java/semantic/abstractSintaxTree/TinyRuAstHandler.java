@@ -29,7 +29,7 @@ public class TinyRuAstHandler implements AstHandler {
         }
 
         // Validar sentencias del start también
-        Context startContext = new Context(stHandler, "");
+        Context startContext = new Context(stHandler);
         ast.getStart().validateSentences(startContext);
     }
 
@@ -80,7 +80,6 @@ public class TinyRuAstHandler implements AstHandler {
     }
 
     public UnaryOperationNode createUnaryExpressionNode(Token operator, ExpressionNode expression) {
-        // TODO: verificar que matchee el tipo del operador y la expresion
         return new UnaryOperationNode(expression, operator);
     }
 

@@ -38,7 +38,7 @@ public class IfElseNode extends SentenceNode {
         AttributeType conditionType = condition.getAttributeType(context);
         // La condicion debe ser booleana
         if (!conditionType.getType().equals("Bool")) {
-            throw new ParameterTypeMismatchException("Bool", conditionType.getType(), condition.getToken());
+            throw new ParameterTypeMismatchException("Bool", conditionType.toString(), condition.getToken());
         }
 
         int emptyBranches = 2;
@@ -54,7 +54,7 @@ public class IfElseNode extends SentenceNode {
 
 
         if (emptyBranches == 0) {
-            setReturn(true);
+            setReturn(thenBody.hasReturn() && elseBody.hasReturn());
         }
     }
 
