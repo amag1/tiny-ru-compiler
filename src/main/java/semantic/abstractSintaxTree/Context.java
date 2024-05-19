@@ -66,7 +66,14 @@ public class Context {
 
     private VariableEntry getAttributeInMethod(String attributeName, String methodName, String className) {
         ClassEntry currentClass = st.getClassByName(className);
-        MethodEntry currentMethod = currentClass.getMethod(methodName);
+
+        MethodEntry currentMethod;
+        if (methodName.equals(".")) {
+            currentMethod = currentClass.getConstructor();
+        }
+        else {
+            currentMethod = currentClass.getMethod(methodName);
+        }
 
         // Buscar en variables locales -> paremetros -> atributos de la clase
         VariableEntry attribute = currentMethod.getLocalVariable(attributeName);
