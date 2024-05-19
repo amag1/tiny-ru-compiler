@@ -133,7 +133,7 @@ public class Context {
     }
 
     public Context cloneChainContext(String currentClassName) {
-        return new Context(this.st, this.callingClassName, this.callingMethodName, currentClassName, false);
+        return new Context(this.st, currentClassName, this.callingMethodName, currentClassName, false);
     }
 
     public Context reset() {
