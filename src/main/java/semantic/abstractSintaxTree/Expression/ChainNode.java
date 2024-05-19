@@ -1,6 +1,7 @@
 package semantic.abstractSintaxTree.Expression;
 
 import exceptions.semantic.syntaxTree.AstException;
+import exceptions.semantic.syntaxTree.VoidAccessException;
 import lexical.Token;
 import lexical.Type;
 import location.Location;
@@ -23,6 +24,10 @@ public class ChainNode extends PrimaryNode {
         // Obtener el tipo del nodo padre
         AttributeType parentType = this.parentNode.getAttributeType(context);
 
+        // Si el padre es de tipo void (null), entonces no existe el nodo hijo
+        if (parentType == null) {
+            throw new VoidAccessException(this.token);
+        }
         // Obtener el tipo del nodo hijo en base al contexto del padre
         Context childrendContext = context.cloneChainContext(parentType.getType());
         return childrenNode.getAttributeType(childrendContext);

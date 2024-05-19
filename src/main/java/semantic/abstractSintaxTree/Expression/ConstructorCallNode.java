@@ -22,10 +22,18 @@ public class ConstructorCallNode extends CallableNode {
 
     @Override
     public AttributeType getAttributeType(Context context) throws AstException {
-        // Check that parameters match
+        // Verificar que la clase exista
+        ClassEntry classEntry = context.getClass(this.token.getLexem());
+        if (classEntry == null) {
+            throw new ClassNotFoundException(this.token);
+        }
+
+        // Verificar que los parametros coincidan
         MethodEntry constructor = context.getConstructorByClass(this.token.getLexem());
+        // Si el constructor es nulo, significa que la clase tiene un constructor vacío
+        // Retorna un objeto del tipo de la clase
         if (constructor == null) {
-            throw new ClassNotFoundException(token);
+            return new AttributeType(this.token.getLexem());
         }
 
         // Convertir parametros del construcor en una lista
