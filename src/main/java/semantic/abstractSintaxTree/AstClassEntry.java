@@ -32,7 +32,7 @@ public class AstClassEntry implements Json {
         }
 
         if (constructor != null) {
-            constructor.validateSentences(classContext);
+            constructor.validateSentences(classContext.clone(this.name, "."));
         }
     }
 
@@ -50,6 +50,10 @@ public class AstClassEntry implements Json {
 
     public void setConstructor(AstMethodEntry constructor) {
         this.constructor = constructor;
+    }
+
+    public AstMethodEntry getConstructor() {
+        return this.constructor;
     }
 
     public String toJson(int indentationIndex) {

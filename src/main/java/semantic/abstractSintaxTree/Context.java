@@ -66,7 +66,14 @@ public class Context {
 
     private VariableEntry getAttributeInMethod(String attributeName, String methodName, String className) {
         ClassEntry currentClass = st.getClassByName(className);
-        MethodEntry currentMethod = currentClass.getMethod(methodName);
+
+        MethodEntry currentMethod;
+        if (methodName.equals(".")) {
+            currentMethod = currentClass.getConstructor();
+        }
+        else {
+            currentMethod = currentClass.getMethod(methodName);
+        }
 
         // Buscar en variables locales -> paremetros -> atributos de la clase
         VariableEntry attribute = currentMethod.getLocalVariable(attributeName);
@@ -126,7 +133,7 @@ public class Context {
     }
 
     public Context cloneChainContext(String currentClassName) {
-        return new Context(this.st, this.callingClassName, this.callingMethodName, currentClassName, false);
+        return new Context(this.st, currentClassName, this.callingMethodName, currentClassName, false);
     }
 
     public Context reset() {

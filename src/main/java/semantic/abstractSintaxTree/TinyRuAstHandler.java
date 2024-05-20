@@ -169,6 +169,17 @@ public class TinyRuAstHandler implements AstHandler {
         MethodEntry currentMethod = stHandler.getCurrentMethod();
 
         // Si aun no existe en el AST, crearlo
+
+        // Primero revisar si el metodo es el constructor
+        if (currentMethod.getName().equals(".")) {
+            if (currentAstClass.getConstructor() == null) {
+                AstMethodEntry constructor = new AstMethodEntry(currentMethod.getToken());
+                currentAstClass.setConstructor(constructor);
+            }
+            return currentAstClass.getConstructor();
+        }
+
+        // Si no es el constructor, buscar el mtodo con ese nombre
         AstMethodEntry currentAstMethod = currentAstClass.getMethod(currentMethod.getName());
         if (currentAstMethod == null) {
             currentAstMethod = new AstMethodEntry(currentMethod.getToken());
