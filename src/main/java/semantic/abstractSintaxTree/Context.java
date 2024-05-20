@@ -21,7 +21,7 @@ public class Context {
         this.callingClassName = callingClassName;
     }
 
-    public Context(SymbolTableLookup st, String callingClassName, String callingMethodName, String currentClassName, boolean isSelfAccess) {
+    private Context(SymbolTableLookup st, String callingClassName, String callingMethodName, String currentClassName, boolean isSelfAccess) {
         this.st = st;
         this.callingClassName = callingClassName;
         this.callingMethodName = callingMethodName;
@@ -165,6 +165,11 @@ public class Context {
             return null;
         }
 
+        if (this.callingMethodName.equals(".")) {
+            ClassEntry currentClass = st.getClassByName(this.callingClassName);
+            return  currentClass.getConstructor();
+        }
+
         return this.getMethod(this.callingMethodName);
     }
 
@@ -194,5 +199,9 @@ public class Context {
         }
 
         return false;
+    }
+
+    public boolean isStart() {
+        return this.callingClassName == null;
     }
 }
