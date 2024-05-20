@@ -4,5 +4,6 @@ start{
     Str b;
 
     if (b) {
-        (IO.out_int(a));}
+        (IO.out_int(a));
+    }
 }

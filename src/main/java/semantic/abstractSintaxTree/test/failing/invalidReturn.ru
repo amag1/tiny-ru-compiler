@@ -6,8 +6,6 @@ impl A{
     fn voidd() -> Parent{
         Child a;
 
-        /? ret a;
-
         ret new Unrelated();
     }
 }
@@ -19,12 +17,12 @@ impl Child{
 
 struct Parent {}
 impl Parent{
-.(){}
+    .(){}
 }
 
 struct Unrelated {}
 impl Unrelated{
-.(){}
+    .(){}
 }
 
 start{}
