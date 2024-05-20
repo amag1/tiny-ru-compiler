@@ -117,6 +117,13 @@ public class Context {
             return (foundType.isArray() == expectedType.isArray());
         }
 
+        // Si es array puede ser nil
+        if (expectedType.isArray()) {
+            if (foundType.getType().equals(AttributeType.NilType.getType())) {
+                return true;
+            }
+        }
+
         // Si el tipo no es un tipo primitivo, verificar si es una subclase
         if (expectedType.isPrimitive()) {
             return false;
