@@ -88,11 +88,12 @@ public class Context {
     }
 
     public MethodEntry getMethod(String methodName) {
-        ClassEntry currentClass = st.getClassByName(callingClassName);
-
+        ClassEntry currentClass;
 
         if (currentClassName != null) {
             currentClass = st.getClassByName(currentClassName);
+        } else {
+            currentClass = st.getClassByName(callingClassName);
         }
 
         if (currentClass == null) {
@@ -133,7 +134,7 @@ public class Context {
     }
 
     public Context cloneChainContext(String currentClassName) {
-        return new Context(this.st, currentClassName, this.callingMethodName, currentClassName, false);
+        return new Context(this.st, this.callingClassName, this.callingMethodName, currentClassName, false);
     }
 
     public Context reset() {
