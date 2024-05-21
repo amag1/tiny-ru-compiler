@@ -38,7 +38,7 @@ public class AbstractSyntaxTree {
         int indentationIndex = 1;
 
         return "{" +
-                JsonHelper.json("classes", this.classes, indentationIndex) +
+                JsonHelper.json("classes", this.classes, indentationIndex) + "," +
                 JsonHelper.json("start", this.start, indentationIndex) +
                 "\n" + JsonHelper.getIdentationString(indentationIndex - 1) + "}";
     }

@@ -21,11 +21,17 @@ import syntactic.SyntacticAnalyzer;
 public class SemanticExecutor extends Executor {
 
     private final Syntactic syntacticAnalyzer;
+    private Logger secondLogger;
 
     public SemanticExecutor(Reader reader, Logger logger) {
         super(reader, logger);
         SymbolTableHandler stHandler = new TinyRuSymbolTableHandler();
         this.syntacticAnalyzer = new SyntacticAnalyzer(new LexicalAnalyzer(reader), stHandler, new TinyRuAstHandler(stHandler.getSymbolTableLookup()));
+    }
+
+    @Override
+    public void setBackupLogger(Logger secondLogger) {
+        this.secondLogger = secondLogger;
     }
 
     public void execute() {
@@ -34,11 +40,11 @@ public class SemanticExecutor extends Executor {
         try {
             syntacticAnalyzer.analyze();
             String symbolTableJson = syntacticAnalyzer.getSymbolTableJson();
-            clogger.LogSemanticSymbolTableSuccess();
-            // logger.LogSymbolTable(symbolTableJson);
             String astJson = syntacticAnalyzer.getAbstractSybolTreeJson();
-            // TODO
-            System.out.println(astJson);
+            logger.LogAst(astJson);
+            secondLogger.LogSymbolTable(symbolTableJson);
+            clogger.LogAstSuccess();
+
         } catch (LexicalException e) {
             clogger.LogLexicError(e);
         } catch (SyntacticException e) {

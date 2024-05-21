@@ -34,7 +34,7 @@ public class LiteralNode extends OperatingNode {
 
         return "{" +
                 JsonHelper.json("nodeType", this.nodeType, indentationIndex) + "," +
-                JsonHelper.json("attributeType", this.attributeType, indentationIndex) + "," +
+                JsonHelper.json("attributeType", this.attributeType.toString(), indentationIndex) + "," +
                 JsonHelper.json("value", this.value, indentationIndex) +
                 "\n" + JsonHelper.getIdentationString(indentationIndex - 1) + "}";
     }
