@@ -82,7 +82,7 @@ public abstract class Logger {
 
     protected List<String> GetAstErrorMessage(AstException e) {
         List result = new ArrayList<String>();
-        result.add("ERROR: SEMANTICO - Sentencias");
+        result.add("ERROR: SEMANTICO - SENTENCIAS");
         result.add("| NUMERO DE LINEA: | NUMERO DE COLUMNA: | DESCRIPCION: |");
         result.add("| " + e.getLine() + " | " + e.getColumn() + " | " + e.getMessage() + " |");
         return result;
