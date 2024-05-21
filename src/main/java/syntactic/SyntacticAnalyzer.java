@@ -813,9 +813,9 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         // ⟨Llamada-Método⟩
         if (getTokenType() == Type.OPEN_PAR) {
             MethodCallNode methodCall = ast.createMethodCallNode(varToken);
-            llamadaMetodo(methodCall);
+            PrimaryNode primary = llamadaMetodo(methodCall);
 
-            return methodCall;
+            return primary;
         }
 
         // ⟨AccesoVar⟩
@@ -860,23 +860,25 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         return ast.handlePossibleChain(parentNode, childrenNode);
     }
 
-    private void llamadaMetodo(CallableNode methodCall) throws SyntacticException, LexicalException {
+    private PrimaryNode llamadaMetodo(CallableNode methodCall) throws SyntacticException, LexicalException {
         //  ⟨Argumentos-Actuales⟩ ⟨Encadenado-O-Lambda⟩
         // Create a new MethodCallNode with the varToken
-        argumentosActuales(methodCall);
-        encadenadoOLambda();
+        List<ExpressionNode> params = argumentosActuales();
+        ast.SetMethodParameter(methodCall, params);
+        PrimaryNode childrenNode = encadenadoOLambda();
+        return  ast.handlePossibleChain(methodCall, childrenNode);
     }
 
-    private StaticMethodCallNode llamadaMetodoEstatico() throws SyntacticException, LexicalException {
+    private PrimaryNode llamadaMetodoEstatico() throws SyntacticException, LexicalException {
         // idStruct . id ⟨Llamada-Método⟩ ⟨Encadenado-O-Lambda⟩
         Token varClass = match(Type.ID_CLASS);
         match(Type.DOT);
         Token varToken = match(Type.ID);
         StaticMethodCallNode staticMethodCallNode = ast.createStaticMethodCallNode(varClass, varToken);
-        llamadaMetodo(staticMethodCallNode);
-        encadenadoOLambda();
+        PrimaryNode primary = llamadaMetodo(staticMethodCallNode);
+        PrimaryNode childrenNode = encadenadoOLambda();
 
-        return staticMethodCallNode;
+        return ast.handlePossibleChain(primary, childrenNode);
     }
 
     private PrimaryNode llamadaNew() throws SyntacticException, LexicalException {
@@ -884,9 +886,10 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         if (getTokenType() == Type.ID_CLASS) {
             Token classToken = match(Type.ID_CLASS);
             ConstructorCallNode constructor = ast.createConstructorCallNode(classToken);
-            argumentosActuales(constructor);
-            encadenadoOLambda();
-            return constructor;
+            List<ExpressionNode> params = argumentosActuales();
+            ast.SetMethodParameter(constructor, params);
+            PrimaryNode childrenNode = encadenadoOLambda();
+            return ast.handlePossibleChain(constructor, childrenNode);
         }
 
         // ⟨Tipo-Primitivo⟩ [ ⟨Expresion⟩ ]
@@ -903,18 +906,19 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         return null; // Unreachable line
     }
 
-    private void argumentosActuales(CallableNode method) throws SyntacticException, LexicalException {
+    private List<ExpressionNode> argumentosActuales() throws SyntacticException, LexicalException {
         // ( ⟨Lista-Expresiones⟩ ) | ( )
         match(Type.OPEN_PAR);
 
         if (getTokenType() == Type.CLOSE_PAR) {
             match(Type.CLOSE_PAR);
+            return new ArrayList<>();
         }
 
         else {
             List<ExpressionNode> params = listaExpresiones();
-            ast.SetMethodParameter(method, params);
             match(Type.CLOSE_PAR);
+            return params;
         }
     }
 
@@ -952,7 +956,8 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         // ⟨Llamada-Método-Encadenado⟩ ::= ⟨Argumentos-Actuales⟩ ⟨Encadenado-O-Lambda⟩
         if (getTokenType() == Type.OPEN_PAR) {
             MethodCallNode method = new MethodCallNode(varToken);
-            argumentosActuales(method);
+            List<ExpressionNode> params = argumentosActuales();
+            ast.SetMethodParameter(method, params);
 
             if (getTokenType() == Type.DOT) {
                 PrimaryNode childrenNode = encadenado();
