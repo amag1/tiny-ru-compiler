@@ -25,7 +25,7 @@ public class ChainNode extends PrimaryNode {
         AttributeType parentType = this.parentNode.getAttributeType(context);
 
         // Si el padre es de tipo void (null), entonces no existe el nodo hijo
-        if (parentType.getType().equals("void")) {
+        if (parentType == null || parentType.getType().equals("void")) {
             throw new VoidAccessException(this.token);
         }
         // Obtener el tipo del nodo hijo en base al contexto del padre
