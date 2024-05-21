@@ -88,11 +88,13 @@ public class Context {
     }
 
     public MethodEntry getMethod(String methodName) {
-        ClassEntry currentClass;
+        ClassEntry currentClass = null;
 
         if (currentClassName != null) {
             currentClass = st.getClassByName(currentClassName);
-        } else {
+        }
+
+        if (callingClassName != null) {
             currentClass = st.getClassByName(callingClassName);
         }
 
