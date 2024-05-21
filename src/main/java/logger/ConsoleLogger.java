@@ -68,4 +68,15 @@ public class ConsoleLogger extends Logger {
             System.out.println(line);
         }
     }
+
+    public void LogAst(String astJson) {
+        System.out.println(astJson);
+    }
+
+    public void LogAstSuccess() {
+        List<String> message = GetAstSuccessMessage();
+        for (String line : message) {
+            System.out.println(line);
+        }
+    }
 }

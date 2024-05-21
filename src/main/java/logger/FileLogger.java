@@ -61,4 +61,15 @@ public class FileLogger extends Logger {
             System.out.println("Ocurrió un error al guardar el archivo destino");
         }
     }
+
+    public void LogAst(String astJson) {
+        initializeFile(this.path);
+        try {
+            FileWriter writer = new FileWriter(this.file);
+            writer.write(astJson);
+            writer.close();
+        } catch (IOException e) {
+            System.out.println("Ocurrió un error al guardar el archivo destino");
+        }
+    }
 }
