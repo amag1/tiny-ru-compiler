@@ -60,7 +60,7 @@ public class DummyAstHandler implements AstHandler{
     }
 
     @Override
-    public SelfAccess createSelfAccess(PrimaryNode node) {
+    public SelfAccess createSelfAccess(PrimaryNode node, Token selfKeyword) {
         return null;
     }
 

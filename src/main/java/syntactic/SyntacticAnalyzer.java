@@ -547,9 +547,9 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
     }
 
     private PrimaryNode accesoSelfSimple() throws SyntacticException, LexicalException {
-        match(Type.KW_SELF);
+        Token selfKeyword = match(Type.KW_SELF);
         PrimaryNode node = encadenadosSimples();
-        return ast.createSelfAccess(node);
+        return ast.createSelfAccess(node, selfKeyword);
     }
 
     private SentenceNode sentenciaSimple() throws SyntacticException, LexicalException {
@@ -782,9 +782,9 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         // ⟨AccesoSelf⟩
         // ⟨AccesoSelf⟩ ::= self ⟨Encadenado-O-Lambda⟩
         if (getTokenType() == Type.KW_SELF) {
-            match(Type.KW_SELF);
+            Token selfKeyword =  match(Type.KW_SELF);
             PrimaryNode node = encadenadoOLambda();
-            return ast.createSelfAccess(node);
+            return ast.createSelfAccess(node, selfKeyword);
         }
 
         // id ⟨AccesoVar-O-Llamada-Método⟩
