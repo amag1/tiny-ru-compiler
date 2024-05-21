@@ -18,4 +18,8 @@ public abstract class Executor {
     }
 
     public abstract void execute();
+
+    public void setBackupLogger(Logger logger) {
+        this.logger = logger;
+    }
 }

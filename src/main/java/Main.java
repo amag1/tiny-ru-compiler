@@ -29,21 +29,13 @@ public class Main {
         // Get the output logger;
 
         // Generate path for output from input
-        String outputFilePath = filePath.substring(0, filePath.lastIndexOf('.')) + ".ts.json";
-        Logger outputLogger = new FileLogger(outputFilePath);
-
-//        if (args.length > 1) {
-//            // Save the tokens in output file
-//            String outputFilePath = args[1];
-//            outputLogger = new FileLogger(outputFilePath);
-//        }
-//        else {
-//            // Logs the result in console
-//            outputLogger = new ConsoleLogger();
-//        }
+        String astOutputFilePath = filePath.substring(0, filePath.lastIndexOf('.')) + ".ast.json";
+        String sTableOutputFilePath = filePath.substring(0, filePath.lastIndexOf('.')) + ".st.json";
+        Logger outputLogger = new FileLogger(astOutputFilePath);
 
         // Execute
         Executor executor = new SemanticExecutor(fileReader, outputLogger);
+        executor.setBackupLogger(new FileLogger(sTableOutputFilePath));
         executor.execute();
     }
 }
