@@ -157,6 +157,9 @@ public class Context {
     }
 
     public ClassEntry getCallingClass() {
+        if (this.callingClassName == null) {
+            return  null;
+        }
         return st.getClassByName(this.callingClassName);
     }
 
