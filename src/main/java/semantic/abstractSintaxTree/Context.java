@@ -92,11 +92,13 @@ public class Context {
 
         if (currentClassName != null) {
             currentClass = st.getClassByName(currentClassName);
+        } else {
+            if (callingClassName != null) {
+                currentClass = st.getClassByName(callingClassName);
+            }
         }
 
-        if (callingClassName != null) {
-            currentClass = st.getClassByName(callingClassName);
-        }
+
 
         if (currentClass == null) {
             return null;
