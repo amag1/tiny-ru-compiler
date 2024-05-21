@@ -16,12 +16,10 @@ public class SelfAccess extends PrimaryNode {
 
     private PrimaryNode node;
 
-    public SelfAccess(PrimaryNode node) {
+    public SelfAccess(PrimaryNode node, Token selfKeyword) {
         this.nodeType = "selfAccess";
         this.node = node;
-        if (node != null) {
-            this.token = node.getToken();
-        }
+        this.token = selfKeyword;
     }
 
     public String toJson(int indentationIndex) {

@@ -29,7 +29,7 @@ public class VariableAccessNode extends PrimaryNode {
         // Chequar si se puede acceder al atributo
         if (var.isPrivate()) {
             // Si el atributo es heredado y privado, es inaccesible
-            if (var.isPrivate()) {
+            if (var.isInherited()) {
                 throw new UnaccesibleVariableException(this.token);
             }
 
