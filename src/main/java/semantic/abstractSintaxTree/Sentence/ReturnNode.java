@@ -12,6 +12,9 @@ import semantic.abstractSintaxTree.Expression.ExpressionNode;
 import semantic.symbolTable.AttributeType;
 import semantic.symbolTable.MethodEntry;
 
+/**
+ * Nodo de retorno
+ */
 public class ReturnNode extends SentenceNode {
     private ExpressionNode returnValue;
 
@@ -29,6 +32,9 @@ public class ReturnNode extends SentenceNode {
         this.returnValue = null;
     }
 
+    /**
+     * Valida que el tipo que se retorna sea compatible con el metodo actual
+     */
     @Override
     public void validate(Context context) throws AstException {
         MethodEntry method = context.getCallingMethod();
@@ -49,7 +55,7 @@ public class ReturnNode extends SentenceNode {
                 // Formatear los tipos en caso de que sean arrays
                 String foundType = currentReturnType.isArray() ? "Array " + currentReturnType.getType() : currentReturnType.getType();
                 String expectedType = method.getReturnType().isArray() ? "Array " + method.getReturnType().getType() : method.getReturnType().getType();
-                throw new InvalidMethodReturn(expectedType,foundType, this.token);
+                throw new InvalidMethodReturn(expectedType, foundType, this.token);
             }
         }
 

@@ -5,6 +5,9 @@ import semantic.JsonHelper;
 import semantic.abstractSintaxTree.Context;
 import semantic.symbolTable.AttributeType;
 
+/**
+ * Nodo de expresion parentizada
+ */
 public class ParentizedExpressionNode extends PrimaryNode {
 
     private ExpressionNode expression;

@@ -10,6 +10,11 @@ import semantic.JsonHelper;
 import semantic.abstractSintaxTree.Context;
 import semantic.symbolTable.AttributeType;
 
+/**
+ * Nodo de creación de un nuevo array
+ * <p>
+ * Representa la creación de un nuevo array de un tipo de elementos
+ */
 public class NewArrayNode extends PrimaryNode {
     private AttributeType elementsType;
     private ExpressionNode lengthExpression;

@@ -7,6 +7,9 @@ import semantic.abstractSintaxTree.Context;
 import semantic.abstractSintaxTree.Expression.ExpressionNode;
 import semantic.symbolTable.AttributeType;
 
+/**
+ * Nodo de sentencia while
+ */
 public class WhileNode extends SentenceNode {
     private ExpressionNode condition;
     private SentenceNode loopBody;
@@ -19,6 +22,11 @@ public class WhileNode extends SentenceNode {
         setToken(condition.getToken());
     }
 
+    /**
+     * Valida que la condicion sea booleana y analiza el bloque del while
+     * <p>
+     * No tiene return aunque se halle alguno en el cuerpo del bucle
+     */
     @Override
     public void validate(Context context) throws AstException {
         AttributeType conditionType = condition.getAttributeType(context);

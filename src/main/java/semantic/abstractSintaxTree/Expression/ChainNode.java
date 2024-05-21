@@ -9,6 +9,13 @@ import semantic.JsonHelper;
 import semantic.abstractSintaxTree.Context;
 import semantic.symbolTable.AttributeType;
 
+/**
+ * Nodo encadenado
+ * <p>
+ * Representa un nodo que se encadena con otro nodo
+ * <p>
+ * Ambos nodos son de tipo primario
+ */
 public class ChainNode extends PrimaryNode {
     private PrimaryNode parentNode;
     private PrimaryNode childrenNode;

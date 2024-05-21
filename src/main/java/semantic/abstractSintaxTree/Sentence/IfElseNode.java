@@ -7,6 +7,9 @@ import semantic.abstractSintaxTree.Context;
 import semantic.abstractSintaxTree.Expression.ExpressionNode;
 import semantic.symbolTable.AttributeType;
 
+/**
+ * Nodo de sentencia if-else
+ */
 public class IfElseNode extends SentenceNode {
     private ExpressionNode condition;
     private SentenceNode thenBody;
@@ -33,6 +36,11 @@ public class IfElseNode extends SentenceNode {
         }
     }
 
+    /**
+     * Valida que la condicion sea booleana y analiza los bloques then y else
+     * <p>
+     * Si ambos bloques tienen return, entonces este tambien lo tiene
+     */
     @Override
     public void validate(Context context) throws AstException {
         AttributeType conditionType = condition.getAttributeType(context);

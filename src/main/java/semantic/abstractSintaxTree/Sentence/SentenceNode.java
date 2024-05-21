@@ -5,6 +5,9 @@ import lexical.Token;
 import semantic.abstractSintaxTree.AbstractSyntaxNode;
 import semantic.abstractSintaxTree.Context;
 
+/**
+ * Nodo de sentencia
+ */
 public abstract class SentenceNode extends AbstractSyntaxNode {
     protected boolean hasReturn = false;
 
@@ -18,8 +21,14 @@ public abstract class SentenceNode extends AbstractSyntaxNode {
         this.token = token;
     }
 
+    /**
+     * Valida la sentencia
+     */
     public abstract void validate(Context context) throws AstException;
 
+    /**
+     * Indica si la sentencia tiene un return
+     */
     public boolean hasReturn() {
         return hasReturn;
     }

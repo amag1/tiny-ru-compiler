@@ -8,6 +8,11 @@ import semantic.abstractSintaxTree.Expression.ExpressionNode;
 import semantic.abstractSintaxTree.Expression.PrimaryNode;
 import semantic.symbolTable.AttributeType;
 
+/**
+ * Nodo de asignacion
+ * <p>
+ * Tiene dos hijos, el lado izquierdo y el lado derecho de la asignacion
+ */
 public class AssignationNode extends SentenceNode {
     private PrimaryNode leftSide;
     private ExpressionNode rightSide;
@@ -20,6 +25,9 @@ public class AssignationNode extends SentenceNode {
         setToken(leftSide.getToken());
     }
 
+    /**
+     * Valida que ambos lados de la asignacion sean compatibles
+     */
     @Override
     public void validate(Context context) throws AstException {
         // Validar ambos lados y chequear que sean compatibles

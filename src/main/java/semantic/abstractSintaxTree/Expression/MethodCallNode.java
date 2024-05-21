@@ -12,6 +12,11 @@ import semantic.symbolTable.*;
 
 import java.util.List;
 
+/**
+ * Nodo de llamada a método
+ * <p>
+ * Solo verifica que el metodo exista, lo demas lo maneja callableNode
+ */
 public class MethodCallNode extends CallableNode {
     private String methodName;
 

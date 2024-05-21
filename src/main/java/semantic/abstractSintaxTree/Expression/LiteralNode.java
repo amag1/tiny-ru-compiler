@@ -7,6 +7,11 @@ import semantic.abstractSintaxTree.Context;
 import semantic.symbolTable.AttributeType;
 
 
+/**
+ * Nodo literal
+ * <p>
+ * Tiene un tipo asociado que no necesita ser calculado
+ */
 public class LiteralNode extends OperatingNode {
     private String value;
 

@@ -5,6 +5,9 @@ import semantic.JsonHelper;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Representa el arbol de sintaxis abstracta
+ */
 public class AbstractSyntaxTree {
     private Map<String, AstClassEntry> classes;
 
