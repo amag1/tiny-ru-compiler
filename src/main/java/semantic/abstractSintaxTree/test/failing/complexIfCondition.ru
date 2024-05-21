@@ -8,12 +8,12 @@ impl A{
     }
 
     fn hola(Int a, Str b) -> Int{
-    if (b == "b") {
-        ret 1;
-    }
-    else {
-        ret 2;
-    }
+        if (b == "b") {
+            ret 1;
+        }
+        else {
+            ret 2;
+        }
     }
 }
 

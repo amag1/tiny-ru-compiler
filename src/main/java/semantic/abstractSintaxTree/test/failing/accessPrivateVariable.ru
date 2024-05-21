@@ -15,7 +15,7 @@ struct Unrelated {
     pri Int a;
 }
 impl Unrelated{
-.(){}
+    .(){}
 }
 
 start{}
