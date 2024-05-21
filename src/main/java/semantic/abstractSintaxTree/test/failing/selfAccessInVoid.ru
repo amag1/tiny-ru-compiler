@@ -1,4 +1,5 @@
+/? SelfAccessInStaticMethod
 start {
     Int x;
-    self.x;
+    self.x = 5;
 }
