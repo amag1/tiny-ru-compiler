@@ -23,6 +23,8 @@ public abstract class Logger {
 
     public abstract void LogSymbolTable(String symbolTableJson);
 
+    public abstract void LogAst(String astJson);
+
     protected List<String> GetLexicSuccessMessage(List<Token> tokens) {
         List result = new ArrayList<String>();
         // Header
