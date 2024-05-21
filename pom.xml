@@ -41,7 +41,7 @@
 
     </dependencies>
     <build>
-        <finalName>etapa3</finalName>
+        <finalName>etapa4</finalName>
         <plugins>
             <!-- Maven Compiler Plugin -->
             <plugin>
