@@ -18,6 +18,9 @@ public abstract class ExpressionNode extends AbstractSyntaxNode {
     /**
      * Todas las expresiones deben tener un tipo. Este método se encarga de
      * hallarlo y lanzar excepciones si no es posible
+     * <p>
+     * También se encarga de verificar que la expresión sea válida.
+     * Esto puede verse en validaciones como asegurar que el índice de un array sea un entero
      *
      * @param context Contexto de ejecución
      * @return Tipo de atributo que representa la expresión
