@@ -1,6 +1,7 @@
 package semantic.abstractSintaxTree.Expression;
 
 import exceptions.semantic.syntaxTree.AstException;
+import exceptions.semantic.syntaxTree.OnlyVarException;
 import exceptions.semantic.syntaxTree.UnaccesibleVariableException;
 import exceptions.semantic.syntaxTree.UndeclaredVariableAccessException;
 import lexical.Token;

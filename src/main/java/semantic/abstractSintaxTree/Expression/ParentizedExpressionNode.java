@@ -29,6 +29,6 @@ public class ParentizedExpressionNode extends PrimaryNode {
 
     @Override
     public AttributeType getAttributeType(Context context) throws AstException {
-        return expression.getAttributeType(context.reset());
+        return expression.getAttributeType(context);
     }
 }

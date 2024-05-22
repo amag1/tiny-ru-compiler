@@ -1,6 +1,7 @@
 package semantic.abstractSintaxTree.Expression;
 
 import exceptions.semantic.syntaxTree.AstException;
+import exceptions.semantic.syntaxTree.OnlyVarException;
 import lexical.Token;
 import semantic.JsonHelper;
 import semantic.abstractSintaxTree.Context;
@@ -31,6 +32,11 @@ public class LiteralNode extends OperatingNode {
 
     @Override
     public AttributeType getAttributeType(Context context) throws AstException {
+        // Chequear que el contexto no sea onlyVar
+        if (context.isOnlyVar()) {
+            throw new OnlyVarException(this.token);
+        }
+
         return this.attributeType;
     }
 

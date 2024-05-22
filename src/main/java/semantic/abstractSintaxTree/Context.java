@@ -18,6 +18,7 @@ public class Context {
     private String callingMethodName;
     private String currentClassName;
     private boolean isSelfAccess;
+    private boolean onlyVar;
 
     public Context(SymbolTableLookup st) {
         this.st = st;
@@ -28,12 +29,13 @@ public class Context {
         this.callingClassName = callingClassName;
     }
 
-    private Context(SymbolTableLookup st, String callingClassName, String callingMethodName, String currentClassName, boolean isSelfAccess) {
+    private Context(SymbolTableLookup st, String callingClassName, String callingMethodName, String currentClassName, boolean isSelfAccess, boolean onlyVar) {
         this.st = st;
         this.callingClassName = callingClassName;
         this.callingMethodName = callingMethodName;
         this.currentClassName = currentClassName;
         this.isSelfAccess = isSelfAccess;
+        this.onlyVar = onlyVar;
     }
 
     /**
@@ -183,14 +185,14 @@ public class Context {
      * @return Contexto clonado
      */
     public Context clone(String callingClassName, String callingMethodName) {
-        return new Context(this.st, callingClassName, callingMethodName, null, false);
+        return new Context(this.st, callingClassName, callingMethodName, null, false,false);
     }
 
     /**
      * Clona el contexto actual y marca selfAccess como true
      */
     public Context cloneSelfContext() {
-        return new Context(this.st, this.callingClassName, this.callingMethodName, null, true);
+        return new Context(this.st, this.callingClassName, this.callingMethodName, null, true, false);
     }
 
     /**
@@ -200,11 +202,15 @@ public class Context {
      * @return Contexto clonado
      */
     public Context cloneChainContext(String currentClassName) {
-        return new Context(this.st, this.callingClassName, this.callingMethodName, currentClassName, false);
+        return new Context(this.st, this.callingClassName, this.callingMethodName, currentClassName, false, this.onlyVar);
     }
 
     public Context reset() {
-        return new Context(this.st, this.callingClassName, this.callingMethodName, null, false);
+        return new Context(this.st, this.callingClassName, this.callingMethodName, null, false, false);
+    }
+
+    public Context cloneOnlyVar() {
+        return new Context(this.st, this.callingClassName, this.callingMethodName, this.currentClassName, false, true);
     }
 
     public ClassEntry getClass(String className) {
@@ -272,5 +278,9 @@ public class Context {
 
     public boolean isStart() {
         return this.callingClassName == null;
+    }
+
+    public boolean isOnlyVar() {
+        return onlyVar;
     }
 }
