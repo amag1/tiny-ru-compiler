@@ -1,9 +1,7 @@
 package semantic.abstractSintaxTree.Expression;
 
-import exceptions.semantic.syntaxTree.AstException;
+import exceptions.semantic.syntaxTree.*;
 import exceptions.semantic.syntaxTree.ClassNotFoundException;
-import exceptions.semantic.syntaxTree.InvalidStaticMethodCallException;
-import exceptions.semantic.syntaxTree.MethodNotFoundException;
 import lexical.Token;
 import lexical.Type;
 import location.Location;
@@ -51,6 +49,12 @@ public class StaticMethodCallNode extends CallableNode {
         List<VariableEntry> parameters = method.getFormalParametersList();
 
         checkParametersMatch(context.reset(), parameters);
+
+
+        // Chequear que el contexto no sea oblyVar
+        if (context.isOnlyVar()) {
+            throw new OnlyVarException(this.token);
+        }
 
         return method.getReturnType();
     }

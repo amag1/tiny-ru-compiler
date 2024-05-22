@@ -1,6 +1,8 @@
 package semantic.abstractSintaxTree.Expression;
 
 import exceptions.semantic.syntaxTree.AstException;
+import exceptions.semantic.syntaxTree.OnlyVarException;
+import exceptions.semantic.syntaxTree.SelfAccessInStaticMethod;
 import exceptions.semantic.syntaxTree.UnaryTypeMismatchException;
 import lexical.Token;
 import semantic.JsonHelper;
@@ -21,7 +23,20 @@ public class UnaryOperationNode extends ExpressionNode {
 
     @Override
     public AttributeType getAttributeType(Context context) throws AstException {
-        AttributeType operatingType = operating.getAttributeType(context.reset());
+        // Chequear que el contexto no sea onlyVar
+        if (context.isOnlyVar()) {
+            throw new OnlyVarException(this.token);
+        }
+
+        String unaryOperator = operator.getToken().getLexem();
+        Context operatingContext;
+        if (unaryOperator.equals("++") || unaryOperator.equals("--")) {
+           operatingContext = context.cloneOnlyVar();
+        } else {
+            operatingContext = context.reset();
+        }
+
+        AttributeType operatingType = operating.getAttributeType(operatingContext);
 
         AttributeType operatorType = this.operator.getAttributeType();
         if (operatorType.getType().equals(operatingType.getType())) {

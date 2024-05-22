@@ -2,6 +2,7 @@ package semantic.abstractSintaxTree.Expression;
 
 import exceptions.semantic.syntaxTree.AstException;
 import exceptions.semantic.syntaxTree.ClassNotFoundException;
+import exceptions.semantic.syntaxTree.OnlyVarException;
 import lexical.Token;
 import location.Location;
 import semantic.JsonHelper;
@@ -37,6 +38,11 @@ public class ConstructorCallNode extends CallableNode {
         // Retorna un objeto del tipo de la clase
         if (constructor == null) {
             return new AttributeType(this.token.getLexem());
+        }
+
+        // Chequear que el contexto no sea onlyVar
+        if (context.isOnlyVar()) {
+            throw new OnlyVarException(this.token);
         }
 
         List<VariableEntry> parameters = constructor.getFormalParametersList();

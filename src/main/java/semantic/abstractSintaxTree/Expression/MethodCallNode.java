@@ -2,6 +2,7 @@ package semantic.abstractSintaxTree.Expression;
 
 import exceptions.semantic.syntaxTree.AstException;
 import exceptions.semantic.syntaxTree.MethodNotFoundException;
+import exceptions.semantic.syntaxTree.OnlyVarException;
 import lexical.Token;
 import lexical.Type;
 import location.Location;
@@ -29,6 +30,11 @@ public class MethodCallNode extends CallableNode {
 
     @Override
     public AttributeType getAttributeType(Context context) throws AstException {
+        // Chequear que el contexto no sea oblyVar
+        if (context.isOnlyVar()) {
+            throw new OnlyVarException(this.token);
+        }
+
         MethodEntry method = context.getMethod(this.methodName);
 
         if (method == null) {
