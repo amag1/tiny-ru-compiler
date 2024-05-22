@@ -130,7 +130,12 @@ public class MethodEntry implements Json {
     }
 
     public List<VariableEntry> getFormalParametersList() {
-        return new ArrayList<>(formalParameters.values());
+        List<VariableEntry> parameters = new ArrayList<>(formalParameters.values());
+
+        // Ordenar lista segun la posicion
+        parameters.sort(Comparator.comparingInt(VariableEntry::getPosition));
+
+        return parameters;
     }
 
     public Map<String, VariableEntry> getLocalVariables() {

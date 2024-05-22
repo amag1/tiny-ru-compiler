@@ -39,12 +39,7 @@ public class ConstructorCallNode extends CallableNode {
             return new AttributeType(this.token.getLexem());
         }
 
-        // Convertir parametros del construcor en una lista
-        List<VariableEntry> parameters = new ArrayList<>();
-        for (Map.Entry<String, VariableEntry> entry : constructor.getFormalParameters().entrySet()) {
-            VariableEntry parameter = entry.getValue();
-            parameters.add(parameter.getPosition(), parameter);
-        }
+        List<VariableEntry> parameters = constructor.getFormalParametersList();
 
         checkParametersMatch(context.reset(), parameters);
 
