@@ -4,10 +4,7 @@ import lexical.Token;
 import lexical.Type;
 import location.Location;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Clase que genera las clases predefinidas de la gramática: IO, Object, Str, Array
@@ -23,12 +20,23 @@ public class PredefinedClassCreator {
         classes.add(generateObjectClass(primitiveAttributeTypes));
         classes.add(generateStrClass(primitiveAttributeTypes));
         classes.add(generateArrayClass(primitiveAttributeTypes));
+        classes.addAll(generatePrimitiveClasses(primitiveAttributeTypes));
 
         for (ClassEntry classEntry : classes) {
             setFieldInPredefinedStruct(classEntry);
         }
 
         return classes;
+    }
+
+    private List<ClassEntry> generatePrimitiveClasses(Map<String, AttributeType> types) {
+        List<ClassEntry> primitiveClasses = new ArrayList<>();
+        List<String> classesToGenerate = new ArrayList<>(Arrays.asList("Int", "Bool", "Char"));
+        for (String classToAdd : classesToGenerate) {
+            ClassEntry classEntry = new ClassEntry(new Token(classToAdd, Type.ID_CLASS, new Location()));
+            primitiveClasses.add(classEntry);
+        }
+        return primitiveClasses;
     }
 
     private ClassEntry generateArrayClass(Map<String, AttributeType> types) {
