@@ -12,6 +12,9 @@ import semantic.symbolTable.AttributeType;
 import semantic.symbolTable.ClassEntry;
 import semantic.symbolTable.MethodEntry;
 
+/**
+ * Nodo de acceso a self
+ */
 public class SelfAccess extends PrimaryNode {
 
     private PrimaryNode node;
@@ -32,6 +35,10 @@ public class SelfAccess extends PrimaryNode {
     }
 
 
+    /**
+     * Valida que el contexto desde el que se llama sea valido
+     * Si lo es, trata a la expresion que le sigue como un encadenado para obtener el tipo
+     */
     @Override
     public AttributeType getAttributeType(Context context) throws AstException {
         // Lanzar error si se accede a self desde start

@@ -6,6 +6,9 @@ import semantic.abstractSintaxTree.Context;
 import semantic.abstractSintaxTree.Expression.ExpressionNode;
 import semantic.symbolTable.AttributeType;
 
+/**
+ * Nodo de sentencia simple
+ */
 public class SimpleSentenceNode extends SentenceNode {
     private ExpressionNode expression;
 

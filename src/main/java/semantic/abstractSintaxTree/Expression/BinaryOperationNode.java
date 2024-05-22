@@ -9,6 +9,10 @@ import semantic.symbolTable.AttributeType;
 
 import javax.management.Attribute;
 
+/**
+ * Nodo operacion binaria.
+ * Tiene dos expresiones (para ambos lados) y un operador.
+ */
 public class BinaryOperationNode extends ExpressionNode {
     private ExpressionNode leftOperating;
     private ExpressionNode rightOperating;

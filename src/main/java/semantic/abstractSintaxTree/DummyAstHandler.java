@@ -7,7 +7,10 @@ import semantic.abstractSintaxTree.Sentence.*;
 
 import java.util.List;
 
-public class DummyAstHandler implements AstHandler{
+/**
+ * Implementación vacía de AstHandler para poder realizar pruebas de etapas anteriores
+ */
+public class DummyAstHandler implements AstHandler {
 
     @Override
     public void validateSenteces() throws AstException {

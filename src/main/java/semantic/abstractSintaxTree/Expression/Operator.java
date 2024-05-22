@@ -12,6 +12,9 @@ public class Operator implements Json {
         this.operator = operator;
     }
 
+    /**
+     * @return El tipo de dato que retorna la operación
+     */
     public AttributeType getAttributeType() {
         return switch (operator.getLexem()) {
             case "+", "-", "*", "/", "%", "++", "--" ->
@@ -22,6 +25,9 @@ public class Operator implements Json {
         };
     }
 
+    /**
+     * @return El tipo que espera como entrada la operación
+     */
     public AttributeType getInputType() {
         return switch (operator.getLexem()) {
             case "+", "-", "*", "/", "%", "++", "--", ">", "<", ">=", "<=" ->

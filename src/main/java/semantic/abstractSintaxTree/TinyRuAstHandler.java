@@ -11,6 +11,13 @@ import semantic.symbolTable.SymbolTableLookup;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Clase que se encarga de manejar el árbol de sintaxis abstracta
+ * y de crear los nodos necesarios para el AST
+ * <p>
+ * Posee metodos para crear nodos y otras estructuras del AST, y consultar
+ * la tabla de simbolos
+ */
 public class TinyRuAstHandler implements AstHandler {
 
     private AbstractSyntaxTree ast;
@@ -21,6 +28,11 @@ public class TinyRuAstHandler implements AstHandler {
         this.stHandler = stHandler;
     }
 
+    /**
+     * Valida todas las sentencias del AST
+     *
+     * @throws AstException Lanza una excepcion si alguna sentencia no es valida
+     */
     public void validateSenteces() throws AstException {
         for (Map.Entry<String, AstClassEntry> entry : ast.getClasses().entrySet()) {
             AstClassEntry currentClass = entry.getValue();
@@ -123,6 +135,11 @@ public class TinyRuAstHandler implements AstHandler {
         return new BlockNode(sentences);
     }
 
+    /**
+     * Agrega una sentencia al metodo actual
+     *
+     * @param sentence La sentencia a agregar
+     */
     public void addSentence(SentenceNode sentence) {
         // Obtener la clase actual de la tabla de símbolos
         ClassEntry currentClass = stHandler.getCurrentClass();

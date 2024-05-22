@@ -9,6 +9,9 @@ import semantic.symbolTable.VariableEntry;
 
 public class ArrayAccessNode extends PrimaryNode {
     private String arrayName;
+    /**
+     * Expresion que representa el indice del array. Debe ser de tipo entero
+     */
     private ExpressionNode index;
 
     public ArrayAccessNode(Token arrayName, ExpressionNode index) {
@@ -29,7 +32,7 @@ public class ArrayAccessNode extends PrimaryNode {
         // Chequar si se puede acceder al atributo
         if (arr.isPrivate()) {
             // Si el atributo es heredado y privado, es inaccesible
-            if (arr.isPrivate()) {
+            if (arr.isInherited()) {
                 throw new UnaccesibleVariableException(this.token);
             }
 

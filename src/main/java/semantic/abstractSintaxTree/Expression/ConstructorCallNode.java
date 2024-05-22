@@ -12,6 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Nodo de llamada a constructor
+ */
 public class ConstructorCallNode extends CallableNode {
 
     public ConstructorCallNode(Token className) {

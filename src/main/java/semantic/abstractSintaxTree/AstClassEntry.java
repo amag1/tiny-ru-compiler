@@ -8,6 +8,9 @@ import semantic.symbolTable.SymbolTableLookup;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Representa una clase dentro del AST
+ */
 public class AstClassEntry implements Json {
 
     private String name;
@@ -24,6 +27,12 @@ public class AstClassEntry implements Json {
         return methods;
     }
 
+    /**
+     * Valida todas las sentencias de la clase
+     *
+     * @param classContext Contexto de la clase
+     * @throws AstException Lanza una excepcion si alguna sentencia no es valida
+     */
     public void validateSentences(Context classContext) throws AstException {
         for (Map.Entry<String, AstMethodEntry> entry : methods.entrySet()) {
             AstMethodEntry currentMethod = entry.getValue();

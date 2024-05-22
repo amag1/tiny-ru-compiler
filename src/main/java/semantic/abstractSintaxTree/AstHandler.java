@@ -7,7 +7,19 @@ import semantic.abstractSintaxTree.Sentence.*;
 
 import java.util.List;
 
+/**
+ * Interfaz para el handler del AST
+ * <p>
+ * Se utiliza para inyectarla dentro del analizador sintactico
+ *
+ * @see semantic.abstractSintaxTree.TinyRuAstHandler
+ */
 public interface AstHandler {
+    /**
+     * Verifica la validez de todas las sentencias
+     *
+     * @throws AstException Lanza una excepcion si alguna sentencia no es valida
+     */
     void validateSenteces() throws AstException;
 
     LiteralNode createLiteral(Token token);

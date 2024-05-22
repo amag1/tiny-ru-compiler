@@ -6,6 +6,11 @@ import semantic.abstractSintaxTree.Context;
 
 import java.util.List;
 
+/**
+ * Nodo de bloque
+ * <p>
+ * Tiene una lista de sentencias
+ */
 public class BlockNode extends SentenceNode {
     private List<SentenceNode> sentences;
 
@@ -18,6 +23,9 @@ public class BlockNode extends SentenceNode {
         }
     }
 
+    /**
+     * Revisa que cada sentencia del bloque sea valida
+     */
     @Override
     public void validate(Context context) throws AstException {
         for (SentenceNode sentence : sentences) {

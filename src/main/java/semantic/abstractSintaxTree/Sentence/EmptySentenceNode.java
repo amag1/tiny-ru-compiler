@@ -3,6 +3,9 @@ package semantic.abstractSintaxTree.Sentence;
 import semantic.JsonHelper;
 import semantic.abstractSintaxTree.Context;
 
+/**
+ * Sentencia vacía
+ */
 public class EmptySentenceNode extends SentenceNode {
 
     public EmptySentenceNode() {
