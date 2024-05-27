@@ -207,7 +207,7 @@ public class Context {
     }
 
     /**
-     * Setea selfContext y currentClass
+     * Setea selfContext
      * @param selfAccess
      */
     public void setSelfAccess(boolean selfAccess) {
