@@ -71,7 +71,10 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
 
     private void start() throws SyntacticException, LexicalException, SymbolTableException {
         // start ⟨Bloque-Método⟩
-        Token start = match(Type.KW_START);
+        Token start = match(Type.ID);
+        if (!start.getLexem().equals("start")) {
+            throwSyntacticException("start", start);
+        }
         st.handleStart();
         ast.createMethodIfNotExists(start);
         bloqueMetodo();
@@ -782,7 +785,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         // ⟨AccesoSelf⟩
         // ⟨AccesoSelf⟩ ::= self ⟨Encadenado-O-Lambda⟩
         if (getTokenType() == Type.KW_SELF) {
-            Token selfKeyword =  match(Type.KW_SELF);
+            Token selfKeyword = match(Type.KW_SELF);
             PrimaryNode node = encadenadoOLambda();
             return ast.createSelfAccess(node, selfKeyword);
         }
@@ -866,7 +869,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         List<ExpressionNode> params = argumentosActuales();
         ast.SetMethodParameter(methodCall, params);
         PrimaryNode childrenNode = encadenadoOLambda();
-        return  ast.handlePossibleChain(methodCall, childrenNode);
+        return ast.handlePossibleChain(methodCall, childrenNode);
     }
 
     private PrimaryNode llamadaMetodoEstatico() throws SyntacticException, LexicalException {
