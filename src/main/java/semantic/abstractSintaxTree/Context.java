@@ -188,29 +188,42 @@ public class Context {
         return new Context(this.st, callingClassName, callingMethodName, null, false,false);
     }
 
-    /**
-     * Clona el contexto actual y marca selfAccess como true
-     */
-    public Context cloneSelfContext() {
-        return new Context(this.st, this.callingClassName, this.callingMethodName, null, true, false);
+    public Context clone() {
+        return  new Context(
+                this.st,
+                this.callingClassName,
+                this.callingMethodName,
+                this.currentClassName,
+                this.isSelfAccess,
+                this.onlyVar
+        );
     }
 
     /**
-     * Clona el contexto para encadenados
-     *
-     * @param currentClassName Nombre de la clase actual
-     * @return Contexto clonado
+     * Setea el contexto actual
      */
-    public Context cloneChainContext(String currentClassName) {
-        return new Context(this.st, this.callingClassName, this.callingMethodName, currentClassName, false, this.onlyVar);
+    public void setCurrentClassName(String currentClassName) {
+        this.currentClassName = currentClassName;
     }
 
+    /**
+     * Setea selfContext
+     * @param selfAccess
+     */
+    public void setSelfAccess(boolean selfAccess) {
+        this.isSelfAccess = selfAccess;
+    }
+
+
+    /**
+      * @return Un nuevo contexto conservando callingClasss y callingMethod del contexto actual
+     */
     public Context reset() {
         return new Context(this.st, this.callingClassName, this.callingMethodName, null, false, false);
     }
 
-    public Context cloneOnlyVar() {
-        return new Context(this.st, this.callingClassName, this.callingMethodName, this.currentClassName, false, true);
+    public void setOnlyVar(boolean onlyVar) {
+        this.onlyVar = onlyVar;
     }
 
     public ClassEntry getClass(String className) {
