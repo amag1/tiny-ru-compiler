@@ -93,4 +93,8 @@ public abstract class AbstractSyntacticAnalyzer {
     protected void throwSyntacticException(String expected) throws SyntacticException {
         throw new SyntacticException(currentToken, expected);
     }
+
+    protected void throwSyntacticException(String expected, Token token) throws SyntacticException {
+        throw new SyntacticException(token, expected);
+    }
 }
