@@ -206,6 +206,10 @@ public class Context {
         this.currentClassName = currentClassName;
     }
 
+    /**
+     * Setea selfContext y currentClass
+     * @param selfAccess
+     */
     public void setSelfAccess(boolean selfAccess) {
         this.isSelfAccess = selfAccess;
         if (selfAccess) this.currentClassName = callingClassName;
@@ -214,7 +218,7 @@ public class Context {
 
 
     /**
-      * @return Un nuevo contexto conservando callinClasss y callinMethod del contexto actual
+      * @return Un nuevo contexto conservando callingClasss y callingMethod del contexto actual
      */
     public Context reset() {
         return new Context(this.st, this.callingClassName, this.callingMethodName, null, false, false);
