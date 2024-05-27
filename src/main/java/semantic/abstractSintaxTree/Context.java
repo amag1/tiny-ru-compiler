@@ -212,8 +212,6 @@ public class Context {
      */
     public void setSelfAccess(boolean selfAccess) {
         this.isSelfAccess = selfAccess;
-        if (selfAccess) this.currentClassName = callingClassName;
-        else this.currentClassName = null;
     }
 
 
