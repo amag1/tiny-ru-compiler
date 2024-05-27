@@ -7,6 +7,8 @@ import semantic.JsonHelper;
 
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Representa una clase dentro de la tabla de simbolos
@@ -170,5 +172,16 @@ public class ClassEntry implements Json {
 
     public void setPredefined(boolean predefined) {
         isPredefined = predefined;
+    }
+
+    public List<MethodEntry> getMethodList() {
+        List<MethodEntry> methodsList = new ArrayList<MethodEntry>();
+        for (MethodEntry method : methods.values()) {
+            methodsList.add(method);
+        }
+
+        methodsList.sort((MethodEntry m1, MethodEntry m2) -> m1.getPosition() - m2.getPosition());
+
+        return methodsList;
     }
 }

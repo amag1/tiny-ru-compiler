@@ -73,6 +73,11 @@ public class ConsoleLogger extends Logger {
         System.out.println(astJson);
     }
 
+    @Override
+    public void Log(String log) {
+        System.out.println(log);
+    }
+
     public void LogAstSuccess() {
         List<String> message = GetAstSuccessMessage();
         for (String line : message) {

@@ -25,6 +25,8 @@ public abstract class Logger {
 
     public abstract void LogAst(String astJson);
 
+    public abstract void Log(String log);
+
     protected List<String> GetLexicSuccessMessage(List<Token> tokens) {
         List result = new ArrayList<String>();
         // Header

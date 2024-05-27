@@ -72,4 +72,16 @@ public class FileLogger extends Logger {
             System.out.println("Ocurrió un error al guardar el archivo destino");
         }
     }
+
+    @Override
+    public void Log(String log) {
+        initializeFile(this.path);
+        try {
+            FileWriter writer = new FileWriter(this.file);
+            writer.write(log);
+            writer.close();
+        } catch (IOException e) {
+            System.out.println("Ocurrió un error al guardar el archivo destino");
+        }
+    }
 }

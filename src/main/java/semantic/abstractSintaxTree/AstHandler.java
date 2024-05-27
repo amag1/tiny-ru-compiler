@@ -68,5 +68,7 @@ public interface AstHandler {
 
     void createMethodIfNotExists(Token methodName);
 
+    AbstractSyntaxTree getAst();
+
     public String toJson();
 }

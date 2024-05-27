@@ -133,6 +133,11 @@ public class DummyAstHandler implements AstHandler {
     }
 
     @Override
+    public AbstractSyntaxTree getAst() {
+        return null;
+    }
+
+    @Override
     public String toJson() {
         return null;
     }
