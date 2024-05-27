@@ -29,7 +29,9 @@ public class ChainNode extends PrimaryNode {
 
     public AttributeType getAttributeType(Context context) throws AstException {
         // Obtener el tipo del nodo padre
-        AttributeType parentType = this.parentNode.getAttributeType(context);
+        Context parentContext = context.clone();
+        parentContext.setOnlyVar(false);
+        AttributeType parentType = this.parentNode.getAttributeType(parentContext);
 
         // Si el padre es de tipo void (null), entonces no existe el nodo hijo
         if (parentType == null || parentType.getType().equals("void")) {
