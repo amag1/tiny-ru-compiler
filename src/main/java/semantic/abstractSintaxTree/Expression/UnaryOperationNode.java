@@ -31,7 +31,8 @@ public class UnaryOperationNode extends ExpressionNode {
         String unaryOperator = operator.getToken().getLexem();
         Context operatingContext;
         if (unaryOperator.equals("++") || unaryOperator.equals("--")) {
-           operatingContext = context.cloneOnlyVar();
+            operatingContext = context.clone();
+            operatingContext.setOnlyVar(true);
         } else {
             operatingContext = context.reset();
         }
