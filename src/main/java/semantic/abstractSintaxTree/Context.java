@@ -188,6 +188,17 @@ public class Context {
         return new Context(this.st, callingClassName, callingMethodName, null, false,false);
     }
 
+    public Context clone() {
+        return  new Context(
+                this.st,
+                this.callingClassName,
+                this.callingMethodName,
+                this.currentClassName,
+                this.isSelfAccess,
+                this.isOnlyVar,
+        )
+    }
+
     /**
      * Clona el contexto actual y marca selfAccess como true
      */
