@@ -1,5 +1,8 @@
 package codeGeneration;
 
+import semantic.symbolTable.ClassEntry;
+import semantic.symbolTable.MethodEntry;
+
 public class MipsHelper {
     boolean debug;
 
@@ -8,7 +11,7 @@ public class MipsHelper {
     }
 
     public String comment(String comment) {
-        return debug ? "nop # " + comment + System.lineSeparator() : "";
+        return debug ? "nop # " + comment : "";
     }
 
     public String generateMacros() {
@@ -17,6 +20,25 @@ public class MipsHelper {
         sb.append(pop());
 
         return sb.toString();
+    }
+
+    public String getLabel(MethodEntry method, ClassEntry entry) {
+        return entry.getName() + "_" + method.getName() + ":";
+    }
+
+    public void appendTab(StringBuilder sb, String... elements) {
+        sb.append("\t");
+        for (String element : elements) {
+            sb.append(element);
+        }
+        sb.append(System.lineSeparator());
+    }
+
+    public void append(StringBuilder sb, String... elements) {
+        for (String element : elements) {
+            sb.append(element);
+        }
+        sb.append(System.lineSeparator());
     }
 
     private String push() {
