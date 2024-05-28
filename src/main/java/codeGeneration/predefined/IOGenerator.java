@@ -61,7 +61,7 @@ public class IOGenerator implements Generable {
                 break;
         }
 
-        helper.appendTab( "lw $ra, ($fp)");
+        helper.loadWord("$ra", "($fp)");
         helper.move("$fp", "$sp");
         helper.appendTab( "addiu $sp, $sp, 4");
         helper.appendTab( "jr $ra");
@@ -90,7 +90,7 @@ public class IOGenerator implements Generable {
 
     private void generateOutBoolMethod(MethodEntry method) {
         helper.comment("Pop argumento");
-        helper.appendTab( "lw $t0, 4($fp)");
+        helper.loadWord(" $t0", "4($fp)");
 
         helper.load("$v0", 4);
         helper.comment("Check if result is zero");
@@ -108,7 +108,7 @@ public class IOGenerator implements Generable {
 
     private void generateOutIntMethod( MethodEntry method) {
         helper.comment("Obtener primer argumento");
-        helper.appendTab( "lw $a0, 4($fp)");
+        helper.loadWord("$a0", "4($fp)");
 
         helper.comment("Print int");
         helper.load("$v0", 1);
