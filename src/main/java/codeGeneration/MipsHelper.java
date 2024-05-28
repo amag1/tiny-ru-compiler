@@ -100,4 +100,12 @@ public class MipsHelper {
     public void jumpRegister(String register) {
         appendTab("jr " + register);
     }
+
+    public void branchOnEqual(String register1, String register2, String offset) {
+        appendTab("beq " + register1 + ", " + register2 + ", " + offset);
+    }
+
+    public void jump(String address) {
+        appendTab("j " + address);
+    }
 }

@@ -94,16 +94,16 @@ public class IOGenerator implements Generable {
 
         helper.load("$v0", 4);
         helper.comment("Check if result is zero");
-        helper.appendTab( "beq $t0, $zero, out_bool_false");
+        helper.branchOnEqual("$t0", "$zero", "out_bool_false");
         helper.appendTab( "la $a0, bool_true_msg");
         helper.appendTab( "syscall");
-        helper.appendTab( "j out_bool_end");
+        helper.jump("out_bool_end");
 
         helper.append( "out_bool_false:");
         helper.appendTab( "la $a0, bool_false_msg");
         helper.appendTab( "syscall");
 
-        helper.append( "out_bool_end:");
+        helper.append("out_bool_end:");
     }
 
     private void generateOutIntMethod( MethodEntry method) {
@@ -133,9 +133,9 @@ public class IOGenerator implements Generable {
         helper.move("$t0", "$v0");
 
         helper.comment("Check if result is zero");
-        helper.appendTab( "beq $t0, $zero, in_bool_false");
+        helper.branchOnEqual("$t0", "$zero", "in_bool_false");
         helper.load("$a0", 1);
-        helper.appendTab( "j in_bool_end");
+        helper.jump("in_bool_end");
 
         helper.append( "in_bool_false:");
         helper.load("$a0", 0);
