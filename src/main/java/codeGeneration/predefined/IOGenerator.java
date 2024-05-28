@@ -63,7 +63,7 @@ public class IOGenerator implements Generable {
 
         helper.loadWord("$ra", "($fp)");
         helper.move("$fp", "$sp");
-        helper.appendTab( "addiu $sp, $sp, 4");
+        helper.addIU("$sp", "$sp", 4);
         helper.appendTab( "jr $ra");
 
         if (method.getName().equals("out_bool")) {
