@@ -32,8 +32,10 @@ public class IOGenerator implements Generable {
         helper.append(".data");
         helper.append(".word");
         helper.startText();
+
         helper.append(helper.getLabel(method, entry));
-        helper.appendTab("move $fp, $sp");
+        helper.move("$fp", "$sp");
+
         helper.appendTab("push($ra)");
         switch (method.getName()) {
             case "out_str":
@@ -60,7 +62,7 @@ public class IOGenerator implements Generable {
         }
 
         helper.appendTab( "lw $ra, ($fp)");
-        helper.appendTab( "move $fp, $sp");
+        helper.move("$fp", "$sp");
         helper.appendTab( "addiu $sp, $sp, 4");
         helper.appendTab( "jr $ra");
 
@@ -90,7 +92,7 @@ public class IOGenerator implements Generable {
         helper.comment("Pop argumento");
         helper.appendTab( "lw $t0, 4($fp)");
 
-        helper.appendTab( "li $v0, 4");
+        helper.load("$v0", 4);
         helper.comment("Check if result is zero");
         helper.appendTab( "beq $t0, $zero, out_bool_false");
         helper.appendTab( "la $a0, bool_true_msg");
@@ -109,7 +111,7 @@ public class IOGenerator implements Generable {
         helper.appendTab( "lw $a0, 4($fp)");
 
         helper.comment("Print int");
-        helper.appendTab( "li $v0, 1");
+        helper.load("$v0", 1);
         helper.appendTab( "syscall");
 
         helper.comment("Pop argumento");
@@ -117,26 +119,26 @@ public class IOGenerator implements Generable {
 
     private void generateInIntMethod(MethodEntry method) {
         helper.comment("Read int");
-        helper.appendTab( "li $v0, 5");
+        helper.load("$v0", 5);
         helper.appendTab( "syscall");
         helper.comment("Store result in accumulator");
-        helper.appendTab( "move $a0, $v0");
+        helper.move("$a0", "$v0");
     }
 
     private void generateInBoolMethod(MethodEntry method) {
         helper.comment("Read int, then convert to zero or one");
-        helper.appendTab( "li $v0, 5");
+        helper.load("$v0", 5);
         helper.appendTab( "syscall");
         helper.comment("Store result in intermediate register");
-        helper.appendTab( "move $t0, $v0");
+        helper.move("$t0", "$v0");
 
         helper.comment("Check if result is zero");
         helper.appendTab( "beq $t0, $zero, in_bool_false");
-        helper.appendTab( "li $a0, 1");
+        helper.load("$a0", 1);
         helper.appendTab( "j in_bool_end");
 
         helper.append( "in_bool_false:");
-        helper.appendTab( "li $a0, 0");
+        helper.load("$a0", 0);
 
         helper.append( "in_bool_end:");
     }
@@ -144,21 +146,21 @@ public class IOGenerator implements Generable {
     private void generateInStrMethod(MethodEntry method) {
         helper.comment("Read string");
         helper.comment("Allocate space");
-        helper.appendTab( "li $v0, 9");
+        helper.load("$v0", 9);
 
         helper.comment("Number of bytes to allocate");
-        helper.appendTab( "li $a0, 256");
+        helper.load("$a0", 256);
 
         helper.appendTab( "syscall");
 
         helper.comment("Store result in accumulator");
-        helper.appendTab( "move $a0, $v0");
+        helper.move("$a0", "$v0");
 
         helper.comment("Read string");
-        helper.appendTab( "li $v0, 8");
+        helper.load("$v0", 8);
 
         helper.comment("Max length of string");
-        helper.appendTab( "li $a1, 256");
+        helper.load("$a1", 256);
         helper.appendTab( "syscall");
     }
 }

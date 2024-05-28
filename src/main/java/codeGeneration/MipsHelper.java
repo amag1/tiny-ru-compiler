@@ -70,7 +70,18 @@ public class MipsHelper {
     }
 
     public void lineSeparator() {
-        sb.append(System.lineSeparator());
+        append(System.lineSeparator());
     }
 
+    public void move(String register1, String register2) {
+        appendTab("move " + register1 +", "+ register2);
+    }
+
+    public void load(String register, String value) {
+        appendTab("li " + register + ", " + value);
+    }
+
+    public void load(String register, int value) {
+        appendTab("li " + register + ", " + value);
+    }
 }
