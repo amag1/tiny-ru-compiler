@@ -88,4 +88,8 @@ public class MipsHelper {
     public void loadWord(String register1,  String register2) {
         appendTab("lw " + register1 +", "+ register2);
     }
+
+    public void push(String register) {
+        appendTab("push(" + register +")");
+    }
 }

@@ -36,7 +36,7 @@ public class IOGenerator implements Generable {
         helper.append(helper.getLabel(method, entry));
         helper.move("$fp", "$sp");
 
-        helper.appendTab("push($ra)");
+        helper.push("ra");
         switch (method.getName()) {
             case "out_str":
                 generateOutStrMethod(method);
@@ -90,7 +90,7 @@ public class IOGenerator implements Generable {
 
     private void generateOutBoolMethod(MethodEntry method) {
         helper.comment("Pop argumento");
-        helper.loadWord(" $t0", "4($fp)");
+        helper.loadWord("$t0", "4($fp)");
 
         helper.load("$v0", 4);
         helper.comment("Check if result is zero");
