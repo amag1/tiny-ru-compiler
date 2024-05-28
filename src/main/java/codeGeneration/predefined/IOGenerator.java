@@ -81,10 +81,10 @@ public class IOGenerator implements Generable {
 
     private void generateOutStrMethod(MethodEntry method) {
         helper.comment("Pop argumento");
-        helper.appendTab("lw $a0, 4($fp)");
+        helper.loadWord("$a0", "4($fp)");
 
         helper.comment("Print string");
-        helper.appendTab("li $v0, 4");
+        helper.load("$v0", 4);
         helper.appendTab("syscall");
     }
 
@@ -95,12 +95,12 @@ public class IOGenerator implements Generable {
         helper.load("$v0", 4);
         helper.comment("Check if result is zero");
         helper.branchOnEqual("$t0", "$zero", "out_bool_false");
-        helper.appendTab( "la $a0, bool_true_msg");
+        helper.loadAddress("$a0", "bool_true_msg");
         helper.appendTab( "syscall");
         helper.jump("out_bool_end");
 
         helper.append( "out_bool_false:");
-        helper.appendTab( "la $a0, bool_false_msg");
+        helper.loadAddress("$a0", "bool_false_msg");
         helper.appendTab( "syscall");
 
         helper.append("out_bool_end:");

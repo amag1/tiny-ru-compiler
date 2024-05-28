@@ -108,4 +108,8 @@ public class MipsHelper {
     public void jump(String address) {
         appendTab("j " + address);
     }
+
+    public void loadAddress(String register, String label) {
+        appendTab("la " + register + ", " + label);
+    }
 }
