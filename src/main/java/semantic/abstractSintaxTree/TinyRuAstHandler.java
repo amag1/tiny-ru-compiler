@@ -181,6 +181,11 @@ public class TinyRuAstHandler implements AstHandler {
         }
     }
 
+    @Override
+    public AbstractSyntaxTree getAst() {
+        return ast;
+    }
+
     private AstMethodEntry getOrCreateMethodEntry(AstClassEntry currentAstClass) {
         // El metodo existe en la tabla de simbolos porque ya leimos su firma
         MethodEntry currentMethod = stHandler.getCurrentMethod();

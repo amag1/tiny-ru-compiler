@@ -603,4 +603,9 @@ public class TinyRuSymbolTableHandler implements SymbolTableHandler {
     public SymbolTableLookup getSymbolTableLookup() {
         return st;
     }
+
+    @Override
+    public SymbolTable getSymbolTable() {
+        return st;
+    }
 }

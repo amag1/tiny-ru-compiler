@@ -1,9 +1,19 @@
+import codeGeneration.CodeGenerator;
+import exceptions.lexical.LexicalException;
+import exceptions.semantic.symbolTable.SymbolTableException;
+import exceptions.semantic.syntaxTree.AstException;
+import exceptions.syntactic.SyntacticException;
 import executor.Executor;
+import lexical.LexicalAnalyzer;
 import logger.ConsoleLogger;
 import logger.FileLogger;
 import logger.Logger;
 import reader.FileReader;
 import semantic.SemanticExecutor;
+import semantic.abstractSintaxTree.TinyRuAstHandler;
+import semantic.symbolTable.SymbolTableHandler;
+import semantic.symbolTable.TinyRuSymbolTableHandler;
+import syntactic.SyntacticAnalyzer;
 import syntactic.SyntacticExecutor;
 
 import java.io.FileNotFoundException;
@@ -26,16 +36,29 @@ public class Main {
             return;
         }
 
-        // Get the output logger;
 
-        // Generate path for output from input
-        String astOutputFilePath = filePath.substring(0, filePath.lastIndexOf('.')) + ".ast.json";
-        String sTableOutputFilePath = filePath.substring(0, filePath.lastIndexOf('.')) + ".st.json";
-        Logger outputLogger = new FileLogger(astOutputFilePath);
+        SymbolTableHandler stHandler = new TinyRuSymbolTableHandler();
+        SyntacticAnalyzer analyzer = new SyntacticAnalyzer(new LexicalAnalyzer(fileReader), stHandler, new TinyRuAstHandler(stHandler.getSymbolTableLookup()));
 
-        // Execute
-        Executor executor = new SemanticExecutor(fileReader, outputLogger);
-        executor.setBackupLogger(new FileLogger(sTableOutputFilePath));
-        executor.execute();
+        ConsoleLogger clogger = new ConsoleLogger();
+        try {
+            CodeGenerator codegen = analyzer.analyze();
+            String code = codegen.generateCode();
+
+            // Generar codigo en archivo de salida
+            // Cambiar el .ru por .asm
+            String outputPath = filePath.replace(".ru", ".asm");
+            Logger logger = new FileLogger(outputPath);
+            logger.Log(code);
+        } catch (LexicalException e) {
+            clogger.LogLexicError(e);
+        } catch (SyntacticException e) {
+            clogger.LogSyntacticError(e);
+        } catch (SymbolTableException e) {
+            clogger.LogSymbolTableError(e);
+        } catch (AstException e) {
+            clogger.LogAstError(e);
+        }
+
     }
 }

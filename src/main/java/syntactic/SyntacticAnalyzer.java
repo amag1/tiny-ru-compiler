@@ -1,5 +1,6 @@
 package syntactic;
 
+import codeGeneration.CodeGenerator;
 import exceptions.lexical.LexicalException;
 import exceptions.semantic.symbolTable.SymbolTableException;
 import exceptions.semantic.syntaxTree.AstException;
@@ -42,11 +43,13 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
      * @throws LexicalException   si ocurre un error lexico
      */
     @Override
-    public void analyze() throws SyntacticException, LexicalException, SymbolTableException, AstException {
+    public CodeGenerator analyze() throws SyntacticException, LexicalException, SymbolTableException, AstException {
         nextToken();
         program();
         st.consolidate();
         ast.validateSenteces();
+
+        return new CodeGenerator(ast.getAst(), st.getSymbolTable());
     }
 
     @Override

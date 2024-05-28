@@ -90,6 +90,11 @@ public class DummySymbolTableHandler implements SymbolTableHandler {
         return null;
     }
 
+    @Override
+    public SymbolTable getSymbolTable() {
+        return null;
+    }
+
     public ClassEntry getCurrentClass() {
         return new ClassEntry(new Token());
     }

@@ -40,6 +40,8 @@ public interface SymbolTableHandler {
 
     SymbolTableLookup getSymbolTableLookup();
 
+    SymbolTable getSymbolTable();
+
     ClassEntry getCurrentClass();
 
     MethodEntry getCurrentMethod();
