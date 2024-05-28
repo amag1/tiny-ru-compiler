@@ -21,17 +21,16 @@ public class CodeGenerator {
     }
 
     public String generateCode() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(helper.generateMacros());
+        helper.generateMacros();
 
         for (ClassEntry classEntry : symbolTable.getClasses()) {
             // Obtener clase del ast
             AstClassEntry astClassEntry = ast.getClasses().get(classEntry.getName());
             ClassGenerator classGenerator = new ClassGenerator(classEntry, astClassEntry, helper);
-            sb.append(classGenerator.generate());
+            helper.append(classGenerator.generate());
         }
 
-        return sb.toString();
+        return helper.getString();
     }
 
 

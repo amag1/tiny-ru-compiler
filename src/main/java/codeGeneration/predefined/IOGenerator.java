@@ -16,150 +16,149 @@ public class IOGenerator implements Generable {
 
     public String generate() {
         // Generar Virtual Table y codigo para cada metodo
-        StringBuilder sb = new StringBuilder();
-        helper.append(sb, "VT_IO:");
-        helper.append(sb, helper.comment("IO Virtual Table"));
+        helper.append("VT_IO:");
+        helper.comment("IO Virtual Table");
 
         for (MethodEntry method : entry.getMethodList()) {
-            generateMethod(sb, method);
+            generateMethod(method);
         }
 
-        return sb.toString();
+        return helper.getString();
     }
 
-    private void generateMethod(StringBuilder sb, MethodEntry method) {
+    private void generateMethod(MethodEntry method) {
         // Add method name
-        helper.append(sb, System.lineSeparator());
-        helper.append(sb, ".data");
-        helper.append(sb, ".word");
-        helper.append(sb, ".text");
-        helper.append(sb, helper.getLabel(method, entry));
-        helper.appendTab(sb, "move $fp, $sp");
-        helper.appendTab(sb, "push($ra)");
+        helper.lineSeparator();
+        helper.append(".data");
+        helper.append(".word");
+        helper.startText();
+        helper.append(helper.getLabel(method, entry));
+        helper.appendTab("move $fp, $sp");
+        helper.appendTab("push($ra)");
         switch (method.getName()) {
             case "out_str":
-                generateOutStrMethod(sb, method);
+                generateOutStrMethod(method);
                 break;
             case "out_int":
-                generateOutIntMethod(sb, method);
+                generateOutIntMethod(method);
                 break;
             case "in_int":
-                generateInIntMethod(sb, method);
+                generateInIntMethod(method);
                 break;
             case "in_str":
-                generateInStrMethod(sb, method);
+                generateInStrMethod(method);
                 break;
             case "in_bool":
-                generateInBoolMethod(sb, method);
+                generateInBoolMethod(method);
                 break;
             case "out_bool":
-                generateOutBoolMethod(sb, method);
+                generateOutBoolMethod( method);
                 break;
             default:
-                generateNotImplementedMethod(sb, method);
+                generateNotImplementedMethod( method);
                 break;
         }
 
-        helper.appendTab(sb, "lw $ra, ($fp)");
-        helper.appendTab(sb, "move $fp, $sp");
-        helper.appendTab(sb, "addiu $sp, $sp, 4");
-        helper.appendTab(sb, "jr $ra");
+        helper.appendTab( "lw $ra, ($fp)");
+        helper.appendTab( "move $fp, $sp");
+        helper.appendTab( "addiu $sp, $sp, 4");
+        helper.appendTab( "jr $ra");
 
         if (method.getName().equals("out_bool")) {
             // Generar mensajes de error al final
-            helper.append(sb, ".data");
-            helper.append(sb, "bool_true_msg: .asciiz \"true\"");
-            helper.append(sb, "bool_false_msg: .asciiz \"false\"");
+            helper.append( ".data");
+            helper.append("bool_true_msg: .asciiz \"true\"");
+            helper.append("bool_false_msg: .asciiz \"false\"");
         }
     }
 
-    private void generateNotImplementedMethod(StringBuilder sb, MethodEntry method) {
-        helper.appendTab(sb, helper.comment("IO method " + method.getName()));
-        helper.appendTab(sb, helper.comment("Method not implemented"));
+    private void generateNotImplementedMethod( MethodEntry method) {
+        helper.comment("IO method " + method.getName());
+        helper.comment("Method not implemented");
     }
 
-    private void generateOutStrMethod(StringBuilder sb, MethodEntry method) {
-        helper.appendTab(sb, helper.comment("Pop argumento"));
-        helper.appendTab(sb, "lw $a0, 4($fp)");
+    private void generateOutStrMethod(MethodEntry method) {
+        helper.comment("Pop argumento");
+        helper.appendTab("lw $a0, 4($fp)");
 
-        helper.appendTab(sb, helper.comment("Print string"));
-        helper.appendTab(sb, "li $v0, 4");
-        helper.appendTab(sb, "syscall");
+        helper.comment("Print string");
+        helper.appendTab("li $v0, 4");
+        helper.appendTab("syscall");
     }
 
-    private void generateOutBoolMethod(StringBuilder sb, MethodEntry method) {
-        helper.appendTab(sb, helper.comment("Pop argumento"));
-        helper.appendTab(sb, "lw $t0, 4($fp)");
+    private void generateOutBoolMethod(MethodEntry method) {
+        helper.comment("Pop argumento");
+        helper.appendTab( "lw $t0, 4($fp)");
 
-        helper.appendTab(sb, "li $v0, 4");
-        helper.appendTab(sb, helper.comment("Check if result is zero"));
-        helper.appendTab(sb, "beq $t0, $zero, out_bool_false");
-        helper.appendTab(sb, "la $a0, bool_true_msg");
-        helper.appendTab(sb, "syscall");
-        helper.appendTab(sb, "j out_bool_end");
+        helper.appendTab( "li $v0, 4");
+        helper.comment("Check if result is zero");
+        helper.appendTab( "beq $t0, $zero, out_bool_false");
+        helper.appendTab( "la $a0, bool_true_msg");
+        helper.appendTab( "syscall");
+        helper.appendTab( "j out_bool_end");
 
-        helper.append(sb, "out_bool_false:");
-        helper.appendTab(sb, "la $a0, bool_false_msg");
-        helper.appendTab(sb, "syscall");
+        helper.append( "out_bool_false:");
+        helper.appendTab( "la $a0, bool_false_msg");
+        helper.appendTab( "syscall");
 
-        helper.append(sb, "out_bool_end:");
+        helper.append( "out_bool_end:");
     }
 
-    private void generateOutIntMethod(StringBuilder sb, MethodEntry method) {
-        helper.appendTab(sb, helper.comment("Obtener primer argumento"));
-        helper.appendTab(sb, "lw $a0, 4($fp)");
+    private void generateOutIntMethod( MethodEntry method) {
+        helper.comment("Obtener primer argumento");
+        helper.appendTab( "lw $a0, 4($fp)");
 
-        helper.appendTab(sb, helper.comment("Print int"));
-        helper.appendTab(sb, "li $v0, 1");
-        helper.appendTab(sb, "syscall");
+        helper.comment("Print int");
+        helper.appendTab( "li $v0, 1");
+        helper.appendTab( "syscall");
 
-        helper.appendTab(sb, helper.comment("Pop argumento"));
+        helper.comment("Pop argumento");
     }
 
-    private void generateInIntMethod(StringBuilder sb, MethodEntry method) {
-        helper.appendTab(sb, helper.comment("Read int"));
-        helper.appendTab(sb, "li $v0, 5");
-        helper.appendTab(sb, "syscall");
-        helper.appendTab(sb, helper.comment("Store result in accumulator"));
-        helper.appendTab(sb, "move $a0, $v0");
+    private void generateInIntMethod(MethodEntry method) {
+        helper.comment("Read int");
+        helper.appendTab( "li $v0, 5");
+        helper.appendTab( "syscall");
+        helper.comment("Store result in accumulator");
+        helper.appendTab( "move $a0, $v0");
     }
 
-    private void generateInBoolMethod(StringBuilder sb, MethodEntry method) {
-        helper.appendTab(sb, helper.comment("Read int, then convert to zero or one"));
-        helper.appendTab(sb, "li $v0, 5");
-        helper.appendTab(sb, "syscall");
-        helper.appendTab(sb, helper.comment("Store result in intermediate register"));
-        helper.appendTab(sb, "move $t0, $v0");
+    private void generateInBoolMethod(MethodEntry method) {
+        helper.comment("Read int, then convert to zero or one");
+        helper.appendTab( "li $v0, 5");
+        helper.appendTab( "syscall");
+        helper.comment("Store result in intermediate register");
+        helper.appendTab( "move $t0, $v0");
 
-        helper.appendTab(sb, helper.comment("Check if result is zero"));
-        helper.appendTab(sb, "beq $t0, $zero, in_bool_false");
-        helper.appendTab(sb, "li $a0, 1");
-        helper.appendTab(sb, "j in_bool_end");
+        helper.comment("Check if result is zero");
+        helper.appendTab( "beq $t0, $zero, in_bool_false");
+        helper.appendTab( "li $a0, 1");
+        helper.appendTab( "j in_bool_end");
 
-        helper.append(sb, "in_bool_false:");
-        helper.appendTab(sb, "li $a0, 0");
+        helper.append( "in_bool_false:");
+        helper.appendTab( "li $a0, 0");
 
-        helper.append(sb, "in_bool_end:");
+        helper.append( "in_bool_end:");
     }
 
-    private void generateInStrMethod(StringBuilder sb, MethodEntry method) {
-        helper.appendTab(sb, helper.comment("Read string"));
-        helper.appendTab(sb, helper.comment("Allocate space"));
-        helper.appendTab(sb, "li $v0, 9");
+    private void generateInStrMethod(MethodEntry method) {
+        helper.comment("Read string");
+        helper.comment("Allocate space");
+        helper.appendTab( "li $v0, 9");
 
-        helper.appendTab(sb, helper.comment("Number of bytes to allocate"));
-        helper.appendTab(sb, "li $a0, 256");
+        helper.comment("Number of bytes to allocate");
+        helper.appendTab( "li $a0, 256");
 
-        helper.appendTab(sb, "syscall");
+        helper.appendTab( "syscall");
 
-        helper.appendTab(sb, helper.comment("Store result in accumulator"));
-        helper.appendTab(sb, "move $a0, $v0");
+        helper.comment("Store result in accumulator");
+        helper.appendTab( "move $a0, $v0");
 
-        helper.appendTab(sb, helper.comment("Read string"));
-        helper.appendTab(sb, "li $v0, 8");
+        helper.comment("Read string");
+        helper.appendTab( "li $v0, 8");
 
-        helper.appendTab(sb, helper.comment("Max length of string"));
-        helper.appendTab(sb, "li $a1, 256");
-        helper.appendTab(sb, "syscall");
+        helper.comment("Max length of string");
+        helper.appendTab( "li $a1, 256");
+        helper.appendTab( "syscall");
     }
 }

@@ -5,28 +5,36 @@ import semantic.symbolTable.MethodEntry;
 
 public class MipsHelper {
     boolean debug;
+    final private StringBuilder sb;
 
     public MipsHelper(boolean debug) {
+        this.sb = new StringBuilder();
         this.debug = debug;
     }
 
-    public String comment(String comment) {
-        return debug ? "nop # " + comment : "";
+    public void comment(String comment) {
+        sb.append(debug ? "\tnop # " + comment + System.lineSeparator() : "");
     }
 
-    public String generateMacros() {
-        StringBuilder sb = new StringBuilder();
+    public void startText() {
+        sb.append(".text");
+    }
+
+
+    public String getString() {
+        return sb.toString();
+    }
+
+    public void generateMacros() {
         sb.append(push());
         sb.append(pop());
-
-        return sb.toString();
     }
 
     public String getLabel(MethodEntry method, ClassEntry entry) {
         return entry.getName() + "_" + method.getName() + ":";
     }
 
-    public void appendTab(StringBuilder sb, String... elements) {
+    public void appendTab(String... elements) {
         sb.append("\t");
         for (String element : elements) {
             sb.append(element);
@@ -34,7 +42,7 @@ public class MipsHelper {
         sb.append(System.lineSeparator());
     }
 
-    public void append(StringBuilder sb, String... elements) {
+    public void append(String... elements) {
         for (String element : elements) {
             sb.append(element);
         }
@@ -61,5 +69,8 @@ public class MipsHelper {
         return sb.toString();
     }
 
+    public void lineSeparator() {
+        sb.append(System.lineSeparator());
+    }
 
 }
