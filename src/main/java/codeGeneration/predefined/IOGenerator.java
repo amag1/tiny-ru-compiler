@@ -64,7 +64,7 @@ public class IOGenerator implements Generable {
         helper.loadWord("$ra", "($fp)");
         helper.move("$fp", "$sp");
         helper.addIU("$sp", "$sp", 4);
-        helper.appendTab( "jr $ra");
+        helper.jumpRegister("$ra");
 
         if (method.getName().equals("out_bool")) {
             // Generar mensajes de error al final

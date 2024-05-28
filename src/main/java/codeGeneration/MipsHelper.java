@@ -96,4 +96,8 @@ public class MipsHelper {
     public void addIU(String register1, String register2, int offset) {
         appendTab("addiu " + register1 + ", " + register2 + ", " + offset);
     }
+
+    public void jumpRegister(String register) {
+        appendTab("jr " + register);
+    }
 }
