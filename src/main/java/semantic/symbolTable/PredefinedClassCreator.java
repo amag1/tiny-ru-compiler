@@ -59,7 +59,7 @@ public class PredefinedClassCreator {
         strClass.addMethod(length);
 
         MethodEntry concat = new MethodEntry(new Token("concat", Type.ID, new Location()), false);
-        concat.addFormalParam(new VariableEntry(types.get("Str"), new Token("s", Type.ID, new Location())));
+        concat.addFormalParam(new VariableEntry(types.get("Str"), new Token("s", Type.ID, new Location()), Scope.PARAM));
         concat.setReturnType(types.get("Str"));
         concat.setPosition(1);
         strClass.addMethod(concat);
@@ -76,42 +76,42 @@ public class PredefinedClassCreator {
         ClassEntry ioClass = new ClassEntry(new Token("IO", Type.ID_CLASS, new Location()));
 
         MethodEntry out_str = new MethodEntry(new Token("out_str", Type.ID, new Location()), true);
-        out_str.addFormalParam(new VariableEntry(types.get("Str"), new Token("x", Type.ID, new Location())));
+        out_str.addFormalParam(new VariableEntry(types.get("Str"), new Token("x", Type.ID, new Location()), Scope.PARAM));
         out_str.setPosition(0);
         ioClass.addMethod(out_str);
 
         MethodEntry out_int = new MethodEntry(new Token("out_int", Type.ID, new Location()), true);
-        out_int.addFormalParam(new VariableEntry(types.get("Int"), new Token("x", Type.ID, new Location())));
+        out_int.addFormalParam(new VariableEntry(types.get("Int"), new Token("x", Type.ID, new Location()), Scope.PARAM));
         out_int.setPosition(1);
         ioClass.addMethod(out_int);
 
         MethodEntry out_bool = new MethodEntry(new Token("out_bool", Type.ID, new Location()), true);
-        out_bool.addFormalParam(new VariableEntry(types.get("Bool"), new Token("x", Type.ID, new Location())));
+        out_bool.addFormalParam(new VariableEntry(types.get("Bool"), new Token("x", Type.ID, new Location()), Scope.PARAM));
         out_bool.setPosition(2);
         ioClass.addMethod(out_bool);
 
         MethodEntry out_char = new MethodEntry(new Token("out_char", Type.ID, new Location()), true);
-        out_char.addFormalParam(new VariableEntry(types.get("Char"), new Token("x", Type.ID, new Location())));
+        out_char.addFormalParam(new VariableEntry(types.get("Char"), new Token("x", Type.ID, new Location()), Scope.PARAM));
         out_char.setPosition(3);
         ioClass.addMethod(out_char);
 
         MethodEntry out_array_int = new MethodEntry(new Token("out_array_int", Type.ID, new Location()), true);
-        out_array_int.addFormalParam(new VariableEntry(toArray(types.get("Int")), new Token("x", Type.ID, new Location())));
+        out_array_int.addFormalParam(new VariableEntry(toArray(types.get("Int")), new Token("x", Type.ID, new Location()), Scope.PARAM));
         out_array_int.setPosition(4);
         ioClass.addMethod(out_array_int);
 
         MethodEntry out_array_str = new MethodEntry(new Token("out_array_str", Type.ID, new Location()), true);
-        out_array_str.addFormalParam(new VariableEntry(toArray(types.get("Str")), new Token("x", Type.ID, new Location())));
+        out_array_str.addFormalParam(new VariableEntry(toArray(types.get("Str")), new Token("x", Type.ID, new Location()), Scope.PARAM));
         out_array_str.setPosition(5);
         ioClass.addMethod(out_array_str);
 
         MethodEntry out_array_bool = new MethodEntry(new Token("out_array_bool", Type.ID, new Location()), true);
-        out_array_bool.addFormalParam(new VariableEntry(toArray(types.get("Bool")), new Token("x", Type.ID, new Location())));
+        out_array_bool.addFormalParam(new VariableEntry(toArray(types.get("Bool")), new Token("x", Type.ID, new Location()), Scope.PARAM));
         out_array_bool.setPosition(6);
         ioClass.addMethod(out_array_bool);
 
         MethodEntry out_array_char = new MethodEntry(new Token("out_array_char", Type.ID, new Location()), true);
-        out_array_char.addFormalParam(new VariableEntry(toArray(types.get("Char")), new Token("x", Type.ID, new Location())));
+        out_array_char.addFormalParam(new VariableEntry(toArray(types.get("Char")), new Token("x", Type.ID, new Location()), Scope.PARAM));
         out_array_char.setPosition(7);
         ioClass.addMethod(out_array_char);
 

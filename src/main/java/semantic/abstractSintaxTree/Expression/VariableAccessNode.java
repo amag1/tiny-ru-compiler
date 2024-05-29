@@ -1,13 +1,11 @@
 package semantic.abstractSintaxTree.Expression;
 
-import exceptions.semantic.syntaxTree.AstException;
-import exceptions.semantic.syntaxTree.OnlyVarException;
-import exceptions.semantic.syntaxTree.UnaccesibleVariableException;
-import exceptions.semantic.syntaxTree.UndeclaredVariableAccessException;
+import exceptions.semantic.syntaxTree.*;
 import lexical.Token;
 import semantic.JsonHelper;
 import semantic.abstractSintaxTree.Context;
 import semantic.symbolTable.AttributeType;
+import semantic.symbolTable.Scope;
 import semantic.symbolTable.VariableEntry;
 
 public class VariableAccessNode extends PrimaryNode {
@@ -37,6 +35,13 @@ public class VariableAccessNode extends PrimaryNode {
             // Si el atributo es llamado desde otro scope, es inaccesible
             if (!context.isSelfContext()) {
                 throw new UnaccesibleVariableException(this.token);
+            }
+        }
+
+        // Chequear si la variable es accesible desde el contexto actual
+        if (context.isStatic()) {
+            if (var.getScope() == Scope.CLASS) {
+                throw new InvalidAccessInStaticContextException(this.token);
             }
         }
 

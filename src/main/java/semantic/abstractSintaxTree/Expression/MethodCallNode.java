@@ -1,8 +1,6 @@
 package semantic.abstractSintaxTree.Expression;
 
-import exceptions.semantic.syntaxTree.AstException;
-import exceptions.semantic.syntaxTree.MethodNotFoundException;
-import exceptions.semantic.syntaxTree.OnlyVarException;
+import exceptions.semantic.syntaxTree.*;
 import lexical.Token;
 import lexical.Type;
 import location.Location;
@@ -39,6 +37,10 @@ public class MethodCallNode extends CallableNode {
 
         if (method == null) {
             throw new MethodNotFoundException(token);
+        }
+
+        if (context.isStatic() && !method.isStatic()) {
+            throw new InvalidAccessInStaticContextException(token);
         }
 
         List<VariableEntry> parameters = method.getFormalParametersList();

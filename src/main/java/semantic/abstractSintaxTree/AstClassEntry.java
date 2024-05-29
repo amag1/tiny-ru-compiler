@@ -37,6 +37,9 @@ public class AstClassEntry implements Json {
         for (Map.Entry<String, AstMethodEntry> entry : methods.entrySet()) {
             AstMethodEntry currentMethod = entry.getValue();
             Context methodContext = classContext.clone(this.name, currentMethod.getName());
+            if (currentMethod.isStatic()) {
+                methodContext.setStatic(true);
+            }
             currentMethod.validateSentences(methodContext);
         }
 

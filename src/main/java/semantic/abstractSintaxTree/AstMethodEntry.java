@@ -18,6 +18,7 @@ public class AstMethodEntry implements Json {
     String name;
 
     private final Token token;
+    private boolean isStatic;
     public ArrayList<SentenceNode> sentences;
 
     public AstMethodEntry(Token token) {
@@ -72,6 +73,14 @@ public class AstMethodEntry implements Json {
 
     public void addSentence(SentenceNode sentence) {
         this.sentences.add(sentence);
+    }
+
+    public boolean isStatic() {
+        return isStatic;
+    }
+
+    public void setStatic(boolean aStatic) {
+        isStatic = aStatic;
     }
 
     public String toJson(int indentationIndex) {
