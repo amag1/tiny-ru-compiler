@@ -501,16 +501,10 @@ public class LexicalAnalyzer implements Lexical {
             throw new InvalidCharacterException(currentChar, location);
         }
         else {
-            returnString = switch (currentChar) {
-                // \0 es el caracter nulo
-                case '0' -> throw new InvalidCharacterException('\0', location);
-                // Los caracteres \n, \t y \v son especiales
-                case 'n' -> "\n";
-                case 't' -> "\t";
-                case 'v' -> "" + (char) 11;
-                // Los demás caracteres simplemente se devuelven sin el backslash
-                default -> "" + currentChar;
-            };
+            if (currentChar == '0') {
+                throw new InvalidCharacterException('\0', location);
+            }
+            returnString = "\\" + currentChar;
         }
         return returnString;
     }
