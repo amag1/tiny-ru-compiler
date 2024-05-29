@@ -39,7 +39,7 @@ public class MipsHelper {
     }
 
     public String getLabel(String method, String entry) {
-        return entry + "_" + method + ":";
+        return entry + "_" + method;
     }
 
     private void appendTab(String... elements) {
@@ -141,7 +141,7 @@ public class MipsHelper {
         startText();
         comment("init Method");
 
-        append(getLabel(method.getName(), classEntry.getName()));
+        append(getLabel(method.getName(), classEntry.getName()) + ":");
 
         // Pushea local vars
         for (VariableEntry var:method.getLocalVarList()) {
@@ -210,7 +210,8 @@ public class MipsHelper {
     }
 
     public void addDataLabel(String name, String type, String value) {
-        appendTab(name + ": " + type + " " + value);
+        if (!name.equals("")) name += ":";
+        appendTab(name + " " + type + " " + value);
     }
 
     public String getVirtualTableName(ClassEntry classEntry) {

@@ -1,12 +1,11 @@
 package semantic.abstractSintaxTree;
 
-import codeGeneration.Generable;
 import semantic.Json;
 
-public abstract class AbstractSyntaxNode implements Json, Generable {
+public abstract class AbstractSyntaxNode implements Json {
     protected String nodeType;
 
-    public String generate() {
+    public String generate(Context context, boolean debug) {
         return "";
     }
 }

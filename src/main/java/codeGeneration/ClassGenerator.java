@@ -58,6 +58,6 @@ public class ClassGenerator implements Generable {
             helper.addDataLabel("", ".word", methodName);
         }
 
-        return  helper.toString();
+        return helper.getString();
     }
 }

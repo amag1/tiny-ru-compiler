@@ -1,9 +1,6 @@
 package codeGeneration;
 
-import semantic.abstractSintaxTree.AbstractSyntaxTree;
-import semantic.abstractSintaxTree.AstClassEntry;
-import semantic.abstractSintaxTree.AstHandler;
-import semantic.abstractSintaxTree.AstMethodEntry;
+import semantic.abstractSintaxTree.*;
 import semantic.symbolTable.*;
 
 public class CodeGenerator {
@@ -36,7 +33,8 @@ public class CodeGenerator {
 
         // Genera código del start
         AstMethodEntry start = ast.getStart();
-        sb.append(start.generate());
+        Context startContext = new Context(symbolTable);
+        sb.append(start.generate(startContext, debug));
 
 
         // Finaliza el programa

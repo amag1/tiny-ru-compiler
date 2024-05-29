@@ -14,7 +14,7 @@ import semantic.symbolTable.SymbolTableLookup;
 import javax.management.Attribute;
 import java.util.ArrayList;
 
-public class AstMethodEntry implements Json, Generable {
+public class AstMethodEntry implements Json {
 
     String name;
 
@@ -84,10 +84,10 @@ public class AstMethodEntry implements Json, Generable {
                 "\n" + JsonHelper.getIdentationString(indentationIndex - 1) + "}";
     }
 
-    public String generate() {
+    public String generate(Context context, boolean debug) {
         StringBuilder sb = new StringBuilder();
         for (SentenceNode sentence: sentences) {
-            sb.append(sentence.generate());
+            sb.append(sentence.generate(context, debug));
         }
 
         return  sb.toString();

@@ -87,7 +87,7 @@ public class StaticMethodCallNode extends CallableNode {
 
         // Pushea parametros
         for (ExpressionNode param:getParameters()) {
-            helper.append(param.generate()); // TODO
+            helper.append(param.generate(context, debug)); // TODO
             helper.push("$a0");
         }
 

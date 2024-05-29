@@ -15,11 +15,7 @@ public class IOGenerator implements Generable {
     }
 
     public String generate() {
-        // Generar Virtual Table y codigo para cada metodo
-        helper.startData();
-        helper.append("VT_IO:");
-        helper.comment("IO Virtual Table");
-
+        // Generar codigo para cada metodo
         for (MethodEntry method : entry.getMethodList()) {
             generateMethod(method);
         }
