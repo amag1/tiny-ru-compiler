@@ -4,6 +4,8 @@ import semantic.symbolTable.ClassEntry;
 import semantic.symbolTable.MethodEntry;
 import semantic.symbolTable.VariableEntry;
 
+import java.util.List;
+
 public class MipsHelper {
     boolean debug;
     final private StringBuilder sb;
@@ -127,20 +129,23 @@ public class MipsHelper {
         this.appendTab( "syscall");
     }
 
-    public void startMethod(MethodEntry method, ClassEntry classEntry) {
+    public void initMethod(MethodEntry method, ClassEntry classEntry) {
         startText();
-        comment("Start Method");
+        comment("init Method");
 
         append(getLabel(method, classEntry));
 
-        // Push local vars
+        // Pushea local vars
         for (VariableEntry var:method.getLocalVarList()) {
             // TODO
         }
+
+        // Pushear registro de activación
+        push("$ra");
     }
 
     public void finishMethod() {
-        loadWord("$ra", "4($fp)"); // Restore return addres
+        loadWord("$ra", "4($sp)"); // Restore return addres
         move("$sp", "$fp"); // Reset stack pointer
         loadAddress("$fp", "($fp)"); // Restore frame pointer
         jumpRegister("$ra"); // Return to calling instruction
@@ -150,25 +155,51 @@ public class MipsHelper {
     /**
      *
      * @param method
-     * @return el offset necesario para acceder al primer parametro en el stack
-     * del registro de activación del método
+     * @return el offset necesario para acceder al un parametro en el stack
+     * desde el frame pointer
      */
-    public int getFirstParamOffset(MethodEntry method) {
+    public int getStackParamOffset(MethodEntry method, int pararameterPosition) {
         int offset = 0;
 
-        // Add calling frame pointer
-        offset += 4;
+        // Agrega frame pointer del llamador
+        offset -= 4;
 
-        // Add return address
-        offset += 4;
-
-        // Add self if not static -- TODO : check
+        // Agrega self si el método no es estatico
         if (!method.isStatic()) {
-            offset += 4;
+            offset -= 4;
         }
+
+        // Agrega parámtetros anteriores
+        offset -= (4*pararameterPosition);
+
+        return offset;
+    }
+
+    /**
+     *
+     * @param method
+     * @return el offset necesario para acceder a una  variable local en el
+     * stack desde el frame pointer
+     */
+    public int getStackLocalVarOffset(MethodEntry method, int varPosition) {
+        int offset = 0;
+
+        // Agrega frame pointer del llamador
+        offset -= 4;
+
+        // Agrega self si el método no es estatico
+        if (!method.isStatic()) {
+            offset -= 4;
+        }
+
+        // Agrega los parametros
+        offset -= method.getFormalParametersList().toArray().length;
+
+        // Agrega variables anteriores
+        offset -= (4*varPosition);
 
         return  offset;
     }
 
 
-    }
+}

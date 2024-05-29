@@ -30,7 +30,7 @@ public class IOGenerator implements Generable {
     private void generateMethod(MethodEntry method) {
         // Add method name
         helper.lineSeparator();
-        helper.startMethod(method, entry);
+        helper.initMethod(method, entry);
 
         switch (method.getName()) {
             case "out_str":
@@ -74,7 +74,7 @@ public class IOGenerator implements Generable {
     private void generateOutStrMethod(MethodEntry method) {
         helper.comment("Pop argumento");
 
-        int paramOffset = helper.getFirstParamOffset(method); // Always one param
+        int paramOffset = helper.getStackParamOffset(method ,0); // Always one param
 
         helper.loadWord("$a0", paramOffset+"($fp)");
 
@@ -84,7 +84,7 @@ public class IOGenerator implements Generable {
 
     private void generateOutBoolMethod(MethodEntry method) {
         helper.comment("Pop argumento");
-        int paramOffset = helper.getFirstParamOffset(method); // Always one param
+        int paramOffset = helper.getStackParamOffset(method, 0); // Always one param
 
         helper.loadWord("$a0", paramOffset+"($fp)");
 
@@ -103,7 +103,7 @@ public class IOGenerator implements Generable {
 
     private void generateOutIntMethod( MethodEntry method) {
         helper.comment("Obtener primer argumento");
-        int paramOffset = helper.getFirstParamOffset(method); // Always one param
+        int paramOffset = helper.getStackParamOffset(method, 0); // Always one param
 
         helper.loadWord("$a0", paramOffset+"($fp)");
 
