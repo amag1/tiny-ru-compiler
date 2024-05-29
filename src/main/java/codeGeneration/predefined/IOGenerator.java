@@ -30,14 +30,8 @@ public class IOGenerator implements Generable {
     private void generateMethod(MethodEntry method) {
         // Add method name
         helper.lineSeparator();
-        helper.append(".data");
-        helper.append(".word");
-        helper.startText();
+        helper.startMethod(method, entry);
 
-        helper.append(helper.getLabel(method, entry));
-        helper.move("$fp", "$sp");
-
-        helper.push("$ra");
         switch (method.getName()) {
             case "out_str":
                 generateOutStrMethod(method);
@@ -58,14 +52,11 @@ public class IOGenerator implements Generable {
                 generateOutBoolMethod( method);
                 break;
             default:
-                generateNotImplementedMethod( method);
+                generateNotImplementedMethod(method);
                 break;
         }
 
-        helper.loadWord("$ra", "($fp)");
-        helper.move("$fp", "$sp");
-        helper.addIU("$sp", "$sp", 4);
-        helper.jumpRegister("$ra");
+        helper.finishMethod();
 
         if (method.getName().equals("out_bool")) {
             // Generar mensajes de error al final
@@ -82,7 +73,10 @@ public class IOGenerator implements Generable {
 
     private void generateOutStrMethod(MethodEntry method) {
         helper.comment("Pop argumento");
-        helper.loadWord("$a0", "4($fp)");
+
+        int paramOffset = helper.getFirstParamOffset(method); // Always one param
+
+        helper.loadWord("$a0", paramOffset+"($fp)");
 
         helper.comment("Print string");
         helper.syscall(4);
@@ -90,7 +84,9 @@ public class IOGenerator implements Generable {
 
     private void generateOutBoolMethod(MethodEntry method) {
         helper.comment("Pop argumento");
-        helper.loadWord("$t0", "4($fp)");
+        int paramOffset = helper.getFirstParamOffset(method); // Always one param
+
+        helper.loadWord("$a0", paramOffset+"($fp)");
 
         helper.comment("Check if result is zero");
         helper.branchOnEqual("$t0", "$zero", "out_bool_false");
@@ -107,7 +103,9 @@ public class IOGenerator implements Generable {
 
     private void generateOutIntMethod( MethodEntry method) {
         helper.comment("Obtener primer argumento");
-        helper.loadWord("$a0", "4($fp)");
+        int paramOffset = helper.getFirstParamOffset(method); // Always one param
+
+        helper.loadWord("$a0", paramOffset+"($fp)");
 
         helper.comment("Print int");
         helper.syscall( 1);

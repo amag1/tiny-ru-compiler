@@ -26,14 +26,14 @@ public class ClassGenerator implements Generable {
         return sb.toString();
     }
 
-    private String generatePredefinedCode() {
+        private String generatePredefinedCode() {
         switch (classEntry.getName()) {
             case "IO":
                 return new IOGenerator(classEntry, debug).generate();
             default:
                 return "";
         }
+
+
     }
-
-
 }

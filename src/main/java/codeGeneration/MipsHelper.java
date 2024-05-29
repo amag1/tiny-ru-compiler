@@ -2,6 +2,7 @@ package codeGeneration;
 
 import semantic.symbolTable.ClassEntry;
 import semantic.symbolTable.MethodEntry;
+import semantic.symbolTable.VariableEntry;
 
 public class MipsHelper {
     boolean debug;
@@ -125,4 +126,49 @@ public class MipsHelper {
         this.load("$v0", number);
         this.appendTab( "syscall");
     }
-}
+
+    public void startMethod(MethodEntry method, ClassEntry classEntry) {
+        startText();
+        comment("Start Method");
+
+        append(getLabel(method, classEntry));
+
+        // Push local vars
+        for (VariableEntry var:method.getLocalVarList()) {
+            // TODO
+        }
+    }
+
+    public void finishMethod() {
+        loadWord("$ra", "4($fp)"); // Restore return addres
+        move("$sp", "$fp"); // Reset stack pointer
+        loadAddress("$fp", "($fp)"); // Restore frame pointer
+        jumpRegister("$ra"); // Return to calling instruction
+    }
+
+
+    /**
+     *
+     * @param method
+     * @return el offset necesario para acceder al primer parametro en el stack
+     * del registro de activación del método
+     */
+    public int getFirstParamOffset(MethodEntry method) {
+        int offset = 0;
+
+        // Add calling frame pointer
+        offset += 4;
+
+        // Add return address
+        offset += 4;
+
+        // Add self if not static -- TODO : check
+        if (!method.isStatic()) {
+            offset += 4;
+        }
+
+        return  offset;
+    }
+
+
+    }
