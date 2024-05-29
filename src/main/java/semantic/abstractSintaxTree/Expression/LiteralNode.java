@@ -62,10 +62,32 @@ public class LiteralNode extends OperatingNode {
         MipsHelper helper = new MipsHelper(true); // TODO
         String literalName = "literal_" + number;
         helper.startData();
-        helper.addDataLabel(literalName, ".asciiz", "\"hello world\""); // TODO
+
+
+        String type = "";
+        String value = "";
+        switch (attributeType.getType()) {
+            case "Int":
+                type = ".word"; value = this.value; break;
+            case "Str", "Char":
+                type = ".asciiz"; value = "\"" + this.value + "\""; break;
+            case "Bool":
+                type = ".word";
+                value = this.value.equals("true") ? "1" : "0";
+        }
+
+
+        helper.addDataLabel(literalName, type, value);
 
         helper.startText();
         helper.storeInAccumulator(literalName);
+        // Al ser de tipo word es necesario especificar que se guarde el valor
+        if (attributeType.equals(AttributeType.IntType) || attributeType.equals(AttributeType.BoolType)) {
+            helper.loadAddress("$t0", "($a0)");
+            helper.loadWord("$a0", "($t0)");
+        }
+
+
 
         return helper.getString();
     }

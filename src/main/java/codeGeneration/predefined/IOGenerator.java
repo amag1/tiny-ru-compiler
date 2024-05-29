@@ -29,7 +29,7 @@ public class IOGenerator implements Generable {
         helper.initMethod(method, entry);
 
         switch (method.getName()) {
-            case "out_str":
+            case "out_str", "out_char":
                 generateOutStrMethod(method);
                 break;
             case "out_int":
@@ -105,8 +105,6 @@ public class IOGenerator implements Generable {
 
         helper.comment("Print int");
         helper.syscall( 1);
-
-        helper.comment("Pop argumento"); // TODO ??
     }
 
     private void generateInIntMethod(MethodEntry method) {
@@ -124,7 +122,7 @@ public class IOGenerator implements Generable {
         helper.move("$t0", "$v0");
 
         helper.comment("Check if result is zero");
-        helper.branchOnEqual("$t0", "$zero", "in_bool_false");
+        helper.branchOnEqual("$a0", "$zero", "in_bool_false");
         helper.load("$a0", 1);
         helper.jump("in_bool_end");
 
