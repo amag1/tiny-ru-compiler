@@ -23,23 +23,7 @@ public class CodeGenerator {
         sb.append(macrosHelper.getString());
 
         // Generar codigo para start
-        MipsHelper sh = new MipsHelper(debug);
-        sh.comment("start program");
-        sh.startText();
-        sh.append("main:");
-
-        // Setea el frame pointer al inicio del stack
-        sh.move("$fp", "$sp");
-
-        // Genera código del start
-        AstMethodEntry start = ast.getStart();
-        Context startContext = new Context(symbolTable);
-        sb.append(start.generate(startContext, debug));
-
-
-        // Finaliza el programa
-        sh.syscall(10);
-        sb.append(sh.getString());
+        sb.append(generateStart());
 
         // Generar codigo pra las clases
         for (ClassEntry classEntry : symbolTable.getClasses()) {
@@ -53,4 +37,24 @@ public class CodeGenerator {
     }
 
 
+    public String generateStart() {
+        MipsHelper startHelper = new MipsHelper(debug);
+        startHelper.comment("start program");
+        startHelper.startText();
+        startHelper.append("main:");
+
+        // Setea el frame pointer al inicio del stack
+        startHelper.move("$fp", "$sp");
+
+        // Genera código del start
+        AstMethodEntry start = ast.getStart();
+        Context startContext = new Context(symbolTable);
+        startHelper.append(start.generate(startContext, debug));
+
+
+        // Finaliza el programa
+        startHelper.syscall(10);
+
+        return startHelper.getString();
+    }
 }

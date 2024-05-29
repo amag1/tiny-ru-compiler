@@ -23,7 +23,9 @@ public class SimpleSentenceNode extends SentenceNode {
 
     @Override
     public void validate(Context context) throws AstException {
-        expression.getAttributeType(context);
+        if (expression != null) {
+            expression.getAttributeType(context);
+        }
     }
 
     public String toJson(int indentationIndex) {
@@ -36,6 +38,9 @@ public class SimpleSentenceNode extends SentenceNode {
     }
 
     public  String generate(Context context, boolean debug) {
-        return expression.generate(context, debug);
+        if (expression != null) {
+            return expression.generate(context, debug);
+        }
+        return  "";
     }
 }

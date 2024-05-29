@@ -30,6 +30,8 @@ public class ClassGenerator implements Generable {
             // TODO
         }
 
+
+
         return sb.toString();
     }
 
@@ -39,8 +41,10 @@ public class ClassGenerator implements Generable {
                 return new IOGenerator(classEntry, debug).generate();
             case "Array":
                 // TODO
-            case "String":
+                return  "Array_length: \n";
+            case "Str":
                 // TODO
+                return "Str_length: \nStr_concat: \n" ;
             default:
                 return "";
         }

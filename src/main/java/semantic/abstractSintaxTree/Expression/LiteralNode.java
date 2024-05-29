@@ -58,13 +58,15 @@ public class LiteralNode extends OperatingNode {
                 "\n" + JsonHelper.getIdentationString(indentationIndex - 1) + "}";
     }
 
-    public String generate() {
+    public String generate(Context context, boolean debug) {
         MipsHelper helper = new MipsHelper(true); // TODO
         String literalName = "literal_" + number;
         helper.startData();
-        helper.addDataLabel(literalName, ".asciiz", "hello world"); // TODO
+        helper.addDataLabel(literalName, ".asciiz", "\"hello world\""); // TODO
+
+        helper.startText();
         helper.storeInAccumulator(literalName);
 
-        return helper.toString();
+        return helper.getString();
     }
 }

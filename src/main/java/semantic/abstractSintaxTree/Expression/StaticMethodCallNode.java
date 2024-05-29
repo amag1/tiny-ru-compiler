@@ -78,7 +78,7 @@ public class StaticMethodCallNode extends CallableNode {
     public  String generate(Context context, boolean debug) {
         // Buscar datos necesarios
         ClassEntry classEntry = context.getClass(this.className.getLexem());
-        MethodEntry method = context.getMethod(this.methodName.getLexem());
+        MethodEntry method = classEntry.getMethod(this.methodName.getLexem());
 
         MipsHelper helper = new MipsHelper(debug);
 
@@ -87,7 +87,8 @@ public class StaticMethodCallNode extends CallableNode {
 
         // Pushea parametros
         for (ExpressionNode param:getParameters()) {
-            helper.append(param.generate(context, debug)); // TODO
+            String paramCode = param.generate(context, debug);
+            helper.append(paramCode); // TODO
             helper.push("$a0");
         }
 
@@ -99,9 +100,10 @@ public class StaticMethodCallNode extends CallableNode {
         int offset = method.getPosition()*4;
 
         // Jump a definición del método
-        helper.storeInAccumulator(offset+"("+classVt+")");
-        helper.jumpRegister("$a0");
+        helper.loadAddress("$t0",classVt);
+        helper.loadWord("$t1", offset+"($t0)");
+        helper.jumpAndLinkRegister("$t1");
 
-        return helper.toString();
+        return helper.getString();
     }
 }

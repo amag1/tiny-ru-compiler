@@ -220,7 +220,11 @@ public class MipsHelper {
 
     public void updateFramePointer() {
         push("$fp"); // Guarda en stack el fp anterior
-        loadWord("$fp", "4(sp)"); // Guarda en fp donde comenzó el stack pointer
+        loadWord("$fp", "4($sp)"); // Guarda en fp donde comenzó el stack pointer
+    }
+
+    public void jumpAndLinkRegister(String register){
+        append("jalr " + register);
     }
 
 }
