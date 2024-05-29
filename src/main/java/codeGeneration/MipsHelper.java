@@ -217,10 +217,9 @@ public class MipsHelper {
         return "VT_" + classEntry.getName();
     }
 
-    public void searchMethodInVT(ClassEntry classEntry, MethodEntry methodEntry) {
-        String classVt = getVirtualTableName(classEntry);
-        int position = methodEntry.getPosition();
-        storeInAccumulator(position+"("+classVt+")");
+    public void updateFramePointer() {
+        push("$fp"); // Guarda en stack el fp anterior
+        loadWord("$fp", "4(sp)"); // Guarda en fp donde comenzó el stack pointer
     }
 
 }
