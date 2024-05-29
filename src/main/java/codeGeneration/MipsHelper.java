@@ -20,7 +20,11 @@ public class MipsHelper {
     }
 
     public void startText() {
-        sb.append(".text\n");
+        append(".text");
+    }
+
+    public void startData() {
+        append(".data");
     }
 
 
@@ -117,10 +121,14 @@ public class MipsHelper {
         appendTab("la " + register + ", " + label);
     }
 
+    public  void storeInAccumulator(String address) {
+        loadAddress("$a0", address);
+    }
+
     public void allocateMemory(int numberOfBits) {
         this.comment("AllocateMemory");
-        this.syscall(9);
         this.load("$a0", numberOfBits); // Set number of bits to allocate
+        this.syscall(9);
         this.move("$a0", "$v0"); // Store in accumulator the address of the result
     }
 
@@ -199,6 +207,10 @@ public class MipsHelper {
         offset -= (4*varPosition);
 
         return  offset;
+    }
+
+    public void addDataLabel(String name, String type, String value) {
+        appendTab(name + ": " + type + " " + value);
     }
 
 

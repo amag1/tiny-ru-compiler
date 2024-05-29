@@ -3,10 +3,8 @@ package codeGeneration;
 import semantic.abstractSintaxTree.AbstractSyntaxTree;
 import semantic.abstractSintaxTree.AstClassEntry;
 import semantic.abstractSintaxTree.AstHandler;
-import semantic.symbolTable.ClassEntry;
-import semantic.symbolTable.SymbolTable;
-import semantic.symbolTable.SymbolTableHandler;
-import semantic.symbolTable.SymbolTableLookup;
+import semantic.abstractSintaxTree.AstMethodEntry;
+import semantic.symbolTable.*;
 
 public class CodeGenerator {
     private AbstractSyntaxTree ast;
@@ -27,6 +25,25 @@ public class CodeGenerator {
         macrosHelper.generateMacros();
         sb.append(macrosHelper.getString());
 
+        // Generar codigo para start
+        MipsHelper sh = new MipsHelper(debug);
+        sh.comment("start program");
+        sh.startText();
+        sh.append("main:");
+
+        // Setea el frame pointer al inicio del stack
+        sh.move("$fp", "$sp");
+
+        // Genera código del start
+        AstMethodEntry start = ast.getStart();
+        sb.append(start.generate());
+
+
+        // Finaliza el programa
+        sh.syscall(10);
+        sb.append(sh.getString());
+
+        // Generar codigo pra las clases
         for (ClassEntry classEntry : symbolTable.getClasses()) {
             // Obtener clase del ast
             AstClassEntry astClassEntry = ast.getClasses().get(classEntry.getName());

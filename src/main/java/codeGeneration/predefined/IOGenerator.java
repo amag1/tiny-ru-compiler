@@ -16,7 +16,7 @@ public class IOGenerator implements Generable {
 
     public String generate() {
         // Generar Virtual Table y codigo para cada metodo
-        helper.append( ".data");
+        helper.startData();
         helper.append("VT_IO:");
         helper.comment("IO Virtual Table");
 
@@ -60,7 +60,7 @@ public class IOGenerator implements Generable {
 
         if (method.getName().equals("out_bool")) {
             // Generar mensajes de error al final
-            helper.append( ".data");
+            helper.startData();
             helper.append("bool_true_msg: .asciiz \"true\"");
             helper.append("bool_false_msg: .asciiz \"false\"");
         }

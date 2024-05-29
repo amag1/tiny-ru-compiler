@@ -1,5 +1,6 @@
 package semantic.abstractSintaxTree.Expression;
 
+import codeGeneration.MipsHelper;
 import exceptions.semantic.syntaxTree.AstException;
 import exceptions.semantic.syntaxTree.OnlyVarException;
 import lexical.Token;
@@ -16,7 +17,14 @@ import semantic.symbolTable.AttributeType;
 public class LiteralNode extends OperatingNode {
     private String value;
 
+    private static int counter;
+
+    private int number;
+
+
+
     public LiteralNode(Token token) {
+        this.number = counter++;
         this.token = token;
         this.attributeType = switch (token.getType()) {
             case INT_LITERAL -> AttributeType.IntType;
@@ -48,5 +56,15 @@ public class LiteralNode extends OperatingNode {
                 JsonHelper.json("attributeType", this.attributeType.toString(), indentationIndex) + "," +
                 JsonHelper.json("value", this.value, indentationIndex) +
                 "\n" + JsonHelper.getIdentationString(indentationIndex - 1) + "}";
+    }
+
+    public String generate() {
+        MipsHelper helper = new MipsHelper(true); // TODO
+        String literalName = "literal_" + number;
+        helper.startData();
+        helper.addDataLabel(literalName, ".asciiz", "hello world"); // TODO
+        helper.storeInAccumulator(literalName);
+
+        return helper.toString();
     }
 }

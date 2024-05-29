@@ -21,6 +21,8 @@ public class ClassGenerator implements Generable {
 
         if (classEntry.isPredefined()) {
             sb.append(generatePredefinedCode());
+        } else {
+            // TODO
         }
 
         return sb.toString();
@@ -30,6 +32,10 @@ public class ClassGenerator implements Generable {
         switch (classEntry.getName()) {
             case "IO":
                 return new IOGenerator(classEntry, debug).generate();
+            case "Array":
+                // TODO
+            case "String":
+                // TODO
             default:
                 return "";
         }

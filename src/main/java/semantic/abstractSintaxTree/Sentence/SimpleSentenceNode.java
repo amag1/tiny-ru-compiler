@@ -34,4 +34,8 @@ public class SimpleSentenceNode extends SentenceNode {
                 JsonHelper.json("expression", expression, indentationIndex) +
                 "\n" + JsonHelper.getIdentationString(indentationIndex - 1) + "}";
     }
+
+    public  String generate() {
+        return expression.generate();
+    }
 }
