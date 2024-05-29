@@ -59,7 +59,7 @@ public class LiteralNode extends OperatingNode {
     }
 
     public String generate(Context context, boolean debug) {
-        MipsHelper helper = new MipsHelper(true); // TODO
+        MipsHelper helper = new MipsHelper(debug);
         String literalName = "literal_" + number;
         helper.startData();
 
@@ -81,6 +81,7 @@ public class LiteralNode extends OperatingNode {
 
         helper.startText();
         helper.storeInAccumulator(literalName);
+
         // Al ser de tipo word es necesario especificar que se guarde el valor
         if (attributeType.equals(AttributeType.IntType) || attributeType.equals(AttributeType.BoolType)) {
             helper.loadAddress("$t0", "($a0)");

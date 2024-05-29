@@ -88,12 +88,12 @@ public class StaticMethodCallNode extends CallableNode {
         // Pushea parametros
         for (ExpressionNode param:getParameters()) {
             String paramCode = param.generate(context, debug);
-            helper.append(paramCode); // TODO
+            helper.append(paramCode);
             helper.push("$a0");
         }
 
 
-        // Obtener el nombre de la virutal table
+        // Obtener el nombre de la virtual table
         String classVt = helper.getVirtualTableName(classEntry);
 
         // Calcular el offset

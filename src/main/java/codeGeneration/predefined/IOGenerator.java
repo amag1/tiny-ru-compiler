@@ -85,7 +85,7 @@ public class IOGenerator implements Generable {
         helper.loadWord("$a0", paramOffset+"($fp)");
 
         helper.comment("Check if result is zero");
-        helper.branchOnEqual("$t0", "$zero", "out_bool_false");
+        helper.branchOnEqual("$a0", "$zero", "out_bool_false");
         helper.loadAddress("$a0", "bool_true_msg");
         helper.syscall( 4);
         helper.jump("out_bool_end");
@@ -122,7 +122,7 @@ public class IOGenerator implements Generable {
         helper.move("$t0", "$v0");
 
         helper.comment("Check if result is zero");
-        helper.branchOnEqual("$a0", "$zero", "in_bool_false");
+        helper.branchOnEqual("$t0", "$zero", "in_bool_false");
         helper.load("$a0", 1);
         helper.jump("in_bool_end");
 

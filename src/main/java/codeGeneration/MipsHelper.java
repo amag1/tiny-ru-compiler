@@ -11,7 +11,6 @@ public class MipsHelper {
     boolean debug;
     final private StringBuilder sb;
 
-    static private String nilPointer = "0x00000000";
 
     public MipsHelper(boolean debug) {
         this.sb = new StringBuilder();
@@ -230,23 +229,5 @@ public class MipsHelper {
         append("jalr " + register);
     }
 
-    public String getDefaultType(AttributeType attType) {
-        if (attType.isArray() || !attType.isPrimitive()) {
-            return nilPointer;
-        }
-
-        switch (attType.getType()) {
-            case "Int":
-                return "$zero";
-            case "Str":
-                return  "\"\"";
-            case "Bool":
-                return  "$zero";
-            case "Char":
-                return  "' '";
-        }
-
-        return nilPointer;
-    }
 
 }
