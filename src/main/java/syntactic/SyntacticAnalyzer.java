@@ -196,7 +196,12 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
             return;
         }
 
-        metodo();
+        if (getTokenType() == Type.KW_FN || getTokenType() == Type.KW_ST) {
+            metodo();
+            return;
+        }
+
+        throwSyntacticException("constructor o método");
     }
 
     private void constructor() throws SyntacticException, LexicalException, SymbolTableException {
