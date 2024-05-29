@@ -17,7 +17,7 @@ public class MipsHelper {
     }
 
     public void startText() {
-        sb.append(".text");
+        sb.append(".text\n");
     }
 
 
@@ -28,13 +28,14 @@ public class MipsHelper {
     public void generateMacros() {
         sb.append(push());
         sb.append(pop());
+
     }
 
     public String getLabel(MethodEntry method, ClassEntry entry) {
         return entry.getName() + "_" + method.getName() + ":";
     }
 
-    public void appendTab(String... elements) {
+    private void appendTab(String... elements) {
         sb.append("\t");
         for (String element : elements) {
             sb.append(element);
@@ -111,5 +112,17 @@ public class MipsHelper {
 
     public void loadAddress(String register, String label) {
         appendTab("la " + register + ", " + label);
+    }
+
+    public void allocateMemory(int numberOfBits) {
+        this.comment("AllocateMemory");
+        this.syscall(9);
+        this.load("$a0", numberOfBits); // Set number of bits to allocate
+        this.move("$a0", "$v0"); // Store in accumulator the address of the result
+    }
+
+    public void syscall(int number) {
+        this.load("$v0", number);
+        this.appendTab( "syscall");
     }
 }

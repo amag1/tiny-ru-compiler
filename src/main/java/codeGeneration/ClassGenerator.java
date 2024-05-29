@@ -8,15 +8,12 @@ public class ClassGenerator implements Generable {
     private ClassEntry classEntry;
     private AstClassEntry astClassEntry;
 
-    private MipsHelper helper;
-
-
     private boolean debug;
 
-    public ClassGenerator(ClassEntry classEntry, AstClassEntry astClassEntry, MipsHelper helper) {
+    public ClassGenerator(ClassEntry classEntry, AstClassEntry astClassEntry, boolean debug) {
         this.classEntry = classEntry;
         this.astClassEntry = astClassEntry;
-        this.helper = helper;
+        this.debug = debug;
     }
 
     public String generate() {
@@ -32,7 +29,7 @@ public class ClassGenerator implements Generable {
     private String generatePredefinedCode() {
         switch (classEntry.getName()) {
             case "IO":
-                return new IOGenerator(classEntry, helper).generate();
+                return new IOGenerator(classEntry, debug).generate();
             default:
                 return "";
         }

@@ -9,13 +9,14 @@ public class IOGenerator implements Generable {
     private MipsHelper helper;
     private ClassEntry entry;
 
-    public IOGenerator(ClassEntry entry, MipsHelper helper) {
-        this.helper = helper;
+    public IOGenerator(ClassEntry entry, boolean debug) {
+        this.helper = new MipsHelper(debug);
         this.entry = entry;
     }
 
     public String generate() {
         // Generar Virtual Table y codigo para cada metodo
+        helper.append( ".data");
         helper.append("VT_IO:");
         helper.comment("IO Virtual Table");
 
@@ -36,7 +37,7 @@ public class IOGenerator implements Generable {
         helper.append(helper.getLabel(method, entry));
         helper.move("$fp", "$sp");
 
-        helper.push("ra");
+        helper.push("$ra");
         switch (method.getName()) {
             case "out_str":
                 generateOutStrMethod(method);
@@ -84,24 +85,22 @@ public class IOGenerator implements Generable {
         helper.loadWord("$a0", "4($fp)");
 
         helper.comment("Print string");
-        helper.load("$v0", 4);
-        helper.appendTab("syscall");
+        helper.syscall(4);
     }
 
     private void generateOutBoolMethod(MethodEntry method) {
         helper.comment("Pop argumento");
         helper.loadWord("$t0", "4($fp)");
 
-        helper.load("$v0", 4);
         helper.comment("Check if result is zero");
         helper.branchOnEqual("$t0", "$zero", "out_bool_false");
         helper.loadAddress("$a0", "bool_true_msg");
-        helper.appendTab( "syscall");
+        helper.syscall( 4);
         helper.jump("out_bool_end");
 
         helper.append( "out_bool_false:");
         helper.loadAddress("$a0", "bool_false_msg");
-        helper.appendTab( "syscall");
+        helper.syscall(4);
 
         helper.append("out_bool_end:");
     }
@@ -111,24 +110,22 @@ public class IOGenerator implements Generable {
         helper.loadWord("$a0", "4($fp)");
 
         helper.comment("Print int");
-        helper.load("$v0", 1);
-        helper.appendTab( "syscall");
+        helper.syscall( 1);
 
-        helper.comment("Pop argumento");
+        helper.comment("Pop argumento"); // TODO ??
     }
 
     private void generateInIntMethod(MethodEntry method) {
         helper.comment("Read int");
-        helper.load("$v0", 5);
-        helper.appendTab( "syscall");
+        helper.syscall( 5);
+
         helper.comment("Store result in accumulator");
         helper.move("$a0", "$v0");
     }
 
     private void generateInBoolMethod(MethodEntry method) {
         helper.comment("Read int, then convert to zero or one");
-        helper.load("$v0", 5);
-        helper.appendTab( "syscall");
+        helper.syscall( 5);
         helper.comment("Store result in intermediate register");
         helper.move("$t0", "$v0");
 
@@ -146,21 +143,10 @@ public class IOGenerator implements Generable {
     private void generateInStrMethod(MethodEntry method) {
         helper.comment("Read string");
         helper.comment("Allocate space");
-        helper.load("$v0", 9);
-
-        helper.comment("Number of bytes to allocate");
-        helper.load("$a0", 256);
-
-        helper.appendTab( "syscall");
-
-        helper.comment("Store result in accumulator");
-        helper.move("$a0", "$v0");
+        helper.allocateMemory(256);
 
         helper.comment("Read string");
-        helper.load("$v0", 8);
-
-        helper.comment("Max length of string");
-        helper.load("$a1", 256);
-        helper.appendTab( "syscall");
+        helper.load("$a1", 256); // Set max length of strings
+        helper.syscall(8); // Read string
     }
 }

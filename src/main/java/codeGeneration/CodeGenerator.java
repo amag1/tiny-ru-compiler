@@ -12,25 +12,29 @@ public class CodeGenerator {
     private AbstractSyntaxTree ast;
     private SymbolTable symbolTable;
     private Boolean debug = true;
-    private MipsHelper helper;
+
 
     public CodeGenerator(AbstractSyntaxTree ast, SymbolTable symbolTable) {
         this.ast = ast;
         this.symbolTable = symbolTable;
-        this.helper = new MipsHelper(debug);
     }
 
     public String generateCode() {
-        helper.generateMacros();
+        StringBuilder sb = new StringBuilder();
+
+        // Generate Macros
+        MipsHelper macrosHelper = new MipsHelper(debug);
+        macrosHelper.generateMacros();
+        sb.append(macrosHelper.getString());
 
         for (ClassEntry classEntry : symbolTable.getClasses()) {
             // Obtener clase del ast
             AstClassEntry astClassEntry = ast.getClasses().get(classEntry.getName());
-            ClassGenerator classGenerator = new ClassGenerator(classEntry, astClassEntry, helper);
-            helper.append(classGenerator.generate());
+            ClassGenerator classGenerator = new ClassGenerator(classEntry, astClassEntry, debug);
+            sb.append(classGenerator.generate());
         }
 
-        return helper.getString();
+        return sb.toString();
     }
 
 
