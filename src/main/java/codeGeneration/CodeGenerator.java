@@ -1,12 +1,7 @@
 package codeGeneration;
 
-import semantic.abstractSintaxTree.AbstractSyntaxTree;
-import semantic.abstractSintaxTree.AstClassEntry;
-import semantic.abstractSintaxTree.AstHandler;
-import semantic.symbolTable.ClassEntry;
-import semantic.symbolTable.SymbolTable;
-import semantic.symbolTable.SymbolTableHandler;
-import semantic.symbolTable.SymbolTableLookup;
+import semantic.abstractSintaxTree.*;
+import semantic.symbolTable.*;
 
 public class CodeGenerator {
     private AbstractSyntaxTree ast;
@@ -27,6 +22,10 @@ public class CodeGenerator {
         macrosHelper.generateMacros();
         sb.append(macrosHelper.getString());
 
+        // Generar codigo para start
+        sb.append(generateStart());
+
+        // Generar codigo pra las clases
         for (ClassEntry classEntry : symbolTable.getClasses()) {
             // Obtener clase del ast
             AstClassEntry astClassEntry = ast.getClasses().get(classEntry.getName());
@@ -38,4 +37,24 @@ public class CodeGenerator {
     }
 
 
+    public String generateStart() {
+        MipsHelper startHelper = new MipsHelper(debug);
+        startHelper.comment("start program");
+        startHelper.startText();
+        startHelper.append("main:");
+
+        // Setea el frame pointer al inicio del stack
+        startHelper.move("$fp", "$sp");
+
+        // Genera código del start
+        AstMethodEntry start = ast.getStart();
+        Context startContext = new Context(symbolTable);
+        startHelper.append(start.generate(startContext, debug));
+
+
+        // Finaliza el programa
+        startHelper.syscall(10);
+
+        return startHelper.getString();
+    }
 }

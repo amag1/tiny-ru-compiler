@@ -1,5 +1,6 @@
 package semantic.abstractSintaxTree;
 
+import codeGeneration.Generable;
 import exceptions.semantic.syntaxTree.AstException;
 import exceptions.semantic.syntaxTree.MissingReturnException;
 import exceptions.semantic.syntaxTree.ReturnInConstructorException;
@@ -90,5 +91,14 @@ public class AstMethodEntry implements Json {
                 JsonHelper.json("name", this.name, indentationIndex) + "," +
                 JsonHelper.json("sentences", this.sentences, indentationIndex) +
                 "\n" + JsonHelper.getIdentationString(indentationIndex - 1) + "}";
+    }
+
+    public String generate(Context context, boolean debug) {
+        StringBuilder sb = new StringBuilder();
+        for (SentenceNode sentence: sentences) {
+            sb.append(sentence.generate(context, debug));
+        }
+
+        return  sb.toString();
     }
 }

@@ -142,6 +142,7 @@ public class MethodEntry implements Json {
         return localVariables;
     }
 
+
     public AttributeType getReturnType() {
         return returnType;
     }
@@ -152,5 +153,11 @@ public class MethodEntry implements Json {
 
     public boolean isStatic() {
         return isStatic;
+    }
+
+    public List<VariableEntry> getLocalVarList() {
+        List<VariableEntry> localVars = new ArrayList<VariableEntry>(this.getLocalVariables().values());
+        localVars.sort((VariableEntry v1, VariableEntry v2) -> v1.getPosition() - v2.getPosition());
+        return localVars;
     }
 }

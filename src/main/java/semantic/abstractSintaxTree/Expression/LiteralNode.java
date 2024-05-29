@@ -1,5 +1,6 @@
 package semantic.abstractSintaxTree.Expression;
 
+import codeGeneration.MipsHelper;
 import exceptions.semantic.syntaxTree.AstException;
 import exceptions.semantic.syntaxTree.OnlyVarException;
 import lexical.Token;
@@ -16,7 +17,14 @@ import semantic.symbolTable.AttributeType;
 public class LiteralNode extends OperatingNode {
     private String value;
 
+    private static int counter;
+
+    private int number;
+
+
+
     public LiteralNode(Token token) {
+        this.number = counter++;
         this.token = token;
         this.attributeType = switch (token.getType()) {
             case INT_LITERAL -> AttributeType.IntType;
@@ -48,5 +56,40 @@ public class LiteralNode extends OperatingNode {
                 JsonHelper.json("attributeType", this.attributeType.toString(), indentationIndex) + "," +
                 JsonHelper.json("value", this.value, indentationIndex) +
                 "\n" + JsonHelper.getIdentationString(indentationIndex - 1) + "}";
+    }
+
+    public String generate(Context context, boolean debug) {
+        MipsHelper helper = new MipsHelper(debug);
+        String literalName = "literal_" + number;
+        helper.startData();
+
+
+        String type = "";
+        String value = "";
+        switch (attributeType.getType()) {
+            case "Int":
+                type = ".word"; value = this.value; break;
+            case "Str", "Char":
+                type = ".asciiz"; value = "\"" + this.value + "\""; break;
+            case "Bool":
+                type = ".word";
+                value = this.value.equals("true") ? "1" : "0";
+        }
+
+
+        helper.addDataLabel(literalName, type, value);
+
+        helper.startText();
+        helper.storeInAccumulator(literalName);
+
+        // Al ser de tipo word es necesario especificar que se guarde el valor
+        if (attributeType.equals(AttributeType.IntType) || attributeType.equals(AttributeType.BoolType)) {
+            helper.loadAddress("$t0", "($a0)");
+            helper.loadWord("$a0", "($t0)");
+        }
+
+
+
+        return helper.getString();
     }
 }
