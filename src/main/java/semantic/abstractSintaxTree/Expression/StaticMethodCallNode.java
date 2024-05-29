@@ -1,5 +1,6 @@
 package semantic.abstractSintaxTree.Expression;
 
+import codeGeneration.MipsHelper;
 import exceptions.semantic.syntaxTree.*;
 import exceptions.semantic.syntaxTree.ClassNotFoundException;
 import lexical.Token;
@@ -72,5 +73,17 @@ public class StaticMethodCallNode extends CallableNode {
 
     public void setParameters(List<ExpressionNode> parameters) {
         super.setParameters(parameters);
+    }
+
+    public  String generate(Context context) {
+
+        ClassEntry classEntry = context.getClass(this.className.getLexem());
+        MethodEntry method = context.getMethod(this.methodName.getLexem());
+
+        MipsHelper helper = new MipsHelper(true);
+        helper.searchMethodInVT(classEntry, method);
+        helper.jumpRegister("$a0");
+
+        return helper.toString();
     }
 }

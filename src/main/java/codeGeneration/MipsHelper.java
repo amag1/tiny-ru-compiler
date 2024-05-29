@@ -38,8 +38,8 @@ public class MipsHelper {
 
     }
 
-    public String getLabel(MethodEntry method, ClassEntry entry) {
-        return entry.getName() + "_" + method.getName() + ":";
+    public String getLabel(String method, String entry) {
+        return entry + "_" + method + ":";
     }
 
     private void appendTab(String... elements) {
@@ -141,7 +141,7 @@ public class MipsHelper {
         startText();
         comment("init Method");
 
-        append(getLabel(method, classEntry));
+        append(getLabel(method.getName(), classEntry.getName()));
 
         // Pushea local vars
         for (VariableEntry var:method.getLocalVarList()) {
@@ -213,5 +213,14 @@ public class MipsHelper {
         appendTab(name + ": " + type + " " + value);
     }
 
+    public String getVirtualTableName(ClassEntry classEntry) {
+        return "VT_" + classEntry.getName();
+    }
+
+    public void searchMethodInVT(ClassEntry classEntry, MethodEntry methodEntry) {
+        String classVt = getVirtualTableName(classEntry);
+        int position = methodEntry.getPosition();
+        storeInAccumulator(position+"("+classVt+")");
+    }
 
 }
