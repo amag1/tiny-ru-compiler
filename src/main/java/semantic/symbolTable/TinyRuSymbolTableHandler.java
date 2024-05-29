@@ -87,7 +87,7 @@ public class TinyRuSymbolTableHandler implements SymbolTableHandler {
         }
 
         // Create new attribute
-        VariableEntry newAtt = new VariableEntry(type, att, isPrivate);
+        VariableEntry newAtt = new VariableEntry(type, att, isPrivate, Scope.CLASS);
         currentClass.addAttribute(newAtt);
     }
 
@@ -373,7 +373,7 @@ public class TinyRuSymbolTableHandler implements SymbolTableHandler {
     public void setInheritedAttributes(ClassEntry classEntry, ClassEntry parent) throws SymbolTableException {
         for (Map.Entry<String, VariableEntry> entry : parent.getAttributes().entrySet()) {
             VariableEntry attribute = entry.getValue();
-            VariableEntry newAttribute = new VariableEntry(attribute.getType(), attribute.getToken(), attribute.isPrivate());
+            VariableEntry newAttribute = new VariableEntry(attribute.getType(), attribute.getToken(), attribute.isPrivate(), Scope.CLASS);
             newAttribute.setInherited(true);
             newAttribute.setPosition(attribute.getPosition());
 
@@ -540,7 +540,7 @@ public class TinyRuSymbolTableHandler implements SymbolTableHandler {
         }
 
         // Agrega el parametro formal a la lista
-        VariableEntry formalParam = new VariableEntry(type, paramToken, position);
+        VariableEntry formalParam = new VariableEntry(type, paramToken, position, Scope.PARAM);
         currentMethod.addFormalParam(formalParam);
     }
 
@@ -577,7 +577,7 @@ public class TinyRuSymbolTableHandler implements SymbolTableHandler {
         }
 
         // Agrega la variable al metodo
-        VariableEntry localVar = new VariableEntry(type, variableToken);
+        VariableEntry localVar = new VariableEntry(type, variableToken, Scope.LOCAL);
         currentMethod.addLocalVariable(localVar);
     }
 

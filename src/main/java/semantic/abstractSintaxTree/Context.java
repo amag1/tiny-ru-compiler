@@ -18,6 +18,8 @@ public class Context {
     private String callingMethodName;
     private String currentClassName;
     private boolean isSelfAccess;
+
+    private boolean isStatic;
     private boolean onlyVar;
 
     public Context(SymbolTableLookup st) {
@@ -185,11 +187,11 @@ public class Context {
      * @return Contexto clonado
      */
     public Context clone(String callingClassName, String callingMethodName) {
-        return new Context(this.st, callingClassName, callingMethodName, null, false,false);
+        return new Context(this.st, callingClassName, callingMethodName, null, false, false);
     }
 
     public Context clone() {
-        return  new Context(
+        return new Context(
                 this.st,
                 this.callingClassName,
                 this.callingMethodName,
@@ -208,6 +210,7 @@ public class Context {
 
     /**
      * Setea selfContext
+     *
      * @param selfAccess
      */
     public void setSelfAccess(boolean selfAccess) {
@@ -216,7 +219,7 @@ public class Context {
 
 
     /**
-      * @return Un nuevo contexto conservando callingClasss y callingMethod del contexto actual
+     * @return Un nuevo contexto conservando callingClasss y callingMethod del contexto actual
      */
     public Context reset() {
         return new Context(this.st, this.callingClassName, this.callingMethodName, null, false, false);
@@ -295,5 +298,13 @@ public class Context {
 
     public boolean isOnlyVar() {
         return onlyVar;
+    }
+
+    public boolean isStatic() {
+        return isStatic;
+    }
+
+    public void setStatic(boolean aStatic) {
+        isStatic = aStatic;
     }
 }

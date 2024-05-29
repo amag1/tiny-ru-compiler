@@ -14,29 +14,33 @@ public class VariableEntry implements Json {
     private AttributeType type;
     private Token token;
     private int position;
+    private Scope scope;
 
     private boolean isPrivate;
 
     private boolean isInherited;
 
-    public VariableEntry(AttributeType type, Token token, int position) {
+    public VariableEntry(AttributeType type, Token token, int position, Scope scope) {
         this.type = type;
         this.token = token;
         this.position = position;
         this.name = token.getLexem();
+        this.scope = scope;
     }
 
-    public VariableEntry(AttributeType type, Token token) {
+    public VariableEntry(AttributeType type, Token token, Scope scope) {
         this.type = type;
         this.token = token;
         this.name = token.getLexem();
+        this.scope = scope;
     }
 
-    public VariableEntry(AttributeType type, Token token, boolean isPrivate) {
+    public VariableEntry(AttributeType type, Token token, boolean isPrivate, Scope scope) {
         this.type = type;
         this.token = token;
         this.name = token.getLexem();
         this.isPrivate = isPrivate;
+        this.scope = scope;
     }
 
     public AttributeType getType() {
@@ -85,6 +89,14 @@ public class VariableEntry implements Json {
 
     public void setInherited(boolean inherited) {
         isInherited = inherited;
+    }
+
+    public Scope getScope() {
+        return scope;
+    }
+
+    public void setScope(Scope scope) {
+        this.scope = scope;
     }
 
     public String toJson(int identationIndex) {

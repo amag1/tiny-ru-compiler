@@ -169,7 +169,10 @@ public class TinyRuAstHandler implements AstHandler {
             // Obtener o crear un nuevo método
             AstMethodEntry currentAstMethod = currentAstClass.getMethod(methodName.getLexem());
             if (currentAstMethod == null) {
+                // Chequear si el metodo es estatico
+                boolean isStatic = stHandler.getCurrentMethod().isStatic();
                 currentAstMethod = new AstMethodEntry(methodName);
+                currentAstMethod.setStatic(isStatic);
                 currentAstClass.addMethod(currentAstMethod);
             }
         }
