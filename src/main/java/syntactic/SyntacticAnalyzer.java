@@ -594,7 +594,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
             ExpressionNode expression = expAnd();
             ExpressionNode recursiveExpression = expOrPrima(expression);
 
-            return ast.createBinaryOperationNode(or, expression, recursiveExpression);
+            return ast.createBinaryOperationNode(or, previousExpression, recursiveExpression);
 
         }
 
@@ -616,7 +616,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
             ExpressionNode expression = expIgual();
             ExpressionNode recursiveExpression = expAdPrima(expression);
 
-            return ast.createBinaryOperationNode(and, expression, recursiveExpression);
+            return ast.createBinaryOperationNode(and, previousExpression, recursiveExpression);
         }
 
         // Otro caso, lambda
