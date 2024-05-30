@@ -97,4 +97,27 @@ public class AttributeType implements Json {
 
         return str;
     }
+
+    public int getSize() {
+        // Metodo para obtener el espacio necesario para almacenar el tipo de dato
+
+        // TODO: no se como se vera esto para tipos no primitivos
+        return 4;
+
+    }
+
+    public String getDefaultValue() {
+        // Metodo para obtener el valor por defecto de un tipo de dato
+        if (this.isPrimitive) {
+            return switch (this.type) {
+                case "Bool" -> "false";
+                case "Char" -> "' '";
+                case "Str" -> "\"\"";
+                default -> "0";
+            };
+        }
+        else {
+            return "nil";
+        }
+    }
 }

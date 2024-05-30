@@ -75,18 +75,16 @@ public class StaticMethodCallNode extends CallableNode {
         super.setParameters(parameters);
     }
 
-    public  String generate(Context context, boolean debug) {
+    public String generate(Context context, boolean debug) {
         // Buscar datos necesarios
         ClassEntry classEntry = context.getClass(this.className.getLexem());
         MethodEntry method = classEntry.getMethod(this.methodName.getLexem());
 
         MipsHelper helper = new MipsHelper(debug);
-
-        // Actualiza el frame pointer
-        helper.updateFramePointer();
-
+        // pushear frame pointer
+        helper.push("$fp");
         // Pushea parametros
-        for (ExpressionNode param:getParameters()) {
+        for (ExpressionNode param : getParameters()) {
             String paramCode = param.generate(context, debug);
             helper.append(paramCode);
             helper.push("$a0");
@@ -97,13 +95,17 @@ public class StaticMethodCallNode extends CallableNode {
         String classVt = helper.getVirtualTableName(classEntry);
 
         // Calcular el offset
-        int offset = method.getPosition()*4;
+        int offset = method.getPosition() * 4;
 
         // Jump a definición del método
-        helper.loadAddress("$t0",classVt);
-        helper.loadWord("$t1", offset+"($t0)");
+        helper.loadAddress("$t0", classVt);
+        helper.loadWord("$t1", offset + "($t0)");
         helper.jumpAndLinkRegister("$t1");
 
+        // Resetear la stack
+        // Popear todos los parametros y el fp
+        helper.addIU("$sp", "$sp", 4 * getParameters().size());
+        helper.pop("$fp");
         return helper.getString();
     }
 }

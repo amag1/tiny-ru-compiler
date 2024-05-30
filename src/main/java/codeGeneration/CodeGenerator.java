@@ -39,16 +39,16 @@ public class CodeGenerator {
 
     public String generateStart() {
         MipsHelper startHelper = new MipsHelper(debug);
-        startHelper.comment("start program");
-        startHelper.startText();
-        startHelper.append("main:");
-
-        // Setea el frame pointer al inicio del stack
-        startHelper.move("$fp", "$sp");
 
         // Genera código del start
         AstMethodEntry start = ast.getStart();
+        MethodEntry startMethod = symbolTable.getStart();
+
         Context startContext = new Context(symbolTable);
+
+        // Generar codigo para las variables locales
+        // Actualiza el frame pointer
+        startHelper.initStart(startMethod);
         startHelper.append(start.generate(startContext, debug));
 
 

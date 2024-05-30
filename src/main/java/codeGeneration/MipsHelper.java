@@ -84,7 +84,7 @@ public class MipsHelper {
     }
 
     public void move(String register1, String register2) {
-        appendTab("move " + register1 +", "+ register2);
+        appendTab("move " + register1 + ", " + register2);
     }
 
     public void load(String register, String value) {
@@ -95,12 +95,16 @@ public class MipsHelper {
         appendTab("li " + register + ", " + value);
     }
 
-    public void loadWord(String register1,  String register2) {
-        appendTab("lw " + register1 +", "+ register2);
+    public void loadWord(String register1, String register2) {
+        appendTab("lw " + register1 + ", " + register2);
     }
 
     public void push(String register) {
-        appendTab("push(" + register +")");
+        appendTab("push(" + register + ")");
+    }
+
+    public void pop(String register) {
+        appendTab("pop(" + register + ")");
     }
 
     public void addIU(String register1, String register2, int offset) {
@@ -123,7 +127,7 @@ public class MipsHelper {
         appendTab("la " + register + ", " + label);
     }
 
-    public  void storeInAccumulator(String address) {
+    public void storeInAccumulator(String address) {
         loadAddress("$a0", address);
     }
 
@@ -136,57 +140,53 @@ public class MipsHelper {
 
     public void syscall(int number) {
         this.load("$v0", number);
-        this.appendTab( "syscall");
+        this.appendTab("syscall");
     }
 
     public void initMethod(MethodEntry method, ClassEntry classEntry) {
         startText();
         comment("init Method");
-
         append(getLabel(method.getName(), classEntry.getName()) + ":");
 
-        // Pushea local vars
-        for (VariableEntry var:method.getLocalVarList()) {
-            // TODO
-        }
-
-        // Pushear registro de activación
+        move("$fp", "$sp");
         push("$ra");
+
+        // Pushea local vars
+        for (VariableEntry var : method.getLocalVarList()) {
+            var.initialize(this, getStackLocalVarOffset(method, var.getPosition()));
+        }
+    }
+
+    public void initStart(MethodEntry method) {
+        startText();
+        comment("init Start");
+
+        append("main:");
+
+        move("$fp", "$sp");
+
+        // Pushea local vars
+        for (VariableEntry var : method.getLocalVarList()) {
+            var.initialize(this, getStackLocalVarOffset(method, var.getPosition()));
+        }
     }
 
     public void finishMethod() {
-        loadWord("$ra", "4($sp)"); // Restore return addres
-        move("$sp", "$fp"); // Reset stack pointer
-        loadAddress("$fp", "($fp)"); // Restore frame pointer
+        pop("$ra");
         jumpRegister("$ra"); // Return to calling instruction
     }
 
 
     /**
-     *
      * @param method
      * @return el offset necesario para acceder al un parametro en el stack
      * desde el frame pointer
      */
-    public int getStackParamOffset(MethodEntry method, int pararameterPosition) {
-        int offset = 0;
-
-        // Agrega frame pointer del llamador
-        offset -= 4;
-
-        // Agrega self si el método no es estatico
-        if (!method.isStatic()) {
-            offset -= 4;
-        }
-
-        // Agrega parámtetros anteriores
-        offset -= (4*pararameterPosition);
-
-        return offset;
+    public int getStackParamOffset(int pararameterPosition, int totalParams) {
+        return 4 * (totalParams - pararameterPosition);
     }
 
     /**
-     *
      * @param method
      * @return el offset necesario para acceder a una  variable local en el
      * stack desde el frame pointer
@@ -206,13 +206,15 @@ public class MipsHelper {
         offset -= method.getFormalParametersList().toArray().length;
 
         // Agrega variables anteriores
-        offset -= (4*varPosition);
+        offset -= (4 * varPosition);
 
-        return  offset;
+        return offset;
     }
 
     public void addDataLabel(String name, String type, String value) {
-        if (!name.equals("")) name += ":";
+        if (!name.equals("")) {
+            name += ":";
+        }
         appendTab(name + " " + type + " " + value);
     }
 
@@ -220,12 +222,8 @@ public class MipsHelper {
         return "VT_" + classEntry.getName();
     }
 
-    public void updateFramePointer() {
-        push("$fp"); // Guarda en stack el fp anterior
-        loadWord("$fp", "4($sp)"); // Guarda en fp donde comenzó el stack pointer
-    }
 
-    public void jumpAndLinkRegister(String register){
+    public void jumpAndLinkRegister(String register) {
         append("jalr " + register);
     }
 
