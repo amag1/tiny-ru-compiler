@@ -148,6 +148,10 @@ public class MipsHelper {
         this.appendTab("syscall");
     }
 
+    public void mutilply(String resRegister, String opRegister1, String opRegister2) {
+        append("mul " + resRegister + ", " + opRegister1 + ", " + opRegister2);
+    }
+
     public void initMethod(MethodEntry method, ClassEntry classEntry) {
         startText();
         comment("init Method");
@@ -244,6 +248,7 @@ public class MipsHelper {
             }
         }
     }
+
 
 
 }

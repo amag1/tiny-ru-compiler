@@ -1,5 +1,6 @@
 package semantic.abstractSintaxTree.Expression;
 
+import codeGeneration.MipsHelper;
 import exceptions.semantic.syntaxTree.AstException;
 import exceptions.semantic.syntaxTree.NonIntArrayIndexException;
 import exceptions.semantic.syntaxTree.NonIntArrayLengthException;
@@ -51,5 +52,37 @@ public class NewArrayNode extends PrimaryNode {
                 JsonHelper.json("elementsType", this.elementsType, indentationIndex) + "," +
                 JsonHelper.json("lengthExpression", this.lengthExpression, indentationIndex) +
                 "\n" + JsonHelper.getIdentationString(indentationIndex - 1) + "}";
+    }
+
+    public String generate(Context context, boolean debug) {
+        // Obtener datos necesarios
+
+        MipsHelper helper = new MipsHelper(debug);
+        helper.comment("New Array");
+
+        // Generar codigo para la expresion del tamaño
+        helper.comment("Calculate array length");
+        helper.append(lengthExpression.generate(context.reset(), debug));
+
+        // Guardar en t0 el tamaño del array
+        helper.sw("$t0", "$a0");
+
+        // Alocar memoria para el array
+        helper.mutilply("$a0", "$t0", "4");
+        helper.syscall(9);
+
+        // Guardar direccion del array en t1
+        helper.sw("$t1", "$a0");
+
+        // TODO for
+        // TODO return cir
+
+        // Guardar variable array
+
+
+
+
+
+        return helper.getString();
     }
 }
