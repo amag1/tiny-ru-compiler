@@ -6,6 +6,7 @@ import semantic.symbolTable.MethodEntry;
 import semantic.symbolTable.VariableEntry;
 
 import java.util.List;
+import java.util.Map;
 
 public class MipsHelper {
     boolean debug;
@@ -109,6 +110,10 @@ public class MipsHelper {
 
     public void addIU(String register1, String register2, int offset) {
         appendTab("addiu " + register1 + ", " + register2 + ", " + offset);
+    }
+
+    public void sw(String registerWithValue, String address) {
+        appendTab("sw " + registerWithValue + ", " + address);
     }
 
     public void jumpRegister(String register) {
@@ -225,6 +230,19 @@ public class MipsHelper {
 
     public void jumpAndLinkRegister(String register) {
         append("jalr " + register);
+    }
+
+    public void addDefaultValues() {
+        startData();
+        Map<String, String> defaultValues = AttributeType.getDefaultValues();
+        for (Map.Entry<String, String> entry : defaultValues.entrySet()) {
+            if (entry.getKey().equals("Str") || entry.getKey().equals("Char")) {
+                addDataLabel("defaultValue" + entry.getKey(), ".asciiz", entry.getValue());
+            }
+            else {
+                addDataLabel("defaultValue" + entry.getKey(), ".word", entry.getValue());
+            }
+        }
     }
 
 

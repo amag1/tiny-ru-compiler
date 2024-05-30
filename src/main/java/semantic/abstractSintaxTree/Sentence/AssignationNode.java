@@ -1,5 +1,6 @@
 package semantic.abstractSintaxTree.Sentence;
 
+import codeGeneration.MipsHelper;
 import exceptions.semantic.syntaxTree.AstException;
 import exceptions.semantic.syntaxTree.ParameterTypeMismatchException;
 import semantic.JsonHelper;
@@ -37,6 +38,32 @@ public class AssignationNode extends SentenceNode {
         if (!context.checkTypes(leftType, rightType)) {
             throw new ParameterTypeMismatchException(leftType.toString(), rightType.toString(), rightSide.getToken());
         }
+    }
+
+    public String generate(Context context, boolean debug) {
+        MipsHelper helper = new MipsHelper(debug);
+
+        // Acceder a la direccion del lado izquierdo
+        helper.comment("Acceder a direccion del lado izquierdo");
+        helper.append(leftSide.accessVariable(context, debug));
+
+        // Pushear la direccion obtenida
+        helper.comment("Pushear la direccion obtenida");
+        helper.push("$a0");
+
+        // Generar el lado derecho de la asignacion
+        helper.comment("Generar el lado derecho de la asignacion");
+        helper.append(rightSide.generate(context, debug));
+
+        // Popear la direccion del lado izquierdo
+        helper.comment("Popear la direccion del lado izquierdo");
+        helper.pop("$t0");
+
+        // Guardar el valor en la direccion obtenida
+        helper.comment("Guardar el valor en la direccion obtenida");
+        helper.sw("$a0", "0($t0)");
+
+        return helper.getString();
     }
 
     public String toJson(int indentationIndex) {

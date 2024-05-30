@@ -3,6 +3,8 @@ package codeGeneration;
 import semantic.abstractSintaxTree.*;
 import semantic.symbolTable.*;
 
+import java.util.Map;
+
 public class CodeGenerator {
     private AbstractSyntaxTree ast;
     private SymbolTable symbolTable;
@@ -54,6 +56,8 @@ public class CodeGenerator {
 
         // Finaliza el programa
         startHelper.syscall(10);
+
+        startHelper.addDefaultValues();
 
         return startHelper.getString();
     }

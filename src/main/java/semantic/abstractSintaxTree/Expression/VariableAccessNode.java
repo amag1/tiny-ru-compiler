@@ -60,6 +60,15 @@ public class VariableAccessNode extends PrimaryNode {
         }
     }
 
+    public String accessVariable(Context context, boolean debug) {
+        switch (variable.getScope()) {
+            case LOCAL:
+                return "la $a0, -" + (4 * variable.getPosition()) + "($fp)";
+            default:
+                return "";
+        }
+    }
+
     public String toJson(int indentationIndex) {
         indentationIndex++;
 

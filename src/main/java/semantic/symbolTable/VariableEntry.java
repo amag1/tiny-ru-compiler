@@ -102,12 +102,10 @@ public class VariableEntry implements Json {
 
     public void initialize(MipsHelper helper, int offset) {
         // Genera el codigo para instanciar con el valor default
-        String defaultValue = this.type.getDefaultValue();
-
         // Obtener el offset de la variable
         // Generar el codigo
         helper.comment("Inicializar variable " + this.name);
-        helper.load("$t0", defaultValue);
+        helper.loadAddress("$t0", "defaultValue" + this.type.getType());
         helper.push("$t0");
     }
 
