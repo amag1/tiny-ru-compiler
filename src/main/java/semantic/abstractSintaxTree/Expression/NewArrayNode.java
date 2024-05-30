@@ -72,9 +72,28 @@ public class NewArrayNode extends PrimaryNode {
         helper.syscall(9);
 
         // Guardar direccion del array en t1
-        helper.sw("$t1", "$a0");
+        helper.sw("$t1", "$v0");
 
-        // TODO for
+        // Iterar sobre el array y setear el default
+        /**
+         li $a0, 20  # Tamaño del array
+
+         li $v0, 9  # syscall para alocar array
+         syscall
+
+         move $t1, $v0 # Guardar en t1 direccion7
+
+
+         start_set_default_array:
+         beqz $a0, end_set_default_array
+         li $t3, 5
+         sw $t3, ($t1)
+         addiu $t1, $t1, 4
+         addiu $a0, $a0, -4
+
+         j start_set_default_array
+         end_set_default_array:
+         **/
         // TODO return cir
 
         // Guardar variable array
