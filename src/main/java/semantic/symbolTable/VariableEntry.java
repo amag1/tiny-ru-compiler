@@ -3,6 +3,7 @@ package semantic.symbolTable;
 import lexical.Token;
 import semantic.Json;
 import semantic.JsonHelper;
+import codeGeneration.MipsHelper;
 
 /**
  * Representa una variable de la tabla de simbolos
@@ -97,6 +98,15 @@ public class VariableEntry implements Json {
 
     public void setScope(Scope scope) {
         this.scope = scope;
+    }
+
+    public void initialize(MipsHelper helper, int offset) {
+        // Genera el codigo para instanciar con el valor default
+        // Obtener el offset de la variable
+        // Generar el codigo
+        helper.comment("Inicializar variable " + this.name);
+        helper.loadAddress("$t0", "defaultValue" + this.type.getType());
+        helper.push("$t0");
     }
 
     public String toJson(int identationIndex) {

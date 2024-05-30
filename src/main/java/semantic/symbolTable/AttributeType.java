@@ -3,6 +3,9 @@ package semantic.symbolTable;
 import lexical.Token;
 import semantic.Json;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Representa un tipo de atributo de la tabla de simbolos
  */
@@ -96,5 +99,26 @@ public class AttributeType implements Json {
         str += type;
 
         return str;
+    }
+
+    public int getSize() {
+        // Metodo para obtener el espacio necesario para almacenar el tipo de dato
+
+        // TODO: no se como se vera esto para tipos no primitivos
+        return 4;
+
+    }
+
+    public static Map<String, String> getDefaultValues() {
+        // Metodo para obtener el valor por defecto de todos los tipos de datos
+        // TODO: ver como representamos el nil, podria morir este metodo pero estoy cansado xd
+        HashMap<String, String> defaultValues = new HashMap<>();
+        defaultValues.put("Int", "0");
+        defaultValues.put("Char", "\" \"");
+        defaultValues.put("Str", "\"\"");
+        defaultValues.put("Bool", "0");
+        defaultValues.put("Struct", "0");
+
+        return defaultValues;
     }
 }

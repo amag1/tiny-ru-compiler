@@ -10,6 +10,7 @@ import semantic.symbolTable.VariableEntry;
 
 public class VariableAccessNode extends PrimaryNode {
     private String variableName;
+    private VariableEntry variable;
 
     public VariableAccessNode(Token token) {
         this.nodeType = "varAccess";
@@ -24,6 +25,8 @@ public class VariableAccessNode extends PrimaryNode {
         if (var == null) {
             throw new UndeclaredVariableAccessException(token);
         }
+
+        variable = var;
 
         // Chequar si se puede acceder al atributo
         if (var.isPrivate()) {
@@ -46,6 +49,24 @@ public class VariableAccessNode extends PrimaryNode {
         }
 
         return var.getType();
+    }
+
+    public String generate(Context context, boolean debug) {
+        switch (variable.getScope()) {
+            case LOCAL:
+                return "lw $a0, -" + (4 * variable.getPosition()) + "($fp)";
+            default:
+                return "";
+        }
+    }
+
+    public String accessVariable(Context context, boolean debug) {
+        switch (variable.getScope()) {
+            case LOCAL:
+                return "la $a0, -" + (4 * variable.getPosition()) + "($fp)";
+            default:
+                return "";
+        }
     }
 
     public String toJson(int indentationIndex) {

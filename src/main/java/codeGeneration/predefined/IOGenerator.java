@@ -2,6 +2,7 @@ package codeGeneration.predefined;
 
 import codeGeneration.Generable;
 import codeGeneration.MipsHelper;
+import semantic.abstractSintaxTree.Context;
 import semantic.symbolTable.ClassEntry;
 import semantic.symbolTable.MethodEntry;
 
@@ -45,7 +46,7 @@ public class IOGenerator implements Generable {
                 generateInBoolMethod(method);
                 break;
             case "out_bool":
-                generateOutBoolMethod( method);
+                generateOutBoolMethod(method);
                 break;
             default:
                 generateNotImplementedMethod(method);
@@ -62,17 +63,16 @@ public class IOGenerator implements Generable {
         }
     }
 
-    private void generateNotImplementedMethod( MethodEntry method) {
+    private void generateNotImplementedMethod(MethodEntry method) {
         helper.comment("IO method " + method.getName());
         helper.comment("Method not implemented");
     }
 
     private void generateOutStrMethod(MethodEntry method) {
         helper.comment("Pop argumento");
+        int paramOffset = helper.getStackParamOffset(0, 1); // Always one param
 
-        int paramOffset = helper.getStackParamOffset(method ,0); // Always one param
-
-        helper.loadWord("$a0", paramOffset+"($fp)");
+        helper.loadWord("$a0", paramOffset + "($fp)");
 
         helper.comment("Print string");
         helper.syscall(4);
@@ -80,36 +80,36 @@ public class IOGenerator implements Generable {
 
     private void generateOutBoolMethod(MethodEntry method) {
         helper.comment("Pop argumento");
-        int paramOffset = helper.getStackParamOffset(method, 0); // Always one param
+        int paramOffset = helper.getStackParamOffset(0, 1); // Always one param
 
-        helper.loadWord("$a0", paramOffset+"($fp)");
+        helper.loadWord("$a0", paramOffset + "($fp)");
 
         helper.comment("Check if result is zero");
         helper.branchOnEqual("$a0", "$zero", "out_bool_false");
         helper.loadAddress("$a0", "bool_true_msg");
-        helper.syscall( 4);
+        helper.syscall(4);
         helper.jump("out_bool_end");
 
-        helper.append( "out_bool_false:");
+        helper.append("out_bool_false:");
         helper.loadAddress("$a0", "bool_false_msg");
         helper.syscall(4);
 
         helper.append("out_bool_end:");
     }
 
-    private void generateOutIntMethod( MethodEntry method) {
+    private void generateOutIntMethod(MethodEntry method) {
         helper.comment("Obtener primer argumento");
-        int paramOffset = helper.getStackParamOffset(method, 0); // Always one param
+        int paramOffset = helper.getStackParamOffset(0, 1); // Always one param
 
-        helper.loadWord("$a0", paramOffset+"($fp)");
+        helper.loadWord("$a0", paramOffset + "($fp)");
 
         helper.comment("Print int");
-        helper.syscall( 1);
+        helper.syscall(1);
     }
 
     private void generateInIntMethod(MethodEntry method) {
         helper.comment("Read int");
-        helper.syscall( 5);
+        helper.syscall(5);
 
         helper.comment("Store result in accumulator");
         helper.move("$a0", "$v0");
@@ -117,7 +117,7 @@ public class IOGenerator implements Generable {
 
     private void generateInBoolMethod(MethodEntry method) {
         helper.comment("Read int, then convert to zero or one");
-        helper.syscall( 5);
+        helper.syscall(5);
         helper.comment("Store result in intermediate register");
         helper.move("$t0", "$v0");
 
@@ -126,10 +126,10 @@ public class IOGenerator implements Generable {
         helper.load("$a0", 1);
         helper.jump("in_bool_end");
 
-        helper.append( "in_bool_false:");
+        helper.append("in_bool_false:");
         helper.load("$a0", 0);
 
-        helper.append( "in_bool_end:");
+        helper.append("in_bool_end:");
     }
 
     private void generateInStrMethod(MethodEntry method) {
