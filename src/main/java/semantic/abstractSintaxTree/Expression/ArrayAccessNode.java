@@ -67,9 +67,9 @@ public class ArrayAccessNode extends PrimaryNode {
 
         helper.comment("access to array");
 
-        helper.append(getArrayAddress(debug));
+        helper.append(getArrayAddress(context, debug));
 
-        helper.loadWord("$a0", "4($t0)"); // Access to element -- TODO
+        helper.loadWord("$a0", "($t0)"); // Access to element -- TODO
 
         return helper.getString();
     }
@@ -78,20 +78,34 @@ public class ArrayAccessNode extends PrimaryNode {
         MipsHelper helper = new MipsHelper(debug);
 
         helper.comment("access to array");
-        helper.append(getArrayAddress(debug));
+        helper.append(getArrayAddress(context, debug));
 
-        helper.loadAddress("$a0", "4($t0)"); // Access to element -- TODO
+        helper.loadAddress("$a0", "($t0)"); // Access to element -- TODO
 
         return helper.getString();
     }
 
-    private String getArrayAddress(boolean debug) {
+    /**
+     * Guarda en t0 la direccion del elemento del array a acceder
+     * @param debug
+     * @return
+     */
+    private String getArrayAddress(Context context, boolean debug) {
         MipsHelper helper = new MipsHelper(debug);
 
+        // Acceder al cir del array
         helper.append(variable.loadWordByScope());
-        helper.loadAddress("$t0", "($a0)"); // Access to cir
+        helper.loadAddress("$t0", "($a0)");
+
+        // Obtener el indice
+        helper.comment("Calculate index expression");
+        helper.append(index.generate(context,debug));
 
         // TODO check if valid index
+
+        // Agregar el offset de indice al cir del array
+        helper.mutilply("$a0", "$a0", "4");
+        helper.add("$t0", "$t0", "$a0");
 
         return helper.getString();
     }
