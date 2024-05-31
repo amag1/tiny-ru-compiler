@@ -151,7 +151,17 @@ public class MipsHelper {
     public void initMethod(MethodEntry method, ClassEntry classEntry) {
         startText();
         comment("init Method");
-        append(getLabel(method.getName(), classEntry.getName()) + ":");
+
+        String label;
+        boolean isConstructor = false;
+        if (method.getName().equals(".")) {
+            label = getLabel(classEntry.getName(), "constructor");
+            isConstructor = true;
+        }
+        else {
+            label = getLabel(method.getName(), classEntry.getName());
+        }
+        append(label + ":");
 
         move("$fp", "$sp");
         push("$ra");
@@ -159,6 +169,14 @@ public class MipsHelper {
         // Pushea local vars
         for (VariableEntry var : method.getLocalVarList()) {
             var.initialize(this, getStackLocalVarOffset(method, var.getPosition()));
+        }
+
+        // Si es el constructor, aloca memoria para el objeto
+        if (isConstructor) {
+            allocateMemory(classEntry.getNumberOfBytes());
+            // Si estamos en el constructor, la referencia a self estará luego de las variables locales
+            // Esto no va a ser igual en el resto de los métodos (tiene que pasarla el llamador)
+            push("$a0");
         }
     }
 
@@ -243,6 +261,10 @@ public class MipsHelper {
                 addDataLabel("defaultValue" + entry.getKey(), ".word", entry.getValue());
             }
         }
+    }
+
+    public void popLocalVariables(MethodEntry method) {
+        addIU("$sp", "$sp", 4 * method.getLocalVarList().size());
     }
 
 

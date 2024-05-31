@@ -25,13 +25,14 @@ public class CodeGenerator {
         sb.append(macrosHelper.getString());
 
         // Generar codigo para start
-        sb.append(generateStart());
+        Context context = new Context(symbolTable);
+        sb.append(generateStart(context));
 
         // Generar codigo pra las clases
         for (ClassEntry classEntry : symbolTable.getClasses()) {
             // Obtener clase del ast
             AstClassEntry astClassEntry = ast.getClasses().get(classEntry.getName());
-            ClassGenerator classGenerator = new ClassGenerator(classEntry, astClassEntry, debug);
+            ClassGenerator classGenerator = new ClassGenerator(context, classEntry, astClassEntry, debug);
             sb.append(classGenerator.generate());
         }
 
@@ -39,20 +40,20 @@ public class CodeGenerator {
     }
 
 
-    public String generateStart() {
+    public String generateStart(Context startContext) {
         MipsHelper startHelper = new MipsHelper(debug);
 
         // Genera código del start
         AstMethodEntry start = ast.getStart();
         MethodEntry startMethod = symbolTable.getStart();
 
-        Context startContext = new Context(symbolTable);
-
         // Generar codigo para las variables locales
         // Actualiza el frame pointer
         startHelper.initStart(startMethod);
         startHelper.append(start.generate(startContext, debug));
 
+        // Popear todas las variables locales
+        startHelper.popLocalVariables(startMethod);
 
         // Finaliza el programa
         startHelper.syscall(10);

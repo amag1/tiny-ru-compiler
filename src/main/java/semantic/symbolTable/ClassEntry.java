@@ -184,4 +184,10 @@ public class ClassEntry implements Json {
 
         return methodsList;
     }
+
+    public int getNumberOfBytes() {
+        // 4 bytes para VT
+        // 4 bytes para cada atributo
+        return 4 + 4 * attributes.size();
+    }
 }

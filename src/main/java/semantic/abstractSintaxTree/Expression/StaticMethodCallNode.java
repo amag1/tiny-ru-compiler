@@ -103,7 +103,7 @@ public class StaticMethodCallNode extends CallableNode {
         helper.jumpAndLinkRegister("$t1");
 
         // Resetear la stack
-        // Popear todos los parametros y el fp
+        // Popear todos los parametros
         helper.addIU("$sp", "$sp", 4 * getParameters().size());
         helper.pop("$fp");
         return helper.getString();

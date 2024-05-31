@@ -1,6 +1,7 @@
 package codeGeneration;
 
 import semantic.abstractSintaxTree.AstClassEntry;
+import semantic.abstractSintaxTree.AstMethodEntry;
 import semantic.abstractSintaxTree.Context;
 import semantic.symbolTable.ClassEntry;
 import codeGeneration.predefined.IOGenerator;
@@ -9,10 +10,11 @@ import semantic.symbolTable.MethodEntry;
 public class ClassGenerator implements Generable {
     private ClassEntry classEntry;
     private AstClassEntry astClassEntry;
+    private Context context;
 
     private boolean debug;
 
-    public ClassGenerator(ClassEntry classEntry, AstClassEntry astClassEntry, boolean debug) {
+    public ClassGenerator(Context context, ClassEntry classEntry, AstClassEntry astClassEntry, boolean debug) {
         this.classEntry = classEntry;
         this.astClassEntry = astClassEntry;
         this.debug = debug;
@@ -26,25 +28,29 @@ public class ClassGenerator implements Generable {
 
         if (classEntry.isPredefined()) {
             sb.append(generatePredefinedCode());
-        } else {
-            // TODO
+        }
+        else {
+            MethodEntry symbolTableConstructor = classEntry.getConstructor();
+            AstMethodEntry astClassEntryConstructor = astClassEntry.getConstructor();
+            sb.append(generateConstructor(symbolTableConstructor, astClassEntryConstructor));
         }
 
+        // generar el constructor
 
 
         return sb.toString();
     }
 
-        private String generatePredefinedCode() {
+    private String generatePredefinedCode() {
         switch (classEntry.getName()) {
             case "IO":
                 return new IOGenerator(classEntry, debug).generate();
             case "Array":
                 // TODO
-                return  "Array_length: \n";
+                return "Array_length: \n";
             case "Str":
                 // TODO
-                return "Str_length: \nStr_concat: \n" ;
+                return "Str_length: \nStr_concat: \n";
             default:
                 return "";
         }
@@ -57,10 +63,28 @@ public class ClassGenerator implements Generable {
         helper.append(helper.getVirtualTableName(classEntry) + ":");
 
         // Apendear nombre de métodos
-        for (MethodEntry method: classEntry.getMethodList()) {
-            String methodName = helper.getLabel(method.getName(),classEntry.getName());
+        for (MethodEntry method : classEntry.getMethodList()) {
+            String methodName = helper.getLabel(method.getName(), classEntry.getName());
             helper.addDataLabel("", ".word", methodName);
         }
+
+        return helper.getString();
+    }
+
+    private String generateConstructor(MethodEntry symbolTableConstructor, AstMethodEntry astClassEntryConstructor) {
+        MipsHelper helper = new MipsHelper(debug);
+
+        helper.startText();
+        helper.append(helper.getLabel("constructor", classEntry.getName()) + ":");
+
+        // Generar codigo para las variables locales
+        helper.initMethod(symbolTableConstructor, classEntry);
+
+        // Generar codigo para las sentencias
+        helper.append(astClassEntryConstructor.generate(context, debug));
+
+        // Finalizar el constructor
+        helper.syscall(10);
 
         return helper.getString();
     }
