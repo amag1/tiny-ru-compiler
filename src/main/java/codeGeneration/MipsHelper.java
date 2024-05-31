@@ -112,6 +112,10 @@ public class MipsHelper {
         appendTab("addiu " + register1 + ", " + register2 + ", " + offset);
     }
 
+    public void add(String register1, String register2, String register3) {
+        appendTab("add " + register1 + ", " + register2 + ", " + register3);
+    }
+
     public void sw(String registerWithValue, String address) {
         appendTab("sw " + registerWithValue + ", " + address);
     }

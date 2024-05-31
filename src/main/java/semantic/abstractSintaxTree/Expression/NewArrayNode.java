@@ -56,7 +56,6 @@ public class NewArrayNode extends PrimaryNode {
 
     public String generate(Context context, boolean debug) {
         // Obtener datos necesarios
-
         MipsHelper helper = new MipsHelper(debug);
         helper.comment("New Array");
 
@@ -65,50 +64,37 @@ public class NewArrayNode extends PrimaryNode {
         helper.append(lengthExpression.generate(context.reset(), debug));
 
         // Guardar en t0 el tamaño del array
-        helper.sw("$t0", "$a0");
+        helper.sw("$a0", "($t0)");
 
         // Alocar memoria para el array
-        helper.mutilply("$a0", "$t0", "4");
+        helper.mutilply("$a0", "$a0", "4");
         helper.syscall(9);
 
         // Guardar direccion del array en t1
         helper.move("$t1", "$v0");
+        helper.add("$a0", "$a0", "$t1"); // Store in the accumolator the final addres of the array
 
         // Iterar sobre el array y setear el default
         helper.comment("start loop");
         helper.append("start_set_default_array:");
-        helper.branchOnEqual("a0", "$zero", "end_set_default_array");
+        helper.branchOnEqual("$a0", "$t1", "end_set_default_array");
 
+        helper.loadWord("$t3", "defaultValueInt"); // TODO
 
+        // Store in t3 the current address
+        // Decrease by 4 for fix the offset difference
+        helper.sw("$t3", "-4($a0)");
+        helper.addIU("$a0", "$a0", -4);
+        helper.jump("start_set_default_array");
+        helper.append("end_set_default_array:");
 
-        /**
-         li $a0, 20  # Tamaño del array
-
-         li $v0, 9  # syscall para alocar array
-         syscall
-
-         move $t1, $v0 # Guardar en t1 direccion7
-         start_set_default_array:
-
-         beqz $a0, end_set_default_array
-
-         --
-
-         li $t3, 5
-         sw $t3, ($t1)
-         addiu $t1, $t1, 4
-         addiu $a0, $a0, -4
-
-         j start_set_default_array
-         end_set_default_array:
-         **/
-        // TODO return cir
+        // Alocar array CIR
+        helper.allocateMemory(2*32); // Dos words
+        helper.sw("$t0", "0($v0)"); // Guardar tamaño en primer word
+        helper.sw("$t1", "4($v0)"); // Guardar direccion en primer word
 
         // Guardar variable array
-
-
-
-
+        helper.storeInAccumulator("($v0)");
 
         return helper.getString();
     }
