@@ -63,38 +63,17 @@ public class NewArrayNode extends PrimaryNode {
         helper.comment("Calculate array length");
         helper.append(lengthExpression.generate(context.reset(), debug));
 
+        // Pushear frame pointer
+        helper.push("$fp");
+
         // Guardar en t0 el tamaño del array
         helper.sw("$a0", "($t0)");
 
-        // Alocar memoria para el array
-        helper.mutilply("$a0", "$a0", "4");
-        helper.syscall(9);
+        // Pushear valor default
+        helper.loadWord("$t0", "defaultValue"+ elementsType.getType());
+        helper.push("$t0");
 
-        // Guardar direccion del array en t1
-        helper.move("$t1", "$v0");
-        helper.add("$a0", "$a0", "$t1"); // Store in the accumolator the final addres of the array
-
-        // Iterar sobre el array y setear el default
-        helper.comment("start loop");
-        helper.append("start_set_default_array:");
-        helper.branchOnEqual("$a0", "$t1", "end_set_default_array");
-
-        helper.loadWord("$t3", "defaultValue"+ elementsType.getType());
-
-        // Store in t3 the current address
-        // Decrease by 4 for fix the offset difference
-        helper.sw("$t3", "-4($a0)");
-        helper.addIU("$a0", "$a0", -4);
-        helper.jump("start_set_default_array");
-        helper.append("end_set_default_array:");
-
-        // Alocar array CIR
-        helper.allocateMemory(2*32); // Dos words
-        helper.sw("$t0", "0($v0)"); // Guardar tamaño en primer word
-        helper.sw("$t1", "4($v0)"); // Guardar direccion en primer word
-
-        // Guardar variable array
-        helper.storeInAccumulator("($v0)");
+        helper.jumpAndLink("new_array");
 
         return helper.getString();
     }

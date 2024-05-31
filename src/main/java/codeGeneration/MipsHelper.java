@@ -240,6 +240,10 @@ public class MipsHelper {
         append("jalr " + register);
     }
 
+    public void jumpAndLink(String address) {
+        append("jal " + address);
+    }
+
     public void addDefaultValues() {
         startData();
 

@@ -35,6 +35,9 @@ public class CodeGenerator {
             sb.append(classGenerator.generate());
         }
 
+        // Generar codigo para nuevo array
+        sb.append(generateNewArray());
+
         return sb.toString();
     }
 
@@ -60,5 +63,47 @@ public class CodeGenerator {
         startHelper.addDefaultValues();
 
         return startHelper.getString();
+    }
+
+    public String generateNewArray() {
+        MipsHelper helper = new MipsHelper(debug);
+
+        helper.startText();
+        helper.append("new_array:");
+
+        // Alocar memoria para el array
+        helper.mutilply("$a0", "$a0", "4");
+        helper.syscall(9);
+
+        // Guardar direccion del array en t1
+        helper.move("$t1", "$v0");
+        helper.add("$a0", "$a0", "$t1"); // Store in the accumolator the final addres of the array
+
+        // Popear el valor default
+        helper.pop("$t3");
+
+        // Iterar sobre el array y setear el default
+        helper.comment("start loop");
+        helper.append("start_set_default_array:");
+        helper.branchOnEqual("$a0", "$t1", "end_set_default_array");
+
+        // Store in t3 the current address
+        // Decrease by 4 for fix the offset difference
+        helper.sw("$t3", "-4($a0)");
+        helper.addIU("$a0", "$a0", -4);
+        helper.jump("start_set_default_array");
+        helper.append("end_set_default_array:");
+
+        // Alocar array CIR
+        helper.allocateMemory(2*32); // Dos words
+        helper.sw("$t0", "0($v0)"); // Guardar tamaño en primer word
+        helper.sw("$t1", "4($v0)"); // Guardar direccion en primer word
+
+        // Guardar variable array
+        helper.storeInAccumulator("($v0)");
+
+        helper.jumpRegister("$ra");
+
+        return  helper.getString();
     }
 }
