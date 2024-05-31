@@ -1,5 +1,6 @@
 package semantic.abstractSintaxTree.Expression;
 
+import codeGeneration.MipsHelper;
 import exceptions.semantic.syntaxTree.*;
 import lexical.Token;
 import semantic.JsonHelper;
@@ -13,6 +14,8 @@ public class ArrayAccessNode extends PrimaryNode {
      * Expresion que representa el indice del array. Debe ser de tipo entero
      */
     private ExpressionNode index;
+
+    private VariableEntry variable;
 
     public ArrayAccessNode(Token arrayName, ExpressionNode index) {
         this.nodeType = "arrayAccess";
@@ -28,6 +31,8 @@ public class ArrayAccessNode extends PrimaryNode {
         if (arr == null) {
             throw new UndeclaredVariableAccessException(this.getToken());
         }
+
+        variable = arr;
 
         // Chequar si se puede acceder al atributo
         if (arr.isPrivate()) {
@@ -54,8 +59,41 @@ public class ArrayAccessNode extends PrimaryNode {
             throw new NonIntArrayIndexException(this.getToken());
         }
 
-        // TODO: hacer esto un poco mas bonito
         return new AttributeType(arr.getType().getType());
+    }
+
+    public String generate(Context context, boolean debug) {
+        MipsHelper helper = new MipsHelper(debug);
+
+        helper.comment("access to array");
+
+        helper.append(variable.loadWordByScope());
+        helper.loadAddress("$t0", "($a0)"); // Access to cir
+
+        // TODO check if valid index
+
+
+        helper.loadWord("$a0", "4($t0)"); // Access to element -- TODO
+
+        return helper.getString();
+    }
+
+    public String accessVariable(Context context, boolean debug) {
+        MipsHelper helper = new MipsHelper(debug);
+
+        helper.comment("access to array");
+
+        helper.append(variable.loadWordByScope());
+        helper.sw("$a0", "($t0)"); // Access to cir
+
+        helper.append(variable.loadWordByScope());
+        helper.loadAddress("$t0", "($a0)"); // Access to cir
+
+        // TODO check if valid index
+
+        helper.loadAddress("$a0", "4($t0)"); // Access to element -- TODO
+
+        return helper.getString();
     }
 
     public String toJson(int indentationIndex) {

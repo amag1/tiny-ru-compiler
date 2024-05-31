@@ -119,4 +119,22 @@ public class VariableEntry implements Json {
                 JsonHelper.json("position", this.getPosition(), identationIndex) +
                 "\n" + JsonHelper.getIdentationString(identationIndex - 1) + "}";
     }
+
+    public String loadWordByScope() {
+        switch (this.getScope()) {
+            case LOCAL:
+                return "lw $a0, -" + (4 * this.getPosition()) + "($fp)";
+            default:
+                return "";
+        }
+    }
+
+    public String loadAddresByScope() {
+        switch (this.getScope()) {
+            case LOCAL:
+                return "la $a0, -" + (4 * this.getPosition()) + "($fp)";
+            default:
+                return "";
+        }
+    }
 }
