@@ -67,11 +67,7 @@ public class ArrayAccessNode extends PrimaryNode {
 
         helper.comment("access to array");
 
-        helper.append(variable.loadWordByScope());
-        helper.loadAddress("$t0", "($a0)"); // Access to cir
-
-        // TODO check if valid index
-
+        helper.append(getArrayAddress(debug));
 
         helper.loadWord("$a0", "4($t0)"); // Access to element -- TODO
 
@@ -82,16 +78,20 @@ public class ArrayAccessNode extends PrimaryNode {
         MipsHelper helper = new MipsHelper(debug);
 
         helper.comment("access to array");
+        helper.append(getArrayAddress(debug));
 
-        helper.append(variable.loadWordByScope());
-        helper.sw("$a0", "($t0)"); // Access to cir
+        helper.loadAddress("$a0", "4($t0)"); // Access to element -- TODO
+
+        return helper.getString();
+    }
+
+    private String getArrayAddress(boolean debug) {
+        MipsHelper helper = new MipsHelper(debug);
 
         helper.append(variable.loadWordByScope());
         helper.loadAddress("$t0", "($a0)"); // Access to cir
 
         // TODO check if valid index
-
-        helper.loadAddress("$a0", "4($t0)"); // Access to element -- TODO
 
         return helper.getString();
     }
