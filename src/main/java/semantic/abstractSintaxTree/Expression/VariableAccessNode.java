@@ -54,7 +54,7 @@ public class VariableAccessNode extends PrimaryNode {
     public String generate(Context context, boolean debug) {
         switch (variable.getScope()) {
             case LOCAL:
-                return "lw $a0, -" + (4 * variable.getPosition()) + "($fp)";
+                return "lw $a0, -" + (4 * variable.getPosition() + 4) + "($fp)";
             default:
                 return "";
         }
@@ -63,7 +63,7 @@ public class VariableAccessNode extends PrimaryNode {
     public String accessVariable(Context context, boolean debug) {
         switch (variable.getScope()) {
             case LOCAL:
-                return "la $a0, -" + (4 * variable.getPosition()) + "($fp)";
+                return "la $a0, -" + (4 * variable.getPosition() + 4) + "($fp)";
             default:
                 return "";
         }

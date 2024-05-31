@@ -187,6 +187,8 @@ public class MipsHelper {
         append("main:");
 
         move("$fp", "$sp");
+        // Aunque no se use, pusheaoms el ra para mantener la estructura
+        push("$ra");
 
         // Pushea local vars
         for (VariableEntry var : method.getLocalVarList()) {

@@ -83,8 +83,10 @@ public class ClassGenerator implements Generable {
         // Generar codigo para las sentencias
         helper.append(astClassEntryConstructor.generate(context, debug));
 
-        // Finalizar el constructor
-        helper.syscall(10);
+        // El constructor guarda referencia a self
+        helper.pop("$a0");
+        helper.popLocalVariables(symbolTableConstructor);
+        helper.finishMethod();
 
         return helper.getString();
     }

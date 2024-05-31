@@ -109,8 +109,11 @@ public class VariableEntry implements Json {
             case "Int", "Bool":
                 helper.loadWord("$t0", "defaultValue" + this.type.getType());
                 break;
-            default:
+            case "Str", "Char":
                 helper.loadAddress("$t0", "defaultValue" + this.type.getType());
+                break;
+            default:
+                helper.loadAddress("$t0", "defaultValueStruct");
                 break;
         }
         helper.push("$t0");
