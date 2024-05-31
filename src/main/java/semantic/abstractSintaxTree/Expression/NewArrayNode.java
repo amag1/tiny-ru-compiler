@@ -79,7 +79,7 @@ public class NewArrayNode extends PrimaryNode {
         helper.append("start_set_default_array:");
         helper.branchOnEqual("$a0", "$t1", "end_set_default_array");
 
-        helper.loadWord("$t3", "defaultValueInt"); // TODO
+        helper.loadWord("$t3", "defaultValue"+ elementsType.getType());
 
         // Store in t3 the current address
         // Decrease by 4 for fix the offset difference
