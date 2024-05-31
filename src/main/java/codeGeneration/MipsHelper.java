@@ -242,15 +242,18 @@ public class MipsHelper {
 
     public void addDefaultValues() {
         startData();
-        Map<String, String> defaultValues = AttributeType.getDefaultValues();
-        for (Map.Entry<String, String> entry : defaultValues.entrySet()) {
-            if (entry.getKey().equals("Str") || entry.getKey().equals("Char")) {
-                addDataLabel("defaultValue" + entry.getKey(), ".asciiz", entry.getValue());
-            }
-            else {
-                addDataLabel("defaultValue" + entry.getKey(), ".word", entry.getValue());
-            }
-        }
+
+        // Add empty_str and blank_space labels
+        addDataLabel("empty_str", ".asciiz",  "\"\"");
+        addDataLabel("blank_space", ".asciiz",  "\" \"");
+
+        // Add labels that point to  empty_str and blank_space labels
+        addDataLabel("defaultValueStr",".word", "empty_str");
+        addDataLabel("defaultValueChar",".word", "blank_space");
+
+        // Add labels to int and bool defaults
+        addDataLabel("defaultValueInt",".word", "0");
+        addDataLabel("defaultValueBool",".word", "0");
     }
 
 }

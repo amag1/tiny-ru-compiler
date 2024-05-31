@@ -105,7 +105,8 @@ public class VariableEntry implements Json {
         // Obtener el offset de la variable
         // Generar el codigo
         helper.comment("Inicializar variable " + this.name);
-        helper.loadAddress("$t0", "defaultValue" + this.type.getType());
+        helper.loadWord("$t0", "defaultValue" + this.type.getType());
+
         helper.push("$t0");
     }
 
