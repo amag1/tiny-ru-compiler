@@ -95,7 +95,8 @@ public class ArrayAccessNode extends PrimaryNode {
 
         // Acceder al cir del array
         helper.append(variable.loadWordByScope());
-        helper.loadAddress("$t0", "($a0)");
+        helper.loadWord("$t0", "4($a0)");
+        helper.push("$t0");
 
         // Obtener el indice
         helper.comment("Calculate index expression");
@@ -103,7 +104,8 @@ public class ArrayAccessNode extends PrimaryNode {
 
         // TODO check if valid index
 
-        // Agregar el offset de indice al cir del array
+        // Agregar el offset de indice al comienzo del array
+        helper.pop("$t0");
         helper.mutilply("$a0", "$a0", "4");
         helper.add("$t0", "$t0", "$a0");
 
