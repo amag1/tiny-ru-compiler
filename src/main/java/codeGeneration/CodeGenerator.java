@@ -82,6 +82,9 @@ public class CodeGenerator {
         // Popear el valor default
         helper.pop("$t3");
 
+        // Popear el tamaño del array
+        helper.pop("$t0");
+
         // Iterar sobre el array y setear el default
         helper.comment("start loop");
         helper.append("start_set_default_array:");

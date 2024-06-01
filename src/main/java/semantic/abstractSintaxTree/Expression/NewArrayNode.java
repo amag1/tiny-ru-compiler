@@ -63,15 +63,14 @@ public class NewArrayNode extends PrimaryNode {
         helper.comment("Calculate array length");
         helper.append(lengthExpression.generate(context.reset(), debug));
 
-        // Pushear frame pointer
-        helper.push("$fp");
-
-        // Guardar en t0 el tamaño del array
+        // Pushear el tamaño del array
         helper.sw("$a0", "($t0)");
+        helper.push("$a0");
 
         // Pushear valor default
         helper.loadWord("$t0", "defaultValue"+ elementsType.getType());
         helper.push("$t0");
+
 
         helper.jumpAndLink("new_array");
 
