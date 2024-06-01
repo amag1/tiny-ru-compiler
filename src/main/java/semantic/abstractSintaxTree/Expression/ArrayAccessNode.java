@@ -69,7 +69,7 @@ public class ArrayAccessNode extends PrimaryNode {
 
         helper.append(getArrayAddress(context, debug));
 
-        helper.loadWord("$a0", "($t0)"); // Access to element -- TODO
+        helper.loadWord("$a0", "($t0)");
 
         return helper.getString();
     }
@@ -80,7 +80,7 @@ public class ArrayAccessNode extends PrimaryNode {
         helper.comment("access to array");
         helper.append(getArrayAddress(context, debug));
 
-        helper.loadAddress("$a0", "($t0)"); // Access to element -- TODO
+        helper.loadAddress("$a0", "($t0)");
 
         return helper.getString();
     }
