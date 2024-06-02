@@ -81,7 +81,7 @@ public class ClassGenerator implements Generable {
 
         // Generar codigo para las sentencias
         if (astClassEntryConstructor != null) {
-            helper.append(astClassEntryConstructor.generate(classEntry, symbolTableConstructor, debug));
+            helper.append(astClassEntryConstructor.generate(context, classEntry, symbolTableConstructor, debug));
         }
 
         // El constructor guarda referencia a self

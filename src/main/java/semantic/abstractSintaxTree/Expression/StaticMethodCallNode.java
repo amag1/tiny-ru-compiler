@@ -4,8 +4,6 @@ import codeGeneration.MipsHelper;
 import exceptions.semantic.syntaxTree.*;
 import exceptions.semantic.syntaxTree.ClassNotFoundException;
 import lexical.Token;
-import lexical.Type;
-import location.Location;
 import semantic.JsonHelper;
 import semantic.abstractSintaxTree.Context;
 import semantic.symbolTable.AttributeType;
@@ -75,13 +73,13 @@ public class StaticMethodCallNode extends CallableNode {
         super.setParameters(parameters);
     }
 
-    public String generate(ClassEntry classEntry, MethodEntry method, boolean debug) {
+    public String generate(Context context, ClassEntry classEntry, MethodEntry method, boolean debug) {
         MipsHelper helper = new MipsHelper(debug);
         // pushear frame pointer
         helper.push("$fp");
         // Pushea parametros
         for (ExpressionNode param : getParameters()) {
-            String paramCode = param.generate(classEntry, method, debug);
+            String paramCode = param.generate(context, classEntry, method, debug);
             helper.append(paramCode);
             helper.push("$a0");
         }

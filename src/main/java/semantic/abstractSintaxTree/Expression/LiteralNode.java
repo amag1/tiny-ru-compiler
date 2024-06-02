@@ -59,7 +59,7 @@ public class LiteralNode extends OperatingNode {
                 "\n" + JsonHelper.getIdentationString(indentationIndex - 1) + "}";
     }
 
-    public String generate(ClassEntry classEntry, MethodEntry methodEntry, boolean debug) {
+    public String generate(Context context, ClassEntry classEntry, MethodEntry methodEntry, boolean debug) {
         MipsHelper helper = new MipsHelper(debug);
         String literalName = "literal_" + id;
         helper.startData();

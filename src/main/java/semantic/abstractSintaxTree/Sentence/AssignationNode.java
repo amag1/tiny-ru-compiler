@@ -42,12 +42,12 @@ public class AssignationNode extends SentenceNode {
         }
     }
 
-    public String generate(ClassEntry classEntry, MethodEntry methodEntry, boolean debug) {
+    public String generate(Context context, ClassEntry classEntry, MethodEntry methodEntry, boolean debug) {
         MipsHelper helper = new MipsHelper(debug);
 
         // Acceder a la direccion del lado izquierdo
         helper.comment("Acceder a direccion del lado izquierdo");
-        helper.append(leftSide.accessVariable(classEntry, methodEntry, debug));
+        helper.append(leftSide.accessVariable(context, classEntry, methodEntry, debug));
 
         // Pushear la direccion obtenida
         helper.comment("Pushear la direccion obtenida");
@@ -55,7 +55,7 @@ public class AssignationNode extends SentenceNode {
 
         // Generar el lado derecho de la asignacion
         helper.comment("Generar el lado derecho de la asignacion");
-        helper.append(rightSide.generate(classEntry, methodEntry, debug));
+        helper.append(rightSide.generate(context, classEntry, methodEntry, debug));
 
         // Popear la direccion del lado izquierdo
         helper.comment("Popear la direccion del lado izquierdo");

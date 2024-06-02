@@ -5,14 +5,11 @@ import exceptions.semantic.syntaxTree.AstException;
 import exceptions.semantic.syntaxTree.ClassNotFoundException;
 import exceptions.semantic.syntaxTree.OnlyVarException;
 import lexical.Token;
-import location.Location;
 import semantic.JsonHelper;
 import semantic.abstractSintaxTree.Context;
 import semantic.symbolTable.*;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Nodo de llamada a constructor
@@ -53,14 +50,14 @@ public class ConstructorCallNode extends CallableNode {
         return constructor.getReturnType();
     }
 
-    public String generate(ClassEntry classEntry, MethodEntry methodEntry, boolean debug) {
+    public String generate(Context context, ClassEntry classEntry, MethodEntry methodEntry, boolean debug) {
         MipsHelper helper = new MipsHelper(debug);
         // Pushear frame pointer
         helper.push("$fp");
         // pushear los parametros
         for (int i = 0; i < super.getParameters().size(); i++) {
             helper.comment("Generar parametro " + i);
-            helper.append(super.getParameters().get(i).generate(classEntry, methodEntry, debug));
+            helper.append(super.getParameters().get(i).generate(context, classEntry, methodEntry, debug));
             helper.push("$a0");
         }
 

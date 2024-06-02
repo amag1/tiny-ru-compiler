@@ -64,23 +64,23 @@ public class ArrayAccessNode extends PrimaryNode {
         return new AttributeType(arr.getType().getType());
     }
 
-    public String generate(ClassEntry classEntry, MethodEntry methodEntry, boolean debug) {
+    public String generate(Context context, ClassEntry classEntry, MethodEntry methodEntry, boolean debug) {
         MipsHelper helper = new MipsHelper(debug);
 
         helper.comment("access to array");
 
-        helper.append(getArrayAddress(classEntry, methodEntry, debug));
+        helper.append(getArrayAddress(context, classEntry, methodEntry, debug));
 
         helper.loadWord("$a0", "($t0)");
 
         return helper.getString();
     }
 
-    public String accessVariable(ClassEntry classEntry, MethodEntry methodEntry, boolean debug) {
+    public String accessVariable(Context context, ClassEntry classEntry, MethodEntry methodEntry, boolean debug) {
         MipsHelper helper = new MipsHelper(debug);
 
         helper.comment("access to array");
-        helper.append(getArrayAddress(classEntry, methodEntry, debug));
+        helper.append(getArrayAddress(context, classEntry, methodEntry, debug));
 
         helper.loadAddress("$a0", "($t0)");
 
@@ -93,7 +93,7 @@ public class ArrayAccessNode extends PrimaryNode {
      * @param debug
      * @return
      */
-    private String getArrayAddress(ClassEntry classEntry, MethodEntry methodEntry, boolean debug) {
+    private String getArrayAddress(Context context, ClassEntry classEntry, MethodEntry methodEntry, boolean debug) {
         MipsHelper helper = new MipsHelper(debug);
 
         // Acceder al cir del array
@@ -103,7 +103,7 @@ public class ArrayAccessNode extends PrimaryNode {
 
         // Obtener el indice
         helper.comment("Calculate index expression");
-        helper.append(index.generate(classEntry, methodEntry, debug));
+        helper.append(index.generate(context, classEntry, methodEntry, debug));
 
         // TODO check if valid index
 

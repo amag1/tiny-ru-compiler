@@ -51,10 +51,13 @@ public class CodeGenerator {
         AstMethodEntry start = ast.getStart();
         MethodEntry startMethod = symbolTable.getStart();
 
+        // Context
+        Context context = new Context(symbolTable);
+
         // Generar codigo para las variables locales
         // Actualiza el frame pointer
         startHelper.initStart(startMethod);
-        startHelper.append(start.generate(new ClassEntry(new Token()), startMethod, debug));
+        startHelper.append(start.generate(context, new ClassEntry(new Token()), startMethod, debug));
 
         // Popear todas las variables locales
         startHelper.popLocalVariables(startMethod);

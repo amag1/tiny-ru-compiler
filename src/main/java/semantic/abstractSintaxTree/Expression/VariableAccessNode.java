@@ -49,7 +49,7 @@ public class VariableAccessNode extends PrimaryNode {
         return var.getType();
     }
 
-    public String generate(ClassEntry classEntry, MethodEntry methodEntry, boolean debug) {
+    public String generate(Context context, ClassEntry classEntry, MethodEntry methodEntry, boolean debug) {
         return variable.loadWordByScope(debug, methodEntry);
     }
 
