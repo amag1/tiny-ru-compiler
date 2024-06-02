@@ -142,7 +142,7 @@ public class VariableEntry implements Json {
     public String loadWordByScope() {
         switch (this.getScope()) {
             case LOCAL:
-                return "lw $a0, -" + (4 * this.getPosition()) + "($fp)";
+                return "lw $a0, -" + (4 * (this.getPosition() + 1)) + "($fp)";
             default:
                 return "";
         }
