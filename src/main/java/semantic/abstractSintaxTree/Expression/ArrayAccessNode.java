@@ -6,6 +6,8 @@ import lexical.Token;
 import semantic.JsonHelper;
 import semantic.abstractSintaxTree.Context;
 import semantic.symbolTable.AttributeType;
+import semantic.symbolTable.ClassEntry;
+import semantic.symbolTable.MethodEntry;
 import semantic.symbolTable.VariableEntry;
 
 public class ArrayAccessNode extends PrimaryNode {
@@ -62,23 +64,23 @@ public class ArrayAccessNode extends PrimaryNode {
         return new AttributeType(arr.getType().getType());
     }
 
-    public String generate(Context context, boolean debug) {
+    public String generate(ClassEntry classEntry, MethodEntry methodEntry, boolean debug) {
         MipsHelper helper = new MipsHelper(debug);
 
         helper.comment("access to array");
 
-        helper.append(getArrayAddress(context, debug));
+        helper.append(getArrayAddress(classEntry, methodEntry, debug));
 
         helper.loadWord("$a0", "($t0)");
 
         return helper.getString();
     }
 
-    public String accessVariable(Context context, boolean debug) {
+    public String accessVariable(ClassEntry classEntry, MethodEntry methodEntry, boolean debug) {
         MipsHelper helper = new MipsHelper(debug);
 
         helper.comment("access to array");
-        helper.append(getArrayAddress(context, debug));
+        helper.append(getArrayAddress(classEntry, methodEntry, debug));
 
         helper.loadAddress("$a0", "($t0)");
 
@@ -87,10 +89,11 @@ public class ArrayAccessNode extends PrimaryNode {
 
     /**
      * Guarda en t0 la direccion del elemento del array a acceder
+     *
      * @param debug
      * @return
      */
-    private String getArrayAddress(Context context, boolean debug) {
+    private String getArrayAddress(ClassEntry classEntry, MethodEntry methodEntry, boolean debug) {
         MipsHelper helper = new MipsHelper(debug);
 
         // Acceder al cir del array
@@ -100,7 +103,7 @@ public class ArrayAccessNode extends PrimaryNode {
 
         // Obtener el indice
         helper.comment("Calculate index expression");
-        helper.append(index.generate(context,debug));
+        helper.append(index.generate(classEntry, methodEntry, debug));
 
         // TODO check if valid index
 

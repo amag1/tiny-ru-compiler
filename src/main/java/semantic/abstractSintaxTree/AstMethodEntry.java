@@ -9,6 +9,8 @@ import semantic.Json;
 import semantic.JsonHelper;
 import semantic.abstractSintaxTree.Sentence.SentenceNode;
 import semantic.symbolTable.AttributeType;
+import semantic.symbolTable.ClassEntry;
+import semantic.symbolTable.MethodEntry;
 import semantic.symbolTable.SymbolTableLookup;
 
 import javax.management.Attribute;
@@ -93,12 +95,12 @@ public class AstMethodEntry implements Json {
                 "\n" + JsonHelper.getIdentationString(indentationIndex - 1) + "}";
     }
 
-    public String generate(Context context, boolean debug) {
+    public String generate(ClassEntry classentry, MethodEntry methodEntry, boolean debug) {
         StringBuilder sb = new StringBuilder();
-        for (SentenceNode sentence: sentences) {
-            sb.append(sentence.generate(context, debug));
+        for (SentenceNode sentence : sentences) {
+            sb.append(sentence.generate(classentry, methodEntry, debug));
         }
 
-        return  sb.toString();
+        return sb.toString();
     }
 }

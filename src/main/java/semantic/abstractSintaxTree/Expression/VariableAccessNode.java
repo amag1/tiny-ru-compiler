@@ -56,7 +56,7 @@ public class VariableAccessNode extends PrimaryNode {
     }
 
     public String accessVariable(Context context, boolean debug) {
-        return variable.loadAddresByScope();
+        return variable.loadAddressByScope(debug);
     }
 
     public String toJson(int indentationIndex) {

@@ -148,10 +148,16 @@ public class VariableEntry implements Json {
         }
     }
 
-    public String loadAddresByScope() {
+    public String loadAddressByScope(boolean debug) {
+        MipsHelper helper = new MipsHelper(debug);
         switch (this.getScope()) {
             case LOCAL:
-                return "la $a0, -" + (4 * (this.getPosition() + 1)) + "($fp)";
+                helper.loadAddress("$a0", "-" + (4 * (this.getPosition() + 1)) + "($fp)");
+                return helper.getString();
+            case CLASS:
+                // Asumir que la direccion del cir fue pusheada justo antes
+                helper.loadWord("$a0", "4($sp)");
+                helper.addIU("$a0", "$a0", 4 * (this.getPosition() + 1));
             default:
                 return "";
         }

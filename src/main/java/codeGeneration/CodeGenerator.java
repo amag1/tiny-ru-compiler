@@ -1,5 +1,6 @@
 package codeGeneration;
 
+import lexical.Token;
 import semantic.abstractSintaxTree.*;
 import semantic.symbolTable.*;
 
@@ -26,7 +27,7 @@ public class CodeGenerator {
 
         // Generar codigo para start
         Context context = new Context(symbolTable);
-        sb.append(generateStart(context));
+        sb.append(generateStart());
 
         // Generar codigo pra las clases
         for (ClassEntry classEntry : symbolTable.getClasses()) {
@@ -43,7 +44,7 @@ public class CodeGenerator {
     }
 
 
-    public String generateStart(Context startContext) {
+    public String generateStart() {
         MipsHelper startHelper = new MipsHelper(debug);
 
         // Genera código del start
@@ -53,7 +54,7 @@ public class CodeGenerator {
         // Generar codigo para las variables locales
         // Actualiza el frame pointer
         startHelper.initStart(startMethod);
-        startHelper.append(start.generate(startContext, debug));
+        startHelper.append(start.generate(new ClassEntry(new Token()), startMethod, debug));
 
         // Popear todas las variables locales
         startHelper.popLocalVariables(startMethod);
@@ -99,7 +100,7 @@ public class CodeGenerator {
         helper.append("end_set_default_array:");
 
         // Alocar array CIR
-        helper.allocateMemory(2*32); // Dos words
+        helper.allocateMemory(2 * 32); // Dos words
         helper.sw("$t0", "0($v0)"); // Guardar tamaño en primer word
         helper.sw("$t1", "4($v0)"); // Guardar direccion en primer word
 
@@ -108,6 +109,6 @@ public class CodeGenerator {
 
         helper.jumpRegister("$ra");
 
-        return  helper.getString();
+        return helper.getString();
     }
 }

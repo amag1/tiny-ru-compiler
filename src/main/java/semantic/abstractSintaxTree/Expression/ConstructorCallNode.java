@@ -53,14 +53,14 @@ public class ConstructorCallNode extends CallableNode {
         return constructor.getReturnType();
     }
 
-    public String generate(Context context, boolean debug) {
+    public String generate(ClassEntry classEntry, MethodEntry methodEntry, boolean debug) {
         MipsHelper helper = new MipsHelper(debug);
         // Pushear frame pointer
         helper.push("$fp");
         // pushear los parametros
         for (int i = 0; i < super.getParameters().size(); i++) {
             helper.comment("Generar parametro " + i);
-            helper.append(super.getParameters().get(i).generate(context, debug));
+            helper.append(super.getParameters().get(i).generate(classEntry, methodEntry, debug));
             helper.push("$a0");
         }
 

@@ -5,6 +5,8 @@ import semantic.JsonHelper;
 import semantic.abstractSintaxTree.Context;
 import semantic.abstractSintaxTree.Expression.ExpressionNode;
 import semantic.symbolTable.AttributeType;
+import semantic.symbolTable.ClassEntry;
+import semantic.symbolTable.MethodEntry;
 
 /**
  * Nodo de sentencia simple
@@ -37,10 +39,10 @@ public class SimpleSentenceNode extends SentenceNode {
                 "\n" + JsonHelper.getIdentationString(indentationIndex - 1) + "}";
     }
 
-    public  String generate(Context context, boolean debug) {
+    public String generate(ClassEntry classEntry, MethodEntry methodEntry, boolean debug) {
         if (expression != null) {
-            return expression.generate(context, debug);
+            return expression.generate(classEntry, methodEntry, debug);
         }
-        return  "";
+        return "";
     }
 }

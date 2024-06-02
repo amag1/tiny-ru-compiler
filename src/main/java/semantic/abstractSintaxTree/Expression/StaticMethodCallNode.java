@@ -75,17 +75,13 @@ public class StaticMethodCallNode extends CallableNode {
         super.setParameters(parameters);
     }
 
-    public String generate(Context context, boolean debug) {
-        // Buscar datos necesarios
-        ClassEntry classEntry = context.getClass(this.className.getLexem());
-        MethodEntry method = classEntry.getMethod(this.methodName.getLexem());
-
+    public String generate(ClassEntry classEntry, MethodEntry method, boolean debug) {
         MipsHelper helper = new MipsHelper(debug);
         // pushear frame pointer
         helper.push("$fp");
         // Pushea parametros
         for (ExpressionNode param : getParameters()) {
-            String paramCode = param.generate(context, debug);
+            String paramCode = param.generate(classEntry, method, debug);
             helper.append(paramCode);
             helper.push("$a0");
         }

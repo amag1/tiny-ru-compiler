@@ -4,6 +4,7 @@ import semantic.symbolTable.AttributeType;
 import semantic.symbolTable.ClassEntry;
 import semantic.symbolTable.MethodEntry;
 import semantic.symbolTable.VariableEntry;
+import semantic.abstractSintaxTree.Context;
 
 import java.util.List;
 import java.util.Map;
@@ -297,6 +298,11 @@ public class MipsHelper {
         for (VariableEntry entry : classEntry.getAttributesList()) {
             entry.initialize(this, (4 * (entry.getPosition() + 1)) + "($a0)");
         }
+    }
+
+    public void pushSelfAddress(ClassEntry classEntry, MethodEntry methodEntry) {
+        // Si estamos en un metodo cualquiera, la referencia a self estará antes de los parametros
+        // Si estamso en el constructor, la referencia a self esta despues de las variables locales
     }
 
 
