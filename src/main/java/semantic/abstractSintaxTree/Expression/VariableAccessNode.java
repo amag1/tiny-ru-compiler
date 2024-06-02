@@ -53,7 +53,7 @@ public class VariableAccessNode extends PrimaryNode {
         return variable.loadWordByScope(debug, methodEntry);
     }
 
-    public String accessVariable(ClassEntry classEntry, MethodEntry methodEntry, boolean debug) {
+    public String accessVariable(Context context, ClassEntry classEntry, MethodEntry methodEntry, boolean debug) {
         return variable.loadAddressByScope(debug, methodEntry);
     }
 

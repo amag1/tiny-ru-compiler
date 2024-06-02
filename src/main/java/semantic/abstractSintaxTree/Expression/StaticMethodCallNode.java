@@ -74,6 +74,10 @@ public class StaticMethodCallNode extends CallableNode {
     }
 
     public String generate(Context context, ClassEntry classEntry, MethodEntry method, boolean debug) {
+        // Buscar datos necesarios
+        ClassEntry targetClass = context.getClass(this.className.getLexem());
+        MethodEntry targetMethod = targetClass.getMethod(this.methodName.getLexem());
+
         MipsHelper helper = new MipsHelper(debug);
         // pushear frame pointer
         helper.push("$fp");
@@ -86,10 +90,10 @@ public class StaticMethodCallNode extends CallableNode {
 
 
         // Obtener el nombre de la virtual table
-        String classVt = helper.getVirtualTableName(this.className.getLexem());
+        String classVt = helper.getVirtualTableName(targetClass);
 
         // Calcular el offset
-        int offset = method.getPosition() * 4;
+        int offset = targetMethod.getPosition() * 4;
 
         // Jump a definición del método
         helper.loadAddress("$t0", classVt);
