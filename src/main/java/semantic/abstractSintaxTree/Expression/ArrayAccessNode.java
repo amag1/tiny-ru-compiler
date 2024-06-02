@@ -97,7 +97,7 @@ public class ArrayAccessNode extends PrimaryNode {
         MipsHelper helper = new MipsHelper(debug);
 
         // Acceder al cir del array
-        helper.append(variable.loadWordByScope());
+        helper.append(variable.loadWordByScope(debug, methodEntry));
         helper.loadWord("$t0", "4($a0)");
         helper.push("$t0");
 

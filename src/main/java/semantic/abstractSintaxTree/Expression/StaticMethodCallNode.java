@@ -88,7 +88,7 @@ public class StaticMethodCallNode extends CallableNode {
 
 
         // Obtener el nombre de la virtual table
-        String classVt = helper.getVirtualTableName(classEntry);
+        String classVt = helper.getVirtualTableName(this.className.getLexem());
 
         // Calcular el offset
         int offset = method.getPosition() * 4;

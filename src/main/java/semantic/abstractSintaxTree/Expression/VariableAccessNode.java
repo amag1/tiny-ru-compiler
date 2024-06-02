@@ -4,9 +4,7 @@ import exceptions.semantic.syntaxTree.*;
 import lexical.Token;
 import semantic.JsonHelper;
 import semantic.abstractSintaxTree.Context;
-import semantic.symbolTable.AttributeType;
-import semantic.symbolTable.Scope;
-import semantic.symbolTable.VariableEntry;
+import semantic.symbolTable.*;
 
 public class VariableAccessNode extends PrimaryNode {
     private String variableName;
@@ -51,12 +49,12 @@ public class VariableAccessNode extends PrimaryNode {
         return var.getType();
     }
 
-    public String generate(Context context, boolean debug) {
-        return variable.loadWordByScope();
+    public String generate(ClassEntry classEntry, MethodEntry methodEntry, boolean debug) {
+        return variable.loadWordByScope(debug, methodEntry);
     }
 
-    public String accessVariable(Context context, boolean debug) {
-        return variable.loadAddressByScope(debug);
+    public String accessVariable(ClassEntry classEntry, MethodEntry methodEntry, boolean debug) {
+        return variable.loadAddressByScope(debug, methodEntry);
     }
 
     public String toJson(int indentationIndex) {

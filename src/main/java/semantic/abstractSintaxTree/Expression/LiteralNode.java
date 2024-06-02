@@ -7,6 +7,8 @@ import lexical.Token;
 import semantic.JsonHelper;
 import semantic.abstractSintaxTree.Context;
 import semantic.symbolTable.AttributeType;
+import semantic.symbolTable.ClassEntry;
+import semantic.symbolTable.MethodEntry;
 
 
 /**
@@ -20,7 +22,6 @@ public class LiteralNode extends OperatingNode {
     private static int counter;
 
     private int id;
-
 
 
     public LiteralNode(Token token) {
@@ -58,7 +59,7 @@ public class LiteralNode extends OperatingNode {
                 "\n" + JsonHelper.getIdentationString(indentationIndex - 1) + "}";
     }
 
-    public String generate(Context context, boolean debug) {
+    public String generate(ClassEntry classEntry, MethodEntry methodEntry, boolean debug) {
         MipsHelper helper = new MipsHelper(debug);
         String literalName = "literal_" + id;
         helper.startData();
@@ -68,9 +69,13 @@ public class LiteralNode extends OperatingNode {
         String value = "";
         switch (attributeType.getType()) {
             case "Int":
-                type = ".word"; value = this.value; break;
+                type = ".word";
+                value = this.value;
+                break;
             case "Str", "Char":
-                type = ".asciiz"; value = "\"" + this.value + "\""; break;
+                type = ".asciiz";
+                value = "\"" + this.value + "\"";
+                break;
             case "Bool":
                 type = ".word";
                 value = this.value.equals("true") ? "1" : "0";
@@ -87,7 +92,6 @@ public class LiteralNode extends OperatingNode {
             helper.loadAddress("$t0", "($a0)");
             helper.loadWord("$a0", "($t0)");
         }
-
 
 
         return helper.getString();

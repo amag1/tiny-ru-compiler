@@ -45,8 +45,6 @@ public class AssignationNode extends SentenceNode {
     public String generate(ClassEntry classEntry, MethodEntry methodEntry, boolean debug) {
         MipsHelper helper = new MipsHelper(debug);
 
-        helper.pushSelfAddress(classEntry, methodEntry);
-
         // Acceder a la direccion del lado izquierdo
         helper.comment("Acceder a direccion del lado izquierdo");
         helper.append(leftSide.accessVariable(classEntry, methodEntry, debug));

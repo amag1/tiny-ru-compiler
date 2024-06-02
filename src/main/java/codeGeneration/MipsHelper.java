@@ -256,6 +256,10 @@ public class MipsHelper {
         return "VT_" + classEntry.getName();
     }
 
+    public String getVirtualTableName(String className) {
+        return "VT_" + className;
+    }
+
 
     public void jumpAndLinkRegister(String register) {
         append("jalr " + register);
@@ -298,11 +302,6 @@ public class MipsHelper {
         for (VariableEntry entry : classEntry.getAttributesList()) {
             entry.initialize(this, (4 * (entry.getPosition() + 1)) + "($a0)");
         }
-    }
-
-    public void pushSelfAddress(ClassEntry classEntry, MethodEntry methodEntry) {
-        // Si estamos en un metodo cualquiera, la referencia a self estará antes de los parametros
-        // Si estamso en el constructor, la referencia a self esta despues de las variables locales
     }
 
 
