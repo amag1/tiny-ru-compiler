@@ -19,12 +19,12 @@ public class LiteralNode extends OperatingNode {
 
     private static int counter;
 
-    private int number;
+    private int id;
 
 
 
     public LiteralNode(Token token) {
-        this.number = counter++;
+        this.id = counter++;
         this.token = token;
         this.attributeType = switch (token.getType()) {
             case INT_LITERAL -> AttributeType.IntType;
@@ -60,7 +60,7 @@ public class LiteralNode extends OperatingNode {
 
     public String generate(Context context, boolean debug) {
         MipsHelper helper = new MipsHelper(debug);
-        String literalName = "literal_" + number;
+        String literalName = "literal_" + id;
         helper.startData();
 
 

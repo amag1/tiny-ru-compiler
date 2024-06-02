@@ -112,6 +112,10 @@ public class MipsHelper {
         appendTab("addiu " + register1 + ", " + register2 + ", " + offset);
     }
 
+    public void add(String register1, String register2, String register3) {
+        appendTab("add " + register1 + ", " + register2 + ", " + register3);
+    }
+
     public void sw(String registerWithValue, String address) {
         appendTab("sw " + registerWithValue + ", " + address);
     }
@@ -146,6 +150,10 @@ public class MipsHelper {
     public void syscall(int number) {
         this.load("$v0", number);
         this.appendTab("syscall");
+    }
+
+    public void mutilply(String resRegister, String opRegister1, String opRegister2) {
+        append("mul " + resRegister + ", " + opRegister1 + ", " + opRegister2);
     }
 
     public void initMethod(MethodEntry method, ClassEntry classEntry) {
@@ -232,6 +240,10 @@ public class MipsHelper {
         append("jalr " + register);
     }
 
+    public void jumpAndLink(String address) {
+        append("jal " + address);
+    }
+
     public void addDefaultValues() {
         startData();
 
@@ -247,6 +259,5 @@ public class MipsHelper {
         addDataLabel("defaultValueInt",".word", "0");
         addDataLabel("defaultValueBool",".word", "0");
     }
-
 
 }

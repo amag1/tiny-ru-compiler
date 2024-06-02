@@ -1,5 +1,6 @@
 package semantic.abstractSintaxTree.Expression;
 
+import codeGeneration.MipsHelper;
 import exceptions.semantic.syntaxTree.*;
 import lexical.Token;
 import semantic.JsonHelper;
@@ -13,6 +14,8 @@ public class ArrayAccessNode extends PrimaryNode {
      * Expresion que representa el indice del array. Debe ser de tipo entero
      */
     private ExpressionNode index;
+
+    private VariableEntry variable;
 
     public ArrayAccessNode(Token arrayName, ExpressionNode index) {
         this.nodeType = "arrayAccess";
@@ -28,6 +31,8 @@ public class ArrayAccessNode extends PrimaryNode {
         if (arr == null) {
             throw new UndeclaredVariableAccessException(this.getToken());
         }
+
+        variable = arr;
 
         // Chequar si se puede acceder al atributo
         if (arr.isPrivate()) {
@@ -54,8 +59,57 @@ public class ArrayAccessNode extends PrimaryNode {
             throw new NonIntArrayIndexException(this.getToken());
         }
 
-        // TODO: hacer esto un poco mas bonito
         return new AttributeType(arr.getType().getType());
+    }
+
+    public String generate(Context context, boolean debug) {
+        MipsHelper helper = new MipsHelper(debug);
+
+        helper.comment("access to array");
+
+        helper.append(getArrayAddress(context, debug));
+
+        helper.loadWord("$a0", "($t0)");
+
+        return helper.getString();
+    }
+
+    public String accessVariable(Context context, boolean debug) {
+        MipsHelper helper = new MipsHelper(debug);
+
+        helper.comment("access to array");
+        helper.append(getArrayAddress(context, debug));
+
+        helper.loadAddress("$a0", "($t0)");
+
+        return helper.getString();
+    }
+
+    /**
+     * Guarda en t0 la direccion del elemento del array a acceder
+     * @param debug
+     * @return
+     */
+    private String getArrayAddress(Context context, boolean debug) {
+        MipsHelper helper = new MipsHelper(debug);
+
+        // Acceder al cir del array
+        helper.append(variable.loadWordByScope());
+        helper.loadWord("$t0", "4($a0)");
+        helper.push("$t0");
+
+        // Obtener el indice
+        helper.comment("Calculate index expression");
+        helper.append(index.generate(context,debug));
+
+        // TODO check if valid index
+
+        // Agregar el offset de indice al comienzo del array
+        helper.pop("$t0");
+        helper.mutilply("$a0", "$a0", "4");
+        helper.add("$t0", "$t0", "$a0");
+
+        return helper.getString();
     }
 
     public String toJson(int indentationIndex) {
