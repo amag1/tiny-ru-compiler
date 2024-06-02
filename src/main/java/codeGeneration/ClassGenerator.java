@@ -31,7 +31,10 @@ public class ClassGenerator implements Generable {
         }
         else {
             MethodEntry symbolTableConstructor = classEntry.getConstructor();
-            AstMethodEntry astClassEntryConstructor = astClassEntry.getConstructor();
+            AstMethodEntry astClassEntryConstructor = null;
+            if (astClassEntry != null) {
+                astClassEntryConstructor = astClassEntry.getConstructor();
+            }
             sb.append(generateConstructor(symbolTableConstructor, astClassEntryConstructor));
         }
 
@@ -81,7 +84,9 @@ public class ClassGenerator implements Generable {
         helper.initMethod(symbolTableConstructor, classEntry);
 
         // Generar codigo para las sentencias
-        helper.append(astClassEntryConstructor.generate(context, debug));
+        if (astClassEntryConstructor != null) {
+            helper.append(astClassEntryConstructor.generate(context, debug));
+        }
 
         // El constructor guarda referencia a self
         helper.pop("$a0");

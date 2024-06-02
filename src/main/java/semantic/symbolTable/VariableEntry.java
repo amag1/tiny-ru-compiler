@@ -138,7 +138,7 @@ public class VariableEntry implements Json {
     public String loadAddresByScope() {
         switch (this.getScope()) {
             case LOCAL:
-                return "la $a0, -" + 4 + (4 * this.getPosition()) + "($fp)";
+                return "la $a0, -" + (4 * (this.getPosition() + 1)) + "($fp)";
             default:
                 return "";
         }
