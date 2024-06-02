@@ -112,6 +112,10 @@ public class MipsHelper {
         appendTab("addiu " + register1 + ", " + register2 + ", " + offset);
     }
 
+    public void add(String register1, String register2, String register3) {
+        appendTab("add " + register1 + ", " + register2 + ", " + register3);
+    }
+
     public void sw(String registerWithValue, String address) {
         appendTab("sw " + registerWithValue + ", " + address);
     }
@@ -146,6 +150,10 @@ public class MipsHelper {
     public void syscall(int number) {
         this.load("$v0", number);
         this.appendTab("syscall");
+    }
+
+    public void mutilply(String resRegister, String opRegister1, String opRegister2) {
+        append("mul " + resRegister + ", " + opRegister1 + ", " + opRegister2);
     }
 
     public void initMethod(MethodEntry method, ClassEntry classEntry) {
@@ -252,17 +260,24 @@ public class MipsHelper {
         append("jalr " + register);
     }
 
+    public void jumpAndLink(String address) {
+        append("jal " + address);
+    }
+
     public void addDefaultValues() {
         startData();
-        Map<String, String> defaultValues = AttributeType.getDefaultValues();
-        for (Map.Entry<String, String> entry : defaultValues.entrySet()) {
-            if (entry.getKey().equals("Str") || entry.getKey().equals("Char")) {
-                addDataLabel("defaultValue" + entry.getKey(), ".asciiz", entry.getValue());
-            }
-            else {
-                addDataLabel("defaultValue" + entry.getKey(), ".word", entry.getValue());
-            }
-        }
+
+        // Add empty_str and blank_space labels
+        addDataLabel("empty_str", ".asciiz",  "\"\"");
+        addDataLabel("blank_space", ".asciiz",  "\" \"");
+
+        // Add labels that point to  empty_str and blank_space labels
+        addDataLabel("defaultValueStr",".word", "empty_str");
+        addDataLabel("defaultValueChar",".word", "blank_space");
+
+        // Add labels to int and bool defaults
+        addDataLabel("defaultValueInt",".word", "0");
+        addDataLabel("defaultValueBool",".word", "0");
     }
 
     public void popLocalVariables(MethodEntry method) {

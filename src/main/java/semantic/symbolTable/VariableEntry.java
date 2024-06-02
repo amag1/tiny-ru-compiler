@@ -105,17 +105,8 @@ public class VariableEntry implements Json {
         // Obtener el offset de la variable
         // Generar el codigo
         helper.comment("Inicializar variable " + this.name);
-        switch (this.type.getType()) {
-            case "Int", "Bool":
-                helper.loadWord("$t0", "defaultValue" + this.type.getType());
-                break;
-            case "Str", "Char":
-                helper.loadAddress("$t0", "defaultValue" + this.type.getType());
-                break;
-            default:
-                helper.loadAddress("$t0", "defaultValueStruct");
-                break;
-        }
+        helper.loadWord("$t0", "defaultValue" + this.type.getType());
+
         helper.push("$t0");
     }
 
@@ -128,5 +119,23 @@ public class VariableEntry implements Json {
                 JsonHelper.json("isInherited", this.isInherited, identationIndex) + "," +
                 JsonHelper.json("position", this.getPosition(), identationIndex) +
                 "\n" + JsonHelper.getIdentationString(identationIndex - 1) + "}";
+    }
+
+    public String loadWordByScope() {
+        switch (this.getScope()) {
+            case LOCAL:
+                return "lw $a0, -" + (4 * this.getPosition()) + "($fp)";
+            default:
+                return "";
+        }
+    }
+
+    public String loadAddresByScope() {
+        switch (this.getScope()) {
+            case LOCAL:
+                return "la $a0, -" + (4 * this.getPosition()) + "($fp)";
+            default:
+                return "";
+        }
     }
 }

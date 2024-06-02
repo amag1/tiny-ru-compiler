@@ -52,21 +52,11 @@ public class VariableAccessNode extends PrimaryNode {
     }
 
     public String generate(Context context, boolean debug) {
-        switch (variable.getScope()) {
-            case LOCAL:
-                return "lw $a0, -" + (4 * variable.getPosition() + 4) + "($fp)";
-            default:
-                return "";
-        }
+        return variable.loadWordByScope();
     }
 
     public String accessVariable(Context context, boolean debug) {
-        switch (variable.getScope()) {
-            case LOCAL:
-                return "la $a0, -" + (4 * variable.getPosition() + 4) + "($fp)";
-            default:
-                return "";
-        }
+        return variable.loadAddresByScope();
     }
 
     public String toJson(int indentationIndex) {

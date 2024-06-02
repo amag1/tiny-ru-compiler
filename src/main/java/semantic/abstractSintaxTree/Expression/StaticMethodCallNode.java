@@ -106,6 +106,7 @@ public class StaticMethodCallNode extends CallableNode {
         // Popear todos los parametros
         helper.addIU("$sp", "$sp", 4 * getParameters().size());
         helper.pop("$fp");
+
         return helper.getString();
     }
 }
