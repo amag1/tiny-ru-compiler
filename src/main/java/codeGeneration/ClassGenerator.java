@@ -18,6 +18,7 @@ public class ClassGenerator implements Generable {
         this.classEntry = classEntry;
         this.astClassEntry = astClassEntry;
         this.debug = debug;
+        this.context = context;
     }
 
     public String generate() {
