@@ -76,10 +76,6 @@ public class ClassGenerator implements Generable {
 
     private String generateConstructor(MethodEntry symbolTableConstructor, AstMethodEntry astClassEntryConstructor) {
         MipsHelper helper = new MipsHelper(debug);
-
-        helper.startText();
-        helper.append(helper.getLabel("constructor", classEntry.getName()) + ":");
-
         // Generar codigo para las variables locales
         helper.initMethod(symbolTableConstructor, classEntry);
 

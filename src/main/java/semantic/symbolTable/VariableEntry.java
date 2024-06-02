@@ -100,7 +100,7 @@ public class VariableEntry implements Json {
         this.scope = scope;
     }
 
-    public void initialize(MipsHelper helper, int offset) {
+    public void initialize(MipsHelper helper) {
         // Genera el codigo para instanciar con el valor default
         // Obtener el offset de la variable
         // Generar el codigo
@@ -113,6 +113,19 @@ public class VariableEntry implements Json {
         }
 
         helper.push("$t0");
+    }
+
+    public void initialize(MipsHelper helper, String address) {
+        // Supone que la variable esta en la direccion dada. Le asigna el valor default
+        helper.comment("Inicializar variable " + this.name);
+        if (this.type.isPrimitive()) {
+            helper.loadWord("$t0", "defaultValue" + this.type.getType());
+
+        }
+        else {
+            helper.loadWord("$t0", "defaultValueStruct");
+        }
+        helper.sw("$t0", address);
     }
 
     public String toJson(int identationIndex) {

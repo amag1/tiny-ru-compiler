@@ -190,4 +190,15 @@ public class ClassEntry implements Json {
         // 4 bytes para cada atributo
         return 4 + 4 * attributes.size();
     }
+
+    public List<VariableEntry> getAttributesList() {
+        List<VariableEntry> attributesList = new ArrayList<VariableEntry>();
+        for (VariableEntry attribute : attributes.values()) {
+            attributesList.add(attribute);
+        }
+
+        attributesList.sort((VariableEntry a1, VariableEntry a2) -> a1.getPosition() - a2.getPosition());
+
+        return attributesList;
+    }
 }

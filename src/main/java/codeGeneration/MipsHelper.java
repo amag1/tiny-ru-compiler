@@ -163,7 +163,7 @@ public class MipsHelper {
         String label;
         boolean isConstructor = false;
         if (method.getName().equals(".")) {
-            label = getLabel(classEntry.getName(), "constructor");
+            label = getLabel("constructor", classEntry.getName());
             isConstructor = true;
         }
         else {
@@ -176,7 +176,7 @@ public class MipsHelper {
 
         // Pushea local vars
         for (VariableEntry var : method.getLocalVarList()) {
-            var.initialize(this, getStackLocalVarOffset(method, var.getPosition()));
+            var.initialize(this);
         }
 
         // Si es el constructor, aloca memoria para el objeto
@@ -185,6 +185,7 @@ public class MipsHelper {
             // Si estamos en el constructor, la referencia a self estará luego de las variables locales
             // Esto no va a ser igual en el resto de los métodos (tiene que pasarla el llamador)
             push("$a0");
+            createCir(classEntry);
         }
     }
 
@@ -200,7 +201,7 @@ public class MipsHelper {
 
         // Pushea local vars
         for (VariableEntry var : method.getLocalVarList()) {
-            var.initialize(this, getStackLocalVarOffset(method, var.getPosition()));
+            var.initialize(this);
         }
     }
 
@@ -211,7 +212,6 @@ public class MipsHelper {
 
 
     /**
-     * @param method
      * @return el offset necesario para acceder al un parametro en el stack
      * desde el frame pointer
      */
@@ -285,6 +285,18 @@ public class MipsHelper {
 
     public void popLocalVariables(MethodEntry method) {
         addIU("$sp", "$sp", 4 * method.getLocalVarList().size());
+    }
+
+    private void createCir(ClassEntry classEntry) {
+        // Supone que en el acumulador tenemos un puntero a la direccion de memoria mas baja de la clase
+        // Primero le asigna a la direccion base la vtable de la clase
+        loadAddress("$t0", getVirtualTableName(classEntry));
+        sw("$t0", "0($a0)");
+
+        // Para cada variable local, inicializa con el valor por defecto
+        for (VariableEntry entry : classEntry.getAttributesList()) {
+            entry.initialize(this, (4 * (entry.getPosition() + 1)) + "($a0)");
+        }
     }
 
 
