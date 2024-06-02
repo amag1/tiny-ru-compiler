@@ -268,16 +268,19 @@ public class MipsHelper {
         startData();
 
         // Add empty_str and blank_space labels
-        addDataLabel("empty_str", ".asciiz",  "\"\"");
-        addDataLabel("blank_space", ".asciiz",  "\" \"");
+        addDataLabel("empty_str", ".asciiz", "\"\"");
+        addDataLabel("blank_space", ".asciiz", "\" \"");
 
         // Add labels that point to  empty_str and blank_space labels
-        addDataLabel("defaultValueStr",".word", "empty_str");
-        addDataLabel("defaultValueChar",".word", "blank_space");
+        addDataLabel("defaultValueStr", ".word", "empty_str");
+        addDataLabel("defaultValueChar", ".word", "blank_space");
 
         // Add labels to int and bool defaults
-        addDataLabel("defaultValueInt",".word", "0");
-        addDataLabel("defaultValueBool",".word", "0");
+        addDataLabel("defaultValueInt", ".word", "0");
+        addDataLabel("defaultValueBool", ".word", "0");
+
+        // Add data label for struct
+        addDataLabel("defaultValueStruct", ".word", "0");
     }
 
     public void popLocalVariables(MethodEntry method) {
