@@ -681,9 +681,8 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         if (contains(opAd)) {
             Token operator = opAd();
             ExpressionNode firstExpression = expMul();
-            ExpressionNode recursiveExpression = expAdPrima(firstExpression);
-
-            return ast.createBinaryOperationNode(operator, previousExpression, recursiveExpression);
+            BinaryOperationNode node = ast.createBinaryOperationNode(operator, previousExpression, firstExpression);
+            return expAdPrima(node);
         }
 
         return previousExpression;
@@ -705,9 +704,8 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         if (contains(opMul)) {
             Token operator = opMul();
             ExpressionNode firstExpression = expUn();
-            ExpressionNode recursiveExpression = expMulPrima(firstExpression);
-
-            return ast.createBinaryOperationNode(operator, operating, recursiveExpression);
+            BinaryOperationNode node = ast.createBinaryOperationNode(operator, operating, firstExpression);
+            return expMulPrima(node);
         }
 
         return operating;
