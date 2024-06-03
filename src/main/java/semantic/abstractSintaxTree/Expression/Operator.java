@@ -38,6 +38,20 @@ public class Operator implements Json {
         };
     }
 
+    // Toma un solo registro y genera el código de la operación
+    // Debe llamarse con operaciones unarias
+    // En todos los casos el resultado queda en el acumulador
+    public String generate(String register) {
+        return switch (operator.getLexem()) {
+            case "++" -> "addi " + register + ", " + register + ", 1";
+            case "--" -> "subi " + register + ", " + register + ", 1";
+            case "+" -> "add " + register + ", " + register + ", 0";
+            case "-" -> "sub " + register + ", $zero, " + register;
+            case "!" -> "xori " + register + ", " + register + ", 1";
+            default -> "nop";
+        };
+    }
+
     public Token getToken() {
         return operator;
     }
