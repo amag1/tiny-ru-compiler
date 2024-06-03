@@ -79,6 +79,10 @@ public class LiteralNode extends OperatingNode {
             case "Bool":
                 type = ".word";
                 value = this.value.equals("true") ? "1" : "0";
+                break;
+            default:
+                type = ".word";
+                value = "0";
         }
 
 
@@ -88,7 +92,7 @@ public class LiteralNode extends OperatingNode {
         helper.storeInAccumulator(literalName);
 
         // Al ser de tipo word es necesario especificar que se guarde el valor
-        if (attributeType.equals(AttributeType.IntType) || attributeType.equals(AttributeType.BoolType)) {
+        if (attributeType.equals(AttributeType.IntType) || attributeType.equals(AttributeType.BoolType) || attributeType.equals(AttributeType.NilType)) {
             helper.loadAddress("$t0", "($a0)");
             helper.loadWord("$a0", "($t0)");
         }
