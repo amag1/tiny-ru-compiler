@@ -52,6 +52,69 @@ public class Operator implements Json {
         };
     }
 
+    public String generate(String reg1, String reg2) {
+        return switch (operator.getLexem()) {
+            case "+" -> "add " + "$a0" + ", " + reg1 + ", " + reg2;
+            case "-" -> "sub " + "$a0" + ", " + reg1 + ", " + reg2;
+            case "*" -> "mul " + "$a0" + ", " + reg1 + ", " + reg2;
+            case "/" -> {
+                String code = "beq " + reg2 + ", $zero, exception_division_by_zero\n";
+                code += "div " + reg1 + ", " + reg2 + "\n";
+                code += "mflo $a0";
+
+                yield code;
+            }
+
+            case "%" -> {
+                String code = "beq " + reg2 + ", $zero, exception_division_by_zero\n";
+                code += "div " + reg1 + ", " + reg2 + "\n";
+                code += "mfhi $a0";
+
+                yield code;
+            }
+
+            case "==" -> {
+                // Resta los dos valores
+                String code = "sub $a0, " + reg1 + ", " + reg2 + "\n";
+                // Normaliza el resultado
+                code += "sltu $a0, $zero, $a0\n";
+
+                // Convierte 0 en 1 y cualquier otro valor en 0
+                code += "xori $a0, $a0, 1";
+
+                yield code;
+            }
+
+            case "!=" -> {
+                // Resta los dos valores
+                String code = "sub $a0, " + reg1 + ", " + reg2 + "\n";
+                // Normaliza el resultado
+                code += "sltu $a0, $zero, $a0";
+
+                yield code;
+            }
+
+            case ">" -> "slt $a0, " + reg2 + ", " + reg1;
+            // Al invertir los registros, se invierte el resultado
+            case "<" -> "slt $a0, " + reg1 + ", " + reg2;
+            case ">=" -> {
+                // Negacion de <
+                String code = "slt $a0, " + reg1 + ", " + reg2 + "\n";
+                code += "xori $a0, $a0, 1";
+                yield code;
+            }
+            case "<=" -> {
+                // Negacion de >
+                String code = "slt $a0, " + reg2 + ", " + reg1 + "\n";
+                code += "xori $a0, $a0, 1";
+                yield code;
+            }
+
+
+            default -> "nop";
+        };
+    }
+
     public Token getToken() {
         return operator;
     }

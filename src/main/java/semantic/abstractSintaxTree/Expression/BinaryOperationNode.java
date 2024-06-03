@@ -1,11 +1,14 @@
 package semantic.abstractSintaxTree.Expression;
 
+import codeGeneration.MipsHelper;
 import exceptions.semantic.syntaxTree.AstException;
 import exceptions.semantic.syntaxTree.BinaryTypeMismatchException;
 import lexical.Token;
 import semantic.JsonHelper;
 import semantic.abstractSintaxTree.Context;
 import semantic.symbolTable.AttributeType;
+import semantic.symbolTable.ClassEntry;
+import semantic.symbolTable.MethodEntry;
 
 import javax.management.Attribute;
 
@@ -53,6 +56,26 @@ public class BinaryOperationNode extends ExpressionNode {
         }
 
         return returnType;
+    }
+
+    public String generate(Context context, ClassEntry classEntry, MethodEntry methodEntry, boolean debug) {
+        MipsHelper helper = new MipsHelper(debug);
+        // Generar codigo para la subexpresion izquierda
+        helper.comment("Generar codigo para operando izquierdo de operacion binaria");
+        helper.append(leftOperating.generate(context, classEntry, methodEntry, debug));
+        helper.push("$a0");
+
+        // Generar codigo para la subexpresion derecha
+        helper.comment("Generar codigo para operando derecho de operacion binaria");
+        helper.append(rightOperating.generate(context, classEntry, methodEntry, debug));
+
+        helper.pop("$t0");
+
+        // Generar el codigo de la operacion
+        helper.comment("Generar codigo para la operacion binaria");
+        helper.append(operator.generate("$t0", "$a0"));
+
+        return helper.getString();
     }
 
     public String toJson(int indentationIndex) {
