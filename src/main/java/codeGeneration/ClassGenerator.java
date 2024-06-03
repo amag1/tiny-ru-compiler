@@ -37,6 +37,12 @@ public class ClassGenerator implements Generable {
                 astClassEntryConstructor = astClassEntry.getConstructor();
             }
             sb.append(generateConstructor(symbolTableConstructor, astClassEntryConstructor));
+
+            // Generar codigo para los metodos
+            for (MethodEntry method : classEntry.getMethodList()) {
+                AstMethodEntry astMethod = astClassEntry.getMethod(method.getName());
+                sb.append(generateMethod(method, astMethod));
+            }
         }
 
         // generar el constructor
@@ -88,6 +94,22 @@ public class ClassGenerator implements Generable {
         // El constructor guarda referencia a self
         helper.pop("$a0");
         helper.popLocalVariables(symbolTableConstructor);
+        helper.finishMethod();
+
+        return helper.getString();
+    }
+
+    private String generateMethod(MethodEntry method, AstMethodEntry astMethod) {
+        MipsHelper helper = new MipsHelper(debug);
+        // Generar codigo para las variables locales
+        helper.initMethod(method, classEntry);
+
+        // Generar codigo para las sentencias
+        if (astMethod != null) {
+            helper.append(astMethod.generate(context, classEntry, method, debug));
+        }
+
+        helper.popLocalVariables(method);
         helper.finishMethod();
 
         return helper.getString();
