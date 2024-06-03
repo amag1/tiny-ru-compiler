@@ -1,5 +1,6 @@
 package codeGeneration;
 
+import lexical.Token;
 import semantic.abstractSintaxTree.*;
 import semantic.symbolTable.*;
 
@@ -25,13 +26,14 @@ public class CodeGenerator {
         sb.append(macrosHelper.getString());
 
         // Generar codigo para start
+        Context context = new Context(symbolTable);
         sb.append(generateStart());
 
         // Generar codigo pra las clases
         for (ClassEntry classEntry : symbolTable.getClasses()) {
             // Obtener clase del ast
             AstClassEntry astClassEntry = ast.getClasses().get(classEntry.getName());
-            ClassGenerator classGenerator = new ClassGenerator(classEntry, astClassEntry, debug);
+            ClassGenerator classGenerator = new ClassGenerator(context, classEntry, astClassEntry, debug);
             sb.append(classGenerator.generate());
         }
 
@@ -49,13 +51,16 @@ public class CodeGenerator {
         AstMethodEntry start = ast.getStart();
         MethodEntry startMethod = symbolTable.getStart();
 
-        Context startContext = new Context(symbolTable);
+        // Context
+        Context context = new Context(symbolTable);
 
         // Generar codigo para las variables locales
         // Actualiza el frame pointer
         startHelper.initStart(startMethod);
-        startHelper.append(start.generate(startContext, debug));
+        startHelper.append(start.generate(context, new ClassEntry(new Token()), startMethod, debug));
 
+        // Popear todas las variables locales
+        startHelper.popLocalVariables(startMethod);
 
         // Finaliza el programa
         startHelper.syscall(10);
@@ -98,7 +103,7 @@ public class CodeGenerator {
         helper.append("end_set_default_array:");
 
         // Alocar array CIR
-        helper.allocateMemory(2*32); // Dos words
+        helper.allocateMemory(2 * 32); // Dos words
         helper.sw("$t0", "0($v0)"); // Guardar tamaño en primer word
         helper.sw("$t1", "4($v0)"); // Guardar direccion en primer word
 
@@ -107,6 +112,6 @@ public class CodeGenerator {
 
         helper.jumpRegister("$ra");
 
-        return  helper.getString();
+        return helper.getString();
     }
 }

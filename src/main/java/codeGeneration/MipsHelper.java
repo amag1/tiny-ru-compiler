@@ -4,6 +4,7 @@ import semantic.symbolTable.AttributeType;
 import semantic.symbolTable.ClassEntry;
 import semantic.symbolTable.MethodEntry;
 import semantic.symbolTable.VariableEntry;
+import semantic.abstractSintaxTree.Context;
 
 import java.util.List;
 import java.util.Map;
@@ -159,14 +160,33 @@ public class MipsHelper {
     public void initMethod(MethodEntry method, ClassEntry classEntry) {
         startText();
         comment("init Method");
-        append(getLabel(method.getName(), classEntry.getName()) + ":");
+
+        String label;
+        boolean isConstructor = false;
+        if (method.getName().equals(".")) {
+            label = getLabel("constructor", classEntry.getName());
+            isConstructor = true;
+        }
+        else {
+            label = getLabel(method.getName(), classEntry.getName());
+        }
+        append(label + ":");
 
         move("$fp", "$sp");
         push("$ra");
 
         // Pushea local vars
         for (VariableEntry var : method.getLocalVarList()) {
-            var.initialize(this, getStackLocalVarOffset(method, var.getPosition()));
+            var.initialize(this);
+        }
+
+        // Si es el constructor, aloca memoria para el objeto
+        if (isConstructor) {
+            allocateMemory(classEntry.getNumberOfBytes());
+            // Si estamos en el constructor, la referencia a self estará luego de las variables locales
+            // Esto no va a ser igual en el resto de los métodos (tiene que pasarla el llamador)
+            push("$a0");
+            createCir(classEntry);
         }
     }
 
@@ -177,10 +197,12 @@ public class MipsHelper {
         append("main:");
 
         move("$fp", "$sp");
+        // Aunque no se use, pusheaoms el ra para mantener la estructura
+        push("$ra");
 
         // Pushea local vars
         for (VariableEntry var : method.getLocalVarList()) {
-            var.initialize(this, getStackLocalVarOffset(method, var.getPosition()));
+            var.initialize(this);
         }
     }
 
@@ -191,7 +213,6 @@ public class MipsHelper {
 
 
     /**
-     * @param method
      * @return el offset necesario para acceder al un parametro en el stack
      * desde el frame pointer
      */
@@ -235,6 +256,10 @@ public class MipsHelper {
         return "VT_" + classEntry.getName();
     }
 
+    public String getVirtualTableName(String className) {
+        return "VT_" + className;
+    }
+
 
     public void jumpAndLinkRegister(String register) {
         append("jalr " + register);
@@ -248,16 +273,36 @@ public class MipsHelper {
         startData();
 
         // Add empty_str and blank_space labels
-        addDataLabel("empty_str", ".asciiz",  "\"\"");
-        addDataLabel("blank_space", ".asciiz",  "\" \"");
+        addDataLabel("empty_str", ".asciiz", "\"\"");
+        addDataLabel("blank_space", ".asciiz", "\" \"");
 
         // Add labels that point to  empty_str and blank_space labels
-        addDataLabel("defaultValueStr",".word", "empty_str");
-        addDataLabel("defaultValueChar",".word", "blank_space");
+        addDataLabel("defaultValueStr", ".word", "empty_str");
+        addDataLabel("defaultValueChar", ".word", "blank_space");
 
         // Add labels to int and bool defaults
-        addDataLabel("defaultValueInt",".word", "0");
-        addDataLabel("defaultValueBool",".word", "0");
+        addDataLabel("defaultValueInt", ".word", "0");
+        addDataLabel("defaultValueBool", ".word", "0");
+
+        // Add data label for struct
+        addDataLabel("defaultValueStruct", ".word", "0");
     }
+
+    public void popLocalVariables(MethodEntry method) {
+        addIU("$sp", "$sp", 4 * method.getLocalVarList().size());
+    }
+
+    private void createCir(ClassEntry classEntry) {
+        // Supone que en el acumulador tenemos un puntero a la direccion de memoria mas baja de la clase
+        // Primero le asigna a la direccion base la vtable de la clase
+        loadAddress("$t0", getVirtualTableName(classEntry));
+        sw("$t0", "0($a0)");
+
+        // Para cada variable local, inicializa con el valor por defecto
+        for (VariableEntry entry : classEntry.getAttributesList()) {
+            entry.initialize(this, (4 * (entry.getPosition() + 1)) + "($a0)");
+        }
+    }
+
 
 }

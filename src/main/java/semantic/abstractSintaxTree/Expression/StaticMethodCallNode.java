@@ -4,8 +4,6 @@ import codeGeneration.MipsHelper;
 import exceptions.semantic.syntaxTree.*;
 import exceptions.semantic.syntaxTree.ClassNotFoundException;
 import lexical.Token;
-import lexical.Type;
-import location.Location;
 import semantic.JsonHelper;
 import semantic.abstractSintaxTree.Context;
 import semantic.symbolTable.AttributeType;
@@ -75,27 +73,27 @@ public class StaticMethodCallNode extends CallableNode {
         super.setParameters(parameters);
     }
 
-    public String generate(Context context, boolean debug) {
+    public String generate(Context context, ClassEntry classEntry, MethodEntry method, boolean debug) {
         // Buscar datos necesarios
-        ClassEntry classEntry = context.getClass(this.className.getLexem());
-        MethodEntry method = classEntry.getMethod(this.methodName.getLexem());
+        ClassEntry targetClass = context.getClass(this.className.getLexem());
+        MethodEntry targetMethod = targetClass.getMethod(this.methodName.getLexem());
 
         MipsHelper helper = new MipsHelper(debug);
         // pushear frame pointer
         helper.push("$fp");
         // Pushea parametros
         for (ExpressionNode param : getParameters()) {
-            String paramCode = param.generate(context, debug);
+            String paramCode = param.generate(context, classEntry, method, debug);
             helper.append(paramCode);
             helper.push("$a0");
         }
 
 
         // Obtener el nombre de la virtual table
-        String classVt = helper.getVirtualTableName(classEntry);
+        String classVt = helper.getVirtualTableName(targetClass);
 
         // Calcular el offset
-        int offset = method.getPosition() * 4;
+        int offset = targetMethod.getPosition() * 4;
 
         // Jump a definición del método
         helper.loadAddress("$t0", classVt);
@@ -103,7 +101,7 @@ public class StaticMethodCallNode extends CallableNode {
         helper.jumpAndLinkRegister("$t1");
 
         // Resetear la stack
-        // Popear todos los parametros y el fp
+        // Popear todos los parametros
         helper.addIU("$sp", "$sp", 4 * getParameters().size());
         helper.pop("$fp");
 

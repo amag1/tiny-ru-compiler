@@ -1,17 +1,15 @@
 package semantic.abstractSintaxTree.Expression;
 
+import codeGeneration.MipsHelper;
 import exceptions.semantic.syntaxTree.AstException;
 import exceptions.semantic.syntaxTree.ClassNotFoundException;
 import exceptions.semantic.syntaxTree.OnlyVarException;
 import lexical.Token;
-import location.Location;
 import semantic.JsonHelper;
 import semantic.abstractSintaxTree.Context;
 import semantic.symbolTable.*;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Nodo de llamada a constructor
@@ -50,6 +48,32 @@ public class ConstructorCallNode extends CallableNode {
         checkParametersMatch(context.reset(), parameters);
 
         return constructor.getReturnType();
+    }
+
+    public String generate(Context context, ClassEntry classEntry, MethodEntry methodEntry, boolean debug) {
+        MipsHelper helper = new MipsHelper(debug);
+        // Pushear frame pointer
+        helper.push("$fp");
+        // pushear los parametros
+        for (int i = 0; i < super.getParameters().size(); i++) {
+            helper.comment("Generar parametro " + i);
+            helper.append(super.getParameters().get(i).generate(context, classEntry, methodEntry, debug));
+            helper.push("$a0");
+        }
+
+        // Llamar al constructor
+        helper.comment("Llamar al constructor");
+        helper.append("jal " + this.token.getLexem() + "_constructor");
+
+        // Resetear stack
+        helper.comment("Resetear stack");
+        helper.addIU("$sp", "$sp", super.getParameters().size() * 4);
+
+        // Resetear frame pointer
+        helper.comment("Resetear frame pointer");
+        helper.pop("$fp");
+
+        return helper.getString();
     }
 
     public String toJson(int indentationIndex) {

@@ -2,14 +2,13 @@ package semantic.abstractSintaxTree.Expression;
 
 import codeGeneration.MipsHelper;
 import exceptions.semantic.syntaxTree.AstException;
-import exceptions.semantic.syntaxTree.NonIntArrayIndexException;
 import exceptions.semantic.syntaxTree.NonIntArrayLengthException;
 import lexical.Token;
-import lexical.Type;
-import location.Location;
 import semantic.JsonHelper;
 import semantic.abstractSintaxTree.Context;
 import semantic.symbolTable.AttributeType;
+import semantic.symbolTable.ClassEntry;
+import semantic.symbolTable.MethodEntry;
 
 /**
  * Nodo de creación de un nuevo array
@@ -54,21 +53,21 @@ public class NewArrayNode extends PrimaryNode {
                 "\n" + JsonHelper.getIdentationString(indentationIndex - 1) + "}";
     }
 
-    public String generate(Context context, boolean debug) {
+    public String generate(Context context, ClassEntry classEntry, MethodEntry methodEntry, boolean debug) {
         // Obtener datos necesarios
         MipsHelper helper = new MipsHelper(debug);
         helper.comment("New Array");
 
         // Generar codigo para la expresion del tamaño
         helper.comment("Calculate array length");
-        helper.append(lengthExpression.generate(context.reset(), debug));
+        helper.append(lengthExpression.generate(context, classEntry, methodEntry, debug));
 
         // Pushear el tamaño del array
         helper.sw("$a0", "($t0)");
         helper.push("$a0");
 
         // Pushear valor default
-        helper.loadWord("$t0", "defaultValue"+ elementsType.getType());
+        helper.loadWord("$t0", "defaultValue" + elementsType.getType());
         helper.push("$t0");
 
 

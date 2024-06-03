@@ -1,6 +1,5 @@
 package semantic.abstractSintaxTree;
 
-import codeGeneration.Generable;
 import exceptions.semantic.syntaxTree.AstException;
 import exceptions.semantic.syntaxTree.MissingReturnException;
 import exceptions.semantic.syntaxTree.ReturnInConstructorException;
@@ -9,9 +8,9 @@ import semantic.Json;
 import semantic.JsonHelper;
 import semantic.abstractSintaxTree.Sentence.SentenceNode;
 import semantic.symbolTable.AttributeType;
-import semantic.symbolTable.SymbolTableLookup;
+import semantic.symbolTable.ClassEntry;
+import semantic.symbolTable.MethodEntry;
 
-import javax.management.Attribute;
 import java.util.ArrayList;
 
 public class AstMethodEntry implements Json {
@@ -93,12 +92,12 @@ public class AstMethodEntry implements Json {
                 "\n" + JsonHelper.getIdentationString(indentationIndex - 1) + "}";
     }
 
-    public String generate(Context context, boolean debug) {
+    public String generate(Context context, ClassEntry classentry, MethodEntry methodEntry, boolean debug) {
         StringBuilder sb = new StringBuilder();
-        for (SentenceNode sentence: sentences) {
-            sb.append(sentence.generate(context, debug));
+        for (SentenceNode sentence : sentences) {
+            sb.append(sentence.generate(context, classentry, methodEntry, debug));
         }
 
-        return  sb.toString();
+        return sb.toString();
     }
 }
