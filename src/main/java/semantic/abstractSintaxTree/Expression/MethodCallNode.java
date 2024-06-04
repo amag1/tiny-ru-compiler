@@ -99,7 +99,7 @@ public class MethodCallNode extends CallableNode {
         helper.comment("Obtener ref a metodo");
 
         // Acceder al cir del objeto
-        int offset = -4 -getParameters().size();
+        int offset = 4 + 4 *getParameters().size();
         helper.loadWord("$a0", offset+"($sp)");
 
         // Acceder a la VT de la clase
@@ -114,6 +114,7 @@ public class MethodCallNode extends CallableNode {
         // Resetear la stack
         // Popear todos los parametros
         helper.addIU("$sp", "$sp", 4 * getParameters().size());
+        helper.pop("$t0"); // pop self
         helper.pop("$fp");
 
         return helper.getString();

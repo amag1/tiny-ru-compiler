@@ -79,6 +79,8 @@ public class StaticMethodCallNode extends CallableNode {
         MethodEntry targetMethod = targetClass.getMethod(this.methodName.getLexem());
 
         MipsHelper helper = new MipsHelper(debug);
+        helper.comment("Start method call " + methodName);
+
         // pushear frame pointer
         helper.push("$fp");
         // Pushea parametros
