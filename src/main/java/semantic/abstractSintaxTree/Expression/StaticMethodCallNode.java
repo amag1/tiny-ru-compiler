@@ -88,7 +88,6 @@ public class StaticMethodCallNode extends CallableNode {
             helper.push("$a0");
         }
 
-
         // Obtener el nombre de la virtual table
         String classVt = helper.getVirtualTableName(targetClass);
 

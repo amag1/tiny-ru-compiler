@@ -1,5 +1,6 @@
 package semantic.abstractSintaxTree.Expression;
 
+import codeGeneration.MipsHelper;
 import exceptions.semantic.syntaxTree.*;
 import lexical.Token;
 import lexical.Type;
@@ -19,6 +20,11 @@ import java.util.List;
 public class MethodCallNode extends CallableNode {
     private String methodName;
 
+    private boolean isChained;
+
+    private MethodEntry method;
+
+
     public MethodCallNode(Token methodName) {
         super(methodName);
         this.nodeType = "methodCall";
@@ -34,6 +40,8 @@ public class MethodCallNode extends CallableNode {
         }
 
         MethodEntry method = context.getMethod(this.methodName);
+        this.isChained = context.isChain();
+        this.method = method;
 
         if (method == null) {
             throw new MethodNotFoundException(token);
@@ -62,5 +70,52 @@ public class MethodCallNode extends CallableNode {
 
     public void setParameters(List<ExpressionNode> parameters) {
         super.setParameters(parameters);
+    }
+
+    public String generate(Context context, ClassEntry classEntry, MethodEntry method, boolean debug) {
+        MipsHelper helper = new MipsHelper(debug);
+
+        helper.push("$fp");
+
+        // Pushear el objeto
+        if (isChained) {
+            // El objeto está en el acumulador
+            helper.push("$a0");
+        } else {
+            // El objeto es self
+            int offset = 4 + 4 * method.getFormalParametersList().size(); // Offset para self
+            helper.push(offset+"($fp)");
+        }
+
+        // Pushea parametros
+        helper.comment("Pushear parametros");
+        for (ExpressionNode param : getParameters()) {
+            String paramCode = param.generate(context, classEntry, method, debug);
+            helper.append(paramCode);
+            helper.push("$a0");
+        }
+
+        // Obtener ref a metodo
+        helper.comment("Obtener ref a metodo");
+
+        // Acceder al cir del objeto
+        int offset = -4 -getParameters().size();
+        helper.loadWord("$a0", offset+"($sp)");
+
+        // Acceder a la VT de la clase
+        helper.loadWord("$a0", "($a0)");
+
+        // Llamar al método
+        offset = method.getPosition() * 4;
+        helper.loadWord("$t1", offset + "($a0)");
+        helper.jumpAndLinkRegister("$t1");
+
+
+        // Resetear la stack
+        // Popear todos los parametros
+        helper.addIU("$sp", "$sp", 4 * getParameters().size());
+        helper.pop("$fp");
+
+        return helper.getString();
     }
 }
