@@ -5,6 +5,8 @@ import lexical.Token;
 import semantic.abstractSintaxTree.AbstractSyntaxNode;
 import semantic.abstractSintaxTree.Context;
 import semantic.symbolTable.AttributeType;
+import semantic.symbolTable.ClassEntry;
+import semantic.symbolTable.MethodEntry;
 
 /**
  * Clase que representa un nodo de una expresión en el AST
@@ -31,6 +33,11 @@ public abstract class ExpressionNode extends AbstractSyntaxNode {
     public Token getToken() {
         return token;
     }
+
+    public String accessVariable(Context context, ClassEntry classEntry, MethodEntry methodEntry, boolean debug) {
+        return "";
+    }
+
 
     protected void setToken(Token token) {
         this.token = token;
