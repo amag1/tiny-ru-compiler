@@ -1,5 +1,6 @@
 package semantic.abstractSintaxTree.Expression;
 
+import codeGeneration.MipsHelper;
 import exceptions.semantic.syntaxTree.AstException;
 import exceptions.semantic.syntaxTree.BinaryTypeMismatchException;
 import exceptions.semantic.syntaxTree.SelfAccessInStaticMethod;
@@ -62,6 +63,19 @@ public class SelfAccess extends PrimaryNode {
         Context selfContext = context.clone();
         selfContext.setSelfAccess(true);
         return node.getAttributeType(selfContext);
+    }
+
+    public String generate(Context context, ClassEntry classEntry, MethodEntry method, boolean debug) {
+        MipsHelper helper = new MipsHelper(debug);
+        int offset = 4 + 4 * method.getFormalParametersList().size(); // Offset para self
+        helper.loadWord("$a0", offset+"($fp)");
+        helper.push("$a0");
+
+        if (node != null) {
+            helper.append(node.generate(context, classEntry, method, debug));
+        }
+
+        return helper.getString();
     }
 }
 
