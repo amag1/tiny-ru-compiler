@@ -307,4 +307,8 @@ public class Context {
     public void setStatic(boolean aStatic) {
         isStatic = aStatic;
     }
+
+    public boolean isChain() {
+        return this.currentClassName == null;
+    }
 }

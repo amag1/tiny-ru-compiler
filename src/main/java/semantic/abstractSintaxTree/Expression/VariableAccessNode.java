@@ -50,6 +50,19 @@ public class VariableAccessNode extends PrimaryNode {
     }
 
     public String generate(Context context, ClassEntry classEntry, MethodEntry methodEntry, boolean debug) {
+        if (context.isChain()) {
+            return  generateFromAccumulator(context,classEntry,methodEntry,debug);
+        }
+        else  {
+            return generateFromScope(context,classEntry,methodEntry,debug);
+        }
+    }
+
+    private String generateFromAccumulator(Context context, ClassEntry classEntry, MethodEntry methodEntry, boolean debug) {
+        return  ""; // TODO
+    }
+
+    private String generateFromScope(Context context, ClassEntry classEntry, MethodEntry methodEntry, boolean debug) {
         return variable.loadWordByScope(debug, methodEntry);
     }
 
