@@ -40,6 +40,9 @@ public class CodeGenerator {
         // Generar codigo para nuevo array
         sb.append(generateNewArray());
 
+        // Generar codigo para excepciones
+        sb.append(generateExceptions());
+
         return sb.toString();
     }
 
@@ -111,6 +114,37 @@ public class CodeGenerator {
         helper.storeInAccumulator("($v0)");
 
         helper.jumpRegister("$ra");
+
+        return helper.getString();
+    }
+
+    public String generateExceptions() {
+        MipsHelper helper = new MipsHelper(debug);
+
+        helper.comment("Exceptions");
+        helper.comment("Division by zero");
+        helper.startText();
+        helper.append("exception_division_by_zero:");
+
+        helper.startData();
+        helper.append("exception_division_by_zero_msg: .asciiz \"Error: Division by zero\"");
+
+        helper.startText();
+        helper.loadAddress("$a0", "exception_division_by_zero_msg");
+        helper.syscall(4);
+        helper.syscall(10);
+
+
+        helper.comment("Index out of bounds");
+        helper.append("exception_index_out_of_bounds:");
+
+        helper.startData();
+        helper.append("exception_index_out_of_bounds_msg: .asciiz \"Error: Index out of bounds\"");
+
+        helper.startText();
+        helper.loadAddress("$a0", "exception_index_out_of_bounds_msg");
+        helper.syscall(4);
+        helper.syscall(10);
 
         return helper.getString();
     }

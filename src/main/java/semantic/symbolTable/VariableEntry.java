@@ -161,8 +161,12 @@ public class VariableEntry implements Json {
                 helper.addIU("$t0", "$t0", (4 * (this.getPosition() + 1)));
                 helper.loadWord("$a0", "0($t0)");
                 return helper.getString();
+            // Default equivale a parametros locales
             default:
-                return "";
+                offset = 4 * method.getFormalParametersList().size();
+                offset -= 4 * (this.getPosition());
+                helper.loadWord("$a0", offset + "($fp)");
+                return helper.getString();
         }
     }
 
@@ -189,7 +193,10 @@ public class VariableEntry implements Json {
                 helper.addIU("$a0", "$t0", (4 * (this.getPosition() + 1)));
                 return helper.getString();
             default:
-                return "";
+                offset = 4 * method.getLocalVarList().size();
+                offset -= 4 * (this.getPosition());
+                helper.loadAddress("$a0", offset + "($fp)");
+                return helper.getString();
         }
     }
 }
