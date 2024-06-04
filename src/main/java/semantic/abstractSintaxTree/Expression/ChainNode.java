@@ -1,6 +1,5 @@
 package semantic.abstractSintaxTree.Expression;
 
-import codeGeneration.MipsHelper;
 import exceptions.semantic.syntaxTree.AstException;
 import exceptions.semantic.syntaxTree.VoidAccessException;
 import lexical.Token;
@@ -9,8 +8,6 @@ import location.Location;
 import semantic.JsonHelper;
 import semantic.abstractSintaxTree.Context;
 import semantic.symbolTable.AttributeType;
-import semantic.symbolTable.ClassEntry;
-import semantic.symbolTable.MethodEntry;
 
 /**
  * Nodo encadenado
@@ -23,8 +20,6 @@ public class ChainNode extends PrimaryNode {
     private PrimaryNode parentNode;
     private PrimaryNode childrenNode;
 
-    AttributeType parentType;
-
     public ChainNode(PrimaryNode parentNode, PrimaryNode childrenNode) {
         this.nodeType = "chain";
         this.parentNode = parentNode;
@@ -36,7 +31,7 @@ public class ChainNode extends PrimaryNode {
         // Obtener el tipo del nodo padre
         Context parentContext = context.clone();
         parentContext.setOnlyVar(false);
-        this.parentType = this.parentNode.getAttributeType(parentContext);
+        AttributeType parentType = this.parentNode.getAttributeType(parentContext);
 
         // Si el padre es de tipo void (null), entonces no existe el nodo hijo
         if (parentType == null || parentType.getType().equals("void")) {
@@ -56,22 +51,5 @@ public class ChainNode extends PrimaryNode {
                 JsonHelper.json("parentNode", this.parentNode, indentationIndex) + "," +
                 JsonHelper.json("childrenNode", this.childrenNode, indentationIndex) +
                 "\n" + JsonHelper.getIdentationString(indentationIndex - 1) + "}";
-    }
-
-    public String generate(Context context, ClassEntry classEntry, MethodEntry methodEntry, boolean debug) {
-        MipsHelper helper = new MipsHelper(debug);
-
-        // Generate code for the parent node and store it in the accumulator
-        helper.comment("Generate code for the parent node");
-        helper.append(this.parentNode.generate(context, classEntry, methodEntry, debug));
-
-        // TODO validar no nil
-
-        // Generar código para el hijo
-        Context childrendContext = context.clone();
-        childrendContext.setCurrentClassName(parentType.getType());
-        helper.append(this.childrenNode.generate(context, classEntry, methodEntry, debug));
-
-        return helper.getString();
     }
 }
