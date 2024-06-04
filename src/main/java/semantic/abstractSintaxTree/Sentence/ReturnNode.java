@@ -87,15 +87,5 @@ public class ReturnNode extends SentenceNode {
                 "\n" + JsonHelper.getIdentationString(indentationIndex - 1) + "}";
     }
 
-    public String generate(Context context, ClassEntry classEntry, MethodEntry methodEntry, boolean debug) {
-        MipsHelper helper = new MipsHelper(debug);
-        if (returnValue != null) {
-            helper.append(returnValue.generate(context, classEntry, methodEntry, debug));
-        }
 
-        helper.pop("$ra");
-        helper.jumpRegister("$ra");
-
-        return helper.getString();
-    }
 }

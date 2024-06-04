@@ -75,6 +75,7 @@ public class MethodCallNode extends CallableNode {
     public String generate(Context context, ClassEntry classEntry, MethodEntry method, boolean debug) {
         MipsHelper helper = new MipsHelper(debug);
 
+        helper.comment("Start method call " + methodName);
         helper.push("$fp");
 
         // Pushear el objeto
@@ -84,7 +85,7 @@ public class MethodCallNode extends CallableNode {
             helper.push("$a0");
         } else {
             // El objeto es self
-            int offset = 4 + 4 * method.getFormalParametersList().size(); // Offset para self
+            int offset = 4 + 4 * this.method.getFormalParametersList().size(); // Offset para self
             helper.loadWord("$a0", offset+"($fp)");
             helper.push("$a0");
         }
@@ -108,10 +109,9 @@ public class MethodCallNode extends CallableNode {
         helper.loadWord("$a0", "($a0)");
 
         // Llamar al método
-        offset = method.getPosition() * 4;
+        offset = this.method.getPosition() * 4;
         helper.loadWord("$t1", offset + "($a0)");
         helper.jumpAndLinkRegister("$t1");
-
 
         // Resetear la stack
         // Popear todos los parametros
