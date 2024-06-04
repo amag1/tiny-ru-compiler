@@ -54,7 +54,9 @@ public class Context {
 
         // El contexto es un encadenado
         if (this.currentClassName != null) {
-            return getAttributeInClass(attributeName, this.currentClassName);
+            VariableEntry var = getAttributeInClass(attributeName, this.currentClassName).copy();;
+            var.setScope(Scope.CHAIN);
+            return var;
         }
 
         // El contexto es el método start
