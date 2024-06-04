@@ -1,5 +1,6 @@
 package semantic.abstractSintaxTree.Sentence;
 
+import codeGeneration.MipsHelper;
 import exceptions.semantic.syntaxTree.AstException;
 import exceptions.semantic.syntaxTree.InvalidMethodReturn;
 import exceptions.semantic.syntaxTree.InvalidVoidMethodReturn;
@@ -10,6 +11,7 @@ import semantic.JsonHelper;
 import semantic.abstractSintaxTree.Context;
 import semantic.abstractSintaxTree.Expression.ExpressionNode;
 import semantic.symbolTable.AttributeType;
+import semantic.symbolTable.ClassEntry;
 import semantic.symbolTable.MethodEntry;
 
 /**
@@ -83,5 +85,17 @@ public class ReturnNode extends SentenceNode {
                 JsonHelper.json("nodeType", this.nodeType, indentationIndex) + "," +
                 JsonHelper.json("returnValue", returnValue, indentationIndex) +
                 "\n" + JsonHelper.getIdentationString(indentationIndex - 1) + "}";
+    }
+
+    public String generate(Context context, ClassEntry classEntry, MethodEntry methodEntry, boolean debug) {
+        MipsHelper helper = new MipsHelper(debug);
+        if (returnValue != null) {
+            helper.append(returnValue.generate(context, classEntry, methodEntry, debug));
+        }
+
+        helper.pop("$ra");
+        helper.jumpRegister("$ra");
+
+        return helper.getString();
     }
 }

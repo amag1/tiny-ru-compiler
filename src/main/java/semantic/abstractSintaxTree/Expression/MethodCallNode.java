@@ -78,13 +78,15 @@ public class MethodCallNode extends CallableNode {
         helper.push("$fp");
 
         // Pushear el objeto
+        helper.comment("Pushear self" );
         if (isChained) {
             // El objeto está en el acumulador
             helper.push("$a0");
         } else {
             // El objeto es self
             int offset = 4 + 4 * method.getFormalParametersList().size(); // Offset para self
-            helper.push(offset+"($fp)");
+            helper.loadWord("$a0", offset+"($fp)");
+            helper.push("$a0");
         }
 
         // Pushea parametros
