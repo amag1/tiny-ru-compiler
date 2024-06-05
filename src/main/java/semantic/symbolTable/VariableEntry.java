@@ -205,7 +205,7 @@ public class VariableEntry implements Json {
                 helper.loadAddress("$a0", "($t0)");
                 return helper.getString();
             default: // PARAM
-                offset = 4 + 4 * method.getLocalVarList().size();
+                offset = 4 * method.getFormalParametersList().size();
                 offset -= 4 * (this.getPosition());
                 helper.loadAddress("$a0", offset + "($fp)");
                 return helper.getString();
