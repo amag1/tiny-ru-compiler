@@ -21,6 +21,7 @@ public class MethodEntry implements Json {
     private Map<String, VariableEntry> localVariables;
     private int position;
     private boolean isRedefined;
+    private String generatedIn = "";
 
 
     public MethodEntry() {
@@ -159,5 +160,13 @@ public class MethodEntry implements Json {
         List<VariableEntry> localVars = new ArrayList<VariableEntry>(this.getLocalVariables().values());
         localVars.sort((VariableEntry v1, VariableEntry v2) -> v1.getPosition() - v2.getPosition());
         return localVars;
+    }
+
+    public String getGeneratedIn() {
+        return generatedIn;
+    }
+
+    public void setGeneratedIn(String generatedIn) {
+        this.generatedIn = generatedIn;
     }
 }

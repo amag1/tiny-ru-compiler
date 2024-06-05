@@ -41,12 +41,13 @@ public class ClassGenerator implements Generable {
 
             // Generar codigo para los metodos
             for (MethodEntry method : classEntry.getMethodList()) {
+                if (!method.getGeneratedIn().isEmpty()) {
+                    continue;
+                }
                 AstMethodEntry astMethod = astClassEntry.getMethod(method.getName());
                 sb.append(generateMethod(method, astMethod));
             }
         }
-
-
 
 
         return sb.toString();
@@ -75,7 +76,14 @@ public class ClassGenerator implements Generable {
 
         // Apendear nombre de métodos
         for (MethodEntry method : classEntry.getMethodList()) {
-            String methodName = helper.getLabel(method.getName(), classEntry.getName());
+            String className;
+            if (!method.getGeneratedIn().isEmpty()) {
+                className = method.getGeneratedIn();
+            }
+            else {
+                className = classEntry.getName();
+            }
+            String methodName = helper.getLabel(method.getName(), className);
             helper.addDataLabel("", ".word", methodName);
         }
 
