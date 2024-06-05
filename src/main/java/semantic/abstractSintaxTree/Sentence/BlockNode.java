@@ -1,8 +1,11 @@
 package semantic.abstractSintaxTree.Sentence;
 
+import codeGeneration.MipsHelper;
 import exceptions.semantic.syntaxTree.AstException;
 import semantic.JsonHelper;
 import semantic.abstractSintaxTree.Context;
+import semantic.symbolTable.ClassEntry;
+import semantic.symbolTable.MethodEntry;
 
 import java.util.List;
 
@@ -34,6 +37,16 @@ public class BlockNode extends SentenceNode {
                 setReturn(true);
             }
         }
+    }
+
+    public String generate(Context context, ClassEntry classEntry, MethodEntry methodEntry, boolean debug) {
+        MipsHelper helper = new MipsHelper(debug);
+        helper.comment("Generar codigo de bloque");
+        for (SentenceNode sentence : sentences) {
+            helper.append(sentence.generate(context, classEntry, methodEntry, debug));
+        }
+
+        return helper.getString();
     }
 
     public String toJson(int indentationIndex) {
