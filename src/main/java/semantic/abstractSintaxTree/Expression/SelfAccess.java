@@ -68,11 +68,22 @@ public class SelfAccess extends PrimaryNode {
     public String generate(Context context, ClassEntry classEntry, MethodEntry method, boolean debug) {
         MipsHelper helper = new MipsHelper(debug);
         int offset = 4 + 4 * method.getFormalParametersList().size(); // Offset para self
-        helper.loadWord("$a0", offset+"($fp)");
-        helper.push("$a0");
+        helper.loadWord("$a0", offset + "($fp)");
 
         if (node != null) {
             helper.append(node.generate(context, classEntry, method, debug));
+        }
+
+        return helper.getString();
+    }
+
+    public String accessVariable(Context context, ClassEntry classEntry, MethodEntry method, boolean debug) {
+        MipsHelper helper = new MipsHelper(debug);
+        int offset = 4 + 4 * method.getFormalParametersList().size(); // Offset para self
+        helper.loadWord("$a0", offset+"($fp)");
+
+        if (node != null) {
+            helper.append(node.accessVariable(context, classEntry, method, debug));
         }
 
         return helper.getString();

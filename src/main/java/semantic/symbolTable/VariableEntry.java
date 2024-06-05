@@ -163,8 +163,8 @@ public class VariableEntry implements Json {
                 return helper.getString();
             case CHAIN:
                 // Acceder a CIR del atributo en acumulador
-                helper.loadWord("$t0", "($a0)");
-                helper.addIU("$a0", "$a0", (4 * (this.getPosition() + 1)));
+                helper.loadAddress("$t0", "($a0)");
+                helper.addIU("$t0", "$t0", (4 * (this.getPosition() + 1)));
                 helper.loadWord("$a0", "($t0)");
                 return helper.getString();
             // Default equivale a parametros locales
@@ -200,8 +200,8 @@ public class VariableEntry implements Json {
                 return helper.getString();
             case CHAIN:
                 // Acceder a CIR del atributo en acumulador
-                helper.loadWord("$t0", "($a0)");
-                helper.addIU("$a0", "$a0", (4 * (this.getPosition() + 1)));
+                helper.loadAddress("$t0", "($a0)");
+                helper.addIU("$t0", "$t0", (4 * (this.getPosition() + 1)));
                 helper.loadAddress("$a0", "($t0)");
                 return helper.getString();
             default: // PARAM
