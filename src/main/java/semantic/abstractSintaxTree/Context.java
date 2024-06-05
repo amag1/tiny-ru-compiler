@@ -49,12 +49,16 @@ public class Context {
     public VariableEntry getAttribute(String attributeName) {
         // Si el contexto esta restringido a self, buscar en la clase actual
         if (this.isSelfAccess) {
-            return getAttributeInClass(attributeName, this.callingClassName);
+            VariableEntry var =  getAttributeInClass(attributeName, this.callingClassName).copy();
+            var.setScope(Scope.CHAIN); // Self access is acceded by chain
+            return var;
         }
 
         // El contexto es un encadenado
         if (this.currentClassName != null) {
-            return getAttributeInClass(attributeName, this.currentClassName);
+            VariableEntry var = getAttributeInClass(attributeName, this.currentClassName).copy();;
+            var.setScope(Scope.CHAIN);
+            return var;
         }
 
         // El contexto es el método start
@@ -306,5 +310,9 @@ public class Context {
 
     public void setStatic(boolean aStatic) {
         isStatic = aStatic;
+    }
+
+    public boolean isChain() {
+        return this.currentClassName != null;
     }
 }

@@ -3,5 +3,6 @@ package semantic.symbolTable;
 public enum Scope {
     CLASS,
     LOCAL,
-    PARAM
+    PARAM,
+    CHAIN
 }

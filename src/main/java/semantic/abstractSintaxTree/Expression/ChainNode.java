@@ -1,5 +1,6 @@
 package semantic.abstractSintaxTree.Expression;
 
+import codeGeneration.MipsHelper;
 import exceptions.semantic.syntaxTree.AstException;
 import exceptions.semantic.syntaxTree.VoidAccessException;
 import lexical.Token;
@@ -8,6 +9,8 @@ import location.Location;
 import semantic.JsonHelper;
 import semantic.abstractSintaxTree.Context;
 import semantic.symbolTable.AttributeType;
+import semantic.symbolTable.ClassEntry;
+import semantic.symbolTable.MethodEntry;
 
 /**
  * Nodo encadenado
@@ -51,5 +54,35 @@ public class ChainNode extends PrimaryNode {
                 JsonHelper.json("parentNode", this.parentNode, indentationIndex) + "," +
                 JsonHelper.json("childrenNode", this.childrenNode, indentationIndex) +
                 "\n" + JsonHelper.getIdentationString(indentationIndex - 1) + "}";
+    }
+
+    public String generate(Context context, ClassEntry classEntry, MethodEntry methodEntry, boolean debug) {
+        MipsHelper helper = new MipsHelper(debug);
+
+        // Generate code for the parent node and store it in the accumulator
+        helper.comment("Generate code for the parent node");
+        helper.append(this.parentNode.generate(context, classEntry, methodEntry, debug));
+
+
+        // TODO validar no nil
+
+        helper.append(this.childrenNode.generate(context, classEntry, methodEntry, debug));
+
+        return helper.getString();
+    }
+
+    public String accessVariable(Context context, ClassEntry classEntry, MethodEntry methodEntry, boolean debug) {
+        MipsHelper helper = new MipsHelper(debug);
+
+        // Generate code for the parent node and store it in the accumulator
+        helper.comment("Generate code for the parent node");
+        helper.append(this.parentNode.generate(context, classEntry, methodEntry, debug));
+
+
+        // TODO validar no nil
+
+        helper.append(this.childrenNode.accessVariable(context, classEntry, methodEntry, debug));
+
+        return helper.getString();
     }
 }

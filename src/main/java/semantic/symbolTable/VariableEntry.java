@@ -161,6 +161,12 @@ public class VariableEntry implements Json {
                 helper.addIU("$t0", "$t0", (4 * (this.getPosition() + 1)));
                 helper.loadWord("$a0", "0($t0)");
                 return helper.getString();
+            case CHAIN:
+                // Acceder a CIR del atributo en acumulador
+                helper.loadAddress("$t0", "($a0)");
+                helper.addIU("$t0", "$t0", (4 * (this.getPosition() + 1)));
+                helper.loadWord("$a0", "($t0)");
+                return helper.getString();
             // Default equivale a parametros locales
             default:
                 offset = 4 * method.getFormalParametersList().size();
@@ -192,11 +198,27 @@ public class VariableEntry implements Json {
                 helper.loadWord("$t0", offset + "($fp)");
                 helper.addIU("$a0", "$t0", (4 * (this.getPosition() + 1)));
                 return helper.getString();
-            default:
+            case CHAIN:
+                // Acceder a CIR del atributo en acumulador
+                helper.loadAddress("$t0", "($a0)");
+                helper.addIU("$t0", "$t0", (4 * (this.getPosition() + 1)));
+                helper.loadAddress("$a0", "($t0)");
+                return helper.getString();
+            default: // PARAM
                 offset = 4 * method.getLocalVarList().size();
                 offset -= 4 * (this.getPosition());
                 helper.loadAddress("$a0", offset + "($fp)");
                 return helper.getString();
         }
     }
+
+    public VariableEntry copy() {
+        return new VariableEntry(
+                this.type,
+                this.token,
+                this.position,
+                this.scope
+        );
+    }
+
 }

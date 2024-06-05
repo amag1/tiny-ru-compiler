@@ -79,6 +79,8 @@ public class StaticMethodCallNode extends CallableNode {
         MethodEntry targetMethod = targetClass.getMethod(this.methodName.getLexem());
 
         MipsHelper helper = new MipsHelper(debug);
+        helper.comment("Start method call " + methodName.getLexem());
+
         // pushear frame pointer
         helper.push("$fp");
         // Pushea parametros
@@ -87,7 +89,6 @@ public class StaticMethodCallNode extends CallableNode {
             helper.append(paramCode);
             helper.push("$a0");
         }
-
 
         // Obtener el nombre de la virtual table
         String classVt = helper.getVirtualTableName(targetClass);
