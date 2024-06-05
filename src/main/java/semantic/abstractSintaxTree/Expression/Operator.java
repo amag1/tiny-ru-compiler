@@ -1,5 +1,6 @@
 package semantic.abstractSintaxTree.Expression;
 
+import codeGeneration.MipsHelper;
 import lexical.Token;
 import semantic.Json;
 import semantic.symbolTable.AttributeType;
@@ -41,13 +42,27 @@ public class Operator implements Json {
     // Toma un solo registro y genera el código de la operación
     // Debe llamarse con operaciones unarias
     // En todos los casos el resultado queda en el acumulador
-    public String generate(String register) {
+    public String generate(String register, boolean debug) {
+        MipsHelper helper = new MipsHelper(debug);
+        helper.loadWord("$t1", "0(" + register + ")");
         return switch (operator.getLexem()) {
-            case "++" -> "addi " + register + ", " + register + ", 1";
-            case "--" -> "subi " + register + ", " + register + ", 1";
-            case "+" -> "add " + register + ", " + register + ", 0";
-            case "-" -> "sub " + register + ", $zero, " + register;
-            case "!" -> "xori " + register + ", " + register + ", 1";
+            case "++" -> {
+                // Aumentar en uno el valor en la posicion de memoria pasada
+                helper.append("addi $t1, $t1, 1");
+                helper.sw("$t1", "0(" + register + ")");
+                helper.move("$a0", "$t1");
+                yield helper.getString();
+            }
+            case "--" -> {
+                // Aumentar en uno el valor en la posicion de memoria pasada
+                helper.append("subi $t1, $t1, 1");
+                helper.sw("$t1", "0(" + register + ")");
+                helper.move("$a0", "$t1");
+                yield helper.getString();
+            }
+            case "+" -> "add $a0, $t1, 0";
+            case "-" -> "sub $a0, $zero, $t1";
+            case "!" -> "xori $a0, $t1, 1";
             default -> "nop";
         };
     }
