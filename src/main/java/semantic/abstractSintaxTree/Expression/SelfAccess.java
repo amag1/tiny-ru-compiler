@@ -67,7 +67,18 @@ public class SelfAccess extends PrimaryNode {
 
     public String generate(Context context, ClassEntry classEntry, MethodEntry method, boolean debug) {
         MipsHelper helper = new MipsHelper(debug);
-        int offset = 4 + 4 * method.getFormalParametersList().size(); // Offset para self
+        int offset;
+
+        if (method.getName() == null || method.getName().equals(".")) {
+            // Obtener offset
+            // Tiene en cuenta $ra
+            offset = -4;
+            offset -= 4 * method.getLocalVarList().size();
+        }
+        else {
+            offset = 4 + 4 * method.getFormalParametersList().size();
+        }
+
         helper.loadWord("$a0", offset + "($fp)");
 
         if (node != null) {
@@ -79,8 +90,20 @@ public class SelfAccess extends PrimaryNode {
 
     public String accessVariable(Context context, ClassEntry classEntry, MethodEntry method, boolean debug) {
         MipsHelper helper = new MipsHelper(debug);
-        int offset = 4 + 4 * method.getFormalParametersList().size(); // Offset para self
+        int offset;
+
+        if (method.getName() == null || method.getName().equals(".")) {
+            // Obtener offset
+            // Tiene en cuenta $ra
+            offset = -4;
+            offset -= 4 * method.getLocalVarList().size();
+        }
+        else {
+            offset = 4 + 4 * method.getFormalParametersList().size();
+        }
+
         helper.loadWord("$a0", offset+"($fp)");
+
 
         if (node != null) {
             helper.append(node.accessVariable(context, classEntry, method, debug));

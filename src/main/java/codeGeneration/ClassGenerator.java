@@ -33,6 +33,7 @@ public class ClassGenerator implements Generable {
         else {
             MethodEntry symbolTableConstructor = classEntry.getConstructor();
             AstMethodEntry astClassEntryConstructor = null;
+            // generar el constructor
             if (astClassEntry != null) {
                 astClassEntryConstructor = astClassEntry.getConstructor();
             }
@@ -45,7 +46,7 @@ public class ClassGenerator implements Generable {
             }
         }
 
-        // generar el constructor
+
 
 
         return sb.toString();
