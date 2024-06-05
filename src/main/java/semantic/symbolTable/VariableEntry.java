@@ -141,13 +141,13 @@ public class VariableEntry implements Json {
 
     public String loadWordByScope(boolean debug, MethodEntry method) {
         MipsHelper helper = new MipsHelper(debug);
+        int offset;
         switch (this.getScope()) {
             case LOCAL:
                 return "lw $a0, -" + (4 * (this.getPosition() + 1)) + "($fp)";
             case CLASS:
                 // Si estamos en un metodo cualquiera, la referencia a self estará antes de los parametros
                 // Si estamso en el constructor, la referencia a self esta despues de las variables locales
-                int offset;
                 if (method.getName() == null || method.getName().equals(".")) {
                     // Obtener offset
                     // Tiene en cuenta $ra
@@ -178,6 +178,7 @@ public class VariableEntry implements Json {
 
     public String loadAddressByScope(boolean debug, MethodEntry method) {
         MipsHelper helper = new MipsHelper(debug);
+        int offset;
         switch (this.getScope()) {
             case LOCAL:
                 helper.loadAddress("$a0", "-" + (4 * (this.getPosition() + 1)) + "($fp)");
@@ -185,7 +186,6 @@ public class VariableEntry implements Json {
             case CLASS:
                 // Si estamos en un metodo cualquiera, la referencia a self estará antes de los parametros
                 // Si estamso en el constructor, la referencia a self esta despues de las variables locales
-                int offset;
                 if (method.getName() == null || method.getName().equals(".")) {
                     // Obtener offset
                     // Tiene en cuenta $ra
