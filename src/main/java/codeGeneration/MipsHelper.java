@@ -46,6 +46,10 @@ public class MipsHelper {
         return entry + "_" + method;
     }
 
+    public String getEndLabel(String method, String entry) {
+        return entry + "_" + method + "_end";
+    }
+
     private void appendTab(String... elements) {
         sb.append("\t");
         for (String element : elements) {
