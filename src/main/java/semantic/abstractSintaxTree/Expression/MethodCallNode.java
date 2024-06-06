@@ -40,7 +40,7 @@ public class MethodCallNode extends CallableNode {
         }
 
         MethodEntry method = context.getMethod(this.methodName);
-        this.isChained = context.isChain() || context.isSelfContext();
+        this.isChained = context.isChain() || context.isSelfAccess();
         this.method = method;
 
         if (method == null) {
