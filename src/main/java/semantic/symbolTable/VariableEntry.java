@@ -141,13 +141,13 @@ public class VariableEntry implements Json {
 
     public String loadWordByScope(boolean debug, MethodEntry method) {
         MipsHelper helper = new MipsHelper(debug);
+        int offset;
         switch (this.getScope()) {
             case LOCAL:
                 return "lw $a0, -" + (4 * (this.getPosition() + 1)) + "($fp)";
             case CLASS:
                 // Si estamos en un metodo cualquiera, la referencia a self estará antes de los parametros
                 // Si estamso en el constructor, la referencia a self esta despues de las variables locales
-                int offset;
                 if (method.getName() == null || method.getName().equals(".")) {
                     // Obtener offset
                     // Tiene en cuenta $ra
@@ -178,6 +178,7 @@ public class VariableEntry implements Json {
 
     public String loadAddressByScope(boolean debug, MethodEntry method) {
         MipsHelper helper = new MipsHelper(debug);
+        int offset;
         switch (this.getScope()) {
             case LOCAL:
                 helper.loadAddress("$a0", "-" + (4 * (this.getPosition() + 1)) + "($fp)");
@@ -185,7 +186,6 @@ public class VariableEntry implements Json {
             case CLASS:
                 // Si estamos en un metodo cualquiera, la referencia a self estará antes de los parametros
                 // Si estamso en el constructor, la referencia a self esta despues de las variables locales
-                int offset;
                 if (method.getName() == null || method.getName().equals(".")) {
                     // Obtener offset
                     // Tiene en cuenta $ra
@@ -205,7 +205,7 @@ public class VariableEntry implements Json {
                 helper.loadAddress("$a0", "($t0)");
                 return helper.getString();
             default: // PARAM
-                offset = 4 * method.getLocalVarList().size();
+                offset = 4 * method.getFormalParametersList().size();
                 offset -= 4 * (this.getPosition());
                 helper.loadAddress("$a0", offset + "($fp)");
                 return helper.getString();

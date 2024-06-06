@@ -420,6 +420,15 @@ public class TinyRuSymbolTableHandler implements SymbolTableHandler {
                 currentClassMethod = parenMethod.copy();
                 currentClassMethod.setInherited(true);
                 currentClassMethod.setPosition(parenMethod.getPosition());
+
+                // Establecer la clase en la que fue definido originalmente el metodo
+                if (!parenMethod.getGeneratedIn().isEmpty()) {
+                    currentClassMethod.setGeneratedIn(parenMethod.getGeneratedIn());
+                }
+                else {
+                    currentClassMethod.setGeneratedIn(parent.getName());
+                }
+
                 currentClass.addInheritedMethod(currentClassMethod);
             }
 
