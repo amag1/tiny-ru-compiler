@@ -315,4 +315,8 @@ public class Context {
     public boolean isChain() {
         return this.currentClassName != null;
     }
+
+    public boolean isSelfAccess() {
+        return isSelfAccess;
+    }
 }
