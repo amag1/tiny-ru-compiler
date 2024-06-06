@@ -18,6 +18,7 @@ public class IfElseNode extends SentenceNode {
     private SentenceNode thenBody;
     private SentenceNode elseBody;
     private static int counter;
+    private int id;
 
     public IfElseNode(ExpressionNode condition, SentenceNode thenBody, SentenceNode elseBody) {
         this.nodeType = "ifSentence";
@@ -38,6 +39,8 @@ public class IfElseNode extends SentenceNode {
                 }
             }
         }
+        id = counter;
+        counter++;
     }
 
     /**
@@ -77,21 +80,20 @@ public class IfElseNode extends SentenceNode {
         helper.append(condition.generate(context, classEntry, methodEntry, debug));
         // Branch a else si falso
         helper.comment("Branch a else si falso");
-        helper.append("beqz $a0, else_" + counter);
+        helper.append("beqz $a0, else_" + id);
         // Generar codigo para then
         helper.comment("Generar codigo para then");
         helper.append(thenBody.generate(context, classEntry, methodEntry, debug));
         // Branch a fin
         helper.comment("Branch a fin");
-        helper.append("j endif_" + counter);
+        helper.append("j endif_" + id);
         // Generar codigo para else
         helper.comment("Generar codigo para else");
-        helper.append("else_" + counter + ":");
+        helper.append("else_" + id + ":");
         helper.append(elseBody.generate(context, classEntry, methodEntry, debug));
         // Fin
         helper.comment("Fin de if");
-        helper.append("endif_" + counter + ":");
-        counter++;
+        helper.append("endif_" + id + ":");
 
         return helper.getString();
     }
