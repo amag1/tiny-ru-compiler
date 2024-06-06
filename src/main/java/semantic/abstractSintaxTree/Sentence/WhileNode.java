@@ -1,11 +1,14 @@
 package semantic.abstractSintaxTree.Sentence;
 
+import codeGeneration.MipsHelper;
 import exceptions.semantic.syntaxTree.AstException;
 import exceptions.semantic.syntaxTree.ParameterTypeMismatchException;
 import semantic.JsonHelper;
 import semantic.abstractSintaxTree.Context;
 import semantic.abstractSintaxTree.Expression.ExpressionNode;
 import semantic.symbolTable.AttributeType;
+import semantic.symbolTable.ClassEntry;
+import semantic.symbolTable.MethodEntry;
 
 /**
  * Nodo de sentencia while
@@ -13,6 +16,8 @@ import semantic.symbolTable.AttributeType;
 public class WhileNode extends SentenceNode {
     private ExpressionNode condition;
     private SentenceNode loopBody;
+    private static int counter;
+    private int id;
 
     public WhileNode(ExpressionNode condition, SentenceNode loopBody) {
         this.nodeType = "whileSentence";
@@ -20,6 +25,8 @@ public class WhileNode extends SentenceNode {
         this.loopBody = loopBody;
 
         setToken(condition.getToken());
+        id = counter;
+        counter++;
     }
 
     /**
@@ -36,6 +43,29 @@ public class WhileNode extends SentenceNode {
         }
 
         loopBody.validate(context);
+    }
+
+
+    public String generate(Context context, ClassEntry classEntry, MethodEntry methodEntry, boolean debug) {
+        MipsHelper helper = new MipsHelper(debug);
+        helper.comment("Generar codigo de bucle while");
+        helper.append("while_" + id + ":");
+
+        helper.comment("Generar codigo para condicion de bucle while");
+        helper.append(condition.generate(context, classEntry, methodEntry, debug));
+
+        helper.comment("Si la condicion es falsa, saltar al final del bucle");
+        helper.append("beqz $a0, end_while_" + id);
+
+        helper.comment("Generar codigo para cuerpo del bucle while");
+        helper.append(loopBody.generate(context, classEntry, methodEntry, debug));
+
+        helper.comment("Volver al inicio del bucle");
+        helper.append("j while_" + id);
+
+        helper.append("end_while_" + id + ":");
+
+        return helper.getString();
     }
 
     public String toJson(int indentationIndex) {
