@@ -78,6 +78,19 @@ public class ReturnNode extends SentenceNode {
         setReturn(true);
     }
 
+    public String generate(Context context, ClassEntry classEntry, MethodEntry methodEntry, boolean debug) {
+        MipsHelper helper = new MipsHelper(debug);
+        helper.comment("Generar codigo de retorno");
+
+        if (returnValue != null) {
+            helper.append(returnValue.generate(context, classEntry, methodEntry, debug));
+        }
+
+        helper.append("j " + helper.getEndLabel(methodEntry.getName(), classEntry.getName()));
+
+        return helper.getString();
+    }
+
     public String toJson(int indentationIndex) {
         indentationIndex++;
 
