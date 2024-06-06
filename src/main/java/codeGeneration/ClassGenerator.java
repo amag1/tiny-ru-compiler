@@ -118,6 +118,8 @@ public class ClassGenerator implements Generable {
             helper.append(astMethod.generate(context, classEntry, method, debug));
         }
 
+        // Agregar etiqueta de fin de metodo
+        helper.append(helper.getEndLabel(method.getName(), classEntry.getName()) + ":");
         helper.popLocalVariables(method);
         helper.finishMethod();
 

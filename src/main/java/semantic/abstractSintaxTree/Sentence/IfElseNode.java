@@ -88,9 +88,12 @@ public class IfElseNode extends SentenceNode {
         helper.comment("Branch a fin");
         helper.append("j endif_" + id);
         // Generar codigo para else
-        helper.comment("Generar codigo para else");
+
         helper.append("else_" + id + ":");
-        helper.append(elseBody.generate(context, classEntry, methodEntry, debug));
+        if (elseBody != null) {
+            helper.comment("Generar codigo para else");
+            helper.append(elseBody.generate(context, classEntry, methodEntry, debug));
+        }
         // Fin
         helper.comment("Fin de if");
         helper.append("endif_" + id + ":");
