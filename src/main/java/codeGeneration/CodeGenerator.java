@@ -158,6 +158,18 @@ public class CodeGenerator {
         helper.syscall(4);
         helper.syscall(10);
 
+        helper.comment("Invalid array length");
+        helper.startText();
+        helper.append("exception_invalid_array_length:");
+
+        helper.startData();
+        helper.append("exception_invalid_array_length_msg: .asciiz \"Error: invalid array length\"");
+
+        helper.startText();
+        helper.loadAddress("$a0", "exception_invalid_array_length_msg");
+        helper.syscall(4);
+        helper.syscall(10);
+
         return helper.getString();
     }
 }
