@@ -72,13 +72,17 @@ public class LiteralNode extends OperatingNode {
                 type = ".word";
                 value = this.value;
                 break;
-            case "Str", "Char":
+            case "Str":
                 type = ".asciiz";
                 value = "\"" + this.value + "\"";
                 break;
             case "Bool":
                 type = ".word";
                 value = this.value.equals("true") ? "1" : "0";
+                break;
+            case  "Char":
+                type = ".word";
+                value = "'" + this.value + "'";
                 break;
             default:
                 type = ".word";
@@ -93,15 +97,8 @@ public class LiteralNode extends OperatingNode {
             helper.createStringCir(literalName);
             helper.loadAddress("$a0", "($t0)");
         } else {
-            helper.storeInAccumulator(literalName);
+            helper.loadWord("$a0", literalName);
         }
-
-        // Al ser de tipo word es necesario especificar que se guarde el valor
-        if (attributeType.equals(AttributeType.IntType) || attributeType.equals(AttributeType.BoolType) || attributeType.equals(AttributeType.NilType)) {
-            helper.loadAddress("$t0", "($a0)");
-            helper.loadWord("$a0", "($t0)");
-        }
-
 
         return helper.getString();
     }

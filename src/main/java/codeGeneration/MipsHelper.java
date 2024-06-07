@@ -278,11 +278,10 @@ public class MipsHelper {
 
         // Add empty_str and blank_space labels
         addDataLabel("empty_str", ".asciiz", "\"\"");
-        addDataLabel("blank_space", ".asciiz", "\" \"");
 
         // Add labels that point to  empty_str and blank_space labels
         addDataLabel("defaultValueStr", ".word", "empty_str");
-        addDataLabel("defaultValueChar", ".word", "blank_space");
+        addDataLabel("defaultValueChar", ".word", "' '");
 
         // Add labels to int and bool defaults
         addDataLabel("defaultValueInt", ".word", "0");

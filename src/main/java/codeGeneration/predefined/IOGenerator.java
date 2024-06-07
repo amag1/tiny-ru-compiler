@@ -78,7 +78,7 @@ public class IOGenerator implements Generable {
         helper.loadWord("$a0", paramOffset + "($fp)");
 
         helper.comment("Print string");
-        helper.syscall(4);
+        helper.syscall(11);
     }
 
     private void generateOutStrMethod(MethodEntry method) {
