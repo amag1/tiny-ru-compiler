@@ -107,13 +107,7 @@ public class VariableEntry implements Json {
         helper.comment("Inicializar variable " + this.name);
         if (this.type.isPrimitive()) {
             if (this.type.getType().equals("Str")) {
-                helper.allocateMemory(8);
-
-                helper.loadAddress("$t0", "VT_Str");
-                helper.sw("$t0", "0($a0)");
-                helper.loadAddress("$t0", "defaultValueStr");
-                helper.sw("$t0", "4($a0)");
-                helper.loadAddress("$t0", "($a0)");
+                helper.createStringCir("defaultValueStr");
             } else {
                 helper.loadWord("$t0", "defaultValue" + this.type.getType());
             }
@@ -130,11 +124,7 @@ public class VariableEntry implements Json {
         helper.comment("Inicializar variable " + this.name);
         if (this.type.isPrimitive()) {
             if (this.type.getType().equals("Str")) {
-                helper.allocateMemory(8);
-                helper.loadAddress("$t0", "VT_Str");
-                helper.sw("$t0", "0($a0)");
-                helper.loadAddress("$t0", "defaultValueStr");
-                helper.sw("$t0", "4($a0)");
+                helper.createStringCir("defaultValueStr");
             } else {
                 helper.loadWord("$t0", "defaultValue" + this.type.getType());
             }

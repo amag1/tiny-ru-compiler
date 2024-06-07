@@ -308,5 +308,14 @@ public class MipsHelper {
         }
     }
 
+    public void createStringCir(String labelValue) {
+        allocateMemory(8);
+        loadAddress("$t0", "VT_Str");
+        sw("$t0", "0($a0)");
+        loadAddress("$t0", labelValue);
+        sw("$t0", "4($a0)");
+        loadAddress("$t0", "($a0)");
+    }
+
 
 }
