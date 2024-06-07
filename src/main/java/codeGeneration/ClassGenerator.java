@@ -1,5 +1,6 @@
 package codeGeneration;
 
+import codeGeneration.predefined.StrGenerator;
 import semantic.abstractSintaxTree.AstClassEntry;
 import semantic.abstractSintaxTree.AstMethodEntry;
 import semantic.abstractSintaxTree.Context;
@@ -61,8 +62,7 @@ public class ClassGenerator implements Generable {
                 // TODO
                 return "Array_length: \n";
             case "Str":
-                // TODO
-                return "Str_length: \nStr_concat: \n";
+                return new StrGenerator(classEntry, debug).generate();
             default:
                 return "";
         }
