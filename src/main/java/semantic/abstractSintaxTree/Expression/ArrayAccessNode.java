@@ -96,7 +96,7 @@ public class ArrayAccessNode extends PrimaryNode {
     private String getArrayAddress(Context context, ClassEntry classEntry, MethodEntry methodEntry, boolean debug) {
         MipsHelper helper = new MipsHelper(debug);
 
-        // TODO validate nil
+        helper.checkNilPointer();
 
         // Acceder al cir del array
         helper.append(variable.loadWordByScope(debug, methodEntry));
@@ -119,7 +119,6 @@ public class ArrayAccessNode extends PrimaryNode {
         helper.pop("$t1");
         helper.append("slt  $s0, $t1, $a0");
         helper.append("bne $s0, $zero, exception_index_out_of_bounds");
-
 
         // Agregar el offset de indice al comienzo del array
         helper.pop("$t0");

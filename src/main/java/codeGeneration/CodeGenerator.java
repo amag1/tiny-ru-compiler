@@ -146,6 +146,18 @@ public class CodeGenerator {
         helper.syscall(4);
         helper.syscall(10);
 
+        helper.comment("Nil pointer");
+        helper.startText();
+        helper.append("exception_nil_pointer:");
+
+        helper.startData();
+        helper.append("exception_nil_pointer_msg: .asciiz \"Error: Nil pointer\"");
+
+        helper.startText();
+        helper.loadAddress("$a0", "exception_nil_pointer_msg");
+        helper.syscall(4);
+        helper.syscall(10);
+
         return helper.getString();
     }
 }

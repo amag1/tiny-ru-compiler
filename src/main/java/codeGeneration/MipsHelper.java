@@ -317,5 +317,10 @@ public class MipsHelper {
         loadAddress("$t0", "($a0)");
     }
 
+    public void checkNilPointer() {
+        comment("Check Nil pointer");
+        branchOnEqual("$a0", "$zero", "exception_nil_pointer");
+    }
+
 
 }
