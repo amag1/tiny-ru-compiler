@@ -108,7 +108,8 @@ public class VariableEntry implements Json {
         if (this.type.isPrimitive()) {
             if (this.type.getType().equals("Str")) {
                 helper.createStringCir("defaultValueStr");
-            } else {
+            }
+            else {
                 helper.loadWord("$t0", "defaultValue" + this.type.getType());
             }
         }
@@ -125,7 +126,8 @@ public class VariableEntry implements Json {
         if (this.type.isPrimitive()) {
             if (this.type.getType().equals("Str")) {
                 helper.createStringCir("defaultValueStr");
-            } else {
+            }
+            else {
                 helper.loadWord("$t0", "defaultValue" + this.type.getType());
             }
         }
@@ -169,7 +171,7 @@ public class VariableEntry implements Json {
                 helper.loadWord("$a0", "0($t0)");
                 return helper.getString();
             case CHAIN:
-                // Acceder a CIR del atributo en acumulador
+                helper.comment("Acceso a valor encadenado");
                 helper.loadAddress("$t0", "($a0)");
                 helper.addIU("$t0", "$t0", (4 * (this.getPosition() + 1)));
                 helper.loadWord("$a0", "($t0)");
@@ -207,6 +209,7 @@ public class VariableEntry implements Json {
                 return helper.getString();
             case CHAIN:
                 // Acceder a CIR del atributo en acumulador
+                helper.comment("Acceso encadenado");
                 helper.loadAddress("$t0", "($a0)");
                 helper.addIU("$t0", "$t0", (4 * (this.getPosition() + 1)));
                 helper.loadAddress("$a0", "($t0)");
