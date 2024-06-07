@@ -60,6 +60,13 @@ public class AttributeType implements Json {
     }
 
     public String getType() {
+        if (isArray) {
+            return "Array";
+        }
+        return type;
+    }
+
+    public String getArrayType() {
         return type;
     }
 
