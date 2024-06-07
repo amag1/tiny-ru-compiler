@@ -96,16 +96,29 @@ public class ArrayAccessNode extends PrimaryNode {
     private String getArrayAddress(Context context, ClassEntry classEntry, MethodEntry methodEntry, boolean debug) {
         MipsHelper helper = new MipsHelper(debug);
 
+        helper.checkNilPointer();
+
         // Acceder al cir del array
         helper.append(variable.loadWordByScope(debug, methodEntry));
         helper.loadWord("$t0", "4($a0)");
+        helper.push("$t0");
+
+        // Guardar tamaño del array
+        helper.loadWord("$t0", "0($a0)");
         helper.push("$t0");
 
         // Obtener el indice
         helper.comment("Calculate index expression");
         helper.append(index.generate(context, classEntry, methodEntry, debug));
 
-        // TODO check if valid index
+        // Chequear si el indice es menor a 0
+        helper.append("slt $s0, $a0,  $zero");
+        helper.append("bne $s0, $zero, exception_index_out_of_bounds");
+
+        // Chequear si el indice es mayor al tamaño del array
+        helper.pop("$t1");
+        helper.append("slt  $s0, $t1, $a0");
+        helper.append("bne $s0, $zero, exception_index_out_of_bounds");
 
         // Agregar el offset de indice al comienzo del array
         helper.pop("$t0");

@@ -63,8 +63,7 @@ public class ChainNode extends PrimaryNode {
         helper.comment("Generate code for the parent node");
         helper.append(this.parentNode.generate(context, classEntry, methodEntry, debug));
 
-
-        // TODO validar no nil
+        helper.checkNilPointer();
 
         helper.append(this.childrenNode.generate(context, classEntry, methodEntry, debug));
 
@@ -78,8 +77,7 @@ public class ChainNode extends PrimaryNode {
         helper.comment("Generate code for the parent node");
         helper.append(this.parentNode.generate(context, classEntry, methodEntry, debug));
 
-
-        // TODO validar no nil
+        helper.checkNilPointer();
 
         helper.append(this.childrenNode.accessVariable(context, classEntry, methodEntry, debug));
 
