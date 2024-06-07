@@ -42,8 +42,7 @@ public class SyntacticExecutor extends Executor {
         } catch (SymbolTableException e) {
             clogger.LogSymbolTableError(e);
         } catch (AstException e) {
-            // TODO
-            System.out.println(e.getMessage());
+            clogger.LogAstError(e);
         }
     }
 }
