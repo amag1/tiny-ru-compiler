@@ -6,7 +6,6 @@ import semantic.symbolTable.ClassEntry;
 import semantic.symbolTable.MethodEntry;
 
 public class StrGenerator implements Generable {
-
     private MipsHelper helper;
     private ClassEntry entry;
 
@@ -36,6 +35,9 @@ public class StrGenerator implements Generable {
                 break;
             case "length":
                 generateLength();
+                break;
+            case "equals":
+                generateEquals();
                 break;
         }
 
@@ -100,6 +102,45 @@ public class StrGenerator implements Generable {
         helper.append("addi $t2, $t2, 1 "); // Mover un byte
         helper.jump("str_length_loop");
         helper.append("end_str_length_loop:");
+    }
+
+    public void generateEquals() {
+        helper.comment("Start equals");
+
+        // Usa t0 como string self
+        helper.loadWord("$t0", "8($fp)"); // Self (acceso a cir)
+        helper.loadWord("$t0", "4($t0)"); // Acceso a valor
+
+        // Usa t1 como string a comparar
+        helper.loadWord("$t1", "4($fp)"); // Param (acceso a cir)
+        helper.loadWord("$t1", "4($t1)"); // Accesso a valor
+
+        // Usa a0 como booleano que representa si son diferentes
+        helper.loadAddress("$a0", "($zero)");
+        helper.load("$a0", 1);
+
+        // Recorrer ambos string comparandolos
+        // En s0 y s1 se guardan los bytes de cada char
+        helper.comment("Iterate over strings until end o difference");
+        helper.append("str_equals_loop:");
+        helper.append("lb $s0, 0($t0)");
+        helper.append("lb $s1, 0($t1)");
+        helper.append("sub $a0, $s1, $s0 ");
+
+        // Si alguno de los dos strings llego al final terminar
+        helper.branchOnEqual("$s1", "$zero", "end_str_equals_loop");
+        helper.branchOnEqual("$s0", "$zero", "end_str_equals_loop");
+
+        // Si hay diferencia terminar
+        helper.append("bne $a0, $zero, end_str_equals_loop");
+        helper.addIU("$t0", "$t0", 1);
+        helper.addIU("$t1", "$t1", 1);
+        helper.jump("str_equals_loop");
+        helper.append("end_str_equals_loop:");
+
+        // Negar a0 representar si son iguales
+        helper.append("sltu $a0, $zero, $a0");
+        helper.append("xori $a0, $a0, 1");
     }
 
 }
