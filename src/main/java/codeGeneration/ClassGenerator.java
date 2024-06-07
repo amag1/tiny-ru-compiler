@@ -1,5 +1,6 @@
 package codeGeneration;
 
+import codeGeneration.predefined.ArrayGenerator;
 import codeGeneration.predefined.StrGenerator;
 import semantic.abstractSintaxTree.AstClassEntry;
 import semantic.abstractSintaxTree.AstMethodEntry;
@@ -60,7 +61,7 @@ public class ClassGenerator implements Generable {
                 return new IOGenerator(classEntry, debug).generate();
             case "Array":
                 // TODO
-                return "Array_length: \n";
+                return new ArrayGenerator(classEntry, debug).generate();
             case "Str":
                 return new StrGenerator(classEntry, debug).generate();
             default:
