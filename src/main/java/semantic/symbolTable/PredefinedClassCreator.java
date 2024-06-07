@@ -64,6 +64,12 @@ public class PredefinedClassCreator {
         concat.setPosition(1);
         strClass.addMethod(concat);
 
+        MethodEntry equals = new MethodEntry(new Token("equals", Type.ID, new Location()), false);
+        equals.addFormalParam(new VariableEntry(types.get("Str"), new Token("s", Type.ID, new Location()), Scope.PARAM));
+        equals.setReturnType(types.get("Bool"));
+        equals.setPosition(2);
+        strClass.addMethod(equals   );
+
         return strClass;
     }
 
