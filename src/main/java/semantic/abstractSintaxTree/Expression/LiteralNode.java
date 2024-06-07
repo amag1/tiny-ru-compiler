@@ -92,7 +92,8 @@ public class LiteralNode extends OperatingNode {
         if (attributeType.getType().equals("Str")) {
             helper.createStringCir(literalName);
             helper.loadAddress("$a0", "($t0)");
-        } else {
+        }
+        else {
             helper.storeInAccumulator(literalName);
         }
 

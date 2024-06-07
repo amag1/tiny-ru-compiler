@@ -62,8 +62,10 @@ public class NewArrayNode extends PrimaryNode {
         helper.comment("Calculate array length");
         helper.append(lengthExpression.generate(context, classEntry, methodEntry, debug));
 
+        // Verificar que la expresion sea positiva
+        helper.move("$t0", "$a0");
+        helper.append("bltz $t0, invalid_array_index");
         // Pushear el tamaño del array
-        helper.sw("$a0", "($t0)");
         helper.push("$a0");
 
         // Pushear valor default

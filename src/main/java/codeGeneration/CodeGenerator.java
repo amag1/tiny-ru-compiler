@@ -146,6 +146,17 @@ public class CodeGenerator {
         helper.syscall(4);
         helper.syscall(10);
 
+        helper.comment("Invalid index");
+        helper.append("invalid_array_index:");
+
+        helper.startData();
+        helper.append("invalid_array_index_msg: .asciiz \"Error: Invalid array index\"");
+
+        helper.startText();
+        helper.loadAddress("$a0", "invalid_array_index_msg");
+        helper.syscall(4);
+        helper.syscall(10);
+
         return helper.getString();
     }
 }

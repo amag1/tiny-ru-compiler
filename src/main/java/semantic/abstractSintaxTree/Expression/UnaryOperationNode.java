@@ -57,7 +57,16 @@ public class UnaryOperationNode extends ExpressionNode {
         MipsHelper helper = new MipsHelper(debug);
         // Comienza generando codigo para la subexpresion
         helper.comment("Generar codigo para operando de expresion unaria");
-        helper.append(operating.accessVariable(context, classEntry, methodEntry, debug));
+
+        // Si es ++ o -- es un acceso a variable
+        if (operator.getToken().getLexem().equals("++") || operator.getToken().getLexem().equals("--")) {
+            helper.append(operating.accessVariable(context.clone(), classEntry, methodEntry, debug));
+        }
+
+        // Si no, es acceso al valor
+        else {
+            helper.append(operating.generate(context.clone(), classEntry, methodEntry, debug));
+        }
 
         // Generar codigo para la operacion
         helper.comment("Generar codigo para la operacion unaria");

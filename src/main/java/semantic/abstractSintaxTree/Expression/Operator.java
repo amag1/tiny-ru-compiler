@@ -60,9 +60,9 @@ public class Operator implements Json {
                 helper.move("$a0", "$t1");
                 yield helper.getString();
             }
-            case "+" -> "add $a0, $t1, 0";
-            case "-" -> "sub $a0, $zero, $t1";
-            case "!" -> "xori $a0, $t1, 1";
+            case "+" -> "add $a0," + register + ", 0";
+            case "-" -> "sub $a0, $zero, " + register;
+            case "!" -> "xori $a0, " + register + ", 1";
             default -> "nop";
         };
     }
