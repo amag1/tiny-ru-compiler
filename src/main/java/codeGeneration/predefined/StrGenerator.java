@@ -75,6 +75,12 @@ public class StrGenerator implements Generable {
         helper.append("addi $t3, $t3, 1");
         helper.jump("concat_loop_2 ");
         helper.append("end_concat_loop_2:");
+
+        // Eliminar ultimo char
+        helper.comment("Eliminar ultimo char");
+        helper.append("li $t0, 0");
+        helper.append("sb $t0, ($t2)");
+
     }
 
     public  void  generateLength() {
