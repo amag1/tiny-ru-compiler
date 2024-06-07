@@ -96,10 +96,11 @@ public class ArrayAccessNode extends PrimaryNode {
     private String getArrayAddress(Context context, ClassEntry classEntry, MethodEntry methodEntry, boolean debug) {
         MipsHelper helper = new MipsHelper(debug);
 
-        helper.checkNilPointer();
-
         // Acceder al cir del array
         helper.append(variable.loadWordByScope(debug, methodEntry));
+
+        helper.checkNilPointer();
+
         helper.loadWord("$t0", "8($a0)");
         helper.push("$t0");
 
