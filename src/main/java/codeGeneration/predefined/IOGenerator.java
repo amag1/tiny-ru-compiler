@@ -30,8 +30,11 @@ public class IOGenerator implements Generable {
         helper.initMethod(method, entry);
 
         switch (method.getName()) {
-            case "out_str", "out_char":
+            case "out_str":
                 generateOutStrMethod(method);
+                break;
+            case  "out_char":
+                generateOutCharMethod(method);
                 break;
             case "out_int":
                 generateOutIntMethod(method);
@@ -68,7 +71,7 @@ public class IOGenerator implements Generable {
         helper.comment("Method not implemented");
     }
 
-    private void generateOutStrMethod(MethodEntry method) {
+    private void generateOutCharMethod(MethodEntry method) {
         helper.comment("Pop argumento");
         int paramOffset = helper.getStackParamOffset(0, 1); // Always one param
 
@@ -77,6 +80,18 @@ public class IOGenerator implements Generable {
         helper.comment("Print string");
         helper.syscall(4);
     }
+
+    private void generateOutStrMethod(MethodEntry method) {
+        helper.comment("Pop argumento");
+        int paramOffset = helper.getStackParamOffset(0, 1); // Always one param
+
+        helper.loadWord("$a0", paramOffset + "($fp)");
+        helper.loadWord("$a0", "4($a0)");
+
+        helper.comment("Print string");
+        helper.syscall(4);
+    }
+
 
     private void generateOutBoolMethod(MethodEntry method) {
         helper.comment("Pop argumento");
