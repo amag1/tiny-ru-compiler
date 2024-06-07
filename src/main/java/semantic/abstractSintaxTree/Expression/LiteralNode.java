@@ -89,7 +89,12 @@ public class LiteralNode extends OperatingNode {
         helper.addDataLabel(literalName, type, value);
 
         helper.startText();
-        helper.storeInAccumulator(literalName);
+        if (attributeType.getType().equals("Str")) {
+            helper.createStringCir(literalName);
+            helper.loadWord("$a0", "($t0)");
+        } else {
+            helper.storeInAccumulator(literalName);
+        }
 
         // Al ser de tipo word es necesario especificar que se guarde el valor
         if (attributeType.equals(AttributeType.IntType) || attributeType.equals(AttributeType.BoolType) || attributeType.equals(AttributeType.NilType)) {
