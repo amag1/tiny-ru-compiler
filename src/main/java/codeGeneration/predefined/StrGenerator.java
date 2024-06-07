@@ -35,7 +35,8 @@ public class StrGenerator implements Generable {
                 generateConcat();
                 break;
             case "length":
-                // TODO
+                generateLength();
+                break;
         }
 
         helper.finishMethod();
@@ -74,8 +75,25 @@ public class StrGenerator implements Generable {
         helper.append("addi $t3, $t3, 1");
         helper.jump("concat_loop_2 ");
         helper.append("end_concat_loop_2:");
+    }
 
-        helper.finishMethod();
+    public  void  generateLength() {
+        helper.comment("Start length");
+
+        // Usa t2 como string
+        helper.loadWord("$t2", "4($fp)"); // Self (acceso a cir)
+        helper.loadWord("$t2", "4($t2)"); // Acceso a valor
+
+        // Recorrer el string guardando en a0 la longitud actual
+        helper.loadAddress("$a0", "($zero)");
+        helper.comment("Iterate over string until end");
+        helper.append("str_length_loop:");
+        helper.append("lb $t0, 0($t2)"); // Cargar byte
+        helper.branchOnEqual("$t0", "$zero", "end_str_length_loop");
+        helper.addIU("$a0", "$a0", 1);
+        helper.append("addi $t2, $t2, 1 "); // Mover un byte
+        helper.jump("str_length_loop");
+        helper.append("end_str_length_loop:");
     }
 
 }
