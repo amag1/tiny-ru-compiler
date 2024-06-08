@@ -9,8 +9,12 @@ import semantic.symbolTable.SymbolTableLookup;
 public class Operator implements Json {
     Token operator;
 
+    private static int counter;
+    private int id;
+
     public Operator(Token operator) {
         this.operator = operator;
+        this.id = counter++;
     }
 
     /**
@@ -122,6 +126,24 @@ public class Operator implements Json {
                 // Negacion de >
                 String code = "slt $a0, " + reg2 + ", " + reg1 + "\n";
                 code += "xori $a0, $a0, 1";
+                yield code;
+            }
+
+            case "&&" -> {
+                // multiplicar los dos valores
+                // luego verificar si son mayores que cero
+                String code = "mul $a0, " + reg1 + ", " + reg2 + "\n";
+                code += "sltu $a0, $zero, $a0";
+
+                yield code;
+            }
+
+            case "||" -> {
+                // Sumar ambos valores
+                // Luego verificar si es mayor que cero
+                String code = "add $a0, " + reg1 + ", " + reg2 + "\n";
+                code += "sltu $a0, $zero, $a0";
+
                 yield code;
             }
 
