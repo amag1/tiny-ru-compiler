@@ -106,9 +106,13 @@ public class CodeGenerator {
         helper.append("end_set_default_array:");
 
         // Alocar array CIR
-        helper.allocateMemory(2 * 32); // Dos words
-        helper.sw("$t0", "0($v0)"); // Guardar tamaño en primer word
-        helper.sw("$t1", "4($v0)"); // Guardar direccion en primer word
+        helper.allocateMemory(12);
+
+        // Guardar vtable en primera word
+        helper.loadAddress("$t2", "VT_Array");
+        helper.sw("$t2", "0($v0)");
+        helper.sw("$t0", "4($v0)"); // Guardar tamaño en segunda word
+        helper.sw("$t1", "8($v0)"); // Guardar direccion en tercera word
 
         // Guardar variable array
         helper.storeInAccumulator("($v0)");
@@ -155,6 +159,18 @@ public class CodeGenerator {
 
         helper.startText();
         helper.loadAddress("$a0", "exception_nil_pointer_msg");
+        helper.syscall(4);
+        helper.syscall(10);
+
+        helper.comment("Invalid array length");
+        helper.startText();
+        helper.append("exception_invalid_array_length:");
+
+        helper.startData();
+        helper.append("exception_invalid_array_length_msg: .asciiz \"Error: invalid array length\"");
+
+        helper.startText();
+        helper.loadAddress("$a0", "exception_invalid_array_length_msg");
         helper.syscall(4);
         helper.syscall(10);
 

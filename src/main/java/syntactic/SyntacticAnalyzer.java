@@ -368,7 +368,7 @@ public class SyntacticAnalyzer extends AbstractSyntacticAnalyzer implements Synt
         if (getTokenType() == Type.ARRAY) {
             match(Type.ARRAY);
             Token type = tipoPrimitivo();
-            return new AttributeType(true, true, type);
+            return new AttributeType(true, false, type);
         }
 
         Type[] primitive = {Type.TYPE_INT, Type.TYPE_CHAR, Type.TYPE_STRING, Type.TYPE_BOOL};

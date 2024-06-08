@@ -61,7 +61,7 @@ public class ArrayAccessNode extends PrimaryNode {
             throw new NonIntArrayIndexException(this.getToken());
         }
 
-        return new AttributeType(arr.getType().getType());
+        return new AttributeType(arr.getType().getArrayType());
     }
 
     public String generate(Context context, ClassEntry classEntry, MethodEntry methodEntry, boolean debug) {
@@ -96,15 +96,16 @@ public class ArrayAccessNode extends PrimaryNode {
     private String getArrayAddress(Context context, ClassEntry classEntry, MethodEntry methodEntry, boolean debug) {
         MipsHelper helper = new MipsHelper(debug);
 
-        helper.checkNilPointer();
-
         // Acceder al cir del array
         helper.append(variable.loadWordByScope(debug, methodEntry));
-        helper.loadWord("$t0", "4($a0)");
+
+        helper.checkNilPointer();
+
+        helper.loadWord("$t0", "8($a0)");
         helper.push("$t0");
 
         // Guardar tamaño del array
-        helper.loadWord("$t0", "0($a0)");
+        helper.loadWord("$t0", "4($a0)");
         helper.push("$t0");
 
         // Obtener el indice
