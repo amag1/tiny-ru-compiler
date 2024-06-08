@@ -176,4 +176,12 @@ public class CodeGenerator {
 
         return helper.getString();
     }
+
+    public AbstractSyntaxTree getAst() {
+        return ast;
+    }
+
+    public SymbolTable getSymbolTable() {
+        return symbolTable;
+    }
 }

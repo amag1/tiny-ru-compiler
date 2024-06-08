@@ -50,6 +50,15 @@ public class Main {
             String outputPath = filePath.replace(".ru", ".asm");
             Logger logger = new FileLogger(outputPath);
             logger.Log(code);
+
+            outputPath = filePath.replace(".ru", ".st.json");
+            logger = new FileLogger(outputPath);
+            logger.LogSymbolTable(codegen.getSymbolTable().toJson(0));
+
+            outputPath = filePath.replace(".ru", ".ast.json");
+            logger = new FileLogger(outputPath);
+            logger.LogAst(codegen.getAst().toJson());
+
         } catch (LexicalException e) {
             clogger.LogLexicError(e);
         } catch (SyntacticException e) {
