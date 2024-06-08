@@ -223,12 +223,17 @@ public class VariableEntry implements Json {
     }
 
     public VariableEntry copy() {
-        return new VariableEntry(
+        VariableEntry entry = new VariableEntry(
                 this.type,
                 this.token,
                 this.position,
                 this.scope
         );
+
+        entry.setPrivate(this.isPrivate);
+        entry.setInherited(this.isInherited);
+
+        return entry;
     }
 
 }

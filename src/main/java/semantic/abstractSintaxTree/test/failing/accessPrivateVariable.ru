@@ -6,7 +6,7 @@ impl A{
     fn voidd() -> void{
         Unrelated a;
 
-        (IO.out_str(a.a));
+        (IO.out_int(a.a));
     }
 }
 
