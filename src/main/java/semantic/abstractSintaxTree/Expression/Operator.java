@@ -9,12 +9,8 @@ import semantic.symbolTable.SymbolTableLookup;
 public class Operator implements Json {
     Token operator;
 
-    private static int counter;
-    private int id;
-
     public Operator(Token operator) {
         this.operator = operator;
-        this.id = counter++;
     }
 
     /**
