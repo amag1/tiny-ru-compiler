@@ -79,14 +79,15 @@ public class MethodCallNode extends CallableNode {
         helper.push("$fp");
 
         // Pushear el objeto
-        helper.comment("Pushear self" );
+        helper.comment("Pushear self");
         if (isChained) {
             // El objeto está en el acumulador
             helper.push("$a0");
-        } else {
+        }
+        else {
             // El objeto es self
             int offset = 4 + 4 * this.method.getFormalParametersList().size(); // Offset para self
-            helper.loadWord("$a0", offset+"($fp)");
+            helper.loadWord("$a0", offset + "($fp)");
             helper.push("$a0");
         }
 
@@ -101,16 +102,26 @@ public class MethodCallNode extends CallableNode {
         // Obtener ref a metodo
         helper.comment("Obtener ref a metodo");
 
-        // Acceder al cir del objeto
-        int offset = 4 + 4 *getParameters().size();
-        helper.loadWord("$a0", offset+"($sp)");
+        if (!context.isStatic()) {
 
-        // Acceder a la VT de la clase
-        helper.loadWord("$a0", "($a0)");
+            // Acceder al cir del objeto
+            int offset = 4 + 4 * getParameters().size();
+            helper.loadWord("$a0", offset + "($sp)");
 
-        // Llamar al método
-        offset = this.method.getPosition() * 4;
-        helper.loadWord("$t1", offset + "($a0)");
+            // Acceder a la VT de la clase
+            helper.loadWord("$a0", "($a0)");
+
+            // Llamar al método
+            offset = this.method.getPosition() * 4;
+            helper.loadWord("$t1", offset + "($a0)");
+        }
+        else {
+            // Obtener directamente la VTable de la clase actual
+            String vtable = helper.getVirtualTableName(classEntry);
+            helper.loadAddress("$t1", vtable);
+            int offset = this.method.getPosition() * 4;
+            helper.loadWord("$t1", offset + "($t1)");
+        }
         helper.jumpAndLinkRegister("$t1");
 
         // Resetear la stack
