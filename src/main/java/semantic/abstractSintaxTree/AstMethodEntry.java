@@ -93,6 +93,11 @@ public class AstMethodEntry implements Json {
     }
 
     public String generate(Context context, ClassEntry classentry, MethodEntry methodEntry, boolean debug) {
+        if (methodEntry.isStatic()) {
+            // Clonar el contexto y hacerlo estatico
+            context = context.clone();
+            context.setStatic(true);
+        }
         StringBuilder sb = new StringBuilder();
         for (SentenceNode sentence : sentences) {
             sb.append(sentence.generate(context, classentry, methodEntry, debug));
