@@ -97,7 +97,9 @@ public class LiteralNode extends OperatingNode {
             helper.createStringCir(literalName);
             helper.loadAddress("$a0", "($t0)");
         } else {
-            helper.loadWord("$a0", literalName);
+            helper.loadAddress("$a0", literalName);
+            helper.loadAddress("$t0", "($a0)");
+            helper.loadWord("$a0", "($t0)");
         }
 
         return helper.getString();
