@@ -6,6 +6,8 @@ import semantic.abstractSintaxTree.Context;
 import semantic.symbolTable.ClassEntry;
 import semantic.symbolTable.MethodEntry;
 
+import java.io.File;
+
 public class IOGenerator implements Generable {
     private MipsHelper helper;
     private ClassEntry entry;
@@ -16,6 +18,7 @@ public class IOGenerator implements Generable {
     }
 
     public String generate() {
+        generateConstants();
         // Generar codigo para cada metodo
         for (MethodEntry method : entry.getMethodList()) {
             generateMethod(method);
@@ -23,6 +26,16 @@ public class IOGenerator implements Generable {
 
         return helper.getString();
     }
+
+
+    private void generateConstants() {
+        helper.startData();
+        // Constantes con el separador elementos de array y un literal 1 para no crearlo de vuelta
+        helper.append(".data\n" +
+                "\tliteral_array_separator: .asciiz \", \"\n" +
+                "\tliteral_one: .word 1");
+    }
+
 
     private void generateMethod(MethodEntry method) {
         // Add method name
@@ -33,7 +46,7 @@ public class IOGenerator implements Generable {
             case "out_str":
                 generateOutStrMethod(method);
                 break;
-            case  "out_char":
+            case "out_char":
                 generateOutCharMethod(method);
                 break;
             case "out_int":
@@ -51,6 +64,19 @@ public class IOGenerator implements Generable {
             case "out_bool":
                 generateOutBoolMethod(method);
                 break;
+            case "out_array_str":
+                generateOutArrayStrMethod();
+                break;
+            case "out_array_int":
+                generateOutArrayIntMethod();
+                break;
+            case "out_array_bool":
+                generateOutArrayBoolMethod();
+                break;
+            case "out_array_char":
+                generateOutArrayCharMethod();
+                break;
+
             default:
                 generateNotImplementedMethod(method);
                 break;
@@ -155,5 +181,21 @@ public class IOGenerator implements Generable {
         helper.comment("Read string");
         helper.load("$a1", 256); // Set max length of strings
         helper.syscall(8); // Read string
+    }
+
+    private void generateOutArrayIntMethod() {
+        helper.fromFile("src/main/java/codeGeneration/predefined/outArrayInt.asm");
+    }
+
+    private void generateOutArrayStrMethod() {
+        helper.fromFile("src/main/java/codeGeneration/predefined/outArrayStr.asm");
+    }
+
+    private void generateOutArrayBoolMethod() {
+        helper.fromFile("src/main/java/codeGeneration/predefined/outArrayBool.asm");
+    }
+
+    private void generateOutArrayCharMethod() {
+        helper.fromFile("src/main/java/codeGeneration/predefined/outArrayChar.asm");
     }
 }

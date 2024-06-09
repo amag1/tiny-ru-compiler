@@ -29,7 +29,7 @@ public class StrGenerator implements Generable {
         helper.lineSeparator();
         helper.initMethod(method, entry);
 
-        switch (method.getName()){
+        switch (method.getName()) {
             case "concat":
                 generateConcat();
                 break;
@@ -71,7 +71,7 @@ public class StrGenerator implements Generable {
         helper.comment("Iterate over second string saving bytes");
         helper.append("concat_loop_2:");
         helper.append("lb $t4, 0($t3)");
-        helper.branchOnEqual("$t4", "$zero","end_concat_loop_2");
+        helper.branchOnEqual("$t4", "$zero", "end_concat_loop_2");
         helper.append("sb $t4, 0($t2)"); // Save byte t4 en direccion de t0
         helper.append("addi $t2, $t2, 1");
         helper.append("addi $t3, $t3, 1");
@@ -85,7 +85,7 @@ public class StrGenerator implements Generable {
 
     }
 
-    public  void  generateLength() {
+    public void generateLength() {
         helper.comment("Start length");
 
         // Usa t2 como string

@@ -6,8 +6,11 @@ import semantic.symbolTable.MethodEntry;
 import semantic.symbolTable.VariableEntry;
 import semantic.abstractSintaxTree.Context;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 
 public class MipsHelper {
     boolean debug;
@@ -319,6 +322,27 @@ public class MipsHelper {
     public void checkNilPointer() {
         comment("Check Nil pointer");
         branchOnEqual("$a0", "$zero", "exception_nil_pointer");
+    }
+
+    public void fromFile(String path) {
+        // Read file content and append
+        File file = new File(path);
+        try {
+            Scanner scanner = new Scanner(file);
+
+            if (!scanner.hasNextLine()) {
+                return;
+            }
+
+            String returnString = scanner.nextLine();
+            while (scanner.hasNextLine()) {
+                returnString += "\n" + scanner.nextLine();
+            }
+
+            append(returnString);
+        } catch (FileNotFoundException e) {
+            append("");
+        }
     }
 
 
