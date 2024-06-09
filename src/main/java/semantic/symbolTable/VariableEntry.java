@@ -100,6 +100,11 @@ public class VariableEntry implements Json {
         this.scope = scope;
     }
 
+    /**
+     * Genera código MIPS para poder inicializar una variable con el valor
+     * default de su tipo
+     * @param helper
+     */
     public void initialize(MipsHelper helper) {
         // Genera el codigo para instanciar con el valor default
         // Obtener el offset de la variable

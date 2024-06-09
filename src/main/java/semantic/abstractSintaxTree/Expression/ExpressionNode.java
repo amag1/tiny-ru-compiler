@@ -34,6 +34,14 @@ public abstract class ExpressionNode extends AbstractSyntaxNode {
         return token;
     }
 
+    /**
+     * Genera código para acceder a la referencia de memoria del resultado de evaluar la expresión
+     * @param context
+     * @param classEntry
+     * @param methodEntry
+     * @param debug
+     * @return
+     */
     public String accessVariable(Context context, ClassEntry classEntry, MethodEntry methodEntry, boolean debug) {
         return "";
     }
