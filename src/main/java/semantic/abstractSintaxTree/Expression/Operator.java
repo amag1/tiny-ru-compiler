@@ -125,6 +125,24 @@ public class Operator implements Json {
                 yield code;
             }
 
+            case "&&" -> {
+                // multiplicar los dos valores
+                // luego verificar si son mayores que cero
+                String code = "mul $a0, " + reg1 + ", " + reg2 + "\n";
+                code += "sltu $a0, $zero, $a0";
+
+                yield code;
+            }
+
+            case "||" -> {
+                // Sumar ambos valores
+                // Luego verificar si es mayor que cero
+                String code = "add $a0, " + reg1 + ", " + reg2 + "\n";
+                code += "sltu $a0, $zero, $a0";
+
+                yield code;
+            }
+
 
             default -> "nop";
         };
