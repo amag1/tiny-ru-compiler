@@ -153,6 +153,12 @@ public class VariableEntry implements Json {
                 "\n" + JsonHelper.getIdentationString(identationIndex - 1) + "}";
     }
 
+    /**
+     * Genera código para acceder al valor de una variable basado en el scope definido
+     * @param debug
+     * @param method
+     * @return
+     */
     public String loadWordByScope(boolean debug, MethodEntry method) {
         MipsHelper helper = new MipsHelper(debug);
         int offset;
@@ -190,6 +196,12 @@ public class VariableEntry implements Json {
         }
     }
 
+    /**
+     * Genera código para acceder a la referencia de una variable basado en el scope definido
+     * @param debug
+     * @param method
+     * @return
+     */
     public String loadAddressByScope(boolean debug, MethodEntry method) {
         MipsHelper helper = new MipsHelper(debug);
         int offset;
