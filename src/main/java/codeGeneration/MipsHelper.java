@@ -12,6 +12,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
+/**
+ * Helper  para facilitar la generación de código en MIPS.
+ */
 public class MipsHelper {
     boolean debug;
     final private StringBuilder sb;

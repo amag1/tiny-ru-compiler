@@ -100,6 +100,11 @@ public class VariableEntry implements Json {
         this.scope = scope;
     }
 
+    /**
+     * Genera código MIPS para poder inicializar una variable con el valor
+     * default de su tipo
+     * @param helper
+     */
     public void initialize(MipsHelper helper) {
         // Genera el codigo para instanciar con el valor default
         // Obtener el offset de la variable
@@ -148,6 +153,12 @@ public class VariableEntry implements Json {
                 "\n" + JsonHelper.getIdentationString(identationIndex - 1) + "}";
     }
 
+    /**
+     * Genera código para acceder al valor de una variable basado en el scope definido
+     * @param debug
+     * @param method
+     * @return
+     */
     public String loadWordByScope(boolean debug, MethodEntry method) {
         MipsHelper helper = new MipsHelper(debug);
         int offset;
@@ -185,6 +196,12 @@ public class VariableEntry implements Json {
         }
     }
 
+    /**
+     * Genera código para acceder a la referencia de una variable basado en el scope definido
+     * @param debug
+     * @param method
+     * @return
+     */
     public String loadAddressByScope(boolean debug, MethodEntry method) {
         MipsHelper helper = new MipsHelper(debug);
         int offset;

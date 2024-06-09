@@ -6,6 +6,11 @@ import semantic.symbolTable.*;
 
 import java.util.Map;
 
+/**
+ * Clase engargada de generar código mips
+ * Genera código para cada sentencia en el archivo fuente, las clases predefinidas,
+ * los macros y las excepciones.
+ */
 public class CodeGenerator {
     private AbstractSyntaxTree ast;
     private SymbolTable symbolTable;
