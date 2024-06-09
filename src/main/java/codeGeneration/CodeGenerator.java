@@ -14,7 +14,7 @@ import java.util.Map;
 public class CodeGenerator {
     private AbstractSyntaxTree ast;
     private SymbolTable symbolTable;
-    private Boolean debug = true;
+    private Boolean debug = false;
 
 
     public CodeGenerator(AbstractSyntaxTree ast, SymbolTable symbolTable) {
@@ -22,7 +22,9 @@ public class CodeGenerator {
         this.symbolTable = symbolTable;
     }
 
-    public String generateCode() {
+    public String generateCode(boolean debug) {
+        this.debug = debug;
+
         StringBuilder sb = new StringBuilder();
 
         // Generate Macros

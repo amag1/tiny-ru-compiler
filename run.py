@@ -1,7 +1,7 @@
 import os
 
 fileName = "test.ru"
-jarName = "./target/etapa4.jar"
+jarName = "./target/tinyRU.jar"
 marsPath = "Mars4_5.jar"
 directory = "./src/main/java/codeGeneration/test"
 
