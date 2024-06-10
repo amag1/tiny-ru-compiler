@@ -1,4 +1,4 @@
-/? 0false 5truecHello world
+/? 0false 5truecHello world
 
 start {
     Int a;

@@ -43,7 +43,13 @@ public class Main {
         ConsoleLogger clogger = new ConsoleLogger();
         try {
             CodeGenerator codegen = analyzer.analyze();
-            String code = codegen.generateCode();
+
+            boolean debug = false;
+            // Si hay un segundo argumento y es -d, ejecutar el programa en modo debug
+            if (args.length > 1 && args[1].equals("-d")) {
+                debug = true;
+            }
+            String code = codegen.generateCode(debug);
 
             // Generar codigo en archivo de salida
             // Cambiar el .ru por .asm
