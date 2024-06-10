@@ -87,7 +87,7 @@ public class SymbolTableTest {
     }
 
     private static Stream<Arguments> providePassingSymbolTable() {
-        String basepath = "src/main/java/semantic/symbolTable/test/passing";
+        String basepath = "src/testCodeGeneration/java/semantic/symbolTable/test/passing";
         return provider(basepath);
     }
 
@@ -115,7 +115,7 @@ public class SymbolTableTest {
     }
 
     private static Stream<Arguments> provideFailingSymbolTable() {
-        String basepath = "src/main/java/semantic/symbolTable/test/failing";
+        String basepath = "src/testCodeGeneration/java/semantic/symbolTable/test/failing";
         return provider(basepath);
     }
 }

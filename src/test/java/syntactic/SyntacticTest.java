@@ -48,7 +48,7 @@ public class SyntacticTest {
     }
 
     private static Stream<String> providePassingSyntactic() {
-        String basepath = "src/main/java/syntactic/test/passing";
+        String basepath = "src/testCodeGeneration/java/syntactic/test/passing";
         return provider(basepath);
     }
 
@@ -69,7 +69,7 @@ public class SyntacticTest {
     }
 
     private static Stream<String> provideFailingSyntactic() {
-        String basepath = "src/main/java/syntactic/test/failing";
+        String basepath = "src/testCodeGeneration/java/syntactic/test/failing";
         return provider(basepath);
     }
 }
