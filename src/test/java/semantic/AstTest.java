@@ -83,7 +83,7 @@ public class AstTest {
     }
 
     private static Stream<Arguments> providePassingAst() {
-        String basepath = "src/testCodeGeneration/java/semantic/abstractSintaxTree/test/passing";
+        String basepath = "src/main/java/semantic/abstractSintaxTree/test/passing";
         return provider(basepath);
     }
 

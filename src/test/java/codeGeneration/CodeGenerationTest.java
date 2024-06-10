@@ -104,7 +104,7 @@ public class CodeGenerationTest {
         ConsoleLogger clogger = new ConsoleLogger();
         try {
             CodeGenerator codegen = analyzer.analyze();
-            String code = codegen.generateCode();
+            String code = codegen.generateCode(true);
 
             // Generar codigo en archivo de salida
             // Cambiar el .ru por .asm
