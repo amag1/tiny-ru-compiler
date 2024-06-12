@@ -61,6 +61,9 @@ public class LiteralNode extends OperatingNode {
 
     public String generate(Context context, ClassEntry classEntry, MethodEntry methodEntry, boolean debug) {
         MipsHelper helper = new MipsHelper(debug);
+        String literalName = "literal_" + id;
+        helper.startData();
+
 
         String type = "";
         String value = "";
@@ -87,18 +90,16 @@ public class LiteralNode extends OperatingNode {
         }
 
 
+        helper.addDataLabel(literalName, type, value);
 
-
+        helper.startText();
         if (attributeType.getType().equals("Str")) {
-            helper.startData();
-            String literalName = "literal_" + id;
-            helper.addDataLabel(literalName, type, value);
-            helper.addDataLabel("str_" + literalName, ".word", literalName);
-            helper.startText();
-            helper.createStringCir("str_" + literalName);
+            helper.createStringCir(literalName);
             helper.loadAddress("$a0", "($t0)");
         } else {
-            helper.load("$a0", value);
+            helper.loadAddress("$a0", literalName);
+            helper.loadAddress("$t0", "($a0)");
+            helper.loadWord("$a0", "($t0)");
         }
 
         return helper.getString();
