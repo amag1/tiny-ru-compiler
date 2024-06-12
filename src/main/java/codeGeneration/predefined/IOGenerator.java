@@ -32,7 +32,8 @@ public class IOGenerator implements Generable {
         helper.startData();
         // Constantes con el separador elementos de array y un literal 1 para no crearlo de vuelta
         helper.append(".data\n" +
-                "\tliteral_array_separator: .asciiz \", \"\n" +
+                "\tarray_separator: .asciiz \", \"\n" +
+                "\tliteral_array_separator: .word array_separator\n" +
                 "\tliteral_one: .word 1");
     }
 
@@ -113,6 +114,7 @@ public class IOGenerator implements Generable {
 
         helper.loadWord("$a0", paramOffset + "($fp)");
         helper.loadWord("$a0", "4($a0)");
+        helper.loadWord("$a0", "($a0)");
 
         helper.comment("Print string");
         helper.syscall(4);
