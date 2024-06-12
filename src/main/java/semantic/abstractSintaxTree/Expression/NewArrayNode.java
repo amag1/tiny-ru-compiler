@@ -70,7 +70,8 @@ public class NewArrayNode extends PrimaryNode {
 
         // Pushear valor default
         if (elementsType.getType().equals("Str")) {
-            helper.loadAddress("$t0", "defaultValue" + elementsType.getType());
+            helper.createStringCir("defaultValueStr");
+            helper.loadAddress("$t0", "($t0)");
         } else {
             helper.loadWord("$t0", "defaultValue" + elementsType.getType());
         }

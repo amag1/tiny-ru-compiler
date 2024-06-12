@@ -87,6 +87,7 @@ public class CodeGenerator {
         helper.append("new_array:");
 
         // Alocar memoria para el array
+        helper.append("lw $a0, 8($sp)");
         helper.mutilply("$a0", "$a0", "4");
         helper.syscall(9);
 
