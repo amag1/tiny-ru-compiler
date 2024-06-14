@@ -102,8 +102,7 @@ public class MethodCallNode extends CallableNode {
         // Obtener ref a metodo
         helper.comment("Obtener ref a metodo");
 
-        if (!context.isStatic()) {
-
+        if (!context.isStatic() || isChained) {
             // Acceder al cir del objeto
             int offset = 4 + 4 * getParameters().size();
             helper.loadWord("$a0", offset + "($sp)");
