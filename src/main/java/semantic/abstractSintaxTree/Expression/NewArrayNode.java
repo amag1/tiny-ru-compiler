@@ -69,7 +69,13 @@ public class NewArrayNode extends PrimaryNode {
         helper.push("$a0");
 
         // Pushear valor default
-        helper.loadWord("$t0", "defaultValue" + elementsType.getType());
+        if (elementsType.getType().equals("Str")) {
+            helper.createStringCir("defaultValueStr");
+            helper.loadAddress("$t0", "($t0)");
+        } else {
+            helper.loadWord("$t0", "defaultValue" + elementsType.getType());
+        }
+
         helper.push("$t0");
 
 
